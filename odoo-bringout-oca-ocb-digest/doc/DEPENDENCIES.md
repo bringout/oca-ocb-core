@@ -1,0 +1,7 @@
+# Dependencies
+
+This addon depends on:
+
+- [mail](../../odoo-bringout-oca-ocb-mail)
+- [portal](../../odoo-bringout-oca-ocb-portal)
+- [resource](../../odoo-bringout-oca-ocb-resource)
