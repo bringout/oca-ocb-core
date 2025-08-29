@@ -1,0 +1,2212 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
+"PO-Revision-Date: 2025-02-10 08:27+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
+msgid " Data Fetched"
+msgstr " Podaci dohvaćeni"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "<b>Amount:</b>"
+msgstr "<b>Iznos:</b>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "<b>Reference:</b>"
+msgstr "<b>Referenca:</b>"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+#, python-format
+msgid ""
+"<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
+"%s</li><li>Account Holder: %s</li></ul>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Povratak na moj račun"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
+msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.manage
+msgid "<i class=\"fa fa-trash\"/> Delete"
+msgstr "<i class=\"fa fa-trash\"/> Obriši"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
+msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
+msgstr "<p>Ova kartica je trenutno povezana sa sledećim zapisima:<p/>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "<span class=\"text-danger\">Unpublished</span>"
+msgstr "<span class=\"fa fa-arrow-right\"> Kreiraj PayPal račun</span>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "<span class=\"text-success\">Published</span>"
+msgstr "<span class=\"fa fa-arrow-right\"> Uzmi moje Stripe ključeve</span>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+msgid ""
+"<span><i class=\"fa fa-arrow-right\"/> How to configure your PayPal "
+"account</span>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid ""
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                If you believe that it is an error, please contact the website administrator."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_methods
+msgid "<strong>No suitable payment provider could be found.</strong>"
+msgstr "<span><i>Greška,</i> Molimo budite svesni da se dogodila greška tokom transakcije. Narudžba je potvrđena ali neće biti plaćena. Ne ustručavajte se da nas kontaktirate ako imate bilo kakva pitanja o statusu vaše narudžbe.</span>"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid ""
+"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
+"                        Please use the <em>Duplicate</em> action instead."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid ""
+"<strong>Warning</strong> Make sure your are logged in as the right partner "
+"before making this payment."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "<strong>Warning</strong> The currency is missing or incorrect."
+msgstr "<strong>Upozorenje</strong> Valuta nedostaje ili je netočna."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "<strong>Warning</strong> You must be logged in to pay."
+msgstr "<strong>Upozorenje</strong>Za plaćanje morate biti prijavljeni."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"A refund request of %(amount)s has been sent. The payment will be created "
+"soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_token.py:0
+#, python-format
+msgid "A token cannot be unarchived once it has been archived."
+msgstr "Dnevnik mora biti specificiran za obrađivača %s."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"A transaction with reference %(ref)s has been initiated to save a new "
+"payment method (%(provider_name)s)"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"A transaction with reference %(ref)s has been initiated using the payment "
+"method %(token)s (%(provider_name)s)."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+#, python-format
+msgid "Account"
+msgstr "Transakcija ne može biti povezana sa fakturama koje imaju različite partnere."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__acc_number
+msgid "Account Number"
+msgstr "Broj računa"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Activate"
+msgstr "Aktiviraj"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__active
+msgid "Active"
+msgstr "Aktivan"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_active
+msgid "Add Extra Fees"
+msgstr "Dodaj dodatne provizije"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Address"
+msgstr "Da li je plaćanje post obrađeno"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
+msgid "Allow Express Checkout"
+msgstr "Dopusti ekspresnu naplatu"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_provider_selection
+msgid "Allow Payment Provider"
+msgstr "Omogući Pružatelja naplate"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
+msgid "Allow Saving Payment Methods"
+msgstr "Dozvoli spremanje metoda plaćanja"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_aps
+#: model:payment.provider,name:payment.payment_provider_aps
+msgid "Amazon Payment Services"
+msgstr "Servis naplate Amazon"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__amount
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "Amount"
+msgstr "Iznos"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
+msgid "Amount Max"
+msgstr "Maksimalni iznos"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "An error occurred during the processing of this payment."
+msgstr "Prilikom obrade ovog plaćanja došlo je do greške."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "An error occurred during the processing of your payment."
+msgstr "Lista obrađivača"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+msgid "Apply"
+msgstr "Primjeni"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+msgid "Archived"
+msgstr "Dogodila se greška tokom obrade ovog plaćanja."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#, python-format
+msgid "Are you sure you want to delete this payment method?"
+msgstr "Jeste li sigurni da želite obrisati ovu metodu plaćanja?"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
+msgstr ""
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_asiapay
+msgid "Asiapay"
+msgstr "Asiapay"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__auth_msg
+msgid "Authorize Message"
+msgstr "Autoriziraj poruku"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_authorize
+msgid "Authorize.net"
+msgstr "Authorize.net"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
+msgid "Authorized"
+msgstr "Autorizovano"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Availability"
+msgstr "Raspoloživost"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+#, python-format
+msgid "Bank"
+msgstr "Banka"
+
+#. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Bank Account"
+msgstr "Račun banke"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
+msgid "Bank Name"
+msgstr "Naziv banke"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
+msgid "Callback Document Model"
+msgstr "Callback Document Model"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
+msgid "Callback Done"
+msgstr "Callback Završeno"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
+msgid "Callback Hash"
+msgstr "Callback Hash"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
+msgid "Callback Method"
+msgstr "Callback metoda"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
+msgid "Callback Record ID"
+msgstr "Callback Record ID"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+#, python-format
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
+msgid "Canceled"
+msgstr "Otkazano"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__cancel_msg
+msgid "Canceled Message"
+msgstr "Otkazana poruka"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Canceled operations"
+msgstr "Otkazane operacije"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
+msgid "Capture Amount Manually"
+msgstr "Capture Amount Manually"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Capture Transaction"
+msgstr "Uhvati transakciju"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
+msgid ""
+"Capture the amount from Odoo, when the delivery is completed.\n"
+"Use this if you want to charge your customers cards only when\n"
+"you are sure you can ship the goods to them."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
+msgid "Child Transactions"
+msgstr "Child Transakcije"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+msgid "Choose a payment method"
+msgstr "Ne može podesiti plaćanje"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "City"
+msgstr "Grad"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Click here to be redirected to the confirmation page."
+msgstr "Ne može podesiti plaćanje."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid "Close"
+msgstr "Zatvori"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__code
+#: model:ir.model.fields,field_description:payment.field_payment_token__provider_code
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_code
+msgid "Code"
+msgstr "Šifra"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__color
+msgid "Color"
+msgstr "Boja"
+
+#. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Communication"
+msgstr "Proverite ovde"
+
+#. module: payment
+#: model:ir.model,name:payment.model_res_company
+msgid "Companies"
+msgstr "Preduzeća"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__company_id
+#: model:ir.model.fields,field_description:payment.field_payment_provider__company_id
+#: model:ir.model.fields,field_description:payment.field_payment_token__company_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__company_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Company"
+msgstr "Kompanija"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Configuration"
+msgstr "Konfiguracija"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#, python-format
+msgid "Confirm Deletion"
+msgstr "Potvrdi brisanje"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
+msgid "Confirmed"
+msgstr "Potvrđeno"
+
+#. module: payment
+#: model:ir.model,name:payment.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
+msgid "Corresponding Module"
+msgstr "Odgovarajući modul"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__available_country_ids
+msgid "Countries"
+msgstr "Zemlje"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Country"
+msgstr "Država"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
+msgid "Create Token"
+msgstr "Povratni URL nakon plaćanja"
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+msgid "Create a new payment provider"
+msgstr "Kreiraj novog pružatelja naplate"
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_token
+msgid "Create a new payment token"
+msgstr "Konfiguriši svoje metode plaćanja."
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_icon
+msgid "Create a payment icon"
+msgstr "Kreiraj novi obrađivač plaćanja"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_provider__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_uid
+msgid "Created by"
+msgstr "Stripe tajni ključ"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_provider__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_token__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
+msgid "Created on"
+msgstr "Stripe javni ključ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid "Creating a transaction from an archived token is forbidden."
+msgstr "Creating a Transakcija from an archived token is forbidden."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Credentials"
+msgstr "Kreiraj novu transakciju plaćanja"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_stripe
+msgid "Credit & Debit Card"
+msgstr "Kreditne i debitne kartice"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_razorpay
+msgid "Credit & Debit Card, UPI (Powered by Razorpay)"
+msgstr "Kreditne i debitne kartice, UPI (pogonjeno od Razorpay)"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
+msgid "Credit & Debit card (via Stripe)"
+msgstr "Kreditna ili Debitna kartica (Putem Stripe)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_adyen
+msgid "Credit Card (powered by Adyen)"
+msgstr "Kreditna kartica (Adyen)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_asiapay
+msgid "Credit Card (powered by Asiapay)"
+msgstr "Kreditna kartica (pogonjeno od Asiapay)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_authorize
+msgid "Credit Card (powered by Authorize)"
+msgstr "Kreditna kartica (Authorize)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_buckaroo
+msgid "Credit Card (powered by Buckaroo)"
+msgstr "Kreditna kartica (Buckaroo)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_mercado_pago
+msgid "Credit Card (powered by Mercado Pago)"
+msgstr "Kreditna kartica (pogonjeno od Mercado Pago)"
+
+#. module: payment
+#: model:payment.provider,display_as:payment.payment_provider_sips
+msgid "Credit Card (powered by Sips)"
+msgstr "Kreditna kartica (Sips)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
+#: model:ir.model.fields,field_description:payment.field_payment_provider__main_currency_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
+msgid "Custom payment instructions"
+msgstr "Prilagođene upute za plaćanje"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
+msgid "Customer"
+msgstr "Kupac"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__sequence
+msgid "Define the display order"
+msgstr "Define the Prikaži Narudžba"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_demo
+msgid "Demo"
+msgstr "Demo"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__display_as
+msgid "Description of the provider for customers"
+msgstr "Opis of the provider for Kupci"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Disabled"
+msgstr "Polje koje se koristi za čuvanje greške i/ili validacionih poruka za informaciju"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Dismiss"
+msgstr "Odbaciti"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__display_as
+msgid "Displayed as"
+msgstr "Prikazano kao"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__done
+msgid "Done"
+msgstr "Gotovo"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
+msgid "Done Message"
+msgstr "Poruka za završeno"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__draft
+msgid "Draft"
+msgstr "U pripremi"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_email_account
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+msgid "Email"
+msgstr "E-Mail"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__enabled
+msgid "Enabled"
+msgstr "Omogućeno"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Enterprise"
+msgstr "Kreiraj sačuvane podatke plaćanja"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
+msgid "Error"
+msgstr "Greška"
+
+#. module: payment
+#. odoo-javascript
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#, python-format
+msgid "Error: %s"
+msgstr "Error: %s"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
+msgid "Express Checkout Form Template"
+msgstr "Predložak obrasca za brzu naplatu"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
+msgid "Express Checkout Supported"
+msgstr "Express Checkout Supported"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Failed operations"
+msgstr "Neuspješno Operacije"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Fees"
+msgstr "Nadoknada"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_fees
+msgid "Fees Supported"
+msgstr "Naknade podržane"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Fiksne domaće provizije"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Fiksne internacionalne provizije"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_flutterwave
+msgid "Flutterwave"
+msgstr "Flutterwave"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "From"
+msgstr "Od"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
+msgid "Full Only"
+msgstr "Samo u potpunosti"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid "Generate Payment Link"
+msgstr "Greška:"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
+msgid "Generate Sales Payment Link"
+msgstr "Generirajte link za plaćanje prodaje"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Group By"
+msgstr "Grupiši po"
+
+#. module: payment
+#: model:ir.model,name:payment.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP usmjeravanje"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
+msgid "Has Multiple Providers"
+msgstr "Ima višestruke pružatelje"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
+msgid "Has the payment been post-processed"
+msgstr "Referenca TX-a kako je sačuvana u bazi podataka obrađivača"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
+msgid "Help Message"
+msgstr "Poruka za pomoć"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__paypal_user_type__new_user
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__paypal_user_type__new_user
+msgid "I don't have a Paypal account"
+msgstr "Nemam Paypal račun"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__paypal_user_type__existing_user
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__paypal_user_type__existing_user
+msgid "I have a Paypal account"
+msgstr "Imam Paypal račun"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__id
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:payment.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__id
+#: model:ir.model.fields,field_description:payment.field_payment_token__id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__id
+msgid "ID"
+msgstr "Obrađivači"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_link_wizard__payment_provider_selection
+msgid ""
+"If a specific payment provider is selected, customers will only be allowed "
+"to pay via this one. If 'All' is selected, customers can pay via any "
+"available payment provider."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "If not defined, the provider name will be used."
+msgstr "If not defined, the provider Naziv will be used."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "If the payment hasn't been confirmed you can contact us."
+msgstr "If the Plaćanje hasn't been Potvrđeno you can contact us."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_methods
+msgid ""
+"If you believe that it is an error, please contact the website "
+"administrator."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__image
+#: model:ir.model.fields,field_description:payment.field_payment_provider__image_128
+msgid "Image"
+msgstr "Slika"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
+msgid "Image displayed on the payment form"
+msgstr "Image displayed on the Plaćanje form"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__state
+msgid ""
+"In test mode, a fake payment is processed through a test payment interface.\n"
+"This mode is advised when setting up the provider."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
+msgid "Inline Form Template"
+msgstr "Predložak ugrađenog obrasca"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Install"
+msgstr "Instalacija"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
+msgid "Installation State"
+msgstr "Status instalacije"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+msgid "Installed"
+msgstr "Instalirano"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Internal server error"
+msgstr "Interna pogreška poslužitelja"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
+msgid "Is Post-processed"
+msgstr "Naknadno obrađeno"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#, python-format
+msgid "It is currently linked to the following documents:"
+msgstr "It is currently linked to the Sljedeći documents:"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__just_done
+msgid "Just done"
+msgstr "Upravo završeno"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
+msgid "Landing Route"
+msgstr "Landing Route"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
+msgid "Language"
+msgstr "Jezik"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_provider____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Paypal PDT token"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
+msgid "Last State Change Date"
+msgstr "3D bezbedni HTML"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_provider__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
+msgid "Last Updated by"
+msgstr "Zadnji ažurirao"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_provider__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_token__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
+msgid "Last Updated on"
+msgstr "Zadnje ažurirano"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"Making a request to the provider is not possible because the provider is "
+"disabled."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
+msgid "Manage payment methods"
+msgstr "Neispravan token pronađen! Token partner %s != %s"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
+msgid "Manual"
+msgstr "Ručno"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
+msgid "Manual Capture Supported"
+msgstr "Manual Capture Supported"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
+msgid "Maximum Amount"
+msgstr "Maksimalan iznos"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_mercado_pago
+msgid "Mercado Pago"
+msgstr "Mercado Pago"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_seller_account
+msgid "Merchant Account ID"
+msgstr "ID računa trgovca"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Message"
+msgstr "Poruka"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_name
+msgid "Method"
+msgstr "Metoda"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_mollie
+msgid "Mollie"
+msgstr "Mollie"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#, python-format
+msgid "Multiple payment options selected"
+msgstr "Upravljaj vašim metodama plaćanja"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__name
+#: model:ir.model.fields,field_description:payment.field_payment_provider__name
+#: model_terms:ir.ui.view,arch_db:payment.payment_icon_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Name"
+msgstr "Naziv:"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
+msgid "No Provider Set"
+msgstr "Pružatelj nije postavljen"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+#, python-format
+msgid ""
+"No manual payment method could be found for this company. Please create one "
+"from the Payment Provider menu."
+msgstr ""
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "No payment has been processed."
+msgstr "Nedostaje referenca partnera pri pokušaju kreiranja novog tokena plaćanja"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#, python-format
+msgid "No payment option selected"
+msgstr "No Plaćanje option selected"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
+msgid "Not done"
+msgstr "Nije gotovo"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
+msgid "Not verified"
+msgstr "Nije pronađen obrađivač plaćanja."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__module_to_buy
+msgid "Odoo Enterprise Module"
+msgstr "Odoo Enterprise modul"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
+msgid "Offline payment by token"
+msgstr "Offline plaćanje putem tokena"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
+#, python-format
+msgid "Ok"
+msgstr "Nije izabran metod plaćanja"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
+msgid "Online direct payment"
+msgstr "Online direktno plaćanje"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
+msgid "Online payment by token"
+msgstr "Online plaćanje tokenom"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
+msgid "Online payment with redirection"
+msgstr "Online plaćanje sa preusmjeravanjem"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
+#, python-format
+msgid "Only administrators can access this data."
+msgstr "Samo administratori imaju pristup ovim podacima."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid "Only authorized transactions can be captured."
+msgstr "Only authorized Transakcije can be captured."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid "Only authorized transactions can be voided."
+msgstr "Only authorized Transakcije can be voided."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid "Only confirmed transactions can be refunded."
+msgstr "Only Potvrđeno Transakcije can be refunded."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
+msgid "Operation"
+msgstr "Operacija"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Operations in progress"
+msgstr "Samo draft/autorizovane transakcije mogu biti otkazane."
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
+msgid "Other"
+msgstr "Drugo"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr "PDT token identiteta"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
+msgid "Partial"
+msgstr "Djelomično"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_token__partner_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Partner"
+msgstr "Partner"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
+msgid "Partner Name"
+msgstr "Naziv partnera"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+msgid "Pay"
+msgstr "Samo transakcije koje imaju status hvatanja mogu biti uhvaćene."
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__paypal
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__paypal
+#: model:payment.provider,name:payment.payment_provider_paypal
+msgid "PayPal"
+msgstr "PayPal"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
+msgid "Payment Details"
+msgstr "Detalji plaćanja"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Payment Followup"
+msgstr "Plaćanje Followup"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Payment Form"
+msgstr "Plati sa PayPal"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_icon
+#: model_terms:ir.ui.view,arch_db:payment.payment_icon_form
+msgid "Payment Icon"
+msgstr "Ikona plaćanja"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_icon
+msgid "Payment Icons"
+msgstr "tx_url: URL transakcije za slanje forme"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_post_msg
+msgid "Payment Instructions"
+msgstr "Upute za plaćanje"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
+msgid "Payment Link"
+msgstr "Poveznica za plaćanje"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__payment_method
+msgid "Payment Method"
+msgstr "Metoda plaćanja"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_provider
+msgid "Payment Provider"
+msgstr "Pružatelj usluge naplate"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_provider
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
+msgid "Payment Providers"
+msgstr "tx_values: vrednosti transakcije"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_provider_ids
+msgid "Payment Providers Available"
+msgstr "Plaćanje Providers Dostupan"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
+msgid "Payment Ref"
+msgstr "Referenca plaćanja"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_token
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__token_id
+msgid "Payment Token"
+msgstr "Token plaćanja"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
+msgid "Payment Token Count"
+msgstr "Broj tokena plaćanja"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_token
+#: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_users__payment_token_ids
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_list
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+msgid "Payment Tokens"
+msgstr "user: trenutni korisnik browse zapis"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transakcija plaćanja"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.model.fields,field_description:payment.field_payment_token__transaction_ids
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
+msgid "Payment Transactions"
+msgstr "Transakcije plaćanja"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
+msgid "Payment Transactions Linked To Token"
+msgstr "Plaćanje Transakcije Linked To Token"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_token.py:0
+#, python-format
+msgid "Payment details saved on %(date)s"
+msgstr "Plati sa drugim obrađivačem plaćanja"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Payment provider"
+msgstr "Pružatelj naplate"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_provider_onboarding_wizard
+msgid "Payment provider onboarding wizard"
+msgstr "Čarobnjak za uvođenje obrađivača plaćanja"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_form
+msgid "Payments"
+msgstr "Plaćanje iz Odoo"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_user_type
+msgid "Paypal User Type"
+msgstr "Vrsta korisnika Paypal-a"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
+msgid "Pending"
+msgstr "Na čekanju"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__pending_msg
+msgid "Pending Message"
+msgstr "Poruka u toku"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#, python-format
+msgid "Please select a payment option."
+msgstr "Plaćanja neuspešna"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#, python-format
+msgid "Please select only one payment option."
+msgstr "Plaćanja primljena"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_link_wizard.py:0
+#, python-format
+msgid "Please set an amount smaller than %s."
+msgstr "Molimo izvršite plaćanje na <ul><li>Banka: %s</li><li>Broj računa: %s</li><li>Vlasnik računa: %s</li></ul>"
+
+#. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Please use the following transfer details"
+msgstr "Please use the Sljedeći transfer details"
+
+#. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Please use the order name as communication reference."
+msgstr "Please use the Narudžba Naziv as communication Referenca."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Please wait ..."
+msgstr "Molimo izaberite opciju za dodavanje novog metoda plaćanja."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "Processed by"
+msgstr "Obradio"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__provider_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Provider"
+msgstr "Provajder"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_reference
+msgid "Provider Reference"
+msgstr "Referenca davatelja usluga"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__provider_ids
+msgid "Providers"
+msgstr "Pružatelji"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_icon_form
+msgid "Providers list"
+msgstr "Popis pružatelja"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__is_published
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Published"
+msgstr "Objavljeno"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_razorpay
+msgid "Razorpay"
+msgstr "Razorpay"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Reason:"
+msgstr "Razlog:"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid "Reason: %s"
+msgstr "Razlog: %s"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__redirect_form_view_id
+msgid "Redirect Form Template"
+msgstr "Predložak obrasca za preusmjeravanje"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "Reference"
+msgstr "Referenca"
+
+#. module: payment
+#: model:ir.model.constraint,message:payment.constraint_payment_transaction_reference_uniq
+msgid "Reference must be unique!"
+msgstr "Referenca Mora be unique!"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
+#, python-format
+msgid "Refund"
+msgstr "Odobrenje"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Refunds"
+msgstr "Povrati"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
+msgid "Refunds Count"
+msgstr "Broj povraćaja"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
+msgid "Related Document ID"
+msgstr "Povezani ID dokumenta"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_model
+msgid "Related Document Model"
+msgstr "Povezani model dokumenta"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
+msgid "SEPA Direct Debit"
+msgstr "SEPA direktno terećenje"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.manage
+msgid "Save Payment Method"
+msgstr "Spremi metodu plaćanja"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+msgid "Save my payment details"
+msgstr "Spremi moje podatke plaćanja"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Saving your payment method, please wait..."
+msgstr "Preusmeravanje na sajt obrađivača"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Select countries. Leave empty to make available everywhere."
+msgstr "Select countries. Leave empty to make Dostupan everywhere."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
+msgid "Selected onboarding payment method"
+msgstr "Selected onboarding Plaćanje method"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_icon__sequence
+#: model:ir.model.fields,field_description:payment.field_payment_provider__sequence
+msgid "Sequence"
+msgstr "Sekvenca"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#, python-format
+msgid "Server Error"
+msgstr "Serverska greška"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Server error:"
+msgstr "Greška poslužitelja:"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_express_checkout
+msgid "Show Allow Express Checkout"
+msgstr "Prikaži Allow Express Checkout"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_tokenization
+msgid "Show Allow Tokenization"
+msgstr "Prikaži Allow Tokenization"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_auth_msg
+msgid "Show Auth Msg"
+msgstr "Prikaži Auth Msg"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_cancel_msg
+msgid "Show Cancel Msg"
+msgstr "Prikaži Otkaži Msg"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_credentials_page
+msgid "Show Credentials Page"
+msgstr "Prikaži Credentials Page"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_done_msg
+msgid "Show Done Msg"
+msgstr "Prikaži Završeno Msg"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_icon_ids
+msgid "Show Payment Icon"
+msgstr "Prikaži Plaćanje Icon"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
+msgid "Show Pending Msg"
+msgstr "Prikaži Pending Msg"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__show_pre_msg
+msgid "Show Pre Msg"
+msgstr "Prikaži Pre Msg"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_sips
+msgid "Sips"
+msgstr "Slipovi"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
+msgid "Source Transaction"
+msgstr "Izvorna transakcija"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__state
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_state_id
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "State"
+msgstr "Županija"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__payment_provider_onboarding_state
+msgid "State of the onboarding payment provider step"
+msgstr "State of the onboarding Plaćanje provider step"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__state
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Status"
+msgstr "Status"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
+#: model:payment.provider,name:payment.payment_provider_stripe
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__payment_icon_ids
+msgid "Supported Payment Icons"
+msgstr "Podržane ikone plaćanja"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.manage
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Test Mode"
+msgstr "Testni način rada"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Token pristupa nije ispravan."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
+msgid "The child transactions of the source transaction."
+msgstr "The child Transakcije of the source Transakcija."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_token__payment_details
+msgid "The clear part of the payment method's payment details."
+msgstr "The clear part of the Plaćanje method's Plaćanje details."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__color
+msgid "The color of the card in kanban view"
+msgstr "The color of the card in kanban view"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__state_message
+msgid "The complementary information message about the state"
+msgstr "Dopunska informacija o stanju"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__available_country_ids
+msgid ""
+"The countries in which this payment provider is available. Leave blank to "
+"make it available in all countries."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__fees
+msgid "The fees amount; set by the system as it depends on the provider"
+msgstr "The fees Iznos; set by the system as it depends on the provider"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "The following fields must be filled: %s"
+msgstr "%s obrađivači plaćanja nisu dozvoljeni u ručnom modu hvatanja!"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__reference
+msgid "The internal reference of the transaction"
+msgstr "The internal Referenca of the Transakcija"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_icon__provider_ids
+msgid "The list of providers supporting this payment icon"
+msgstr "Ako je ostavite prazno, obrađivač plaćanja će biti dostupan za sve zemlje."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
+msgid "The main currency of the company, used to display monetary fields."
+msgstr "The main currency of the Kompanija, used to Prikaži monetary fields."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__maximum_amount
+msgid ""
+"The maximum payment amount that this payment provider is available for. "
+"Leave blank to make it available for any payment amount."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
+msgid "The message displayed if payment is authorized"
+msgstr "The Poruka displayed if Plaćanje is authorized"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
+msgid ""
+"The message displayed if the order is canceled during the payment process"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__done_msg
+msgid ""
+"The message displayed if the order is successfully done after the payment "
+"process"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
+msgid "The message displayed if the order pending after the payment process"
+msgstr "The Poruka displayed if the Narudžba pending after the Plaćanje process"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
+msgid "The message displayed to explain and help the payment process"
+msgstr "The Poruka displayed to explain and help the Plaćanje process"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid ""
+"The payment should either be direct, with redirection, or made by a token."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_token__provider_ref
+msgid "The provider reference of the token of the transaction"
+msgstr "The provider Referenca of the token of the Transakcija"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
+msgid "The provider reference of the transaction"
+msgstr "The provider Referenca of the Transakcija"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
+msgid "The route the user is redirected to after the transaction"
+msgstr "The route the Korisnik is redirected to after the Transakcija"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
+msgid "The source transaction of related refund transactions"
+msgstr "The source Transakcija of related refund Transakcije"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__code
+#: model:ir.model.fields,help:payment.field_payment_token__provider_code
+#: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
+msgid "The technical code of this payment provider."
+msgstr "Tehnički kod ovog pružaoca plaćanja."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
+msgid ""
+"The template rendering a form submitted to redirect the user when making a "
+"payment"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
+msgid "The template rendering the express payment methods' form."
+msgstr "The Šablon rendering the express Plaćanje methods' form."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
+msgid ""
+"The template rendering the inline payment form when making a direct payment"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__token_inline_form_view_id
+msgid ""
+"The template rendering the inline payment form when making a payment by "
+"token."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The transaction with reference %(ref)s for %(amount)s encountered an error "
+"(%(provider_name)s)."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The transaction with reference %(ref)s for %(amount)s has been authorized "
+"(%(provider_name)s)."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The transaction with reference %(ref)s for %(amount)s has been confirmed "
+"(%(provider_name)s)."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/wizards/payment_link_wizard.py:0
+#, python-format
+msgid "The value of the payment amount must be positive."
+msgstr "Transakcija %s sa %s za %s je na čekanju."
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
+msgid "There are no transactions to show"
+msgstr "Nema transakcija za prikaz."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "There is nothing to pay."
+msgstr "There is nothing to pay."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"This action will also archive %s tokens that are registered with this "
+"provider. Archiving tokens is irreversible."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
+msgid ""
+"This controls whether customers can save their payment methods as payment tokens.\n"
+"A payment token is an anonymous link to the payment method details saved in the\n"
+"provider's database, allowing the customer to reuse it for a next purchase."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
+msgid ""
+"This controls whether customers can use express payment methods. Express "
+"checkout enables customers to pay with Google Pay and Apple Pay from which "
+"address information is collected at payment."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_icon__image
+#: model:ir.model.fields,help:payment.field_payment_icon__image_payment_form
+msgid ""
+"This field holds the image used for this payment icon, limited to 64x64 px"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid ""
+"This partner has no email, which may cause issues with some payment providers.\n"
+"                     Setting an email for this partner is advised."
+msgstr ""
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "This payment has been canceled."
+msgstr "This Plaćanje has been canceled."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
+msgid "This payment method has been verified by our system."
+msgstr "This Plaćanje method has been verified by our system."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
+msgid "This payment method has not been verified by our system."
+msgstr "This Plaćanje method has not been verified by our system."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
+msgid "Token Inline Form Template"
+msgstr "Ugrađeni predložak obrasca s tokenom"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
+msgid "Tokenization Supported"
+msgstr "Tokenization Supported"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"Transaction authorization is not supported by the following payment "
+"providers: %s"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
+msgid "Type of Refund Supported"
+msgstr "Tip podržanog povraćaja"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Unable to contact the Odoo server."
+msgstr "Ovaj šablon renderuje dugme obrađivača sa svim potrebnim vrednostima.\n                                            Renderovan je sa qWeb sa sledećim kontekstom evaluacije:"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.checkout
+#: model_terms:ir.ui.view,arch_db:payment.manage
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Unpublished"
+msgstr "Ova transakcija je otkazana."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+msgid "Upgrade"
+msgstr "Nadogradi"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
+msgid "Validation of the payment method"
+msgstr "Validacija načina plaćanja"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Variabilne domaće provizije (u procentima)"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "Variable fees must always be positive and below 100%."
+msgstr "Variable fees Mora always be positive and Ispod 100%."
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Varijabilne internacionalne provizije (u procentima)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__verified
+msgid "Verified"
+msgstr "Potvrđeno"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Void Transaction"
+msgstr "Poništi transakciju"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Waiting for operations to process"
+msgstr "Waiting for Operacije to process"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "Warning"
+msgstr "Upozorenje"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#, python-format
+msgid "Warning!"
+msgstr "Upozorenje!"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#: code:addons/payment/static/src/js/manage_form.js:0
+#, python-format
+msgid "We are not able to delete your payment method."
+msgstr "We are not able to Obriši your Plaćanje method."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "We are not able to find your payment, but don't worry."
+msgstr "Nismo u mogućnosti da dodamo vaš metod plaćanja trenutno."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/payment_form_mixin.js:0
+#, python-format
+msgid "We are not able to process your payment."
+msgstr "Nismo u mogućnosti da dodamo vaš metod plaćanja trenutno.</p>"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/manage_form.js:0
+#, python-format
+msgid "We are not able to save your payment method."
+msgstr "We are not able to Sačuvaj your Plaćanje method."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/js/post_processing.js:0
+#, python-format
+msgid "We are processing your payment, please wait ..."
+msgstr "We are processing your Plaćanje, please wait ..."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "We are waiting for the payment provider to confirm the payment."
+msgstr "We are waiting for the Plaćanje provider to confirm the Plaćanje."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
+msgid ""
+"Whether a payment token should be created when post-processing the "
+"transaction"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
+msgid "Whether the callback has already been executed"
+msgstr "Whether the callback has already been executed"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__is_published
+msgid ""
+"Whether the provider is visible on the website or not. Tokens remain "
+"functional but are only visible on manage forms."
+msgstr ""
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_transfer
+msgid "Wire Transfer"
+msgstr "Žičani prenos"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"You cannot delete the payment provider %s; disable it or uninstall it "
+"instead."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "You cannot publish a disabled provider."
+msgstr "Nije moguće objaviti onemogućenog pružatelja naplate."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "You do not have access to this payment token."
+msgstr "Nismo u mogućnosti da obradimo vaše plaćanje."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "You should receive an email confirming your payment in a few minutes."
+msgstr "Možete kliknuti ovde da budete preusmereni na stranicu potvrde."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "You will be notified when the payment is confirmed."
+msgstr "Biti ćete obaviješteni kad plaćanje bude potvrđeno."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "You will be notified when the payment is fully confirmed."
+msgstr "Biti ćete obaviješteni kad plaćanje bude potpuno potvrđeno."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_adyen
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_aps
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_asiapay
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_authorize
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_buckaroo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_sips
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
+#, python-format
+msgid "Your payment has been authorized."
+msgstr "Bićete preusmereni na Paypal sajt nakon klika na dugme plaćanja."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_adyen
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_aps
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_asiapay
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_authorize
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_buckaroo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_sips
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_transfer
+#, python-format
+msgid "Your payment has been cancelled."
+msgstr "Bićete preusmereni na Sips sajt nakon klika na dugme plaćanja."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Your payment has been processed."
+msgstr "Vaša narudžba je obrađena."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Your payment has been received but need to be confirmed manually."
+msgstr "Vaša narudžba se obrađuje, molimo sačekajte ..."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_adyen
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_aps
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_asiapay
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_authorize
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_buckaroo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#, python-format
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#: model_terms:payment.provider,done_msg:payment.payment_provider_adyen
+#: model_terms:payment.provider,done_msg:payment.payment_provider_aps
+#: model_terms:payment.provider,done_msg:payment.payment_provider_asiapay
+#: model_terms:payment.provider,done_msg:payment.payment_provider_authorize
+#: model_terms:payment.provider,done_msg:payment.payment_provider_buckaroo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
+#: model_terms:payment.provider,done_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
+#: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit
+#: model_terms:payment.provider,done_msg:payment.payment_provider_sips
+#: model_terms:payment.provider,done_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
+#, python-format
+msgid "Your payment has been successfully processed. Thank you!"
+msgstr "Vaše plaćanje je uspješno obrađeno. Hvala!"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Your payment has not been processed yet."
+msgstr "Vaše plaćanje još nije obrađeno."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Your payment is being processed, please wait..."
+msgstr "Your Plaćanje is being Obrađeno, please wait..."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Your payment is in pending state."
+msgstr "Vaše plaćanje je u tijeku."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Your payment method has been saved."
+msgstr "Your Plaćanje method has been saved."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "ZIP"
+msgstr "Broj pošte"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
+msgid "Zip"
+msgstr "Broj pošte"
+
+#. module: payment
+#: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
+#: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
+msgid "payment: post-process transactions"
+msgstr "Plaćanje: post-process Transakcije"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
+msgid "provider"
+msgstr "pružatelj"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.icon_list
+msgid "show less"
+msgstr "npr. Detalji vaše kreditne kartice su pogrešni. Molimo proverite."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.icon_list
+msgid "show more"
+msgstr "partner_values: specifične vrednosti o kupcu, na primer iz forme dostave"
