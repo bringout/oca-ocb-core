@@ -2,4 +2,4 @@
 
 This addon depends on:
 
-- [portal](../../odoo-bringout-oca-ocb-portal)
+- [portal](../../../../../oca-ocb-website/odoo-bringout-oca-ocb-portal)
