@@ -2,6 +2,6 @@
 
 This addon depends on:
 
-- [base_setup](../../../../odoo-bringout-oca-ocb-base_setup)
-- [membership](../../../../../oca-ocb-vertical-industry/odoo-bringout-oca-ocb-membership)
-- [event](../../../../odoo-bringout-oca-ocb-event)
+- [base_setup](https://github.com/bringout/oca-ocb-core)
+- [membership](https://github.com/bringout/oca-ocb-vertical-industry)
+- [event](https://github.com/bringout/oca-ocb-core)

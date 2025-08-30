@@ -2,5 +2,5 @@
 
 This addon depends on:
 
-- [mail_bot](../../../../odoo-bringout-oca-ocb-mail_bot)
-- [hr](../../../../../oca-ocb-hr/odoo-bringout-oca-ocb-hr)
+- [mail_bot](https://github.com/bringout/oca-ocb-core)
+- [hr](https://github.com/bringout/oca-ocb-hr)

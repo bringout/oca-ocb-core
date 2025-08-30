@@ -2,5 +2,5 @@
 
 This addon depends on:
 
-- [event](../../../../odoo-bringout-oca-ocb-event)
-- [crm](../../../../../oca-ocb-crm/odoo-bringout-oca-ocb-crm)
+- [event](https://github.com/bringout/oca-ocb-core)
+- [crm](https://github.com/bringout/oca-ocb-crm)

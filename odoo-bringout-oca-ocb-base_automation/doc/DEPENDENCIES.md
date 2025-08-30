@@ -3,5 +3,5 @@
 This addon depends on:
 
 - base
-- [resource](../../../../odoo-bringout-oca-ocb-resource)
-- [mail](../../../../odoo-bringout-oca-ocb-mail)
+- [resource](https://github.com/bringout/oca-ocb-core)
+- [mail](https://github.com/bringout/oca-ocb-core)

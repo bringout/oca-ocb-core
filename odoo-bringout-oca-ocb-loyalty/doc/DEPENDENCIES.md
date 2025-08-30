@@ -2,4 +2,4 @@
 
 This addon depends on:
 
-- [product](../../../../../oca-ocb-sale/odoo-bringout-oca-ocb-product)
+- [product](https://github.com/bringout/oca-ocb-sale)
