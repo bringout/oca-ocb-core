@@ -2,5 +2,5 @@
 
 This addon depends on:
 
-- [mrp](https://github.com/bringout/oca-ocb-mrp/tree/2829be3138755add397c1199488f39925393daaf/odoo-bringout-oca-ocb-mrp)
-- [purchase_stock](https://github.com/bringout/oca-ocb-warehouse/tree/f7f834405e26b3f1b9786c04a4a652fd978abd14/odoo-bringout-oca-ocb-purchase_stock)
+- [mrp](https://github.com/bringout/oca-ocb-mrp/tree/a9922818dc8c042d608e806bb98ba5cabc0e778a/odoo-bringout-oca-ocb-mrp)
+- [purchase_stock](https://github.com/bringout/oca-ocb-warehouse/tree/3e067eb100be2ddf743af8f74cbee58df4eb6bb0/odoo-bringout-oca-ocb-purchase_stock)

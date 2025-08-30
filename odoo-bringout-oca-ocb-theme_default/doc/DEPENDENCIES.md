@@ -2,4 +2,4 @@
 
 This addon depends on:
 
-- [website](https://github.com/bringout/oca-ocb-website/tree/d4409ad46e8021555059a5fb87598f6d572458a3/odoo-bringout-oca-ocb-website)
+- [website](https://github.com/bringout/oca-ocb-website/tree/727598c0d7a6eb8cd7e5356eb5e2c1b21390e0c1/odoo-bringout-oca-ocb-website)

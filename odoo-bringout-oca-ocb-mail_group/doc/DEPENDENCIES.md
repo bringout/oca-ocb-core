@@ -2,5 +2,5 @@
 
 This addon depends on:
 
-- [mail](https://github.com/bringout/oca-ocb-core/tree/11a704b400b8bf0763643e267bf123858a85c9e6/odoo-bringout-oca-ocb-mail)
-- [portal](https://github.com/bringout/oca-ocb-website/tree/d4409ad46e8021555059a5fb87598f6d572458a3/odoo-bringout-oca-ocb-portal)
+- [mail](https://github.com/bringout/oca-ocb-core/tree/b8a76bf74d4ef2767aa510ddf3515d4c8c9b941d/odoo-bringout-oca-ocb-mail)
+- [portal](https://github.com/bringout/oca-ocb-website/tree/727598c0d7a6eb8cd7e5356eb5e2c1b21390e0c1/odoo-bringout-oca-ocb-portal)
