@@ -2,4 +2,4 @@
 
 This addon depends on:
 
-- [iap_mail](https://github.com/bringout/oca-ocb-technical/tree/c402a40a06d0be2fb22b984c2e7c0bd673fa7f80/odoo-bringout-oca-ocb-iap_mail)
+- [iap_mail](https://github.com/bringout/oca-ocb-technical/tree/823c95bfc5f4d48617544ec3cb80ffb889f07f55/odoo-bringout-oca-ocb-iap_mail)
