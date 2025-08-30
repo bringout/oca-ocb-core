@@ -6,7 +6,7 @@ This package provides the Odoo core runtime and the `base` addon. It sits at the
 flowchart LR
     subgraph CLI
       OBIN[`odoo-bin`]
-      CLI[CLI Entrypoints]
+      CLIEP[CLI Entrypoints]
     end
     subgraph Core
       CONF[Config Loader]
@@ -35,7 +35,7 @@ flowchart LR
       IRCONF[ir.config_parameter]
     end
 
-    OBIN --> CLI --> CONF --> SRV --> REG
+    OBIN --> CLIEP --> CONF --> SRV --> REG
     SRV --> HTTP -->|routes| BaseControllers
     SRV --> CRON
     REG --> ORM --> PG
