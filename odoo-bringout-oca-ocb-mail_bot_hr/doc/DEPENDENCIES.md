@@ -2,5 +2,5 @@
 
 This addon depends on:
 
-- [mail_bot](https://github.com/bringout/oca-ocb-core/tree/b3e6fb998e53b9eb1bc9669d992017616c2bd7b3/odoo-bringout-oca-ocb-mail_bot)
-- [hr](https://github.com/bringout/oca-ocb-hr/tree/dc1405e12dbe76ffb119a0feb323b56ae2c58522/odoo-bringout-oca-ocb-hr)
+- [mail_bot](https://github.com/bringout/oca-ocb-core/tree/5ee733c06c9a8113e4e3fc04ef7a99c41bc0b970/odoo-bringout-oca-ocb-mail_bot)
+- [hr](https://github.com/bringout/oca-ocb-hr/tree/eb4b035c2ae30a52ff9d18cecd2b898328021028/odoo-bringout-oca-ocb-hr)
