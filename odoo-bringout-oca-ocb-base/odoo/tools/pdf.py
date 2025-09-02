@@ -16,7 +16,7 @@ from reportlab.pdfgen import canvas
 try:
     # class were renamed in PyPDF2 > 2.0
     # https://pypdf2.readthedocs.io/en/latest/user/migration-1-to-2.html#classes
-    from PyPDF2 import PdfReader
+    from PyPDF2 import PdfReader, PdfWriter
     import PyPDF2
     # monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
     # https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
@@ -26,12 +26,34 @@ try:
                 kwargs["strict"] = True  # maintain the default
             kwargs = {k:v for k, v in kwargs.items() if k in ('strict', 'stream')}
             super().__init__(*args, **kwargs)
+            
+        def getNumPages(self):
+            """Compatibility method for old API"""
+            return len(self.pages)
+            
+        def getPage(self, page_num):
+            """Compatibility method for old API"""
+            return self.pages[page_num]
+
+    class PdfFileWriter(PdfWriter):
+        def _addObject(self, obj):
+            return self._add_object(obj)
+            
+        def addPage(self, page):
+            """Compatibility method for old API"""
+            return self.add_page(page)
+            
+        def addMetadata(self, metadata):
+            """Compatibility method for old API"""
+            return self.add_metadata(metadata)
 
     PyPDF2.PdfFileReader = PdfFileReader
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-    PdfFileWriter._addObject = PdfFileWriter._add_object
+    PyPDF2.PdfFileWriter = PdfFileWriter
 except ImportError:
-    from PyPDF2 import PdfFileWriter, PdfFileReader
+    try:
+        from PyPDF2 import PdfFileWriter, PdfFileReader
+    except ImportError:
+        from PyPDF2 import PdfWriter as PdfFileWriter, PdfReader as PdfFileReader
 
 from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
 
@@ -65,10 +87,15 @@ DictionaryObject.get = _unwrapping_get
 class BrandedFileWriter(PdfFileWriter):
     def __init__(self):
         super().__init__()
-        self.addMetadata({
+        # Use new API method if available, fall back to old API
+        metadata = {
             '/Creator': "Odoo",
             '/Producer': "Odoo",
-        })
+        }
+        if hasattr(self, 'add_metadata'):
+            self.add_metadata(metadata)
+        else:
+            self.addMetadata(metadata)
 
 
 PdfFileWriter = BrandedFileWriter
