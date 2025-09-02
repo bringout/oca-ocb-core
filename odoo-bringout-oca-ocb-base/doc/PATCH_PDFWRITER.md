@@ -43,6 +43,18 @@ This patch provides backward compatibility by creating wrapper classes that:
 
 ## Implementation Details
 
+### Critical PyPDF2 3.x Fix - Page Content Copying
+
+In PyPDF2 3.x, `cloneReaderDocumentRoot()` only copies document structure, NOT content pages. This was causing 327-byte PDFs with no actual content. Modules using this method now include explicit page copying:
+
+```python
+writer.cloneReaderDocumentRoot(reader)
+# Copy all pages from the reader to the writer (required for PyPDF2 3.x)
+for page_num in range(reader.getNumPages()):
+    page = reader.getPage(page_num)
+    writer.addPage(page)
+```
+
 ### Compatibility Import Pattern
 ```python
 try:
