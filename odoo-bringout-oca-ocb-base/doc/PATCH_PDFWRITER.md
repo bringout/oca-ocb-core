@@ -19,6 +19,7 @@ In PyPDF2 3.0.0, several classes and methods were deprecated and removed:
 - `getPage(n)` → `pages[n]`
 - `appendPagesFromReader()` → `append_pages_from_reader()`
 - `_addObject()` → `_add_object()`
+- `cloneReaderDocumentRoot()` → `clone_reader_document_root()`
 
 ## Solution
 
@@ -79,6 +80,7 @@ except ImportError:
 | `PdfFileReader.getNumPages()` | `len(PdfReader.pages)` | ✅ Wrapped |
 | `PdfFileReader.getPage()` | `PdfReader.pages[]` | ✅ Wrapped |
 | `PdfFileWriter.appendPagesFromReader()` | `PdfWriter.append_pages_from_reader()` | ✅ Wrapped |
+| `PdfFileWriter.cloneReaderDocumentRoot()` | `PdfWriter.clone_reader_document_root()` | ✅ Wrapped |
 
 ## Testing
 

@@ -46,6 +46,10 @@ try:
         def addMetadata(self, metadata):
             """Compatibility method for old API"""
             return self.add_metadata(metadata)
+            
+        def cloneReaderDocumentRoot(self, reader):
+            """Compatibility method for old API"""
+            return self.clone_reader_document_root(reader)
 
     PyPDF2.PdfFileReader = PdfFileReader
     PyPDF2.PdfFileWriter = PdfFileWriter
