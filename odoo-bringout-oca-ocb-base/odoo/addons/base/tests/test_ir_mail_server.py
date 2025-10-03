@@ -9,7 +9,7 @@ from unittest.mock import patch
 import psycopg2.errors
 
 from odoo import tools
-from odoo.addons.base.tests import test_mail_examples
+from odoo.addons.base.tests import mail_examples
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.tests import tagged, users
 from odoo.tests.common import TransactionCase
@@ -40,7 +40,7 @@ class EmailConfigCase(TransactionCase):
     @patch.dict(config.options, {"email_from": "settings@example.com"})
     def test_default_email_from(self):
         """ Email from setting is respected and comes from configuration. """
-        message = self.env["ir.mail_server"].build_email(
+        message = self.env["ir.mail_server"]._build_email__(
             False, "recipient@example.com", "Subject",
             "The body of an email",
         )
@@ -108,8 +108,8 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             'content',
             '<p>content</p>',
             '<head><meta content="text/html; charset=utf-8" http-equiv="Content-Type"></head><body><p>content</p></body>',
-            test_mail_examples.MISC_HTML_SOURCE,
-            test_mail_examples.QUOTE_THUNDERBIRD_HTML,
+            mail_examples.MISC_HTML_SOURCE,
+            mail_examples.QUOTE_THUNDERBIRD_HTML,
         ]
         expected_list = [
             'content',
@@ -119,7 +119,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             'On 01/05/2016 10:24 AM, Raoul\nPoilvache wrote:\n\n* Test reply. The suite. *\n\n--\nRaoul Poilvache\n\nTop cool !!!\n\n--\nRaoul Poilvache',
         ]
         for body, expected in zip(bodies, expected_list):
-            message = self.env['ir.mail_server'].build_email(
+            message = self.env['ir.mail_server']._build_email__(
                 'john.doe@from.example.com',
                 'destinataire@to.example.com',
                 body=body,
@@ -151,6 +151,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
     def test_mail_server_get_test_email_from(self):
         """ Test the email used to test the mail server connection. Check
         from_filter parsing / default fallback value. """
+        self.env.user.email = 'mitchell.admin@example.com'
         test_server = self.env['ir.mail_server'].create({
             'from_filter': 'example_2.com, example_3.com',
             'name': 'Test Server',
@@ -258,7 +259,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 with self.subTest(mail_from=mail_from, provide_smtp=provide_smtp):
                     with self.mock_smtplib_connection():
                         if provide_smtp:
-                            smtp_session = IrMailServer.connect(smtp_from=mail_from)
+                            smtp_session = IrMailServer._connect__(smtp_from=mail_from)
                             message = self._build_email(mail_from=mail_from)
                             IrMailServer.send_email(message, smtp_session=smtp_session)
                         else:
@@ -283,7 +284,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         for provide_smtp in [False, True]:
             with self.mock_smtplib_connection():
                 if provide_smtp:
-                    smtp_session = IrMailServer.connect(smtp_from='"Name" <test@unknown_domain.com>')
+                    smtp_session = IrMailServer._connect__(smtp_from='"Name" <test@unknown_domain.com>')
                     message = self._build_email(mail_from='"Name" <test@unknown_domain.com>')
                     IrMailServer.send_email(message, smtp_session=smtp_session)
                 else:
@@ -317,7 +318,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             mail_server, smtp_from = IrMailServer._find_mail_server(email_from='"Name" <test@unknown_domain.com>')
             self.assertEqual(mail_server, context_server)
             self.assertEqual(smtp_from, "notification@context.example.com")
-            smtp_session = IrMailServer.connect(smtp_from=smtp_from)
+            smtp_session = IrMailServer._connect__(smtp_from=smtp_from)
             message = self._build_email(mail_from='"Name" <test@unknown_domain.com>')
             IrMailServer.send_email(message, smtp_session=smtp_session)
 
@@ -401,7 +402,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 with self.subTest(mail_from=mail_from, provide_smtp=provide_smtp):
                     with self.mock_smtplib_connection():
                         if provide_smtp:
-                            smtp_session = IrMailServer.connect(smtp_from=mail_from)
+                            smtp_session = IrMailServer._connect__(smtp_from=mail_from)
                             message = self._build_email(mail_from=mail_from)
                             IrMailServer.send_email(message, smtp_session=smtp_session)
                         else:
@@ -482,7 +483,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         attachments = [('test.eml', eml_content, 'message/rfc822')]
 
         # Build the email with the .eml attachment
-        message = IrMailServer.build_email(
+        message = IrMailServer._build_email__(
             email_from='john.doe@from.example.com',
             email_to='destinataire@to.example.com',
             subject='Subject with .eml attachment',

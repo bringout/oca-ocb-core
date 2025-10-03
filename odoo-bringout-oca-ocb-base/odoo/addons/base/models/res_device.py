@@ -5,7 +5,7 @@ from datetime import datetime
 import logging
 
 from odoo import api, fields, models, tools
-from odoo.http import GeoIP, request, root
+from odoo.http import GeoIP, request, root, STORED_SESSION_BYTES
 from odoo.tools import SQL, OrderedSet, unique
 from odoo.tools.translate import _
 from .res_users import check_identity
@@ -34,13 +34,8 @@ class ResDeviceLog(models.Model):
     is_current = fields.Boolean("Current Device", compute="_compute_is_current")
     linked_ip_addresses = fields.Text("Linked IP address", compute="_compute_linked_ip_addresses")
 
-    def init(self):
-        self.env.cr.execute(SQL("""
-            CREATE INDEX IF NOT EXISTS res_device_log__composite_idx ON %s
-            (user_id, session_identifier, platform, browser, last_activity, id) WHERE revoked = False
-        """,
-            SQL.identifier(self._table)
-        ))
+    _composite_idx = models.Index("(user_id, session_identifier, platform, browser, last_activity, id) WHERE revoked IS NOT TRUE")
+    _revoked_idx = models.Index("(revoked) WHERE revoked IS NOT TRUE")
 
     def _compute_display_name(self):
         for device in self:
@@ -68,8 +63,8 @@ class ResDeviceLog(models.Model):
             )
 
     def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
-        if field_name == 'is_current' and request:
-            return SQL("session_identifier = %s DESC", request.session.sid[:42])
+        if field_name == 'is_current' and request and request.session.sid:
+            return SQL("session_identifier = %s DESC", request.session.sid[:STORED_SESSION_BYTES])
         return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
 
     def _is_mobile(self, platform):
@@ -92,7 +87,7 @@ class ResDeviceLog(models.Model):
 
         geoip = GeoIP(trace['ip_address'])
         user_id = request.session.uid
-        session_identifier = request.session.sid[:42]
+        session_identifier = request.session.sid[:STORED_SESSION_BYTES]
 
         if self.env.cr.readonly:
             self.env.cr.rollback()
@@ -136,9 +131,34 @@ class ResDeviceLog(models.Model):
         """)
         _logger.info("GC device logs delete %d entries", self.env.cr.rowcount)
 
+    @api.autovacuum
+    def __update_revoked(self):
+        """
+            Set the field ``revoked`` to ``True`` for ``res.device.log``
+            for which the session file no longer exists on the filesystem.
+        """
+        device_logs_by_session_identifier = {}
+        for session_identifier, device_logs in self.env['res.device.log']._read_group(
+            domain=[('revoked', '=', False)],
+            groupby=['session_identifier'],
+            aggregates=['id:recordset'],
+        ):
+            device_logs_by_session_identifier[session_identifier] = device_logs
+
+        revoked_session_identifiers = root.session_store.get_missing_session_identifiers(
+            device_logs_by_session_identifier.keys()
+        )
+        device_logs_to_revoke = self.env['res.device.log'].concat(*map(
+            device_logs_by_session_identifier.get,
+            revoked_session_identifiers
+        ))
+        # Initial run may take 5-10 minutes due to many non-revoked sessions,
+        # marking them enables index use on ``revoked IS NOT TRUE``.
+        device_logs_to_revoke.sudo().write({'revoked': True})
+
 
 class ResDevice(models.Model):
-    _name = "res.device"
+    _name = 'res.device'
     _inherit = ["res.device.log"]
     _description = "Devices"
     _auto = False
@@ -184,9 +204,9 @@ class ResDevice(models.Model):
                             D2.last_activity > D.last_activity
                             OR (D2.last_activity = D.last_activity AND D2.id > D.id)
                         )
-                        AND D2.revoked = False
+                        AND D2.revoked IS NOT TRUE
                 )
-                AND D.revoked = False
+                AND D.revoked IS NOT TRUE
         """
 
     @property
