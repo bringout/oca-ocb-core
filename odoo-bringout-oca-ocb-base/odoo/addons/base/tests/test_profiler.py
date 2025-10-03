@@ -646,7 +646,7 @@ class TestSyncRecorder(BaseCase):
 
         # map stack frames to their function name, and check
         stacks_methods = [[frame[2] for frame in stack] for stack in stacks]
-        self.assertEqual(stacks_methods, [
+        self.assertEqual(stacks_methods[:-2], [
             ['a'],
             ['a', 'b'],
             ['a'],
@@ -657,8 +657,6 @@ class TestSyncRecorder(BaseCase):
             ['a', 'c'],
             ['a'],
             [],
-            ['__exit__'],
-            ['__exit__', 'stop']  # could be removed by cleaning two last frames, or removing last frames only contained in profiler.py
         ])
 
         # map stack frames to their line number, and check

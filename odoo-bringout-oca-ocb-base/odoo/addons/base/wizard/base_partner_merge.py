@@ -213,6 +213,27 @@ class MergePartnerAutomatic(models.TransientModel):
 
         self.env.flush_all()
 
+        # Company-dependent fields
+        try:
+            with self._cr.savepoint():
+                params = {
+                    'destination_id': f'res.partner,{dst_partner.id}',
+                    'source_ids': tuple(f'res.partner,{src}' for src in src_partners.ids),
+                }
+                self._cr.execute("""
+            UPDATE ir_property AS _ip1
+            SET res_id = %(destination_id)s
+            WHERE res_id IN %(source_ids)s
+            AND NOT EXISTS (
+                 SELECT
+                 FROM ir_property AS _ip2
+                 WHERE _ip2.res_id = %(destination_id)s
+                 AND _ip2.fields_id = _ip1.fields_id
+                 AND _ip2.company_id IS NOT DISTINCT FROM _ip1.company_id
+            )""", params)
+        except psycopg2.Error:
+            _logger.info(f'Could not move ir.property from partners: {src_partners.ids} to partner: {dst_partner.id}')
+
     def _get_summable_fields(self):
         """ Returns the list of fields that should be summed when merging partners
         """
@@ -243,7 +264,9 @@ class MergePartnerAutomatic(models.TransientModel):
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
-                        if column in summable_fields and values.get(column):
+                        if field.type == 'reference':
+                            values[column] = item[column]
+                        elif column in summable_fields and values.get(column):
                             values[column] += write_serializer(item[column])
                         else:
                             values[column] = write_serializer(item[column])
@@ -293,6 +316,10 @@ class MergePartnerAutomatic(models.TransientModel):
             child_ids |= Partner.search([('id', 'child_of', [partner_id.id])]) - partner_id
         if partner_ids & child_ids:
             raise UserError(_("You cannot merge a contact with one of his parent."))
+
+        # check if the list of partners to merge are linked to more than one user
+        if len(partner_ids.with_context(active_test=False).user_ids) > 1:
+            raise UserError(_("You cannot merge contacts linked to more than one user even if only one is active."))
 
         if extra_checks and len(set(partner.email for partner in partner_ids)) > 1:
             raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))

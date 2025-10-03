@@ -56,26 +56,6 @@ class TestHttpCase(HttpCase):
                 console_log_count += 1
         self.assertEqual(console_log_count, 1)
 
-    @patch.dict(config.options, {"dev_mode": []})
-    def test_404_assets(self):
-        IrAttachment = self.env['ir.attachment']
-        # Ensure no assets exists
-        IrAttachment.search([('url', '=like', '/web/assets/%')]).unlink()
-        response = self.url_open('/NoSuchPage')
-        self.assertEqual(response.status_code, 404, "Page should not exist")
-        self.assertFalse(
-            IrAttachment.search_count([('url', '=like', '/web/assets/%')]),
-            "Assets should not have been generated because the transaction was rolled back"
-            # Well, they should - but this is part of a compromise to avoid
-            # being in the way of the read-only mode.
-        )
-        response = self.url_open('/')
-        self.assertEqual(response.status_code, 200, "Page should exist")
-        self.assertTrue(
-            IrAttachment.search_count([('url', '=like', '/web/assets/%')]),
-            "Assets should have been generated"
-        )
-
 
 @tagged('-at_install', 'post_install')
 class TestChromeBrowser(HttpCase):
@@ -85,7 +65,6 @@ class TestChromeBrowser(HttpCase):
         with patch.dict(config.options, {'screencasts': screencasts_dir, 'screenshots': config['screenshots']}):
             self.browser = ChromeBrowser(self)
         self.addCleanup(self.browser.stop)
-        self.addCleanup(self.browser.clear)
 
     def test_screencasts(self):
         self.browser.start_screencast()
@@ -131,8 +110,8 @@ class TestRequestRemaining(HttpCase):
                 # but this makes the test more clear and robust
                 _logger.info('B finish')
 
-        self.env.registry.clear_caches()
-        self.addCleanup(self.env.registry.clear_caches)
+        self.env.registry.clear_cache('routing')
+        self.addCleanup(self.env.registry.clear_cache, 'routing')
 
         def late_request_thread():
             # In some rare case the request may arrive after _wait_remaining_requests.
@@ -147,9 +126,9 @@ class TestRequestRemaining(HttpCase):
 
     def test_requests_b(self):
         self.env.cr.execute('SELECT 1')
-        with self.assertLogs('odoo.tests.common', level="ERROR") as lc:
+        with self.assertLogs('odoo.tests.common') as lc:
             self.main_lock.release()
             _logger.info('B started, waiting for A to finish')
             self.thread_a.join()
-        self.assertEqual(lc.output, ['ERROR:odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. (required "/base/tests/test_http_case.py:TestRequestRemaining.test_requests_b", got "/base/tests/test_http_case.py:TestRequestRemaining.test_requests_a")'])
+        self.assertEqual(lc.output[0].split(':', 1)[1], 'odoo.tests.common:Request with path /web/concurrent has been ignored during test as it it does not contain the test_cursor cookie or it is expired. (required "/base/tests/test_http_case.py:TestRequestRemaining.test_requests_b", got "/base/tests/test_http_case.py:TestRequestRemaining.test_requests_a")')
         self.env.cr.fetchall()

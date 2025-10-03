@@ -46,6 +46,15 @@ class FormatAddressMixin(models.AbstractModel):
     _name = "format.address.mixin"
     _description = 'Address Format'
 
+    def _extract_fields_from_address(self, address_line):
+        """
+        Extract keys from the address line.
+        For example, if the address line is "zip: %(zip)s, city: %(city)s.",
+        this method will return ['zip', 'city'].
+        """
+        address_fields = ['%(' + field + ')s' for field in ADDRESS_FIELDS + ('state_code', 'state_name')]
+        return sorted([field[2:-2] for field in address_fields if field in address_line], key=address_line.index)
+
     def _view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
         address_view_id = self.env.company.country_id.address_view_id.sudo()
@@ -69,12 +78,13 @@ class FormatAddressMixin(models.AbstractModel):
         elif address_format and not self._context.get('no_address_format'):
             # For the zip, city and state fields we need to move them around in order to follow the country address format.
             # The purpose of this is to help the user by following a format he is used to.
-            city_line = [line.split(' ') for line in address_format.split('\n') if 'city' in line]
+            city_line = [self._extract_fields_from_address(line) for line in address_format.split('\n') if 'city' in line]
             if city_line:
-                field_order = [field.replace('%(', '').replace(')s', '') for field in city_line[0]]
+                field_order = city_line[0]
                 for address_node in arch.xpath("//div[hasclass('o_address_format')]"):
-                    concerned_fields = {'zip', 'city', 'state_id'} - {field_order[0]}
-                    current_field = address_node.find(f".//field[@name='{field_order[0]}']")
+                    first_field = field_order[0] if field_order[0] not in ('state_code', 'state_name') else 'state_id'
+                    concerned_fields = {'zip', 'city', 'state_id'} - {first_field}
+                    current_field = address_node.find(f".//field[@name='{first_field}']")
                     # First loop into the fields displayed in the address_format, and order them.
                     for field in field_order[1:]:
                         if field in ('state_code', 'state_name'):
@@ -132,35 +142,27 @@ class PartnerCategory(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('You can not create recursive tags.'))
 
-    def name_get(self):
+    @api.depends('parent_id')
+    def _compute_display_name(self):
         """ Return the categories' display name, including their direct
             parent by default.
-
-            If ``context['partner_category_display']`` is ``'short'``, the short
-            version of the category name (without the direct parent) is used.
-            The default is the long version.
         """
-        if self._context.get('partner_category_display') == 'short':
-            return super(PartnerCategory, self).name_get()
-
-        res = []
         for category in self:
             names = []
             current = category
             while current:
-                names.append(current.name)
+                names.append(current.name or "")
                 current = current.parent_id
-            res.append((category.id, ' / '.join(reversed(names))))
-        return res
+            category.display_name = ' / '.join(reversed(names))
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
+    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
+        domain = domain or []
         if name:
-            # Be sure name_search is symetric to name_get
+            # Be sure name_search is symetric to display_name
             name = name.split(' / ')[-1]
-            args = [('name', operator, name)] + args
-        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+            domain = [('name', operator, name)] + domain
+        return self._search(domain, limit=limit, order=order)
 
 
 class PartnerTitle(models.Model):
@@ -176,9 +178,13 @@ class Partner(models.Model):
     _description = 'Contact'
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
-    _order = "display_name ASC, id DESC"
+    _order = "complete_name ASC, id DESC"
+    _rec_names_search = ['complete_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
     _allow_sudo_commands = False
-    _rec_names_search = ['display_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
+    _check_company_domain = models.check_company_domain_parent_of
+
+    # the partner types that must be added to a partner's complete name, like "Delivery"
+    _complete_name_displayed_types = ('invoice', 'delivery', 'other')
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
@@ -201,13 +207,12 @@ class Partner(models.Model):
         return values
 
     name = fields.Char(index=True, default_export_compatible=True)
-    display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
-    translated_display_name = fields.Char(compute='_compute_translated_display_name')
+    complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
-    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
+    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
@@ -217,7 +222,7 @@ class Partner(models.Model):
                                "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
                                "Anywhere else, time values are computed according to the time offset of your web client.")
 
-    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
+    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
     user_id = fields.Many2one(
         'res.users', string='Salesperson',
         compute='_compute_user_id',
@@ -242,14 +247,12 @@ class Partner(models.Model):
         [('contact', 'Contact'),
          ('invoice', 'Invoice Address'),
          ('delivery', 'Delivery Address'),
-         ('private', 'Private Address'),
          ('other', 'Other Address'),
         ], string='Address Type',
         default='contact',
         help="- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
-             "- Invoice Address : Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
-             "- Delivery Address : Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
-             "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
+             "- Invoice Address: Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+             "- Delivery Address: Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
              "- Other: Other address for the company (e.g. subsidiary, ...)")
     # address fields
     street = fields.Char()
@@ -345,19 +348,24 @@ class Partner(models.Model):
             return "base/static/img/money.png"
         return super()._avatar_get_placeholder_path()
 
-    @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name', 'commercial_company_name')
-    def _compute_display_name(self):
-        # retrieve name_get() without any fancy feature
-        names = dict(self.with_context({}).name_get())
-        for partner in self:
-            partner.display_name = names.get(partner.id)
+    def _get_complete_name(self):
+        self.ensure_one()
 
-    @api.depends_context('lang')
-    @api.depends('display_name')
-    def _compute_translated_display_name(self):
-        names = dict(self.with_context(lang=self.env.lang).name_get())
+        displayed_types = self._complete_name_displayed_types
+        type_description = dict(self._fields['type']._description_selection(self.env))
+
+        name = self.name or ''
+        if self.company_name or self.parent_id:
+            if not name and self.type in displayed_types:
+                name = type_description[self.type]
+            if not self.is_company:
+                name = f"{self.commercial_company_name or self.sudo().parent_id.name}, {name}"
+        return name.strip()
+
+    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name', 'commercial_company_name')
+    def _compute_complete_name(self):
         for partner in self:
-            partner.translated_display_name = names.get(partner.id)
+            partner.complete_name = partner.with_context({})._get_complete_name()
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
@@ -441,8 +449,6 @@ class Partner(models.Model):
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
-        if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
-            view_id = self.env.ref('base.view_partner_simple_form').id
         arch, view = super()._get_view(view_id, view_type, **options)
         company = self.env.company
         if company.country_id.vat_label:
@@ -501,7 +507,7 @@ class Partner(models.Model):
 
     @api.onchange('state_id')
     def _onchange_state(self):
-        if self.state_id.country_id:
+        if self.state_id.country_id and self.country_id != self.state_id.country_id:
             self.country_id = self.state_id.country_id
 
     @api.onchange('email')
@@ -605,6 +611,13 @@ class Partner(models.Model):
         extended by inheriting classes. """
         return ['vat', 'company_registry', 'industry_id']
 
+    @api.model
+    def _company_dependent_commercial_fields(self):
+        return [
+            fname for fname in self._commercial_fields()
+            if self._fields[fname].company_dependent
+        ]
+
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,
         as if they were related fields """
@@ -612,7 +625,29 @@ class Partner(models.Model):
         if commercial_partner != self:
             sync_vals = commercial_partner._update_fields_values(self._commercial_fields())
             self.write(sync_vals)
+            self._company_dependent_commercial_sync()
             self._commercial_sync_to_children()
+
+    def _company_dependent_commercial_sync(self):
+        company_dependent_commercial_field_ids = [
+            self.env['ir.model.fields']._get(self._name, fname).id
+            for fname in self._company_dependent_commercial_fields()
+        ]
+        if company_dependent_commercial_field_ids:
+            parent_properties = self.env['ir.property'].search([
+                ('fields_id', 'in', company_dependent_commercial_field_ids),
+                ('res_id', '=', f'res.partner,{self.commercial_partner_id.id}'),
+                # value was already assigned for current company
+                ('company_id', '!=', self.env.company.id),
+            ])
+            # prevent duplicate keys by removing existing properties from the partner
+            self.env['ir.property'].search([
+                ('fields_id', 'in', company_dependent_commercial_field_ids),
+                ('res_id', '=', f'res.partner,{self.id}'),
+                ('company_id', '!=', self.env.company.id),
+            ]).unlink()
+            for prop in parent_properties:
+                prop.copy({'res_id': f'res.partner,{self.id}'})
 
     def _commercial_sync_to_children(self):
         """ Handle sync of commercial fields to descendants """
@@ -849,69 +884,25 @@ class Partner(models.Model):
                 'target': 'new',
                 }
 
-    def _get_contact_name(self, partner, name):
-        return "%s, %s" % (partner.commercial_company_name or partner.sudo().parent_id.name, name)
-
-    def _get_name(self):
-        """ Utility method to allow name_get to be overrided without re-browse the partner """
-        partner = self
-        name = partner.name or ''
-
-        if partner.company_name or partner.parent_id:
-            if not name and partner.type in ['invoice', 'delivery', 'other']:
-                types = dict(self._fields['type']._description_selection(self.env))
-                name = types[partner.type]
-            if not partner.is_company:
-                name = self._get_contact_name(partner, name)
-        if self._context.get('show_address_only'):
-            name = partner._display_address(without_company=True)
-        if self._context.get('show_address'):
-            name = name + "\n" + partner._display_address(without_company=True)
-        name = re.sub(r'\s+\n', '\n', name)
-        if self._context.get('partner_show_db_id'):
-            name = "%s (%s)" % (name, partner.id)
-        if self._context.get('address_inline'):
-            splitted_names = name.split("\n")
-            name = ", ".join([n for n in splitted_names if n.strip()])
-        if self._context.get('show_email') and partner.email:
-            name = "%s <%s>" % (name, partner.email)
-        if self._context.get('html_format'):
-            name = name.replace('\n', '<br/>')
-        if self._context.get('show_vat') and partner.vat:
-            name = "%s ‒ %s" % (name, partner.vat)
-        return name.strip()
-
-    def name_get(self):
-        res = []
+    @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
+    @api.depends_context('show_address', 'partner_show_db_id', 'address_inline', 'show_email', 'show_vat', 'lang')
+    def _compute_display_name(self):
         for partner in self:
-            name = partner._get_name()
-            res.append((partner.id, name))
-        return res
+            name = partner.with_context(lang=self.env.lang)._get_complete_name()
+            if partner._context.get('show_address'):
+                name = name + "\n" + partner._display_address(without_company=True)
+            name = re.sub(r'\s+\n', '\n', name)
+            if partner._context.get('partner_show_db_id'):
+                name = f"{name} ({partner.id})"
+            if partner._context.get('address_inline'):
+                splitted_names = name.split("\n")
+                name = ", ".join([n for n in splitted_names if n.strip()])
+            if partner._context.get('show_email') and partner.email:
+                name = f"{name} <{partner.email}>"
+            if partner._context.get('show_vat') and partner.vat:
+                name = f"{name} ‒ {partner.vat}"
 
-    def _parse_partner_name(self, text):
-        """ Parse partner name (given by text) in order to find a name and an
-        email. Supported syntax:
-
-          * Raoul <raoul@grosbedon.fr>
-          * "Raoul le Grand" <raoul@grosbedon.fr>
-          * Raoul raoul@grosbedon.fr (strange fault tolerant support from
-            df40926d2a57c101a3e2d221ecfd08fbb4fea30e now supported directly
-            in 'email_split_tuples';
-
-        Otherwise: default, everything is set as the name. Starting from 13.3
-        returned email will be normalized to have a coherent encoding.
-         """
-        name, email = '', ''
-        split_results = tools.email_split_tuples(text)
-        if split_results:
-            name, email = split_results[0]
-
-        if email:
-            email = tools.email_normalize(email)
-        else:
-            name, email = text, ''
-
-        return name, email
+            partner.display_name = name.strip()
 
     @api.model
     def name_create(self, name):
@@ -926,26 +917,15 @@ class Partner(models.Model):
             context = dict(self._context)
             context.pop('default_type')
             self = self.with_context(context)
-        name, email = self._parse_partner_name(name)
-        if self._context.get('force_email') and not email:
+        name, email_normalized = tools.parse_contact_from_email(name)
+        if self._context.get('force_email') and not email_normalized:
             raise ValidationError(_("Couldn't create contact without email address!"))
 
-        create_values = {self._rec_name: name or email}
-        if email:  # keep default_email in context
-            create_values['email'] = email
+        create_values = {self._rec_name: name or email_normalized}
+        if email_normalized:  # keep default_email in context
+            create_values['email'] = email_normalized
         partner = self.create(create_values)
-        return partner.name_get()[0]
-
-    @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        """ Override search() to always show inactive children when searching via ``child_of`` operator. The ORM will
-        always call search() with a simple domain of the form [('parent_id', 'in', [ids])]. """
-        # a special ``domain`` is set on the ``child_ids`` o2m to bypass this logic, as it uses similar domain expressions
-        if len(args) == 1 and len(args[0]) == 3 and args[0][:2] == ('parent_id','in') \
-                and args[0][2] != [False]:
-            self = self.with_context(active_test=False)
-        return super(Partner, self)._search(args, offset=offset, limit=limit, order=order,
-                                            count=count, access_rights_uid=access_rights_uid)
+        return partner.id, partner.display_name
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -961,17 +941,17 @@ class Partner(models.Model):
         if not email:
             raise ValueError(_('An email is required for find_or_create to work'))
 
-        parsed_name, parsed_email = self._parse_partner_name(email)
-        if not parsed_email and assert_valid_email:
+        parsed_name, parsed_email_normalized = tools.parse_contact_from_email(email)
+        if not parsed_email_normalized and assert_valid_email:
             raise ValueError(_('A valid email is required for find_or_create to work properly.'))
 
-        partners = self.search([('email', '=ilike', parsed_email)], limit=1)
+        partners = self.search([('email', '=ilike', parsed_email_normalized)], limit=1)
         if partners:
             return partners
 
-        create_values = {self._rec_name: parsed_name or parsed_email}
-        if parsed_email:  # keep default_email in context
-            create_values['email'] = parsed_email
+        create_values = {self._rec_name: parsed_name or parsed_email_normalized}
+        if parsed_email_normalized:  # keep default_email in context
+            create_values['email'] = parsed_email_normalized
         return self.create(create_values)
 
     def _get_gravatar_image(self, email):
@@ -1106,7 +1086,7 @@ class Partner(models.Model):
         """
         States = self.env['res.country.state']
         states_ids = {vals['state_id'] for vals in vals_list if vals.get('state_id')}
-        state_to_country = States.search([('id', 'in', list(states_ids))]).read(['country_id'])
+        state_to_country = States.search_read([('id', 'in', list(states_ids))], ['country_id'])
         for vals in vals_list:
             if vals.get('state_id'):
                 country_id = next(c['country_id'][0] for c in state_to_country if c['id'] == vals.get('state_id'))
@@ -1120,6 +1100,15 @@ class Partner(models.Model):
     def _get_country_name(self):
         return self.country_id.name or ''
 
+    def _get_all_addr(self):
+        self.ensure_one()
+        return [{
+            'contact_type': self.street,
+            'street': self.street,
+            'zip': self.zip,
+            'city': self.city,
+            'country': self.country_id.code,
+        }]
 
 
 class ResPartnerIndustry(models.Model):
