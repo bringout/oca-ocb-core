@@ -11,9 +11,11 @@ import threading
 import re
 import functools
 
-from psycopg2 import sql
+from psycopg2 import OperationalError
 
 from odoo import tools
+from odoo.tools import SQL
+
 
 _logger = logging.getLogger(__name__)
 
@@ -146,6 +148,9 @@ class Collector:
             self._processed = True
         return self._entries
 
+    def summary(self):
+        return f"{'='*10} {self.name} {'='*10} \n Entries: {len(self._entries)}"
+
 
 class SQLCollector(Collector):
     """
@@ -169,6 +174,13 @@ class SQLCollector(Collector):
             'start': query_start,
             'time': query_time,
         })
+
+    def summary(self):
+        total_time = sum(entry['time'] for entry in self._entries) or 1
+        sql_entries = ''
+        for entry in self._entries:
+            sql_entries += f"\n{'-' * 100}'\n'{entry['time']}  {'*' * int(entry['time'] / total_time * 100)}'\n'{entry['full_query']}"
+        return super().summary() + sql_entries
 
 
 class PeriodicCollector(Collector):
@@ -515,7 +527,7 @@ class Profiler:
     Will save sql and async stack trace by default.
     """
     def __init__(self, collectors=None, db=..., profile_session=None,
-                 description=None, disable_gc=False, params=None):
+                 description=None, disable_gc=False, params=None, log=False):
         """
         :param db: database name to use to save results.
             Will try to define database automatically by default.
@@ -537,6 +549,8 @@ class Profiler:
         self.filecache = {}
         self.params = params or {}  # custom parameters usable by collectors
         self.profile_id = None
+        self.log = log
+        self.sub_profilers = []
         self.entry_count_limit = int(self.params.get("entry_count_limit", 0))   # the limit could be set using a smarter way
         self.done = False
 
@@ -621,18 +635,23 @@ class Profiler:
                     for collector in self.collectors:
                         if collector.entries:
                             values[collector.name] = json.dumps(collector.entries)
-                    query = sql.SQL("INSERT INTO {}({}) VALUES %s RETURNING id").format(
-                        sql.Identifier("ir_profile"),
-                        sql.SQL(",").join(map(sql.Identifier, values)),
+                    query = SQL(
+                        "INSERT INTO ir_profile(%s) VALUES %s RETURNING id",
+                        SQL(",").join(map(SQL.identifier, values)),
+                        tuple(values.values()),
                     )
-                    cr.execute(query, [tuple(values.values())])
+                    cr.execute(query)
                     self.profile_id = cr.fetchone()[0]
                     _logger.info('ir_profile %s (%s) created', self.profile_id, self.profile_session)
+        except OperationalError:
+            _logger.exception("Could not save profile in database")
         finally:
             if self.disable_gc:
                 gc.enable()
             if self.params:
                 del self.init_thread.profiler_params
+            if self.log:
+                _logger.info(self.summary())
 
     def _get_cm_proxy(self):
         return _Nested(self)
@@ -694,6 +713,13 @@ class Profiler:
             "duration": self.duration,
             "collectors": {collector.name: collector.entries for collector in self.collectors},
         }, indent=4)
+
+    def summary(self):
+        result = ''
+        for profiler in [self, *self.sub_profilers]:
+            for collector in profiler.collectors:
+                result += f'\n{self.description}\n{collector.summary()}'
+        return result
 
 
 class _Nested:

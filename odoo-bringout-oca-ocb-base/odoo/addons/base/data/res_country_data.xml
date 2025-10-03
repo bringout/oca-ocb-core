@@ -180,6 +180,7 @@
         <record id="bn" model="res.country">
             <field name="name">Brunei Darussalam</field>
             <field name="code">bn</field>
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(country_name)s'"  name="address_format" />
             <field name="currency_id" ref="BND" />
             <field eval="673" name="phone_code" />
         </record>
@@ -1104,6 +1105,7 @@
             <field name="code">om</field>
             <field name="currency_id" ref="OMR" />
             <field eval="968" name="phone_code" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" />
         </record>
         <record id="pa" model="res.country">
             <field name="name">Panama</field>
@@ -1111,6 +1113,7 @@
             <field name="currency_id" ref="PAB" />
             <field eval="507" name="phone_code" />
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" />
+            <field name="vat_label">RUC</field>
         </record>
         <record id="pe" model="res.country">
             <field name="name">Peru</field>
@@ -1143,6 +1146,7 @@
             <field name="code">pk</field>
             <field name="currency_id" ref="PKR" />
             <field eval="92" name="phone_code" />
+            <field name="vat_label">NTN</field>
         </record>
         <record id="pl" model="res.country">
             <field name="name">Poland</field>

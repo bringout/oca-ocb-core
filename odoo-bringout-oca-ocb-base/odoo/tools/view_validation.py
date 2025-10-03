@@ -238,6 +238,8 @@ def get_expression_field_names(expression):
                     ignore 'parent.truc' and 'parent.truc.id')
     :return: set(str)
     """
+    if not expression:
+        return set()
     item_ast = ast.parse(expression.strip(), mode='eval').body
     contextual_values = _get_expression_contextual_values(item_ast)
 
@@ -304,14 +306,12 @@ def relaxng(view_type):
     return _relaxng_cache[view_type]
 
 
-@validate('calendar', 'graph', 'pivot', 'search', 'tree', 'activity')
+@validate('calendar', 'graph', 'pivot', 'search', 'list', 'activity')
 def schema_valid(arch, **kwargs):
     """ Get RNG validator and validate RNG file."""
     validator = relaxng(arch.tag)
     if validator and not validator.validate(arch):
-        result = True
         for error in validator.error_log:
-            _logger.warning(tools.ustr(error))
-            result = False
-        return result
+            _logger.warning("%s", error)
+        return False
     return True
