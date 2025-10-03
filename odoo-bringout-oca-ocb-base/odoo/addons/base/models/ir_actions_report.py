@@ -24,33 +24,7 @@ from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
-try:
-    from PyPDF2 import PdfWriter, PdfReader
-    
-    # Create compatibility classes for old PyPDF2 API
-    class PdfFileWriter(PdfWriter):
-        def addPage(self, page):
-            return self.add_page(page)
-        
-        def addMetadata(self, metadata):
-            return self.add_metadata(metadata)
-        
-        def appendPagesFromReader(self, reader, after_page_append=None):
-            return self.append_pages_from_reader(reader, after_page_append)
-    
-    class PdfFileReader(PdfReader):
-        def getNumPages(self):
-            return len(self.pages)
-        
-        def getPage(self, page_num):
-            return self.pages[page_num]
-        
-        @property
-        def numPages(self):
-            return len(self.pages)
-
-except ImportError:
-    from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile

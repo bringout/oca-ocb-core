@@ -49,8 +49,7 @@ The kernel of Odoo, needed for all installation.
         'views/ir_qweb_widget_templates.xml',
         'views/ir_module_views.xml',
         'data/ir_module_category_data.xml',
-        # Removed enterprise proprietary module promos (to_buy) from base data
-        # 'data/ir_module_module.xml',
+        'data/ir_module_module.xml',
         'report/ir_module_reports.xml',
         'report/ir_module_report_templates.xml',
         'wizard/base_module_update_views.xml',
