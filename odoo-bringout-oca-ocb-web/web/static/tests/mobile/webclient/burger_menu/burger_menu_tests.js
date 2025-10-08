@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { click, legacyExtraNextTick } from "@web/../tests/helpers/utils";
+import { click, nextTick } from "@web/../tests/helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -17,6 +17,7 @@ import { companyService } from "@web/webclient/company_service";
 let serverData;
 
 const serviceRegistry = registry.category("services");
+const userMenuRegistry = registry.category("user_menuitems");
 
 QUnit.module("Burger Menu", {
     beforeEach() {
@@ -59,9 +60,7 @@ QUnit.test("Burger Menu on an App", async (assert) => {
 
     await createWebClient({ serverData });
     await click(document.body, ".o_navbar_apps_menu .dropdown-toggle");
-    await legacyExtraNextTick();
     await click(document.body, ".o_app:nth-of-type(2)");
-    await legacyExtraNextTick();
 
     assert.containsNone(document.body, ".o_burger_menu");
 
@@ -72,7 +71,7 @@ QUnit.test("Burger Menu on an App", async (assert) => {
         document.body.querySelector(".o_burger_menu nav.o_burger_menu_content li").textContent,
         "SubMenu"
     );
-    assert.hasClass(document.body.querySelector(".o_burger_menu_content"), "o_burger_menu_dark");
+    assert.hasClass(document.body.querySelector(".o_burger_menu_content"), "o_burger_menu_app");
 
     await click(document.body, ".o_burger_menu_topbar");
     assert.doesNotHaveClass(
@@ -81,7 +80,7 @@ QUnit.test("Burger Menu on an App", async (assert) => {
     );
 
     await click(document.body, ".o_burger_menu_topbar");
-    assert.hasClass(document.body.querySelector(".o_burger_menu_content"), "o_burger_menu_dark");
+    assert.hasClass(document.body.querySelector(".o_burger_menu_content"), "o_burger_menu_app");
 });
 
 QUnit.test("Burger Menu on an App without SubMenu", async (assert) => {
@@ -89,9 +88,7 @@ QUnit.test("Burger Menu on an App without SubMenu", async (assert) => {
 
     await createWebClient({ serverData });
     await click(document.body, ".o_navbar_apps_menu .dropdown-toggle");
-    await legacyExtraNextTick();
     await click(document.body, ".o_app:nth-of-type(2)");
-    await legacyExtraNextTick();
 
     assert.containsNone(document.body, ".o_burger_menu");
 
@@ -111,7 +108,6 @@ QUnit.test("Burger menu closes when an action is requested", async (assert) => {
     assert.containsOnce(document.body, ".o_burger_menu");
 
     await doAction(wc, 1);
-    await legacyExtraNextTick();
     assert.containsNone(document.body, ".o_burger_menu");
     assert.containsOnce(document.body, ".o_kanban_view");
 });
@@ -131,9 +127,7 @@ QUnit.test("Burger menu closes when click on menu item", async (assert) => {
     };
     await createWebClient({ serverData });
     await click(document.body, ".o_navbar_apps_menu .dropdown-toggle");
-    await legacyExtraNextTick();
     await click(document.body, ".o_app:nth-of-type(2)");
-    await legacyExtraNextTick();
 
     assert.containsNone(document.body, ".o_burger_menu");
 
@@ -144,7 +138,30 @@ QUnit.test("Burger menu closes when click on menu item", async (assert) => {
         "SubMenu"
     );
     await click(document.body, ".o_burger_menu nav.o_burger_menu_content li");
-    await legacyExtraNextTick();
-    await legacyExtraNextTick();
+    await nextTick();
     assert.containsNone(document.body, ".o_burger_menu");
+});
+
+QUnit.test("Burger menu closes when click on user menu item", async (assert) => {
+    userMenuRegistry.add("ring_item", function () {
+        return {
+            type: "item",
+            id: "ring",
+            description: "Ring",
+            callback: () => {
+                assert.step("callback ring_item");
+            },
+            sequence: 5,
+        };
+    });
+    await createWebClient({ serverData });
+
+    assert.containsNone(document.body, ".o_burger_menu");
+
+    await click(document.body, ".o_mobile_menu_toggle");
+    assert.containsOnce(document.body, ".o_burger_menu");
+
+    await click(document.body, ".o_burger_menu .o_user_menu_mobile a");
+    assert.containsNone(document.body, ".o_burger_menu");
+    assert.verifySteps(["callback ring_item"]);
 });

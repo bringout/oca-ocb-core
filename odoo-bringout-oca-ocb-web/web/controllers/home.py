@@ -41,7 +41,7 @@ class Home(http.Controller):
         # Ensure we have both a database and a user
         ensure_db()
         if not request.session.uid:
-            return request.redirect('/web/login', 303)
+            return request.redirect_query('/web/login', query=request.params, code=303)
         if kw.get('redirect'):
             return request.redirect(kw.get('redirect'), 303)
         if not security.check_session(request.session, request.env):
@@ -63,12 +63,16 @@ class Home(http.Controller):
             return request.redirect('/web/login?error=access')
 
     @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'])
-    def web_load_menus(self, unique):
+    def web_load_menus(self, unique, lang=None):
         """
         Loads the menus for the webclient
         :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
+        :param lang: language in which the menus should be loaded (only works if language is installed)
         :return: the menus (including the images in Base64)
         """
+        if lang:
+            request.update_context(lang=lang)
+
         menus = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
         body = json.dumps(menus, default=ustr)
         response = request.make_response(body, [
@@ -143,7 +147,7 @@ class Home(http.Controller):
         if request.env.user._is_system():
             uid = request.session.uid = odoo.SUPERUSER_ID
             # invalidate session token cache as we've changed the uid
-            request.env['res.users'].clear_caches()
+            request.env.registry.clear_cache()
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
         return request.redirect(self._login_redirect(uid))
@@ -165,11 +169,16 @@ class Home(http.Controller):
                    ('Cache-Control', 'no-store')]
         return request.make_response(data, headers, status=status)
 
+    @http.route(['/robots.txt'], type='http', auth="none")
+    def robots(self, **kwargs):
+        allowed_routes = self._get_allowed_robots_routes()
+        robots_content = ["User-agent: *", "Disallow: /"]
+        robots_content.extend(f"Allow: {route}" for route in allowed_routes)
+
+        return request.make_response("\n".join(robots_content), [('Content-Type', 'text/plain')])
+
     def _get_allowed_robots_routes(self):
         """Override this method to return a list of allowed routes.
-        By default this controller does not serve robots.txt so all routes
-        are implicitly open but we want any module to be able to append
-        to this list, in case the website module is installed.
 
         :return: A list of URL paths that should be allowed by robots.txt
               Examples: ['/social_instagram/', '/sitemap.xml', '/web/']

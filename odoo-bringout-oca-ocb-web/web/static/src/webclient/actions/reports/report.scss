@@ -6,7 +6,6 @@ $o-default-report-secondary-color: rgb(0, 0, 0) !default;
 // It doesn't support CSS's rgba function
 // We re-define here the .bg-[theme-colors] (and text)
 // In order to define them as a css rgb function
-// The gray scales are done in bootstrap_review.scss
 $report-extended-theme-colors: map-merge(
   $utilities-colors,
   (
@@ -21,6 +20,15 @@ $report-extended-theme-colors: map-merge(
     }
     .bg-#{$color-name} {
         background-color: RGB($color-value) if($enable-important-utilities, !important, null);
+    }
+}
+// Do a similar operation than before for grays.
+@each $color-name, $color-value in $grays {
+    .text-#{$color-name} {
+        color: $color-value if($enable-important-utilities, !important, null);
+    }
+    .bg-#{$color-name} {
+        background-color: $color-value if($enable-important-utilities, !important, null);
     }
 }
 
@@ -163,14 +171,13 @@ ol {
 }
 
 /* Checklist */
-ul {
-    &.o_checklist {
-        > li {
-            list-style: none;
-            position: relative;
-            margin-left: 20px;
-        }
-        > li:not(.oe-nested):before {
+ul.o_checklist {
+    > li {
+        list-style: none;
+        position: relative;
+        margin-left: 20px;
+
+        &:not(.oe-nested):before {
             content: '';
             position: absolute;
             left: -20px;
@@ -181,7 +188,7 @@ ul {
             border: 1px solid;
             cursor: pointer;
         }
-        > li.o_checked:after {
+        &.o_checked:after {
             content: "✓";
             transition: opacity .5s;
             position: absolute;
@@ -211,6 +218,40 @@ blockquote {
     -webkit-box-flex: 1 !important;
 }
 
+.report-wrapping-flexbox {
+    // overriding the `display` prop of `.row`
+    display: block !important;
+}
+
+.report-wrapping-flexbox > .col-auto {
+    float: left;
+}
+
+// Report footer need to support bootstrap columns (2, 3 and 4 columns)
+// Even if the width is smaller than the media querry limit from bootstrap.
+// This need come from the footer being editable via the Odoo editor.
+
+.footer {
+    .row {
+        -webkit-box-flex: 1 !important;
+    }
+    .col-lg-3 {
+        flex: 0 0 auto;
+        -webkit-box-flex: 1 !important;
+        width: 25%;
+    }
+    .col-lg-4 {
+        flex: 0 0 auto;
+        -webkit-box-flex: 1 !important;
+        width: 33.33333333%;
+    }
+    .col-lg-6 {
+        flex: 0 0 auto;
+        -webkit-box-flex: 1 !important;
+        width: 50%;
+    }
+}
+
 // Boostrap 5 introduces variable paddings for container which wkhtmltopdf doesn't seem to process, so we restore Boostrap 4's paddings for PDFs
 .container {
     padding-right: $container-padding-x;
@@ -229,4 +270,52 @@ blockquote {
 
 li.oe-nested {
     display: block;
+}
+
+.o_portal_address {
+    span[itemprop="telephone"] {
+        white-space: nowrap;
+        display: inline-block;
+    }
+}
+
+// Override html_editor display styles as it uses 'calc' which doesn't work with wkhtmltopdf
+.display-1-fs {
+    font-size: 6rem;
+}
+
+.display-2-fs {
+    font-size: 5.5rem;
+}
+
+.display-3-fs {
+    font-size: 4.5rem;
+}
+
+.display-4-fs {
+    font-size: 3.5rem;
+}
+
+.h1-fs {
+    font-size: 2.5rem;
+}
+
+.h2-fs {
+    font-size: 2rem;
+}
+
+.h3-fs {
+    font-size: 1.75rem;
+}
+
+.h4-fs {
+    font-size: 1.5rem;
+}
+
+.h5-fs {
+    font-size: 1.25rem;
+}
+
+.h6-fs {
+    font-size: 1rem;
 }

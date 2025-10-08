@@ -20,6 +20,11 @@ import { makeFakeUserService } from "../../helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
 
+async function exportAllAction(target) {
+    await click(target, ".o_cp_action_menus .dropdown-toggle");
+    await click(target, ".o_cp_action_menus .dropdown-item");
+}
+
 QUnit.module("ViewDialogs", (hooks) => {
     let serverData;
     let target;
@@ -253,12 +258,13 @@ QUnit.module("ViewDialogs", (hooks) => {
             mockRPC(route, args) {
                 if (args.method === "create") {
                     assert.strictEqual(args.model, "ir.exports");
+                    const [values] = args.args[0];
                     assert.strictEqual(
-                        args.args[0].name,
+                        values.name,
                         "Export template",
                         "the template name is correctly sent"
                     );
-                    return 2;
+                    return [2];
                 }
                 if (args.method === "search_read") {
                     assert.deepEqual(
@@ -774,6 +780,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             activateElement: () => {},
             deactivateElement: () => {},
             size: 4,
+            isSmall: true,
         };
         const fakeUIService = {
             start(env) {
@@ -987,7 +994,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             domain: [["bar", "!=", "glou"]],
         });
 
-        await click(target.querySelector(".o_list_export_xlsx"));
+        await exportAllAction(target);
     });
 
     QUnit.test("Direct export grouped list ", async function (assert) {
@@ -1039,7 +1046,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             domain: [["bar", "!=", "glou"]],
         });
 
-        await click(target.querySelector(".o_list_export_xlsx"));
+        await exportAllAction(target);
     });
 
     QUnit.test("Export dialog with duplicated fields", async function (assert) {
@@ -1084,6 +1091,40 @@ QUnit.module("ViewDialogs", (hooks) => {
             target.querySelector(".modal .o_export_field").textContent,
             "Foo",
             "the field to export corresponds to the field displayed in the list view"
+        );
+    });
+
+    QUnit.test("Export dialog: no column_invisible fields in default export list", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="bar" column_invisible="1"/>
+                </tree>`,
+            actionMenus: {},
+            mockRPC(route) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            }
+        });
+
+        await openExportDataDialog();
+        assert.containsOnce(
+            target,
+            ".modal .o_export_field",
+            "there is only one field in export field list."
+        );
+        assert.strictEqual(
+            target.querySelector(".modal .o_export_field").textContent,
+            "Foo",
+            "the field to export corresponds to the visible one in the list view"
         );
     });
 
@@ -1291,7 +1332,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                 "should have 3 th, 1 for selector, 1 for columns, 1 for optional columns"
             );
 
-            await click(target.querySelector(".o_list_export_xlsx"));
+            await exportAllAction(target);
         }
     );
 

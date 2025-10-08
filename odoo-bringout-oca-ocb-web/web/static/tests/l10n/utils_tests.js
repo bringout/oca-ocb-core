@@ -11,4 +11,5 @@ QUnit.test("pyToJsLocale", (assert) => {
     assert.strictEqual(pyToJsLocale("sr@latin"), "sr-Latn");
     assert.strictEqual(pyToJsLocale("sr_RS@latin"), "sr-Latn-RS");
     assert.strictEqual(pyToJsLocale("en-US"), "en-US");
+    assert.strictEqual(pyToJsLocale(undefined), "");
 });

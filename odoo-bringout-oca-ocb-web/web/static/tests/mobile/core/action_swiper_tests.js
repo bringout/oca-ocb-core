@@ -931,7 +931,7 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
         const { execRegisteredTimeouts } = mockTimeout();
         patchWithCleanup(ActionSwiper.prototype, {
             setup() {
-                this._super(...arguments);
+                super.setup();
                 onPatched(() => {
                     if (executingAction) {
                         assert.step("ActionSwiper patched");

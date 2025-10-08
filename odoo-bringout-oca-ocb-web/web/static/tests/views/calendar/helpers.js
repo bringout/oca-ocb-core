@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
 import { uiService } from "@web/core/ui/ui_service";
+import { createElement } from "@web/core/utils/xml";
 import { registry } from "@web/core/registry";
+import { Field } from "@web/views/fields/field";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, mount, nextTick, triggerEvent } from "../../helpers/utils";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
@@ -206,6 +208,8 @@ export const FAKE_FIELDS = {
 };
 
 function makeFakeModelState() {
+    const fakeFieldNode = createElement("field", { name: "name" });
+    const fakeModels = { event: FAKE_FIELDS };
     return {
         canCreate: true,
         canDelete: true,
@@ -226,9 +230,18 @@ function makeFakeModelState() {
         isTimeHidden: false,
         hasAllDaySlot: true,
         hasEditDialog: false,
-        hasQuickCreate: false,
-        popoverFields: {
-            name: { rawAttrs: {}, options: {} },
+        quickCreate: false,
+        popoverFieldNodes: {
+            name: Field.parseFieldNode(fakeFieldNode, fakeModels, "event", "calendar"),
+        },
+        activeFields: {
+            name: {
+                context: "{}",
+                invisible: false,
+                readonly: false,
+                required: false,
+                onChange: false,
+            },
         },
         rangeEnd: makeFakeDate().endOf("month"),
         rangeStart: makeFakeDate().startOf("month"),
@@ -263,16 +276,15 @@ async function scrollTo(el, scrollParam) {
 }
 
 export function findPickedDate(target) {
-    return target.querySelector(".ui-datepicker-current-day");
+    return target.querySelector(".o_datetime_picker .o_selected");
 }
 
 export async function pickDate(target, date) {
-    const [year, month, day] = date.split("-");
-    const iMonth = parseInt(month, 10) - 1;
+    const day = date.split("-")[2];
     const iDay = parseInt(day, 10) - 1;
-    const el = target.querySelectorAll(
-        `.ui-datepicker-calendar td[data-year="${year}"][data-month="${iMonth}"]`
-    )[iDay];
+    const el = target.querySelectorAll(`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range)`)[
+        iDay
+    ];
     el.scrollIntoView();
     await click(el);
 }
@@ -497,9 +509,40 @@ export async function resizeEventToTime(target, eventId, dateTime) {
     await nextTick();
 }
 
+export async function resizeEventToDate(target, eventId, date) {
+    const event = findEvent(target, eventId);
+    const slot = findAllDaySlot(target, date);
+
+    await scrollTo(event);
+    await triggerEventForCalendar(event, "mouseenter");
+
+    // Find event resizer
+    const resizer = event.querySelector(".fc-end-resizer");
+    resizer.style.display = "block";
+    resizer.style.width = "100%";
+    resizer.style.height = "1em";
+    resizer.style.bottom = "0";
+    const resizerRect = resizer.getBoundingClientRect();
+    const resizerPos = {
+        x: resizerRect.x + resizerRect.width,
+        y: resizerRect.y + resizerRect.height / 2,
+    };
+    await triggerEventForCalendar(resizer, "mousedown", resizerPos);
+    // Find slot position
+    await scrollTo(slot, false);
+    const slotRect = slot.getBoundingClientRect();
+    const toPos = {
+        x: slotRect.x + slotRect.width / 2,
+        y: slotRect.y + slotRect.height / 2,
+    };
+    await triggerEventForCalendar(slot, "mousemove", toPos);
+    await triggerEventForCalendar(slot, "mouseup", toPos);
+    await nextTick();
+}
+
 export async function changeScale(target, scale) {
-    await click(target, `.o_calendar_scale_buttons .scale_button_selection`);
-    await click(target, `.o_calendar_scale_buttons .o_calendar_button_${scale}`);
+    await click(target, `.o_view_scale_selector .scale_button_selection`);
+    await click(target, `.o_view_scale_selector .o_scale_button_${scale}`);
     await nextTick();
 }
 

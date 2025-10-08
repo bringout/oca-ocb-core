@@ -8,12 +8,24 @@ import {
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
+import { registry } from "@web/core/registry";
+import { uiService } from "@web/core/ui/ui_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 
 import { scanBarcode, BarcodeDialog } from "@web/webclient/barcode/barcode_scanner";
+import { createWebClient } from "@web/../tests/webclient/helpers";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { overlayService } from "@web/core/overlay/overlay_service";
 
 QUnit.module("Barcode scanner", {});
 
 QUnit.test("Barcode scanner crop overlay", async (assert) => {
+    registry.category("services").add("ui", uiService);
+    registry.category("services").add("hotkey", hotkeyService);
+    registry.category("services").add("dialog", dialogService);
+    registry.category("services").add("overlay", overlayService);
+
+    const { env } = await createWebClient({});
     const firstBarcodeValue = "Odoo";
     const secondBarcodeValue = "O-CMD-TEST";
 
@@ -60,17 +72,17 @@ QUnit.test("Barcode scanner crop overlay", async (assert) => {
 
     patchWithCleanup(BarcodeDialog.prototype, {
         async isVideoReady() {
-            return this._super(...arguments).then(() => {
-                videoReady.resolve();
-            });
+            const result = await super.isVideoReady(...arguments);
+            videoReady.resolve();
+            return result;
         },
         onResize(overlayInfo) {
             assert.step(JSON.stringify(overlayInfo));
-            return this._super(...arguments);
+            return super.onResize(...arguments);
         },
     });
 
-    const firstBarcodeFound = scanBarcode();
+    const firstBarcodeFound = scanBarcode(env);
     await videoReady;
     // Needed due to the change on the props in the Crop component
     await nextTick();
@@ -113,7 +125,7 @@ QUnit.test("Barcode scanner crop overlay", async (assert) => {
     barcodeToGenerate = secondBarcodeValue;
     videoReady = makeDeferred();
 
-    const secondBarcodeFound = scanBarcode();
+    const secondBarcodeFound = scanBarcode(env);
     await videoReady;
     const secondValueScanned = await secondBarcodeFound;
     assert.strictEqual(
@@ -130,4 +142,81 @@ QUnit.test("Barcode scanner crop overlay", async (assert) => {
         ],
         "We should haves three resize event; one for the default position, another one for the all frame and the last one must be the same as the saved second position"
     );
+});
+
+QUnit.test("Closing barcode scanner before camera loads should not throw an error", async (assert) => {
+    registry.category("services").add("ui", uiService);
+    registry.category("services").add("hotkey", hotkeyService);
+    registry.category("services").add("dialog", dialogService);
+    registry.category("services").add("overlay", overlayService);
+
+    const { env } = await createWebClient({});
+    const cameraReady = makeDeferred();
+
+    patchWithCleanup(browser.navigator, {
+        mediaDevices: {
+            async getUserMedia() {
+                await cameraReady;
+                const canvas = document.createElement("canvas");
+                return canvas.captureStream();
+            },
+        },
+    });
+
+    scanBarcode(env);
+
+    await nextTick();
+    assert.ok(
+        document.querySelector(".modal-dialog.modal-dialog-centered"),
+        "The barcode dialog should be open."
+    );
+
+    const escapeEvent = new KeyboardEvent("keydown", { key: "Escape", bubbles: true });
+    document.body.dispatchEvent(escapeEvent);
+    await nextTick();
+
+    assert.notOk(
+        document.querySelector(".modal-dialog.modal-dialog-centered"),
+        "The barcode dialog should be closed."
+    );
+
+    cameraReady.resolve();
+    await nextTick();
+});
+
+QUnit.test("Closing barcode scanner while video is loading should not cause errors", async (assert) => {
+    registry.category("services").add("ui", uiService);
+    registry.category("services").add("hotkey", hotkeyService);
+    registry.category("services").add("dialog", dialogService);
+    registry.category("services").add("overlay", overlayService);
+
+    const { env } = await createWebClient({});
+
+    patchWithCleanup(browser.navigator, {
+        mediaDevices: {
+            async getUserMedia() {
+                const canvas = document.createElement("canvas");
+                return canvas.captureStream();
+            },
+        },
+    });
+
+    scanBarcode(env);
+    await nextTick();
+
+    assert.ok(
+        document.querySelector(".modal-dialog.modal-dialog-centered"),
+        "The barcode dialog should be open."
+    );
+
+    const escapeEvent = new KeyboardEvent("keydown", { key: "Escape", bubbles: true });
+    document.body.dispatchEvent(escapeEvent);
+    await nextTick();
+
+    assert.notOk(
+        document.querySelector(".modal-dialog.modal-dialog-centered"),
+        "The barcode dialog should be closed."
+    );
+
+    await nextTick();
 });

@@ -2,12 +2,13 @@
 import markupsafe
 import os
 from markupsafe import Markup
+from math import ceil
 
 from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br
-from odoo.modules import get_resource_path
-from odoo.tools import file_path, html2plaintext, is_html_empty
+from odoo.tools import html2plaintext, is_html_empty
+from odoo.tools.misc import file_path
 
 try:
     import sass as libsass
@@ -217,7 +218,7 @@ class BaseDocumentLayout(models.TransientModel):
             return False, False
 
         base_w, base_h = image.size
-        w = int(50 * base_w / base_h)
+        w = ceil(50 * base_w / base_h)
         h = 50
 
         # Converts to RGBA (if already RGBA, this is a noop)
@@ -250,14 +251,6 @@ class BaseDocumentLayout(models.TransientModel):
             primary, secondary = secondary, primary
 
         return tools.rgb_to_hex(primary), tools.rgb_to_hex(secondary)
-
-    @api.model
-    def action_open_base_document_layout(self, action_ref=None):
-        if not action_ref:
-            action_ref = 'web.action_base_document_layout_configurator'
-        res = self.env["ir.actions.actions"]._for_xml_id(action_ref)
-        self.env[res["res_model"]].check_access_rights('write')
-        return res
 
     def document_layout_save(self):
         # meant to be overridden
@@ -306,7 +299,7 @@ class BaseDocumentLayout(models.TransientModel):
 
         precision = 8
         output_style = 'expanded'
-        bootstrap_path = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
+        bootstrap_path = file_path('web/static/lib/bootstrap/scss')
 
         try:
             return libsass.compile(
