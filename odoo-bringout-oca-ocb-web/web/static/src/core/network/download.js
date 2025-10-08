@@ -1,9 +1,13 @@
-/** @odoo-module **/
-
-import { _lt } from "../l10n/translation";
-import { makeErrorFromResponse, ConnectionLostError } from "@web/core/network/rpc_service";
+import { _t } from "@web/core/l10n/translation";
+import { makeErrorFromResponse, ConnectionLostError } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 
+/* eslint-disable */
+/**
+ * The following sections are from libraries, they have been slightly modified
+ * to allow patching them during tests, but should not be linted, so that we can
+ * keep a minimal diff that is easy to reapply when upgrading
+ */
 // -----------------------------------------------------------------------------
 // Content Disposition Library
 // -----------------------------------------------------------------------------
@@ -155,7 +159,7 @@ function decodefield(str) {
  * @return {ContentDisposition}
  * @public
  */
-function parse(string) {
+export function parse(string) {
     if (!string || typeof string !== "string") {
         throw new TypeError("argument string is required");
     }
@@ -316,13 +320,16 @@ function _download(data, filename, mimetype) {
         anchor.href = url; // assign href prop to temp anchor
         if (anchor.href.indexOf(url) !== -1) {
             // if the browser determines that it's a potentially valid url path:
-            let ajax = new XMLHttpRequest();
-            ajax.open("GET", url, true);
-            configureBlobDownloadXHR(ajax);
-            setTimeout(() => {
-                ajax.send();
-            }, 0); // allows setting custom ajax headers using the return:
-            return ajax;
+            return new Promise((resolve, reject) => {
+                let xhr = new browser.XMLHttpRequest();
+                xhr.open("GET", url, true);
+                configureBlobDownloadXHR(xhr, {
+                    onSuccess: resolve,
+                    onFailure: reject,
+                    url
+                });
+                xhr.send();
+            });
         }
     }
 
@@ -362,8 +369,9 @@ function _download(data, filename, mimetype) {
             anchor.href = url;
             anchor.setAttribute("download", fileName);
             anchor.className = "download-js-link";
-            anchor.innerText = _lt("downloading...");
+            anchor.innerText = _t("downloading...");
             anchor.style.display = "none";
+            anchor.target = "_blank";
             document.body.appendChild(anchor);
             setTimeout(() => {
                 anchor.click();
@@ -420,7 +428,7 @@ function _download(data, filename, mimetype) {
         if (typeof blob === "string" || blob.constructor === toString) {
             try {
                 return saver(`data:${mimeType};base64,${self.btoa(blob)}`);
-            } catch (_y) {
+            } catch {
                 return saver(`data:${mimeType},${encodeURIComponent(blob)}`);
             }
         }
@@ -434,6 +442,7 @@ function _download(data, filename, mimetype) {
     }
     return true;
 }
+/* eslint-enable */
 
 // -----------------------------------------------------------------------------
 // Exported download functions
@@ -446,18 +455,18 @@ function _download(data, filename, mimetype) {
  * @param {String} filename
  * @param {String} mimetype
  * @returns {Boolean}
- * 
+ *
  * Note: the actual implementation is certainly unconventional, but sadly
  * necessary to be able to test code using the download function
  */
 export function downloadFile(data, filename, mimetype) {
-    return downloadFile._download(data, filename, mimetype)
+    return downloadFile._download(data, filename, mimetype);
 }
 downloadFile._download = _download;
 
 /**
  * Download a file from form or server url
- * 
+ *
  * This function is meant to call a controller with some data
  * and download the response.
  *
@@ -493,6 +502,7 @@ download._download = (options) => {
         configureBlobDownloadXHR(xhr, {
             onSuccess: resolve,
             onFailure: reject,
+            url: options.url,
         });
         xhr.send(data);
     });
@@ -507,8 +517,12 @@ download._download = (options) => {
  * @param {object} [options]
  * @param {(filename: string) => void} [options.onSuccess]
  * @param {(Error) => void} [options.onFailure]
+ * @param {string} [options.url]
  */
-export function configureBlobDownloadXHR(xhr, { onSuccess = () => {}, onFailure = () => {} } = {}) {
+export function configureBlobDownloadXHR(
+    xhr,
+    { onSuccess = () => {}, onFailure = () => {}, url } = {}
+) {
     xhr.responseType = "blob";
     xhr.onload = () => {
         const mimetype = xhr.response.type;
@@ -522,7 +536,7 @@ export function configureBlobDownloadXHR(xhr, { onSuccess = () => {}, onFailure 
             onSuccess(filename);
         } else if (xhr.status === 502) {
             // If Odoo is behind another server (nginx)
-            onFailure(new ConnectionLostError());
+            onFailure(new ConnectionLostError(url));
         } else {
             const decoder = new FileReader();
             decoder.onload = () => {
@@ -555,6 +569,6 @@ export function configureBlobDownloadXHR(xhr, { onSuccess = () => {}, onFailure 
         }
     };
     xhr.onerror = () => {
-        onFailure(new ConnectionLostError());
+        onFailure(new ConnectionLostError(url));
     };
 }

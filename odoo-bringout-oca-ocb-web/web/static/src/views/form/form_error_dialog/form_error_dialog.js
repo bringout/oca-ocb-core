@@ -1,18 +1,43 @@
-/** @odoo-module **/
-
 import { Dialog } from "@web/core/dialog/dialog";
-import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 import { Component } from "@odoo/owl";
-const errorHandlerRegistry = registry.category("error_handlers");
 
 export class FormErrorDialog extends Component {
+    static template = "web.FormErrorDialog";
+    static components = { Dialog };
+    static props = {
+        message: { type: String, optional: true },
+        data: { type: Object },
+        onDiscard: Function,
+        onStayHere: Function,
+        onRedirect: { type: Function, optional: true },
+        close: Function,
+    };
+
     setup() {
-        const { data, message } = this.props;
-        if (data && data.arguments && data.arguments.length > 0) {
-            this.message = data.arguments[0];
+        this.action = useService("action");
+        this.message = this.props.message;
+        if (this.props?.data.name === "odoo.exceptions.RedirectWarning") {
+            this.message = this.props.data.arguments[0];
+            this.redirectAction = this.props.data.arguments[1];
+            this.redirectBtnLabel = this.props.data.arguments[2];
+            this.additionalContext = this.props.data.arguments[3];
+        }
+    }
+
+    async onRedirectBtnClicked() {
+        if (this.props.onRedirect) {
+            await this.props.onRedirect({
+                action: this.redirectAction,
+                additionalContext: this.additionalContext,
+            });
+            this.props.close();
         } else {
-            this.message = message;
+            await this.action.doAction(this.redirectAction, {
+                additionalContext: this.additionalContext,
+            });
+            this.stay();
         }
     }
 
@@ -26,33 +51,3 @@ export class FormErrorDialog extends Component {
         this.props.close();
     }
 }
-FormErrorDialog.template = "web.FormErrorDialog";
-FormErrorDialog.components = { Dialog };
-
-function formSaveErrorHandler(env, error, originalError) {
-    if (originalError && originalError.__raisedOnFormSave) {
-        const event = originalError.event;
-        error.unhandledRejectionEvent.preventDefault();
-        if (event.isDefaultPrevented()) {
-            // in theory, here, event was already handled
-            return true;
-        }
-        event.preventDefault();
-
-        env.services.dialog.add(
-            FormErrorDialog,
-            {
-                message: originalError.message.message,
-                data: originalError.message.data,
-                onDiscard: originalError.onDiscard,
-                onStayHere: originalError.onStayHere,
-            },
-            {
-                onClose: originalError.onStayHere,
-            }
-        );
-
-        return true;
-    }
-}
-errorHandlerRegistry.add("formSaveErrorHandler", formSaveErrorHandler);

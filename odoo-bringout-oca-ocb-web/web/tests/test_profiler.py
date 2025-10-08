@@ -67,7 +67,7 @@ class TestProfilingWeb(ProfilingHttpCase):
         descriptions = self.env['ir.profile'].search([], order='id desc', limit=3).mapped('name')
         self.assertEqual(descriptions, [
             f'test_profile_test_tool uid:{self.env.uid} warm ',
-            f'test_profile_test_tool uid:{self.env.uid} warm /web/login?',
+            f'test_profile_test_tool uid:{self.env.uid} warm /web/login?redirect=%2Fweb%3F',
             f'test_profile_test_tool uid:{self.env.uid} warm /web?',
         ])
 

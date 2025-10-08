@@ -1,9 +1,7 @@
-/** @odoo-module **/
-
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
-import { useComponent, useEffect, useRef, useEnv } from "@odoo/owl";
+import { useComponent, useEffect, useRef } from "@odoo/owl";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -11,14 +9,21 @@ import { useComponent, useEffect, useRef, useEnv } from "@odoo/owl";
  * erased by an update of the model (typically coming from an onchange) when the
  * user is currently editing it.
  *
- * @param {() => string} getValue a function that returns the value to write in
+ * @param {Object} params
+ * @param {() => string} params.getValue a function that returns the value to write in
  *   the input, if the user isn't currently editing it
- * @param {string} [refName="input"] the ref of the input/textarea
+ * @param {(value: string) => any} [params.parse] a function that parses the value of the input.
+ * @param {Ref<HTMLInputElement | HTMLTextAreaElement>} [params.ref] a ref containing the input/textarea
+ * @param {string} [params.refName="input"] the ref name of the input/textarea
+ * @param {boolean} [params.preventLineBreaks] Prevent line breaks in input when set
+ * @param {string} [params.fieldName]
+ * @param {() => boolean} [params.shouldSave] if true, save the record with the new value
  */
 export function useInputField(params) {
-    const env = useEnv();
     const inputRef = params.ref || useRef(params.refName || "input");
     const component = useComponent();
+    const fieldName = params.fieldName || component.props.name;
+    const shouldSave = params.shouldSave ?? (() => false);
 
     /*
      * A field is dirty if it is no longer sync with the model
@@ -46,11 +51,12 @@ export function useInputField(params) {
      */
     function onInput(ev) {
         isDirty = ev.target.value !== lastSetValue;
-        if (component.props.setDirty) {
-            component.props.setDirty(isDirty);
+        if (params.preventLineBreaks && ev.inputType === "insertFromPaste") {
+            ev.target.value = ev.target.value.replace(/[\r\n]+/g, " ");
         }
-        if (component.props.record && !component.props.record.isValid) {
-            component.props.record.resetFieldValidity(component.props.name);
+        component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+        if (!component.props.record.isValid) {
+            component.props.record.resetFieldValidity(fieldName);
         }
     }
 
@@ -58,7 +64,7 @@ export function useInputField(params) {
      * On blur, we consider the field no longer dirty, even if it were to be invalid.
      * However, if the field is invalid, the new value will not be committed to the model.
      */
-    function onChange(ev) {
+    async function onChange(ev) {
         if (isDirty) {
             isDirty = false;
             let isInvalid = false;
@@ -66,24 +72,22 @@ export function useInputField(params) {
             if (params.parse) {
                 try {
                     val = params.parse(val);
-                } catch (_e) {
-                    if (component.props.record) {
-                        component.props.record.setInvalidField(component.props.name);
-                    }
+                } catch {
+                    component.props.record.setInvalidField(fieldName);
                     isInvalid = true;
                 }
             }
 
             if (!isInvalid) {
-                pendingUpdate = true;
-                Promise.resolve(component.props.update(val)).then(() => {
+                if (val !== component.props.record.data[fieldName]) {
+                    lastSetValue = inputRef.el.value;
+                    pendingUpdate = true;
+                    await component.props.record.update({ [fieldName]: val }, { save: shouldSave() });
                     pendingUpdate = false;
-                });
-                lastSetValue = ev.target.value;
-            }
-
-            if (component.props.setDirty) {
-                component.props.setDirty(isDirty);
+                    component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+                } else {
+                    inputRef.el.value = params.getValue();
+                }
             }
         }
     }
@@ -91,6 +95,9 @@ export function useInputField(params) {
         const hotkey = getActiveHotkey(ev);
         if (["enter", "tab", "shift+tab"].includes(hotkey)) {
             commitChanges(false);
+        }
+        if (params.preventLineBreaks && ["enter", "shift+enter"].includes(hotkey)) {
+            ev.preventDefault();
         }
     }
 
@@ -117,19 +124,23 @@ export function useInputField(params) {
      * If it is not such a case, we update the field with the new value.
      */
     useEffect(() => {
-        const isInvalid = component.props.record
-            ? component.props.record.isInvalid(component.props.name)
-            : false;
-        if (inputRef.el && !isDirty && !isInvalid) {
-            inputRef.el.value = params.getValue();
+        // We need to call getValue before the condition to always observe
+        // the corresponding value in the record. Otherwise, in some cases,
+        // if the value in the record change the useEffect isn't triggered.
+        const value = params.getValue();
+        if (
+            inputRef.el &&
+            !isDirty &&
+            !component.props.record.isFieldInvalid(fieldName)
+        ) {
+            inputRef.el.value = value;
             lastSetValue = inputRef.el.value;
         }
     });
 
-    useBus(env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => commitChanges(true));
-    useBus(env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", (ev) =>
-        ev.detail.proms.push(commitChanges())
-    );
+    const { model } = component.props.record;
+    useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges(true));
+    useBus(model.bus, "NEED_LOCAL_CHANGES", (ev) => ev.detail.proms.push(commitChanges()));
 
     /**
      * Roughly the same as onChange, but called at more specific / critical times. (See bus events)
@@ -147,12 +158,12 @@ export function useInputField(params) {
             if (params.parse) {
                 try {
                     val = params.parse(val);
-                } catch (_e) {
+                } catch {
                     isInvalid = true;
                     if (urgent) {
                         return;
-                    } else if (component.props.record) {
-                        component.props.record.setInvalidField(component.props.name);
+                    } else {
+                        component.props.record.setInvalidField(fieldName);
                     }
                 }
             }
@@ -161,12 +172,10 @@ export function useInputField(params) {
                 return;
             }
 
-            if ((val || false) !== (component.props.value || false)) {
+            if ((val || false) !== (component.props.record.data[fieldName] || false)) {
                 lastSetValue = inputRef.el.value;
-                await component.props.update(val);
-                if (component.props.setDirty) {
-                    component.props.setDirty(isDirty);
-                }
+                await component.props.record.update({ [fieldName]: val }, { save: shouldSave() });
+                component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             } else {
                 inputRef.el.value = params.getValue();
             }
