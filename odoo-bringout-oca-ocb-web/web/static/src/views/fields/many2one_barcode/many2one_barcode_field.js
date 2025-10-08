@@ -1,28 +1,32 @@
-/** @odoo-module **/
-
-import { _lt } from "@web/core/l10n/translation";
+import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2OneField } from "../many2one/many2one_field";
+import { computeM2OProps, Many2One } from "../many2one/many2one";
+import {
+    buildM2OFieldDescription,
+    extractM2OFieldProps,
+    Many2OneField,
+} from "../many2one/many2one_field";
 
-export class Many2OneBarcodeField extends Many2OneField {}
+export class Many2OneBarcodeField extends Component {
+    static template = "web.Many2OneBarcodeField";
+    static components = { Many2One };
+    static props = { ...Many2OneField.props };
 
-Many2OneBarcodeField.props = {
-    ...Many2OneField.props,
-};
-Many2OneBarcodeField.defaultProps = {
-    ...Many2OneField.defaultProps,
-    canScanBarcode: true,
-};
+    get m2oProps() {
+        return computeM2OProps(this.props);
+    }
+}
 
-Many2OneBarcodeField.displayName = _lt("Many2OneBarcode");
-Many2OneBarcodeField.template = "web.Many2OneField";
-Many2OneBarcodeField.supportedTypes = ["many2one"];
+export const many2OneBarcodeField = {};
 
-Many2OneBarcodeField.extractProps = (args) => {
-    return {
-        ...Many2OneField.extractProps(args),
-        canScanBarcode: true,
-    };
-};
-
-registry.category("fields").add("many2one_barcode", Many2OneBarcodeField);
+registry.category("fields").add("many2one_barcode", {
+    ...buildM2OFieldDescription(Many2OneBarcodeField),
+    displayName: _t("Many2OneBarcode"),
+    extractProps(staticInfo, dynamicInfo) {
+        return {
+            ...extractM2OFieldProps(staticInfo, dynamicInfo),
+            canScanBarcode: true,
+        };
+    },
+});

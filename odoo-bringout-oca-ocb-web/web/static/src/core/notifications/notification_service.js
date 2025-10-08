@@ -1,12 +1,7 @@
-/** @odoo-module **/
-
-import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { NotificationContainer } from "./notification_container";
 
 import { reactive } from "@odoo/owl";
-
-const AUTOCLOSE_DELAY = 4000;
 
 /**
  * @typedef {Object} NotificationButton
@@ -17,6 +12,7 @@ const AUTOCLOSE_DELAY = 4000;
  *
  * @typedef {Object} NotificationOptions
  * @property {string} [title]
+ * @property {number} [autocloseDelay=4000]
  * @property {"warning" | "danger" | "success" | "info"} [type]
  * @property {boolean} [sticky=false]
  * @property {string} [className]
@@ -25,14 +21,20 @@ const AUTOCLOSE_DELAY = 4000;
  */
 
 export const notificationService = {
+    notificationContainer: NotificationContainer,
+
     start() {
         let notifId = 0;
         const notifications = reactive({});
 
-        registry.category("main_components").add("NotificationContainer", {
-            Component: NotificationContainer,
-            props: { notifications },
-        });
+        registry.category("main_components").add(
+            this.notificationContainer.name,
+            {
+                Component: this.notificationContainer,
+                props: { notifications },
+            },
+            { sequence: 100 }
+        );
 
         /**
          * @param {string} message
@@ -42,8 +44,6 @@ export const notificationService = {
             const id = ++notifId;
             const closeFn = () => close(id);
             const props = Object.assign({}, options, { message, close: closeFn });
-            const sticky = props.sticky;
-            delete props.sticky;
             delete props.onClose;
             const notification = {
                 id,
@@ -51,9 +51,6 @@ export const notificationService = {
                 onClose: options.onClose,
             };
             notifications[id] = notification;
-            if (!sticky) {
-                browser.setTimeout(closeFn, AUTOCLOSE_DELAY);
-            }
             return closeFn;
         }
 

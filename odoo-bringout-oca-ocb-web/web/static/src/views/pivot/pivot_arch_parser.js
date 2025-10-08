@@ -1,9 +1,8 @@
-/** @odoo-module **/
+import { exprToBoolean } from "@web/core/utils/strings";
+import { visitXML } from "@web/core/utils/xml";
+import { evaluateExpr } from "@web/core/py_js/py";
 
-import { XMLParser } from "@web/core/utils/xml";
-import { archParseBoolean } from "@web/views/utils";
-
-export class PivotArchParser extends XMLParser {
+export class PivotArchParser {
     parse(arch) {
         const archInfo = {
             activeMeasures: [], // store the defined active measures
@@ -14,11 +13,11 @@ export class PivotArchParser extends XMLParser {
             widgets: {}, // wigdets defined in the arch
         };
 
-        this.visitXML(arch, (node) => {
+        visitXML(arch, (node) => {
             switch (node.tagName) {
                 case "pivot": {
                     if (node.hasAttribute("disable_linking")) {
-                        archInfo.disableLinking = archParseBoolean(
+                        archInfo.disableLinking = exprToBoolean(
                             node.getAttribute("disable_linking")
                         );
                     }
@@ -29,7 +28,7 @@ export class PivotArchParser extends XMLParser {
                         archInfo.title = node.getAttribute("string");
                     }
                     if (node.hasAttribute("display_quantity")) {
-                        archInfo.displayQuantity = archParseBoolean(
+                        archInfo.displayQuantity = exprToBoolean(
                             node.getAttribute("display_quantity")
                         );
                     }
@@ -42,10 +41,22 @@ export class PivotArchParser extends XMLParser {
                     if (node.hasAttribute("string")) {
                         archInfo.fieldAttrs[fieldName].string = node.getAttribute("string");
                     }
-                    const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-                    if (modifiers.invisible === true) {
+                    if (
+                        node.getAttribute("invisible") === "True" ||
+                        node.getAttribute("invisible") === "1"
+                    ) {
                         archInfo.fieldAttrs[fieldName].isInvisible = true;
                         break;
+                    }
+                    for (const { name, value } of node.attributes) {
+                        if (["name", "type", "operator", "interval", "string", "widget"].includes(name)) {
+                            continue;
+                        }
+                        if (name === "options") {
+                            archInfo.fieldAttrs[fieldName].options = evaluateExpr(value);
+                        } else {
+                            archInfo.fieldAttrs[fieldName][name] = value;
+                        }
                     }
 
                     if (node.hasAttribute("interval")) {

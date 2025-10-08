@@ -2,8 +2,8 @@
 $o-cw-popup-avatar-size: 16px;
 
 .o_cw_popover {
-    min-width: 256px;
-    max-width: 328px;
+    width: 448px;
+    z-index: $zindex-modal - 1;
     font-size: $font-size-base;
 
     .card-header,
@@ -13,14 +13,11 @@ $o-cw-popup-avatar-size: 16px;
         line-height: 1;
     }
 
-    .card-footer {
+    .card-footer, .modal-footer {
+        --btn-group-gap: -1px;
         background: none;
     }
 
-    .o_footer_shrink {
-        padding-top: 0px;
-        padding-bottom: 0px;
-    }
     .o_cw_popover_close {
         cursor: pointer;
     }
@@ -70,6 +67,54 @@ $o-cw-popup-avatar-size: 16px;
                 order: 2;
                 margin: 0 0 0 0.4rem;
             }
+        }
+    }
+// ===============  Generate color classes ===============
+    .card-header {
+        padding-left: 2px;
+    }
+}
+
+// Put logic in a function so that temporary variable like $-color
+// are not assigned to the global scope and potentially mess with
+// other global variables
+@function o-build-web-calendar-colors() {
+    $-calendar-colors: ();
+    @for $i from 1 through length($o-colors-complete) {
+        $-color: nth($o-colors-complete, $i);
+        $-color-subtle: mix($o-white, $-color, 55%);
+        $-calendar-colors: append($-calendar-colors, (
+            color-subtle: $-color-subtle,
+            popover-background-color: lighten($-color-subtle, 10%),
+            popover-color:  color-contrast($-color-subtle),
+        ));
+    }
+    @return $-calendar-colors;
+}
+$o-web-calendar-colors: o-build-web-calendar-colors();
+
+
+@for $i from 1 through length($o-web-calendar-colors) {
+    .modal.o_technical_modal.o_modal_full .modal-dialog .modal-content.o_calendar_color_#{$i - 1} {
+        .modal-header {
+            background-color: map-get(nth($o-web-calendar-colors, $i), "color-subtle");
+
+            .btn {
+                color: $body-color;
+            }
+        }
+    }
+
+    .o_cw_popover.o_calendar_color_#{$i - 1} {
+        $-calendar-colors-map: nth($o-web-calendar-colors, $i);
+        .card-header,
+        .card-header .popover-header {
+            background-color: map-get($-calendar-colors-map, "popover-background-color");
+            color: map-get($-calendar-colors-map, "popover-color");
+        }
+
+        .card-header {
+            --#{$variable-prefix}card-border-color: #{map-get($-calendar-colors-map, "color-subtle")};
         }
     }
 }

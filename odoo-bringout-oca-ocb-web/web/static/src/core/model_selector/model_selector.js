@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -8,6 +6,19 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart } from "@odoo/owl";
 
 export class ModelSelector extends Component {
+    static template = "web.ModelSelector";
+    static components = { AutoComplete };
+    static props = {
+        onModelSelected: Function,
+        id: { type: String, optional: true },
+        value: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
+        // list of models technical name, if not set
+        // we will fetch all models we have access to
+        models: { type: Array, optional: true },
+        nbVisibleModels: { type: Number, optional: true },
+    };
+
     setup() {
         this.orm = useService("orm");
 
@@ -21,22 +32,28 @@ export class ModelSelector extends Component {
             }
 
             this.models = this.models.map((record) => ({
-                label: record.display_name,
-                technical: record.model,
-                classList: {
-                    [`o_model_selector_${record.model}`]: 1,
+                cssClass: `o_model_selector_${record.model.replaceAll(".", "_")}`,
+                data: {
+                    technical: record.model,
                 },
+                label: record.display_name,
+                onSelect: () =>
+                    this.props.onModelSelected({
+                        label: record.display_name,
+                        technical: record.model,
+                    }),
             }));
         });
-    }
-
-    get placeholder() {
-        return _t("Search a Model...");
     }
 
     get sources() {
         return [this.optionsSource];
     }
+
+    get placeholder() {
+        return this.props.placeholder || _t("Type a model here...");
+    }
+
     get optionsSource() {
         return {
             placeholder: _t("Loading..."),
@@ -44,18 +61,22 @@ export class ModelSelector extends Component {
         };
     }
 
-    onSelect(option) {
-        this.props.onModelSelected({
-            label: option.label,
-            technical: option.technical,
-        });
+    get nbVisibleModels() {
+        return this.props.nbVisibleModels || 8;
     }
 
     filterModels(name) {
         if (!name) {
-            return this.models.slice(0, 8);
+            const visibleModels = this.models.slice(0, this.nbVisibleModels);
+            if (this.models.length - visibleModels.length > 0) {
+                visibleModels.push({
+                    label: _t("Start typing..."),
+                    cssClass: "o_m2o_start_typing",
+                });
+            }
+            return visibleModels;
         }
-        return fuzzyLookup(name, this.models, (model) => model.technical + model.label).slice(0, 8);
+        return fuzzyLookup(name, this.models, (model) => model.data.technical + model.label);
     }
 
     loadOptionsSource(request) {
@@ -64,8 +85,7 @@ export class ModelSelector extends Component {
         if (!options.length) {
             options.push({
                 label: _t("No records"),
-                classList: "o_m2o_no_result",
-                unselectable: true,
+                cssClass: "o_m2o_no_result",
             });
         }
         return options;
@@ -80,14 +100,3 @@ export class ModelSelector extends Component {
         return result || [];
     }
 }
-
-ModelSelector.template = "web.ModelSelector";
-ModelSelector.components = { AutoComplete };
-ModelSelector.props = {
-    onModelSelected: Function,
-    id: { type: String, optional: true },
-    value: { type: String, optional: true },
-    // list of models technical name, if not set
-    // we will fetch all models we have access to
-    models: { type: Array, optional: true },
-};

@@ -1,6 +1,4 @@
-/** @odoo-module **/
-
-import { EventBus } from "@odoo/owl";
+import { EventBus, validate } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -8,6 +6,46 @@ import { EventBus } from "@odoo/owl";
 export class KeyNotFoundError extends Error {}
 
 export class DuplicatedKeyError extends Error {}
+
+// -----------------------------------------------------------------------------
+// Validation
+// -----------------------------------------------------------------------------
+
+const validateSchema = (name, key, value, schema) => {
+    if (!odoo.debug) {
+        return;
+    }
+    try {
+        validate(value, schema);
+    } catch (error) {
+        throw new Error(`Validation error for key "${key}" in registry "${name}": ${error}`);
+    }
+};
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+
+/**
+ * @template S
+ * @template C
+ * @typedef {import("registries").RegistryData<S, C>} RegistryData
+ */
+
+/**
+ * @template T
+ * @typedef {T extends RegistryData<any, any> ? T : RegistryData<T, {}>} ToRegistryData
+ */
+
+/**
+ * @template T
+ * @typedef {ToRegistryData<T>["__itemShape"]} GetRegistryItemShape
+ */
+
+/**
+ * @template T
+ * @typedef {ToRegistryData<T>["__categories"]} GetRegistryCategories
+ */
 
 /**
  * Registry
@@ -20,14 +58,25 @@ export class DuplicatedKeyError extends Error {}
  *   (for example, the FunctionRegistry subclass this for this purpose)
  * 2. it throws an error when the get operation fails
  * 3. it provides a chained API to add items to the registry.
+ *
+ * @template T
  */
 export class Registry extends EventBus {
-    constructor() {
+    /**
+     * @param {string} [name]
+     */
+    constructor(name) {
         super();
+        /** @type {Record<string, [number, GetRegistryItemShape<T>]>}*/
         this.content = {};
+        /** @type {{ [P in keyof GetRegistryCategories<T>]?: Registry<GetRegistryCategories<T>[P]> }} */
         this.subRegistries = {};
+        /** @type {GetRegistryItemShape<T>[]}*/
         this.elements = null;
+        /** @type {[string, GetRegistryItemShape<T>][]}*/
         this.entries = null;
+        this.name = name;
+        this.validationSchema = null;
 
         this.addEventListener("UPDATE", () => {
             this.elements = null;
@@ -43,13 +92,18 @@ export class Registry extends EventBus {
      * be chained
      *
      * @param {string} key
-     * @param {any} value
+     * @param {GetRegistryItemShape<T>} value
      * @param {{force?: boolean, sequence?: number}} [options]
-     * @returns {Registry}
+     * @returns {Registry<T>}
      */
     add(key, value, { force, sequence } = {}) {
+        if (this.validationSchema) {
+            validateSchema(this.name, key, value, this.validationSchema);
+        }
         if (!force && key in this.content) {
-            throw new DuplicatedKeyError(`Cannot add '${key}' in this registry: it already exists`);
+            throw new DuplicatedKeyError(
+                `Cannot add key "${key}" in the "${this.name}" registry: it already exists`
+            );
         }
         let previousSequence;
         if (force) {
@@ -67,11 +121,11 @@ export class Registry extends EventBus {
      * Get an item from the registry
      *
      * @param {string} key
-     * @returns {any}
+     * @returns {GetRegistryItemShape<T>}
      */
     get(key, defaultValue) {
         if (arguments.length < 2 && !(key in this.content)) {
-            throw new KeyNotFoundError(`Cannot find ${key} in this registry!`);
+            throw new KeyNotFoundError(`Cannot find key "${key}" in the "${this.name}" registry`);
         }
         const info = this.content[key];
         return info ? info[1] : defaultValue;
@@ -91,7 +145,7 @@ export class Registry extends EventBus {
      * Get a list of all elements in the registry. Note that it is ordered
      * according to the sequence numbers.
      *
-     * @returns {any[]}
+     * @returns {GetRegistryItemShape<T>[]}
      */
     getAll() {
         if (!this.elements) {
@@ -104,7 +158,7 @@ export class Registry extends EventBus {
     /**
      * Return a list of all entries, ordered by sequence numbers.
      *
-     * @returns {[string, any][]}
+     * @returns {[string, GetRegistryItemShape<T>][]}
      */
     getEntries() {
         if (!this.entries) {
@@ -129,15 +183,27 @@ export class Registry extends EventBus {
     /**
      * Open a sub registry (and create it if necessary)
      *
-     * @param {string} subcategory
-     * @returns {Registry}
+     * @template {keyof GetRegistryCategories<T> & string} K
+     * @param {K} subcategory
+     * @returns {Registry<GetRegistryCategories<T>[K]>}
      */
     category(subcategory) {
         if (!(subcategory in this.subRegistries)) {
-            this.subRegistries[subcategory] = new Registry();
+            this.subRegistries[subcategory] = new Registry(subcategory);
         }
         return this.subRegistries[subcategory];
     }
+
+    addValidation(schema) {
+        if (this.validationSchema) {
+            throw new Error("Validation schema already set on this registry");
+        }
+        this.validationSchema = schema;
+        for (const [key, value] of this.getEntries()) {
+            validateSchema(this.name, key, value, schema);
+        }
+    }
 }
 
+/** @type {Registry<import("registries").GlobalRegistry>} */
 export const registry = new Registry();

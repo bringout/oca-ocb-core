@@ -1,8 +1,6 @@
-/** @odoo-module **/
-
-import { deepCopy } from "@web/core/utils/objects";
+import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
+import { UPDATE_METHODS } from "@web/core/orm_service";
 
 /**
  * @typedef {Object} IrFilter
@@ -15,6 +13,8 @@ import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
  * @property {boolean} is_default
  * @property {string} model_id
  * @property {[number, string] | false} action_id
+ * @property {number | false} embedded_action_id
+ * @property {number | false} embedded_parent_res_id
  */
 
 /**
@@ -40,48 +40,18 @@ import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
  * @property {boolean} loadIrFilters
  */
 
-/**
- * @typedef {Object} LoadFieldsOptions
- * @property {string[] | false} [fieldNames]
- * @property {string[]} [attributes]
- */
-
 export const viewService = {
     dependencies: ["orm"],
+    async: ["loadViews"],
     start(env, { orm }) {
-        let cache = {};
-
-        env.bus.addEventListener("CLEAR-CACHES", () => {
-            cache = {};
-            const processedArchs = registry.category("__processed_archs__");
-            processedArchs.content = {};
-            processedArchs.trigger("UPDATE");
-        });
-
-        /**
-         * Loads fields information
-         *
-         * @param {string} resModel
-         * @param {LoadFieldsOptions} [options]
-         * @returns {Promise<object>}
-         */
-        async function loadFields(resModel, options = {}) {
-            const key = JSON.stringify([
-                "fields",
-                resModel,
-                options.fieldNames,
-                options.attributes,
-            ]);
-            if (!cache[key]) {
-                cache[key] = orm
-                    .call(resModel, "fields_get", [options.fieldNames, options.attributes])
-                    .catch((error) => {
-                        delete cache[key];
-                        return Promise.reject(error);
-                    });
+        rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
+            const { model, method } = ev.detail.data.params;
+            if (["ir.ui.view", "ir.filters"].includes(model)) {
+                if (UPDATE_METHODS.includes(method)) {
+                    rpcBus.trigger("CLEAR-CACHES", "get_views");
+                }
             }
-            return cache[key];
-        }
+        });
 
         /**
          * Loads various information concerning views: fields_view for each view,
@@ -92,56 +62,63 @@ export const viewService = {
          * @returns {Promise<ViewDescriptions>}
          */
         async function loadViews(params, options = {}) {
+            const { context, resModel, views } = params;
             const loadViewsOptions = {
                 action_id: options.actionId || false,
+                embedded_action_id: options.embeddedActionId || false,
+                embedded_parent_res_id: options.embeddedParentResId || false,
                 load_filters: options.loadIrFilters || false,
-                toolbar: options.loadActionMenus || false,
+                toolbar: (!context?.disable_toolbar && options.loadActionMenus) || false,
             };
+            for (const key in options) {
+                if (
+                    ![
+                        "actionId",
+                        "embeddedActionId",
+                        "embeddedParentResId",
+                        "loadIrFilters",
+                        "loadActionMenus",
+                    ].includes(key)
+                ) {
+                    loadViewsOptions[key] = options[key];
+                }
+            }
             if (env.isSmall) {
                 loadViewsOptions.mobile = true;
             }
-            const { context, resModel, views } = params;
-            const filteredContext = Object.fromEntries(
-                Object.entries(context || {}).filter((k, v) => !String(k).startsWith("default_"))
-            );
-            const key = JSON.stringify([resModel, views, filteredContext, loadViewsOptions]);
-            if (!cache[key]) {
-                cache[key] = orm
-                    .call(resModel, "get_views", [], { context, views, options: loadViewsOptions })
-                    .then((result) => {
-                        const { models, views } = result;
-                        const modelsCopy = deepCopy(models); // for legacy views
-                        const viewDescriptions = {
-                            __legacy__: generateLegacyLoadViewsResult(resModel, views, modelsCopy),
-                            fields: models[resModel],
-                            relatedModels: models,
-                            views: {},
-                        };
-                        for (const [resModel, fields] of Object.entries(modelsCopy)) {
-                            const key = JSON.stringify(["fields", resModel, undefined, undefined]);
-                            cache[key] = Promise.resolve(fields);
-                        }
-                        for (const viewType in views) {
-                            const { arch, toolbar, id, filters, custom_view_id } = views[viewType];
-                            const viewDescription = { arch, id, custom_view_id };
-                            if (toolbar) {
-                                viewDescription.actionMenus = toolbar;
-                            }
-                            if (filters) {
-                                viewDescription.irFilters = filters;
-                            }
-                            viewDescriptions.views[viewType] = viewDescription;
-                        }
-                        return viewDescriptions;
-                    })
-                    .catch((error) => {
-                        delete cache[key];
-                        return Promise.reject(error);
-                    });
+            if (env.debug) {
+                loadViewsOptions.debug = true;
             }
-            return cache[key];
+            const filteredContext = Object.fromEntries(
+                Object.entries(context || {}).filter(
+                    ([k, v]) => k == "lang" || k.endsWith("_view_ref")
+                )
+            );
+
+            const result = await orm.cache({ type: "disk" }).call(resModel, "get_views", [], {
+                context: filteredContext,
+                views,
+                options: loadViewsOptions,
+            });
+            const viewDescriptions = {
+                fields: result.models[resModel].fields,
+                relatedModels: result.models,
+                views: {},
+            };
+            for (const viewType in result.views) {
+                const { arch, toolbar, id, filters, custom_view_id } = result.views[viewType];
+                const viewDescription = { arch, id, custom_view_id };
+                if (toolbar) {
+                    viewDescription.actionMenus = toolbar;
+                }
+                if (filters) {
+                    viewDescription.irFilters = filters;
+                }
+                viewDescriptions.views[viewType] = viewDescription;
+            }
+            return viewDescriptions;
         }
-        return { loadViews, loadFields };
+        return { loadViews };
     },
 };
 

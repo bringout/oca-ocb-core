@@ -1,12 +1,17 @@
-/** @odoo-module */
-
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { KanbanColumnExamplesDialog } from "./kanban_column_examples_dialog";
 
-import { Component, useExternalListener, useState, useRef } from "@odoo/owl";
+import { Component, useExternalListener, useState, useRef, onPatched } from "@odoo/owl";
 
 export class KanbanColumnQuickCreate extends Component {
+    static template = "web.KanbanColumnQuickCreate";
+    static props = {
+        onFoldChange: Function,
+        onValidate: Function,
+        folded: Boolean,
+        groupByField: Object,
+    };
+
     setup() {
         this.dialog = useService("dialog");
         this.root = useRef("root");
@@ -39,12 +44,11 @@ export class KanbanColumnQuickCreate extends Component {
 
         // Key Navigation
         useHotkey("escape", () => this.fold());
-    }
-
-    get canShowExamples() {
-        const { allowedGroupBys = [], examples = [] } = this.props.exampleData || {};
-        const hasExamples = Boolean(examples.length);
-        return hasExamples && allowedGroupBys.includes(this.props.groupByField.name);
+        onPatched(() => {
+            if (this.state.hasInputFocused && !this.props.folded) {
+                this.root.el.scrollIntoView({ behavior: "smooth" });
+            }
+        });
     }
 
     get relatedFieldName() {
@@ -64,20 +68,9 @@ export class KanbanColumnQuickCreate extends Component {
         if (title.length) {
             this.props.onValidate(title);
             this.inputRef.el.value = "";
+            this.inputRef.el.focus();
+            this.state.hasInputFocused = true;
         }
-    }
-
-    showExamples() {
-        this.dialog.add(KanbanColumnExamplesDialog, {
-            examples: this.props.exampleData.examples,
-            applyExamplesText:
-                this.props.exampleData.applyExamplesText || this.env._t("Use This For My Kanban"),
-            applyExamples: (index) => {
-                for (const groupName of this.props.exampleData.examples[index].columns) {
-                    this.props.onValidate(groupName);
-                }
-            },
-        });
     }
 
     onInputKeydown(ev) {
@@ -86,4 +79,3 @@ export class KanbanColumnQuickCreate extends Component {
         }
     }
 }
-KanbanColumnQuickCreate.template = "web.KanbanColumnQuickCreate";

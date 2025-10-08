@@ -1,45 +1,27 @@
-/** @odoo-module alias=web.public.root */
+import { cookie } from "@web/core/browser/cookie";
+import publicWidget from '@web/legacy/js/public/public_widget';
 
-import dom from 'web.dom';
-import legacyEnv from 'web.public_env';
-import session from 'web.session';
-import {getCookie} from 'web.utils.cookies';
-import publicWidget from 'web.public.widget';
-import { registry } from '@web/core/registry';
-
-import AbstractService from "web.AbstractService";
-import lazyloader from "web.public.lazyloader";
-
-import {
-    makeLegacyNotificationService,
-    makeLegacyRpcService,
-    makeLegacySessionService,
-    makeLegacyDialogMappingService,
-    mapLegacyEnvToWowlEnv,
-    makeLegacyRainbowManService,
-} from "../../utils";
-import { standaloneAdapter } from "web.OwlCompatibility";
+import lazyloader from "@web/legacy/js/public/lazyloader";
 
 import { makeEnv, startServices } from "@web/env";
-import { setLoadXmlDefaultApp, loadJS, templates } from '@web/core/assets';
+import { getTemplate } from '@web/core/templates';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
-import { jsonrpc } from '@web/core/network/rpc_service';
-import { _t } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
+import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
+import { App, Component, whenReady } from "@odoo/owl";
+import { RPCError } from '@web/core/network/rpc';
+import { patch } from "@web/core/utils/patch";
 
-
-const serviceRegistry = registry.category("services");
-import { Component, App, whenReady } from "@odoo/owl";
+const { Settings } = luxon;
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)
 function getLang() {
     var html = document.documentElement;
-    return (html.getAttribute('lang') || 'en_US').replace('-', '_');
+    return jsToPyLocale(html.getAttribute('lang')) || 'en_US';
 }
-const lang = getCookie('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
-// momentjs don't have config for en_US, so avoid useless RPC
-var localeDef = lang !== 'en_US' ? loadJS('/web/webclient/locale/' + lang.replace('-', '_')) : Promise.resolve();
+const lang = cookie.get('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
 
 
 /**
@@ -48,37 +30,48 @@ var localeDef = lang !== 'en_US' ? loadJS('/web/webclient/locale/' + lang.replac
  * this Class instance. Its main role will be to retrieve RPC demands from its
  * children and handle them.
  */
-export const PublicRoot = publicWidget.RootWidget.extend({
-    events: _.extend({}, publicWidget.RootWidget.prototype.events || {}, {
+export const PublicRoot = publicWidget.Widget.extend({
+    events: {
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
         'click .js_disable_on_click': '_onDisableOnClick',
-    }),
-    custom_events: _.extend({}, publicWidget.RootWidget.prototype.custom_events || {}, {
+    },
+    custom_events: {
         call_service: '_onCallService',
         context_get: '_onContextGet',
         main_object_request: '_onMainObjectRequest',
         widgets_start_request: '_onWidgetsStartRequest',
         widgets_stop_request: '_onWidgetsStopRequest',
-    }),
+    },
 
     /**
      * @constructor
      */
-    init: function () {
+    init: function (_, env) {
         this._super.apply(this, arguments);
-        this.env = legacyEnv;
+        this.env = env;
         this.publicWidgets = [];
-    },
-    /**
-     * @override
-     */
-    willStart: function () {
-        // TODO would be even greater to wait for localeDef only when necessary
-        return Promise.all([
-            this._super.apply(this, arguments),
-            session.is_bound,
-            localeDef
-        ]);
+        // Patch interaction_service so that it also starts and stops public
+        // widgets.
+        const interactionsService = this.env.services["public.interactions"];
+        const publicRoot = this;
+        if (interactionsService) {
+            patch(interactionsService.constructor.prototype, {
+                startInteractions(el) {
+                    super.startInteractions(el);
+                    if (!publicRoot.startFromEventHandler) {
+                        // this.editMode is assigned by website_edit_service
+                        publicRoot._startWidgets($(el || this.el), { fromInteractionPatch: true, editableMode: this.editMode })
+                    }
+                },
+                stopInteractions(el) {
+                    super.stopInteractions(el);
+                    // Call to interactions is only from the event handler.
+                    if (!publicRoot.stopFromEventHandler) {
+                        publicRoot._stopWidgets($(el || this.el));
+                    }
+                },
+            });
+        }
     },
     /**
      * @override
@@ -86,13 +79,13 @@ export const PublicRoot = publicWidget.RootWidget.extend({
     start: function () {
         var defs = [
             this._super.apply(this, arguments),
-            this._startWidgets()
+            this._startWidgets(undefined, { starting: true })
         ];
 
         // Display image thumbnail
         this.$(".o_image[data-mimetype^='image']").each(function () {
             var $img = $(this);
-            if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+            if (/gif|jpe|jpg|png|webp/.test($img.data('mimetype')) && $img.data('src')) {
                 $img.css('background-image', "url('" + $img.data('src') + "')");
             }
         });
@@ -101,13 +94,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         if (window.location.hash.indexOf("scrollTop=") > -1) {
             this.el.scrollTop = +window.location.hash.match(/scrollTop=([0-9]+)/)[1];
         }
-
-        // Fix for IE:
-        if ($.fn.placeholder) {
-            $('input, textarea').placeholder();
-        }
-
-        this.$el.children().on('error.datetimepicker', this._onDateTimePickerError.bind(this));
 
         return Promise.all(defs);
     },
@@ -125,7 +111,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @returns {Object}
      */
     _getContext: function (context) {
-        return _.extend({
+        return Object.assign({
             'lang': getLang(),
         }, context || {});
     },
@@ -150,15 +136,16 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         return publicWidget.registry;
     },
     /**
-     * As the root instance is designed to be unique, the associated
-     * registry has been instantiated outside of the class and is simply
-     * returned here.
+     * Restarts interactions from the specified targetEl, or from #wrapwrap.
      *
      * @private
-     * @override
+     * @param {HTMLElement} targetEl
+     * @param {Object} [options]
      */
-    _getRegistry: function () {
-        return registry.category("public_root_widgets");
+    _restartInteractions(targetEl, options) {
+        const publicInteractions = this.bindService("public.interactions");
+        publicInteractions.stopInteractions(targetEl);
+        publicInteractions.startInteractions(targetEl);
     },
     /**
      * Creates an PublicWidget instance for each DOM element which matches the
@@ -189,17 +176,46 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         });
 
         this._stopWidgets($from);
+        if (!options?.starting && !options?.fromInteractionPatch) {
+            if ($from) {
+                for (const fromEl of $from) {
+                    this._restartInteractions(fromEl, options);
+                }
+            } else {
+                this._restartInteractions(undefined, options);
+            }
+        }
 
-        var defs = _.map(this._getPublicWidgetsRegistry(options), function (PublicWidget) {
-            var selector = PublicWidget.prototype.selector || '';
-            var $target = dom.cssFind($from, selector, true);
+        var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {
+            const selector = PublicWidget.prototype.selector;
+            if (!selector) {
+                return;
+            }
+            const selectorHas = PublicWidget.prototype.selectorHas;
+            const selectorFunc = typeof selector === 'function'
+                ? selector
+                : fromEl => {
+                    const els = [...fromEl.querySelectorAll(selector)];
+                    if (fromEl.matches(selector)) {
+                        els.push(fromEl);
+                    }
+                    return els;
+                };
 
-            var defs = _.map($target, function (el) {
+            let targetEls = [];
+            for (const fromEl of $from) {
+                targetEls.push(...selectorFunc(fromEl));
+            }
+            if (selectorHas) {
+                targetEls = targetEls.filter(el => !!el.querySelector(selectorHas));
+            }
+
+            const proms = targetEls.map(el => {
                 var widget = new PublicWidget(self, options);
                 self.publicWidgets.push(widget);
-                return widget.attachTo($(el));
+                return widget.attachTo(el);
             });
-            return Promise.all(defs);
+            return Promise.all(proms);
         });
         return Promise.all(defs);
     },
@@ -213,7 +229,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      *        of its descendants
      */
     _stopWidgets: function ($from) {
-        var removedWidgets = _.map(this.publicWidgets, function (widget) {
+        var removedWidgets = this.publicWidgets.map((widget) => {
             if (!$from
                 || $from.filter(widget.el).length
                 || $from.find(widget.el).length) {
@@ -222,7 +238,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
             }
             return null;
         });
-        this.publicWidgets = _.difference(this.publicWidgets, removedWidgets);
+        this.publicWidgets = this.publicWidgets.filter((x) => removedWidgets.indexOf(x) < 0);
     },
 
     //--------------------------------------------------------------------------
@@ -237,37 +253,9 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @param {OdooEvent} event
      */
     _onCallService: function (ev) {
-        function _computeContext(context, noContextKeys) {
-            context = _.extend({}, this._getContext(), context);
-            if (noContextKeys) {
-                context = _.omit(context, noContextKeys);
-            }
-            return JSON.parse(JSON.stringify(context));
-        }
-
         const payload = ev.data;
-        let args = payload.args || [];
-        if (payload.service === 'ajax' && payload.method === 'rpc') {
-            // ajax service uses an extra 'target' argument for rpc
-            args = args.concat(ev.target);
-
-            var route = args[0];
-            if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
-                var params = args[1];
-                var options = args[2];
-                var noContextKeys;
-                if (options) {
-                    noContextKeys = options.noContextKeys;
-                    args[2] = _.omit(options, 'noContextKeys');
-                }
-                params.kwargs.context = _computeContext.call(this, params.kwargs.context, noContextKeys);
-            }
-        } else {
-            return;
-        }
-
         const service = this.env.services[payload.service];
-        const result = service[payload.method].apply(service, args);
+        const result = service[payload.method].apply(service, payload.args || []);
         payload.callback(result);
         ev.stopPropagation();
     },
@@ -305,10 +293,19 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onWidgetsStartRequest: function (ev) {
-        this._startWidgets(ev.data.$target, ev.data.options)
-            .then(ev.data.onSuccess)
-            .guardedCatch(ev.data.onFailure);
+    async _onWidgetsStartRequest(ev) {
+        this.startFromEventHandler = true;
+        try {
+            await this._startWidgets(ev.data.$target, ev.data.options);
+            ev.data.onSuccess?.();
+        } catch (e) {
+            ev.data.onFailure?.(e);
+            if (!(e instanceof RPCError)) {
+                throw e;
+            }
+        } finally {
+            this.stopFromEventHandler = true;
+        }
     },
     /**
      * Called when the root is notified that the public widgets have to be
@@ -319,14 +316,23 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      */
     _onWidgetsStopRequest: function (ev) {
         this._stopWidgets(ev.data.$target);
+        // also stops interactions
+        const targetEl = ev.data.$target ? ev.data.$target[0] : undefined;
+        const publicInteractions = this.bindService("public.interactions");
+        this.stopFromEventHandler = true;
+        try {
+            publicInteractions.stopInteractions(targetEl);
+        } finally {
+            this.stopFromEventHandler = false;
+        }
     },
     /**
      * @todo review
      * @private
      */
     _onWebsiteFormSubmit: function (ev) {
-        var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
-        _.each($buttons, function (btn) {
+        var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit').toArray();
+        $buttons.forEach((btn) => {
             var $btn = $(btn);
             $btn.prepend('<i class="fa fa-circle-o-notch fa-spin"></i> ');
             $btn.prop('disabled', true);
@@ -354,11 +360,6 @@ export const PublicRoot = publicWidget.RootWidget.extend({
 });
 
 /**
- * Configure Owl with the public env
- */
-owl.Component.env = legacyEnv;
-
-/**
  * This widget is important, because the tour manager needs a root widget in
  * order to work. The root widget must be a service provider with the ajax
  * service, so that the tour manager can let the server know when tours have
@@ -366,61 +367,30 @@ owl.Component.env = legacyEnv;
  */
 export async function createPublicRoot(RootWidget) {
     await lazyloader.allScriptsLoaded;
-    AbstractService.prototype.deployServices(legacyEnv);
-    // add a bunch of mapping services that will redirect service calls from the legacy env
-    // to the wowl env
-    serviceRegistry.add("legacy_rpc", makeLegacyRpcService(legacyEnv));
-    serviceRegistry.add("legacy_session", makeLegacySessionService(legacyEnv, session));
-    serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
-    serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
-    serviceRegistry.add("legacy_rainbowman_service", makeLegacyRainbowManService(legacyEnv));
-    const wowlToLegacyServiceMappers = registry.category('wowlToLegacyServiceMappers').getEntries();
-    for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
-        serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
-    }
-    await Promise.all([whenReady(), session.is_bound]);
+    await whenReady();
+    const env = makeEnv();
+    await startServices(env);
 
-    // Patch browser.fetch and the rpc service to use the correct base url when
-    // embeded in an external page
-    const baseUrl = session.prefix;
-    const { fetch } = browser;
-    browser.fetch = function(url, ...args) {
-        if (!url.match(/^(?:https?:)?\/\//)) {
-            url = baseUrl + url;
-        }
-        return fetch(url, ...args);
-    }
-    serviceRegistry.add("rpc", {
-        async: true,
-        start(env) {
-            let rpcId = 0;
-            return function rpc(route, params = {}, settings) {
-                if (!route.match(/^(?:https?:)?\/\//)) {
-                    route = baseUrl + route;
-                }
-                return jsonrpc(env, rpcId++, route, params, settings);
-            };
-        },
-    }, { force: true });
+    env.services["public.interactions"].isReady.then(() => {
+        document.body.setAttribute("is-ready", "true");
+    });
 
-    const wowlEnv = makeEnv();
-
-    await startServices(wowlEnv);
-    mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
-    // The root widget's parent is a standalone adapter so that it has _trigger_up
-    const publicRoot = new RootWidget(standaloneAdapter({ Component }));
+    Component.env = env;
+    const publicRoot = new RootWidget(null, env);
     const app = new App(MainComponentsContainer, {
-        templates,
-        env: wowlEnv,
-        dev: wowlEnv.debug,
-        translateFn: _t,
+        getTemplate,
+        env,
+        dev: env.debug,
+        translateFn: appTranslateFn,
         translatableAttributes: ["data-tooltip"],
     });
-    setLoadXmlDefaultApp(app);
-    await Promise.all([
+    const locale = pyToJsLocale(lang) || browser.navigator.language;
+    Settings.defaultLocale = locale;
+    const [root] = await Promise.all([
         app.mount(document.body),
         publicRoot.attachTo(document.body),
     ]);
+    odoo.__WOWL_DEBUG__ = { root };
     return publicRoot;
 }
 

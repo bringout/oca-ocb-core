@@ -1,15 +1,22 @@
-/** @odoo-module **/
-
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import {
+    formatDate as _formatDate,
+    formatDateTime as _formatDateTime,
+    toLocaleDateString,
+    toLocaleDateTimeString,
+} from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { escape, nbsp, sprintf } from "@web/core/utils/strings";
 import { isBinarySize } from "@web/core/utils/binary";
-import { session } from "@web/session";
-import { humanNumber, insertThousandsSep } from "@web/core/utils/numbers";
+import {
+    formatFloat as formatFloatNumber,
+    humanNumber,
+    insertThousandsSep,
+} from "@web/core/utils/numbers";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 import { markup } from "@odoo/owl";
+import { formatCurrency } from "@web/core/currency";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -50,36 +57,59 @@ export function formatBinary(value) {
  * @returns {string}
  */
 export function formatBoolean(value) {
-    return markup(`
+    return markup`
         <div class="o-checkbox d-inline-block me-2">
             <input id="boolean_checkbox" type="checkbox" class="form-check-input" disabled ${
                 value ? "checked" : ""
             }/>
             <label for="boolean_checkbox" class="form-check-label"/>
-        </div>`);
+        </div>`;
 }
 
 /**
- * Returns a string representing a char.  If the value is false, then we return
- * an empty string.
- *
- * @param {string|false} value
+ * @param {string} value
  * @param {Object} [options] additional options
- * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @param {boolean} [options.isPassword=false] if true, returns '********'
  *   instead of the formatted value
  * @returns {string}
  */
 export function formatChar(value, options) {
-    value = typeof value === "string" ? value : "";
     if (options && options.isPassword) {
         return "*".repeat(value ? value.length : 0);
     }
-    if (options && options.escape) {
-        value = escape(value);
-    }
-    return value;
+    return value || "";
 }
+formatChar.extractOptions = ({ attrs }) => ({
+    isPassword: exprToBoolean(attrs.password),
+});
+
+export function formatDate(value, options = {}) {
+    if (options.numeric) {
+        return _formatDate(value, options);
+    } else {
+        return toLocaleDateString(value);
+    }
+}
+formatDate.extractOptions = ({ options }) => ({
+    numeric: exprToBoolean(options.numeric ?? false),
+});
+
+export function formatDateTime(value, options = {}) {
+    if (options.numeric) {
+        if (options.showTime === false) {
+            return _formatDate(value, options);
+        }
+        return _formatDateTime(value, options);
+    } else {
+        return toLocaleDateTimeString(value, options);
+    }
+}
+formatDateTime.extractOptions = ({ attrs, options }) => ({
+    ...formatDate.extractOptions({ attrs, options }),
+    showSeconds: exprToBoolean(options.show_seconds ?? false),
+    showTime: exprToBoolean(options.show_time ?? true),
+    showDate: exprToBoolean(options.show_date ?? true),
+});
 
 /**
  * Returns a string representing a float.  The result takes into account the
@@ -95,7 +125,8 @@ export function formatChar(value, options) {
  * @param {string} [options.thousandsSep] thousands separator to insert
  * @param {number[]} [options.grouping] array of relative offsets at which to
  *   insert `thousandsSep`. See `insertThousandsSep` method.
- * @param {boolean} [options.noTrailingZeros=false] if true, the decimal part
+ * @param {number} [options.decimals] used for humanNumber formmatter
+ * @param {boolean} [options.trailingZeros=true] if false, the decimal part
  *   won't contain unnecessary trailing zeros.
  * @returns {string}
  */
@@ -103,25 +134,25 @@ export function formatFloat(value, options = {}) {
     if (value === false) {
         return "";
     }
-    if (options.humanReadable) {
-        return humanNumber(value, options);
+    if (!options.digits && options.field) {
+        options.digits = options.field.digits;
     }
-    const grouping = options.grouping || l10n.grouping;
-    const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
-    const decimalPoint = "decimalPoint" in options ? options.decimalPoint : l10n.decimalPoint;
-    let precision;
-    if (options.digits && options.digits[1] !== undefined) {
-        precision = options.digits[1];
-    } else {
-        precision = 2;
-    }
-    const formatted = (value || 0).toFixed(precision).split(".");
-    formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
-    if (options.noTrailingZeros) {
-        formatted[1] = formatted[1].replace(/0+$/, "");
-    }
-    return formatted[1] ? formatted.join(decimalPoint) : formatted[0];
+    return formatFloatNumber(value, options);
 }
+formatFloat.extractOptions = ({ attrs, options }) => {
+    // Sadly, digits param was available as an option and an attr.
+    // The option version could be removed with some xml refactoring.
+    let digits;
+    if (attrs.digits) {
+        digits = JSON.parse(attrs.digits);
+    } else if (options.digits) {
+        digits = options.digits;
+    }
+    const humanReadable = !!options.human_readable;
+    const decimals = options.decimals || 0;
+    const trailingZeros = !options.hide_trailing_zeros;
+    return { decimals, digits, humanReadable, trailingZeros };
+};
 
 /**
  * Returns a string representing a float value, from a float converted with a
@@ -137,8 +168,15 @@ export function formatFloatFactor(value, options = {}) {
         return "";
     }
     const factor = options.factor || 1;
-    return formatFloat(value * factor, options);
+    if (!options.digits && options.field) {
+        options.digits = options.field.digits;
+    }
+    return formatFloatNumber(value * factor, options);
 }
+formatFloatFactor.extractOptions = ({ attrs, options }) => ({
+    ...formatFloat.extractOptions({ attrs, options }),
+    factor: options.factor,
+});
 
 /**
  * Returns a string representing a time value, from a float.  The idea is that
@@ -182,6 +220,9 @@ export function formatFloatTime(value, options = {}) {
     }
     return `${isNegative ? "-" : ""}${hour}:${min}${sec}`;
 }
+formatFloatTime.extractOptions = ({ options }) => ({
+    displaySeconds: options.displaySeconds,
+});
 
 /**
  * Returns a string representing an integer.  If the value is false, then we
@@ -194,6 +235,7 @@ export function formatFloatTime(value, options = {}) {
  * @param {boolean} [options.isPassword=false] if returns true, acts like
  * @param {string} [options.thousandsSep] thousands separator to insert
  * @param {number[]} [options.grouping] array of relative offsets at which to
+ * @param {number} [options.decimals] used for humanNumber formmatter
  *   insert `thousandsSep`. See `insertThousandsSep` method.
  * @returns {string}
  */
@@ -211,14 +253,19 @@ export function formatInteger(value, options = {}) {
     const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
     return insertThousandsSep(value.toFixed(0), thousandsSep, grouping);
 }
+formatInteger.extractOptions = ({ attrs, options }) => ({
+    decimals: options.decimals || 0,
+    humanReadable: !!options.human_readable,
+    isPassword: exprToBoolean(attrs.password),
+});
 
 /**
  * Returns a string representing a many2one value. The value is expected to be
- * either `false` or an array in the form [id, display_name]. The returned
- * value will then be the display name of the given value, or an empty string
- * if the value is false.
+ * either `false` or an array in the form [id, display_name] or an object
+ * containing at least the key "display_name". The returned value will then be
+ * the display name of the given value, or an empty string if the value is false.
  *
- * @param {[number, string] | false} value
+ * @param {[number, string] | { display_name: string } | false} value
  * @param {Object} [options] additional options
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @returns {string}
@@ -226,8 +273,10 @@ export function formatInteger(value, options = {}) {
 export function formatMany2one(value, options) {
     if (!value) {
         value = "";
+    } else if ("display_name" in value ? value.display_name : value[1]) {
+        value = "display_name" in value ? value.display_name : value[1];
     } else {
-        value = value[1] || "";
+        value = _t("Unnamed");
     }
     if (options && options.escape) {
         value = encodeURIComponent(value);
@@ -250,7 +299,7 @@ export function formatX2many(value) {
     } else if (count === 1) {
         return _t("1 record");
     } else {
-        return sprintf(_t("%s records"), count);
+        return _t("%s records", count);
     }
 }
 
@@ -291,27 +340,15 @@ export function formatMonetary(value, options = {}) {
             (options.field && options.field.currency_field) ||
             "currency_id";
         const dataValue = options.data[currencyField];
-        currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
+        currencyId = dataValue?.id ?? dataValue;
     }
-    const currency = session.currencies[currencyId];
-    const digits = options.digits || (currency && currency.digits);
-
-    let formattedValue;
-    if (options.humanReadable) {
-        formattedValue = humanNumber(value, { decimals: digits ? digits[1] : 2 });
-    } else {
-        formattedValue = formatFloat(value, { digits });
-    }
-
-    if (!currency || options.noSymbol) {
-        return formattedValue;
-    }
-    const formatted = [currency.symbol, formattedValue];
-    if (currency.position === "after") {
-        formatted.reverse();
-    }
-    return formatted.join(nbsp);
+    return formatCurrency(value, currencyId, options);
 }
+formatMonetary.extractOptions = ({ options }) => ({
+    noSymbol: options.no_symbol,
+    currencyField: options.currency_field,
+    trailingZeros: !options.hide_trailing_zeros,
+});
 
 /**
  * Returns a string representing the given value (multiplied by 100)
@@ -324,10 +361,14 @@ export function formatMonetary(value, options = {}) {
  */
 export function formatPercentage(value, options = {}) {
     value = value || 0;
-    options = Object.assign({ noTrailingZeros: true, thousandsSep: "" }, options);
-    const formatted = formatFloat(value * 100, options);
+    options = Object.assign({ trailingZeros: false, thousandsSep: "" }, options);
+    if (!options.digits && options.field) {
+        options.digits = options.field.digits;
+    }
+    const formatted = formatFloatNumber(value * 100, options);
     return `${formatted}${options.noSymbol ? "" : "%"}`;
 }
+formatPercentage.extractOptions = formatFloat.extractOptions;
 
 /**
  * Returns a string representing the value of the python properties field
@@ -352,7 +393,20 @@ function formatProperties(value, field) {
  * @returns {string}
  */
 export function formatReference(value, options) {
-    return formatMany2one(value ? [value.resId, value.displayName] : false, options);
+    return formatMany2one(
+        value ? { id: value.resId, display_name: value.displayName } : false,
+        options
+    );
+}
+
+/**
+ * Returns a string representing the value of the many2one_reference field.
+ *
+ * @param {Object|false} value Object with keys "resId" and "displayName"
+ * @returns {string}
+ */
+export function formatMany2oneReference(value) {
+    return value ? formatMany2one({ id: value.resId, display_name: value.displayName }) : "";
 }
 
 /**
@@ -376,6 +430,17 @@ export function formatSelection(value, options = {}) {
  * @returns {string}
  */
 export function formatText(value) {
+    return value ? value.toString() : "";
+}
+
+/**
+ * Returns the value.
+ * Note that, this function is added to be coherent with the rest of the formatters.
+ *
+ * @param {html} value
+ * @returns {html}
+ */
+export function formatHtml(value) {
     return value || "";
 }
 
@@ -393,11 +458,11 @@ registry
     .add("float", formatFloat)
     .add("float_factor", formatFloatFactor)
     .add("float_time", formatFloatTime)
-    .add("html", (value) => value)
+    .add("html", formatHtml)
     .add("integer", formatInteger)
     .add("json", formatJson)
     .add("many2one", formatMany2one)
-    .add("many2one_reference", formatInteger)
+    .add("many2one_reference", formatMany2oneReference)
     .add("one2many", formatX2many)
     .add("many2many", formatX2many)
     .add("monetary", formatMonetary)

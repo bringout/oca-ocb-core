@@ -1,44 +1,17 @@
-/** @odoo-module **/
-
-import { useDebugCategory } from "@web/core/debug/debug_context";
-import { useSetupAction } from "@web/webclient/actions/action_hook";
-import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { download } from "@web/core/network/download";
+import { rpc } from "@web/core/network/rpc";
+import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
+import {
+    deleteConfirmationMessage,
+    ConfirmationDialog,
+} from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { useComponent, useEffect, xml } from "@odoo/owl";
-
-export function useSetupView(params) {
-    const component = useComponent();
-    useDebugCategory("view", { component });
-    useSetupAction(params);
-}
-
-export function useViewArch(arch, params = {}) {
-    const CATEGORY = "__processed_archs__";
-
-    arch = arch.trim();
-    const processedRegistry = registry.category(CATEGORY);
-
-    let processedArch;
-    if (!processedRegistry.contains(arch)) {
-        processedArch = {};
-        processedRegistry.add(arch, processedArch);
-    } else {
-        processedArch = processedRegistry.get(arch);
-    }
-
-    const { compile, extract } = params;
-    if (!("template" in processedArch) && compile) {
-        processedArch.template = xml`${compile(arch)}`;
-    }
-    if (!("extracted" in processedArch) && extract) {
-        processedArch.extracted = extract(arch);
-    }
-
-    return processedArch;
-}
+import { useComponent, useEffect } from "@odoo/owl";
+import { DynamicList } from "@web/model/relational_model/dynamic_list";
 
 /**
  * Allows for a component (usually a View component) to handle links with
@@ -59,15 +32,6 @@ export function useActionLinks({ resModel, reload }) {
 
     const orm = useService("orm");
     const { doAction } = useService("action");
-
-    function checkAndCollapseBootstrap(target) {
-        // the handler should have stopped the Event
-        // But we still need to alert bootstrap if we need to
-        // This function should be removed when we get rid of bootstrap as a JS framework
-        if (target.dataset.bsToggle === "collapse") {
-            $(target).trigger("click.bs.collapse.data-api");
-        }
-    }
 
     async function handler(ev) {
         ev.preventDefault();
@@ -124,7 +88,6 @@ export function useActionLinks({ resModel, reload }) {
             }
             keepLast.add(doAction(action, options));
         }
-        checkAndCollapseBootstrap(target);
     }
 
     return (ev) => {
@@ -158,4 +121,98 @@ export function useBounceButton(containerRef, shouldBounce) {
         },
         () => [containerRef.el]
     );
+}
+
+export function useExportRecords(env, context, getDefaultExportList) {
+    const { model, searchModel } = env;
+    useBus(searchModel, "direct-export-data", async () => {
+        _downloadExport(getDefaultExportList(), false, "xlsx");
+    });
+    const _getExportedFields = async (isCompatible, parentParams) => {
+        const root = model.root;
+        let domain = parentParams ? [] : root.domain;
+        if (!root.isDomainSelected && root.selection.length > 0) {
+            const ids = root.selection.map((e) => e.resId);
+            domain = [["id", "in", ids]];
+        }
+        return await rpc("/web/export/get_fields", {
+            model: root.resModel,
+            domain,
+            import_compat: isCompatible,
+            ...parentParams,
+        });
+    };
+
+    const _downloadExport = async (fields, import_compat, format) => {
+        const root = model.root;
+        const exportedFields = fields.map((field) => ({
+            name: field.name || field.id,
+            label: field.label || field.string,
+            store: field.store,
+            type: field.field_type || field.type,
+        }));
+        if (import_compat) {
+            exportedFields.unshift({
+                name: "id",
+                label: _t("External ID"),
+            });
+        }
+        await download({
+            data: {
+                data: JSON.stringify({
+                    import_compat,
+                    context: root.context,
+                    domain: root.domain,
+                    fields: exportedFields,
+                    groupby: root.groupBy,
+                    ids:
+                        !root.isDomainSelected && root.selection.length > 0
+                            ? root.selection.map((e) => e.resId)
+                            : false,
+                    model: root.resModel,
+                }),
+            },
+            url: `/web/export/${format}`,
+        });
+    };
+
+    return () => {
+        const root = model.root;
+        model.dialog.add(ExportDataDialog, {
+            context: root.context,
+            defaultExportList: getDefaultExportList(),
+            download: _downloadExport,
+            getExportedFields: _getExportedFields,
+            root,
+        });
+    };
+}
+
+export function useDeleteRecords(model) {
+    function getDefaultDialogProps(records) {
+        const isDynamicList = model.root instanceof DynamicList;
+        let body = deleteConfirmationMessage;
+        if (
+            records?.length > 1 ||
+            (isDynamicList && (model.root.isDomainSelected || model.root.selection.length > 1))
+        ) {
+            body = _t("Are you sure you want to delete these records?");
+        }
+        let confirm = () => records.forEach((r) => r.delete());
+        if (isDynamicList) {
+            confirm = () => model.root.deleteRecords(records);
+        }
+        return {
+            body,
+            cancel: () => {},
+            cancelLabel: _t("No, keep it"),
+            confirm,
+            confirmLabel: _t("Delete"),
+            title: _t("Bye-bye, record!"),
+        };
+    }
+    return (dialogProps, records) => {
+        const defaultProps = getDefaultDialogProps(records);
+        model.dialog.add(ConfirmationDialog, { ...defaultProps, ...dialogProps });
+    };
 }

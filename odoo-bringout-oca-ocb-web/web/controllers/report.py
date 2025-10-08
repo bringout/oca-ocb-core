@@ -23,7 +23,7 @@ class ReportController(http.Controller):
     @http.route([
         '/report/<converter>/<reportname>',
         '/report/<converter>/<reportname>/<docids>',
-    ], type='http', auth='user', website=True)
+    ], type='http', auth='user', website=True, readonly=True)
     def report_routes(self, reportname, docids=None, converter=None, **data):
         report = request.env['ir.actions.report']
         context = dict(request.env.context)
@@ -52,7 +52,10 @@ class ReportController(http.Controller):
     #------------------------------------------------------
     # Misc. route utils
     #------------------------------------------------------
-    @http.route(['/report/barcode', '/report/barcode/<barcode_type>/<path:value>'], type='http', auth="public")
+    @http.route([
+        '/report/barcode',
+        '/report/barcode/<barcode_type>/<path:value>',
+    ], type='http', auth='public', readonly=True)
     def report_barcode(self, barcode_type, value, **kwargs):
         """Contoller able to render barcode images thanks to reportlab.
         Samples::
@@ -68,8 +71,8 @@ class ReportController(http.Controller):
         :param height: Pixel height of the barcode
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
-        :param quiet: Accepted values: 0 (default) or 1. 1 will display white
-        margins on left and right.
+        :param quiet: Accepted values: 0 or 1 (default). 1 will display white
+        margins on left and right for barcodes and on all sides for QR codes.
         :param mask: The mask code to be used when rendering this QR-code.
                      Masks allow adding elements on top of the generated image,
                      such as the Swiss cross in the center of QR-bill codes.
@@ -81,10 +84,14 @@ class ReportController(http.Controller):
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
-        return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
+        return request.make_response(barcode, headers=[
+            ('Content-Type', 'image/png'),
+            ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}, immutable'),
+        ])
 
     @http.route(['/report/download'], type='http', auth="user")
-    def report_download(self, data, context=None, token=None):  # pylint: disable=unused-argument
+    # pylint: disable=unused-argument
+    def report_download(self, data, context=None, token=None, readonly=True):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
@@ -133,16 +140,16 @@ class ReportController(http.Controller):
             else:
                 return
         except Exception as e:
-            _logger.exception("Error while generating report %s", reportname)
+            _logger.warning("Error while generating report %s", reportname, exc_info=True)
             se = http.serialize_exception(e)
             error = {
-                'code': 200,
+                'code': 0,
                 'message': "Odoo Server Error",
                 'data': se
             }
             res = request.make_response(html_escape(json.dumps(error)))
             raise werkzeug.exceptions.InternalServerError(response=res) from e
 
-    @http.route(['/report/check_wkhtmltopdf'], type='json', auth="user")
+    @http.route(['/report/check_wkhtmltopdf'], type='jsonrpc', auth='user', readonly=True)
     def check_wkhtmltopdf(self):
         return request.env['ir.actions.report'].get_wkhtmltopdf_state()

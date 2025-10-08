@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.ReferenceField" owl="1">
+    <t t-name="web.ReferenceField">
+        <t t-set="relation" t-value="getRelation()"/>
         <div class="o_row">
-            <t t-if="!props.readonly and !props.hideModelSelector">
+            <t t-if="!props.readonly and !hideModelSelector">
                 <select class="o_input"
                     t-att-tabindex="relation ? '-1': 0"
                     t-on-change="(ev) => this.updateModel(ev.target.value || false)"
@@ -15,10 +16,7 @@
                 </select>
             </t>
             <t t-if="relation">
-                <Many2OneField
-                    t-key="m2oProps.relation"
-                    t-props="m2oProps"
-                />
+                <Many2One t-key="relation" t-props="m2oProps"/>
             </t>
         </div>
     </t>

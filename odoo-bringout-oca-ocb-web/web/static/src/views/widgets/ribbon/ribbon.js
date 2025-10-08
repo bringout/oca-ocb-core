@@ -1,5 +1,4 @@
-/** @odoo-module */
-
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "../standard_widget_props";
 
@@ -18,7 +17,20 @@ import { Component } from "@odoo/owl";
  *        If you don't specify the bg_color prop the bg-success class will be used
  *        by default.
  */
-class RibbonWidget extends Component {
+export class RibbonWidget extends Component {
+    static template = "web.Ribbon";
+    static props = {
+        ...standardWidgetProps,
+        record: { type: Object, optional: true },
+        text: { type: String },
+        title: { type: String, optional: true },
+        bgClass: { type: String, optional: true },
+    };
+    static defaultProps = {
+        title: "",
+        bgClass: "text-bg-success",
+    };
+
     get classes() {
         let classes = this.props.bgClass;
         if (this.props.text.length > 15) {
@@ -30,23 +42,30 @@ class RibbonWidget extends Component {
     }
 }
 
-RibbonWidget.template = "web.Ribbon";
-RibbonWidget.props = {
-    ...standardWidgetProps,
-    text: { type: String },
-    title: { type: String, optional: true },
-    bgClass: { type: String, optional: true },
-};
-RibbonWidget.defaultProps = {
-    title: "",
-    bgClass: "bg-success",
-};
-RibbonWidget.extractProps = ({ attrs }) => {
-    return {
+export const ribbonWidget = {
+    component: RibbonWidget,
+    extractProps: ({ attrs }) => ({
         text: attrs.title || attrs.text,
         title: attrs.tooltip,
         bgClass: attrs.bg_color,
-    };
+    }),
+    supportedAttributes: [
+        {
+            label: _t("Title"),
+            name: "title",
+            type: "string",
+        },
+        {
+            label: _t("Background color"),
+            name: "bg_color",
+            type: "string",
+        },
+        {
+            label: _t("Tooltip"),
+            name: "tooltip",
+            type: "string",
+        },
+    ],
 };
 
-registry.category("view_widgets").add("web_ribbon", RibbonWidget);
+registry.category("view_widgets").add("web_ribbon", ribbonWidget);

@@ -1,70 +1,29 @@
-/*!rtl:begin:ignore*/
-
-@keyframes slide-top {
-	0% {
-		opacity: 0;
-		transform: translateY(-5%);
-	}
-}
-
-@keyframes slide-end {
-	0% {
-		opacity: 0;
-		transform: translateX(5%);
-	}
-}
-
-@keyframes slide-bottom {
-	0% {
-		opacity: 0;
-		transform: translateY(5%);
-	}
-}
-
-@keyframes slide-start {
-	0% {
-		opacity: 0;
-		transform: translateX(-5%);
-	}
-}
-
 .o_popover {
-	@each $direction in (top, end, bottom, start) {
-		&.bs-popover-#{$direction} {
-			animation: 0.2s slide-#{$direction};
-		}
+	> .popover-arrow {
+		--safety-margin: calc((var(--popover-arrow-width) / 4) - 1px);
+		--position-min: var(--safety-margin);
+		--position-center: calc(50% - var(--popover-arrow-width) / 2);
+		--position-max: calc(100% - var(--popover-arrow-width) - var(--safety-margin));
+		transition: opacity var(--animation-time), transform var(--animation-time);
+		opacity: 1;
 	}
 
-	&.o-popover-top, &.o-popover-auto[x-placement^="top"] {
-		margin-top: -0.5rem;
+	&[data-popper-placement^="top"] > .popover-arrow.sucked {
+		opacity: 0;
+		transform: translateY(-100%);
 	}
-
-	&.o-popover-right, &.o-popover-auto[x-placement^="right"] {
-		margin-left: 0.5rem;
+	&[data-popper-placement^="right"] > .popover-arrow.sucked {
+		opacity: 0;
+		/*rtl:ignore*/
+		transform: translateX(100%);
 	}
-
-	&.o-popover-bottom, &.o-popover-auto[x-placement^="bottom"] {
-		margin-top: 0.5rem;
+	&[data-popper-placement^="bottom"] > .popover-arrow.sucked {
+		opacity: 0;
+		transform: translateY(100%);
 	}
-
-	&.o-popover-left, &.o-popover-auto[x-placement^="left"] {
-		margin-left: -0.5rem;
-	}
-
-	&.o-popover--ts .popover-arrow, &.o-popover--bs .popover-arrow {
-		left: $popover-border-radius;
-	}
-
-	&.o-popover--te .popover-arrow, &.o-popover--be .popover-arrow {
-		right: $popover-border-radius;
-	}
-
-	&.o-popover--ls .popover-arrow, &.o-popover--rs .popover-arrow {
-		top: $popover-border-radius;
-	}
-
-	&.o-popover--le .popover-arrow, &.o-popover--re .popover-arrow {
-		bottom: $popover-border-radius;
+	&[data-popper-placement^="left"] > .popover-arrow.sucked {
+		opacity: 0;
+		/*rtl:ignore*/
+		transform: translateX(-100%);
 	}
 }
-/*!rtl:end:ignore*/

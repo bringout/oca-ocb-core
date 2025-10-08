@@ -1,192 +1,332 @@
-/** @odoo-module */
-
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { download } from "@web/core/network/download";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { DynamicRecordList } from "@web/views/relational_model";
+import { _t } from "@web/core/l10n/translation";
+import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
+import { user } from "@web/core/user";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
-import { ActionMenus } from "@web/search/action_menus/action_menus";
+import { omit } from "@web/core/utils/objects";
+import { useSetupAction } from "@web/search/action_hook";
+import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
-import { session } from "@web/session";
-import { useModel } from "@web/views/model";
+import { useModelWithSampleData } from "@web/model/model";
+import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
+import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { useSetupView } from "@web/views/view_hook";
+import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { useViewButtons } from "@web/views/view_button/view_button_hook";
-import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
+import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
+import { ListConfirmationDialog } from "./list_confirmation_dialog";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
+import { session } from "@web/session";
+import { ListCogMenu } from "./list_cog_menu";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { SelectionBox } from "@web/views/view_components/selection_box";
+import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
-import { Component, onMounted, onWillStart, useSubEnv, useEffect, useRef } from "@odoo/owl";
-
-export class ListViewHeaderButton extends ViewButton {
-    async onClick() {
-        const { clickParams, list } = this.props;
-        const resIds = await list.getResIds(true);
-        clickParams.buttonContext = {
-            active_domain: this.props.domain,
-            // active_id: resIds[0], // FGE TODO
-            active_ids: resIds,
-            active_model: list.resModel,
-        };
-
-        this.env.onClickViewButton({
-            clickParams,
-            getResParams: () => ({
-                context: list.context,
-                evalContext: list.evalContext,
-                resModel: list.resModel,
-                resIds,
-            }),
-        });
-    }
-}
-ListViewHeaderButton.props = [...ViewButton.props, "list", "domain"];
+import {
+    Component,
+    onWillPatch,
+    onWillRender,
+    onWillStart,
+    useEffect,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
 export class ListController extends Component {
+    static template = `web.ListView`;
+    static components = {
+        ActionMenus,
+        Layout,
+        ViewButton,
+        MultiRecordViewButton,
+        SearchBar,
+        CogMenu: ListCogMenu,
+        DropdownItem,
+        SelectionBox,
+    };
+    static props = {
+        ...standardViewProps,
+        allowSelectors: { type: Boolean, optional: true },
+        onSelectionChanged: { type: Function, optional: true },
+        readonly: { type: Boolean, optional: true },
+        showButtons: { type: Boolean, optional: true },
+        allowOpenAction: { type: Boolean, optional: true },
+        Model: Function,
+        Renderer: Function,
+        buttonTemplate: String,
+        archInfo: Object,
+    };
+    static defaultProps = {
+        allowSelectors: true,
+        createRecord: () => {},
+        selectRecord: () => {},
+        showButtons: true,
+        allowOpenAction: true,
+    };
+
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
-        this.notificationService = useService("notification");
-        this.userService = useService("user");
-        this.rpc = useService("rpc");
         this.orm = useService("orm");
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
-        this.editable = this.props.editable ? this.archInfo.editable : false;
-        this.multiEdit = this.archInfo.multiEdit;
         this.activeActions = this.archInfo.activeActions;
-        const fields = this.props.fields;
-        const { rootState } = this.props.state || {};
-        const { rawExpand } = this.archInfo;
-        this.model = useModel(this.props.Model, {
-            resModel: this.props.resModel,
-            fields,
-            activeFields: this.archInfo.activeFields,
-            fieldNodes: this.archInfo.fieldNodes,
-            handleField: this.archInfo.handleField,
-            viewMode: "list",
-            groupByInfo: this.archInfo.groupBy.fields,
-            limit: this.archInfo.limit || this.props.limit,
-            countLimit: this.archInfo.countLimit,
-            defaultOrder: this.archInfo.defaultOrder,
-            expand: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
-            groupsLimit: this.archInfo.groupsLimit,
-            multiEdit: this.multiEdit,
-            rootState,
-        });
+        this.onOpenFormView = this.openRecord.bind(this);
+        this.editable = (!this.props.readonly && this.archInfo.editable) || false;
+        this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
+        this.model = useState(
+            useModelWithSampleData(this.props.Model, this.modelParams, this.modelOptions)
+        );
 
-        this.optionalActiveFields = [];
+        // In multi edition, we save or notify invalidity directly when a field is updated, which
+        // occurs on the change event for input fields. But we don't want to do it when clicking on
+        // "Discard". So we set a flag on mousedown (which triggers the update) to block the multi
+        // save or invalid notification.
+        // However, if the mouseup (and click) is done outside "Discard", we finally want to do it.
+        // We use `nextActionAfterMouseup` for this purpose: it registers a callback to execute if
+        // the mouseup following a mousedown on "Discard" isn't done on "Discard".
+        this.hasMousedownDiscard = false;
+        this.nextActionAfterMouseup = null;
+
+        this.optionalActiveFields = {};
+
+        this.editedRecord = null;
+        onWillRender(() => {
+            this.editedRecord = this.model.root.editedRecord;
+        });
 
         onWillStart(async () => {
-            this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
+            this.isExportEnable = await user.hasGroup("base.group_allow_export");
         });
-
-        onMounted(() => {
-            const { rendererScrollPositions } = this.props.state || {};
+        let { rendererScrollPositions } = this.props.state || {};
+        useEffect(() => {
             if (rendererScrollPositions) {
                 const renderer = this.rootRef.el.querySelector(".o_list_renderer");
-                renderer.scrollLeft = rendererScrollPositions.left;
-                renderer.scrollTop = rendererScrollPositions.top;
+                if (renderer) {
+                    renderer.scrollLeft = rendererScrollPositions.left;
+                    renderer.scrollTop = rendererScrollPositions.top;
+                    rendererScrollPositions = null;
+                }
             }
         });
 
         this.archiveEnabled =
-            "active" in fields
-                ? !fields.active.readonly
-                : "x_active" in fields
-                ? !fields.x_active.readonly
+            "active" in this.props.fields
+                ? !this.props.fields.active.readonly
+                : "x_active" in this.props.fields
+                ? !this.props.fields.x_active.readonly
                 : false;
-        useSubEnv({ model: this.model }); // do this in useModel?
-        useViewButtons(this.model, this.rootRef, {
+        useSubEnv({ model: this.model }); // do this in useModelWithSampleData?
+        useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
+            reload: () => this.model.load(),
         });
-        useSetupView({
+        useSetupAction({
             rootRef: this.rootRef,
-            beforeLeave: async () => {
-                const list = this.model.root;
-                const editedRecord = list.editedRecord;
-                if (editedRecord) {
-                    if (!(await list.unselectRecord(true))) {
-                        return false;
-                    }
-                }
-            },
-            beforeUnload: async (ev) => {
-                const editedRecord = this.model.root.editedRecord;
-                if (editedRecord) {
-                    const isValid = await editedRecord.urgentSave();
-                    if (!isValid) {
-                        ev.preventDefault();
-                        ev.returnValue = "Unsaved changes";
-                    }
-                }
-            },
+            beforeLeave: this.beforeLeave.bind(this),
+            beforeUnload: this.beforeUnload.bind(this),
             getLocalState: () => {
                 const renderer = this.rootRef.el.querySelector(".o_list_renderer");
                 return {
-                    rootState: this.model.root.exportState(),
-                    rendererScrollPositions: { left: renderer.scrollLeft, top: renderer.scrollTop },
+                    modelState: this.model.exportState(),
+                    rendererScrollPositions: {
+                        left: renderer?.scrollLeft || 0,
+                        top: renderer?.scrollTop || 0,
+                    },
                 };
             },
-            getOrderBy: () => {
-                return this.model.root.orderBy;
-            },
+            getOrderBy: () => this.model.root.orderBy,
         });
 
         usePager(() => {
-            const list = this.model.root;
-            const { count, hasLimitedCount, isGrouped, limit, offset } = list;
             if (this.model.useSampleModel) {
                 return;
             }
+            const { count, hasLimitedCount, isGrouped, limit, offset } = this.model.root;
             return {
                 offset: offset,
                 limit: limit,
                 total: count,
                 onUpdate: async ({ offset, limit }, hasNavigated) => {
-                    if (this.model.root.editedRecord) {
-                        if (!(await this.model.root.editedRecord.save())) {
+                    if (this.editedRecord) {
+                        if (!(await this.editedRecord.save())) {
                             return;
                         }
                     }
-                    await list.load({ limit, offset });
-                    this.render(true); // FIXME WOWL reactivity
+                    await this.model.root.load({ limit, offset });
                     if (hasNavigated) {
                         this.onPageChangeScroll();
                     }
                 },
-                updateTotal: !isGrouped && hasLimitedCount ? () => list.fetchCount() : undefined,
+                updateTotal:
+                    !isGrouped && hasLimitedCount ? () => this.model.root.fetchCount() : undefined,
             };
         });
 
         useEffect(
             () => {
-                if (this.props.onSelectionChanged) {
-                    const resIds = this.model.root.selection.map((record) => record.resId);
-                    this.props.onSelectionChanged(resIds);
+                this.onSelectionChanged();
+            },
+            () => [this.model.root.selection.length, this.model.root.isDomainSelected]
+        );
+        this.searchBarToggler = useSearchBarToggler();
+        this.firstLoad = true;
+        onWillPatch(() => {
+            this.firstLoad = false;
+        });
+        this.exportRecords = useExportRecords(this.env, this.props.context, () =>
+            this.getExportableFields()
+        );
+        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
+    }
+
+    get modelParams() {
+        const { rawExpand } = this.archInfo;
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            this.archInfo,
+            this.props.fields
+        );
+        const groupByInfo = {};
+        for (const fieldName in this.archInfo.groupBy.fields) {
+            const fieldNodes = this.archInfo.groupBy.fields[fieldName].fieldNodes;
+            const fields = this.archInfo.groupBy.fields[fieldName].fields;
+            groupByInfo[fieldName] = extractFieldsFromArchInfo({ fieldNodes }, fields);
+        }
+
+        const modelConfig = this.props.state?.modelState?.config || {
+            resModel: this.props.resModel,
+            fields,
+            activeFields,
+            openGroupsByDefault: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
+        };
+
+        return {
+            config: modelConfig,
+            state: this.props.state?.modelState,
+            groupByInfo,
+            limit: this.archInfo.limit || this.props.limit,
+            countLimit: this.archInfo.countLimit,
+            defaultOrderBy: this.archInfo.defaultOrder,
+            groupsLimit: this.archInfo.groupsLimit,
+            multiEdit: !this.props.readonly && this.archInfo.multiEdit,
+            activeIdsLimit: session.active_ids_limit,
+            hooks: {
+                onRecordSaved: this.onRecordSaved.bind(this),
+                onWillSaveRecord: this.onWillSaveRecord.bind(this),
+                onWillSaveMulti: this.onWillSaveMulti.bind(this),
+                onAskMultiSaveConfirmation: this.onAskMultiSaveConfirmation.bind(this),
+                onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
+            },
+        };
+    }
+
+    get modelOptions() {
+        return {
+            lazy:
+                !this.env.config.isReloadingController &&
+                !this.env.inDialog &&
+                !!this.props.display.controlPanel,
+        };
+    }
+
+    get actionMenuProps() {
+        return {
+            getActiveIds: () => this.model.root.selection.map((r) => r.resId),
+            context: this.model.root.context,
+            domain: this.props.domain,
+            items: this.actionMenuItems,
+            isDomainSelected: this.model.root.isDomainSelected,
+            resModel: this.model.root.resModel,
+            onActionExecuted: ({ noReload } = {}) => {
+                if (!noReload) {
+                    return this.model.load();
                 }
             },
-            () => [this.model.root.selection.length]
+        };
+    }
+
+    get archiveDialogProps() {
+        return {};
+    }
+
+    get deleteConfirmationDialogProps() {
+        return {};
+    }
+
+    getExportableFields() {
+        return unique(
+            this.props.archInfo.columns
+                .filter((col) => col.type === "field")
+                .filter((col) => !col.optional || this.optionalActiveFields[col.name])
+                .filter((col) => !evaluateBooleanExpr(col.column_invisible, this.props.context))
+                .map((col) => this.props.fields[col.name])
+                .filter((field) => field.exportable !== false)
+                .filter((field) => field.type !== "properties")
         );
     }
 
+    async beforeLeave(ev) {
+        return this.model.root.leaveEditMode();
+    }
+
+    async beforeUnload(ev) {
+        if (this.editedRecord) {
+            const isValid = await this.editedRecord.urgentSave();
+            if (!isValid) {
+                ev.preventDefault();
+                ev.returnValue = "Unsaved changes";
+            }
+        }
+    }
+
+    onDeleteSelectedRecords() {
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps);
+    }
+
+    /**
+     * onRecordSaved is a callBack that will be executed after the save
+     * if it was done. It will therefore not be executed if the record
+     * is invalid or if a server error is thrown.
+     * @param {Record} record
+     */
+    async onRecordSaved(record) {}
+
+    async onSelectionChanged() {
+        if (this.props.onSelectionChanged) {
+            const resIds = await this.model.root.getResIds(true);
+            this.props.onSelectionChanged(resIds);
+        }
+    }
+
+    /**
+     * onWillSaveRecord is a callBack that will be executed before the
+     * record save if the record is valid if the record is valid.
+     * If it returns false, it will prevent the save.
+     * @param {Record} record
+     */
+    async onWillSaveRecord(record) {}
+
     async createRecord({ group } = {}) {
+        if (!this.model.isReady && !this.model.config.groupBy.length && this.editable) {
+            // If the view isn't grouped and the list is editable, a new record row will be added,
+            // in edition. In this situation, we must wait for the model to be ready.
+            await this.model.whenReady;
+        }
         const list = (group && group.list) || this.model.root;
         if (this.editable && !list.isGrouped) {
             if (!(list instanceof DynamicRecordList)) {
                 throw new Error("List should be a DynamicRecordList");
             }
-            if (list.editedRecord) {
-                await list.editedRecord.save();
-            }
+            await list.leaveEditMode();
             if (!list.editedRecord) {
-                await (group || list).createRecord({}, this.editable === "top");
+                await (group || list).addNewRecord(this.editable === "top");
             }
             this.render();
         } else {
@@ -194,53 +334,65 @@ export class ListController extends Component {
         }
     }
 
-    async openRecord(record) {
-        if (this.archInfo.openAction) {
-            this.actionService.doActionButton({
-                name: this.archInfo.openAction.action,
-                type: this.archInfo.openAction.type,
-                resModel: record.resModel,
-                resId: record.resId,
-                resIds: record.resIds,
-                context: record.context,
-                onClose: async () => {
-                    await record.model.root.load();
-                    record.model.notify();
+    async openRecord(record, { force, newWindow } = { force: false }) {
+        const dirty = await record.isDirty();
+        if (dirty) {
+            await record.save();
+        }
+        if (this.props.allowOpenAction && this.archInfo.openAction) {
+            this.actionService.doActionButton(
+                {
+                    name: this.archInfo.openAction.action,
+                    type: this.archInfo.openAction.type,
+                    resModel: record.resModel,
+                    resId: record.resId,
+                    resIds: record.resIds,
+                    context: record.context,
+                    onClose: async () => {
+                        await record.model.root.load();
+                    },
                 },
-            });
+                {
+                    newWindow,
+                }
+            );
         } else {
             const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);
-            this.props.selectRecord(record.resId, { activeIds });
+            this.props.selectRecord(record.resId, { activeIds, force, newWindow });
         }
     }
 
-    onClickCreate() {
-        this.createRecord();
+    async onClickCreate() {
+        return executeButtonCallback(this.rootRef.el, () => this.createRecord());
     }
 
-    onClickDiscard() {
-        const editedRecord = this.model.root.editedRecord;
-        if (editedRecord.isVirtual) {
-            this.model.root.removeRecord(editedRecord);
-        } else {
-            editedRecord.discard();
-        }
+    async onClickDiscard() {
+        return executeButtonCallback(this.rootRef.el, () =>
+            this.model.root.leaveEditMode({ discard: true })
+        );
     }
 
-    onClickSave() {
-        this.model.root.editedRecord.save();
+    async onClickSave() {
+        return executeButtonCallback(this.rootRef.el, async () => {
+            const saved = await this.editedRecord.save();
+            if (saved) {
+                await this.model.root.leaveEditMode();
+            }
+        });
     }
 
     onMouseDownDiscard(mouseDownEvent) {
-        const list = this.model.root;
-        list.blockUpdate = true;
+        this.hasMousedownDiscard = true;
         document.addEventListener(
             "mouseup",
             (mouseUpEvent) => {
+                this.hasMousedownDiscard = false;
                 if (mouseUpEvent.target !== mouseDownEvent.target) {
-                    list.blockUpdate = false;
-                    list.multiSave(list.editedRecord);
+                    if (this.nextActionAfterMouseup) {
+                        this.nextActionAfterMouseup();
+                    }
                 }
+                this.nextActionAfterMouseup = null;
             },
             { capture: true, once: true }
         );
@@ -248,255 +400,102 @@ export class ListController extends Component {
 
     onPageChangeScroll() {
         if (this.rootRef && this.rootRef.el) {
-            this.rootRef.el.querySelector(".o_content").scrollTop = 0;
+            if (this.env.isSmall) {
+                this.rootRef.el.scrollTop = 0;
+            } else {
+                this.rootRef.el.querySelector(".o_content .o_list_renderer").scrollTop = 0;
+            }
         }
     }
 
-    getSelectedResIds() {
-        return this.model.root.getResIds(true);
-    }
-
-    getActionMenuItems() {
-        const isM2MGrouped = this.model.root.isM2MGrouped;
-        const otherActionItems = [];
-        if (this.isExportEnable) {
-            otherActionItems.push({
-                key: "export",
-                description: this.env._t("Export"),
-                callback: () => this.onExportData(),
-            });
-        }
-        if (this.archiveEnabled && !isM2MGrouped) {
-            otherActionItems.push({
-                key: "archive",
-                description: this.env._t("Archive"),
-                callback: () => {
-                    const dialogProps = {
-                        body: this.env._t(
-                            "Are you sure that you want to archive all the selected records?"
-                        ),
-                        confirmLabel: this.env._t("Archive"),
-                        confirm: () => {
-                            this.toggleArchiveState(true);
-                        },
-                        cancel: () => {},
-                    };
-                    this.dialogService.add(ConfirmationDialog, dialogProps);
-                },
-            });
-            otherActionItems.push({
-                key: "unarchive",
-                description: this.env._t("Unarchive"),
-                callback: () => this.toggleArchiveState(false),
-            });
-        }
-        if (this.activeActions.delete && !isM2MGrouped) {
-            otherActionItems.push({
-                key: "delete",
-                description: this.env._t("Delete"),
+    getStaticActionMenuItems() {
+        return {
+            export: {
+                isAvailable: () => this.isExportEnable,
+                sequence: 10,
+                icon: "fa fa-upload",
+                description: _t("Export"),
+                callback: () => this.exportRecords(),
+            },
+            duplicate: {
+                isAvailable: () => this.activeActions.duplicate,
+                sequence: 30,
+                icon: "fa fa-clone",
+                description: _t("Duplicate"),
+                callback: () => this.model.root.duplicateRecords(),
+            },
+            archive: {
+                isAvailable: () => this.archiveEnabled,
+                sequence: 40,
+                icon: "oi oi-archive",
+                description: _t("Archive"),
+                callback: () =>
+                    this.model.root.toggleArchiveWithConfirmation(true, this.archiveDialogProps),
+            },
+            unarchive: {
+                isAvailable: () => this.archiveEnabled,
+                sequence: 45,
+                icon: "oi oi-unarchive",
+                description: _t("Unarchive"),
+                callback: () => this.model.root.toggleArchiveWithConfirmation(false),
+            },
+            delete: {
+                isAvailable: () => this.activeActions.delete,
+                sequence: 50,
+                icon: "fa fa-trash-o",
+                description: _t("Delete"),
+                class: "text-danger",
                 callback: () => this.onDeleteSelectedRecords(),
-            });
-        }
-        return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
+            },
+        };
     }
 
-    async onSelectDomain() {
-        if (!this.isTotalTrustable) {
-            const limit = DynamicRecordList.WEB_SEARCH_READ_COUNT_LIMIT;
-            this.nbRecordsMatchingDomain = await this.orm.searchCount(this.props.resModel, this.model.root.domain, { limit })
-        }
-        this.model.root.selectDomain(true);
-        if (this.props.onSelectionChanged) {
-            const resIds = await this.model.root.getResIds(true);
-            this.props.onSelectionChanged(resIds);
-        }
+    get actionMenuItems() {
+        const { actionMenus } = this.props.info;
+        const staticActionItems = Object.entries(this.getStaticActionMenuItems())
+            .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
+            .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
+            .map(([key, item]) =>
+                Object.assign(
+                    { key, groupNumber: STATIC_ACTIONS_GROUP_NUMBER },
+                    omit(item, "isAvailable")
+                )
+            );
+
+        return {
+            action: [...staticActionItems, ...(actionMenus?.action || [])],
+            print: actionMenus?.print,
+        };
     }
 
-    get className() {
-        return this.props.className;
-    }
-
-    get nbSelected() {
-        return this.model.root.selection.length;
-    }
-
-    get isPageSelected() {
-        const root = this.model.root;
-        return root.selection.length === root.records.length;
+    get hasSelectedRecords() {
+        return this.model.root.selection.length || this.isDomainSelected;
     }
 
     get isDomainSelected() {
         return this.model.root.isDomainSelected;
     }
 
-    get isTotalTrustable() {
-        return !this.model.root.isGrouped || this.model.root.count <= this.model.root.limit;
+    evalViewModifier(modifier) {
+        return evaluateBooleanExpr(modifier, this.model.root.evalContext);
     }
 
-    get nbTotal() {
-        const list = this.model.root;
-        return list.isGrouped ? list.nbTotalRecords : list.count;
-    }
-
-    onOptionalFieldsChanged(optionalActiveFields) {
-        this.optionalActiveFields = optionalActiveFields;
-    }
-
-    get defaultExportList() {
-        return unique(
-            this.props.archInfo.columns
-                .filter((col) => col.type === "field")
-                .filter((col) => !col.optional || this.optionalActiveFields[col.name])
-                .map((col) => this.props.fields[col.name])
-                .filter((field) => field.exportable !== false)
-        );
+    get className() {
+        return this.props.className;
     }
 
     get display() {
-        if (!this.env.isSmall) {
+        const { controlPanel } = this.props.display;
+        if (!controlPanel) {
             return this.props.display;
         }
-        const { controlPanel } = this.props.display;
         return {
             ...this.props.display,
             controlPanel: {
                 ...controlPanel,
-                "bottom-right": !this.nbSelected,
+                layoutActions: !this.hasSelectedRecords,
             },
         };
-    }
-
-    async downloadExport(fields, import_compat, format) {
-        let ids = false;
-        if (!this.isDomainSelected) {
-            const resIds = await this.getSelectedResIds();
-            ids = resIds.length > 0 && resIds;
-        }
-        const exportedFields = fields.map((field) => ({
-            name: field.name || field.id,
-            label: field.label || field.string,
-            store: field.store,
-            type: field.field_type || field.type,
-        }));
-        if (import_compat) {
-            exportedFields.unshift({ name: "id", label: this.env._t("External ID") });
-        }
-        await download({
-            data: {
-                data: JSON.stringify({
-                    import_compat,
-                    context: this.props.context,
-                    domain: this.model.root.domain,
-                    fields: exportedFields,
-                    groupby: this.model.root.groupBy,
-                    ids,
-                    model: this.model.root.resModel,
-                }),
-            },
-            url: `/web/export/${format}`,
-        });
-    }
-
-    async getExportedFields(model, import_compat, parentParams) {
-        return await this.rpc("/web/export/get_fields", {
-            ...parentParams,
-            model,
-            import_compat,
-        });
-    }
-
-    /**
-     * Opens the Export Dialog
-     *
-     * @private
-     */
-    async onExportData() {
-        const dialogProps = {
-            context: this.props.context,
-            defaultExportList: this.defaultExportList,
-            download: this.downloadExport.bind(this),
-            getExportedFields: this.getExportedFields.bind(this),
-            root: this.model.root,
-        };
-        this.dialogService.add(ExportDataDialog, dialogProps);
-    }
-    /**
-     * Export Records in a xls file
-     *
-     * @private
-     */
-    async onDirectExportData() {
-        await this.downloadExport(this.defaultExportList, false, "xlsx");
-    }
-    /**
-     * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
-     *
-     * @private
-     * @param {boolean} archive
-     * @returns {Promise}
-     */
-    async toggleArchiveState(archive) {
-        let resIds;
-        const isDomainSelected = this.model.root.isDomainSelected;
-        const total = this.model.root.count;
-        if (archive) {
-            resIds = await this.model.root.archive(true);
-        } else {
-            resIds = await this.model.root.unarchive(true);
-        }
-        if (
-            isDomainSelected &&
-            resIds.length === session.active_ids_limit &&
-            resIds.length < total
-        ) {
-            this.notificationService.add(
-                sprintf(
-                    this.env._t(
-                        "Of the %d records selected, only the first %d have been archived/unarchived."
-                    ),
-                    resIds.length,
-                    total
-                ),
-                { title: this.env._t("Warning") }
-            );
-        }
-    }
-
-    get deleteConfirmationDialogProps() {
-        const root = this.model.root;
-        const body =
-            root.isDomainSelected || root.selection.length > 1
-                ? this.env._t("Are you sure you want to delete these records?")
-                : this.env._t("Are you sure you want to delete this record?");
-        return {
-            body,
-            confirm: async () => {
-                const total = root.count;
-                const resIds = await this.model.root.deleteRecords();
-                this.model.notify();
-                if (
-                    root.isDomainSelected &&
-                    resIds.length === session.active_ids_limit &&
-                    resIds.length < total
-                ) {
-                    this.notificationService.add(
-                        sprintf(
-                            this.env._t(
-                                `Only the first %s records have been deleted (out of %s selected)`
-                            ),
-                            resIds.length,
-                            total
-                        ),
-                        { title: this.env._t("Warning") }
-                    );
-                }
-            },
-            cancel: () => {},
-        };
-    }
-
-    async onDeleteSelectedRecords() {
-        this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
     }
 
     discardSelection() {
@@ -506,31 +505,67 @@ export class ListController extends Component {
     }
 
     async beforeExecuteActionButton(clickParams) {
-        if (clickParams.special !== "cancel" && this.model.root.editedRecord) {
-            return this.model.root.editedRecord.save();
+        if (clickParams.special !== "cancel" && this.editedRecord) {
+            return this.editedRecord.save();
         }
     }
 
     async afterExecuteActionButton(clickParams) {}
-}
 
-ListController.template = `web.ListView`;
-ListController.components = { ActionMenus, ListViewHeaderButton, Layout, ViewButton };
-ListController.props = {
-    ...standardViewProps,
-    allowSelectors: { type: Boolean, optional: true },
-    editable: { type: Boolean, optional: true },
-    onSelectionChanged: { type: Function, optional: true },
-    showButtons: { type: Boolean, optional: true },
-    Model: Function,
-    Renderer: Function,
-    buttonTemplate: String,
-    archInfo: Object,
-};
-ListController.defaultProps = {
-    allowSelectors: true,
-    createRecord: () => {},
-    editable: true,
-    selectRecord: () => {},
-    showButtons: true,
-};
+    onAskMultiSaveConfirmation(changes, validSelectedRecords) {
+        if (this.model.root.selection.length > 1 && validSelectedRecords.length > 0) {
+            const record = validSelectedRecords[0];
+            const { isDomainSelected, selection } = this.model.root;
+            return new Promise((resolve) => {
+                const dialogProps = {
+                    confirm: () => resolve(true),
+                    cancel: () => resolve(false),
+                    isDomainSelected,
+                    fields: Object.keys(changes).map((fieldName) => {
+                        const fieldNode = Object.values(this.archInfo.fieldNodes).find(
+                            (fieldNode) => fieldNode.name === fieldName
+                        );
+                        const label = fieldNode && fieldNode.string;
+                        return {
+                            name: fieldName,
+                            label: label || record.fields[fieldName].string,
+                            fieldNode,
+                            widget: fieldNode && fieldNode.widget,
+                        };
+                    }),
+                    changes,
+                    nbRecords: selection.length,
+                    nbValidRecords: validSelectedRecords.length,
+                    record,
+                };
+
+                const focusedCellBeforeDialog = document.activeElement.closest(".o_data_cell");
+                this.dialogService.add(ListConfirmationDialog, dialogProps, {
+                    onClose: () => {
+                        if (focusedCellBeforeDialog) {
+                            focusedCellBeforeDialog.focus();
+                        }
+                        resolve(false);
+                    },
+                });
+            });
+        }
+        return true;
+    }
+
+    onWillSaveMulti(editedRecord, changes) {
+        if (this.hasMousedownDiscard) {
+            this.nextActionAfterMouseup = () => this.model.root.multiSave(editedRecord, changes);
+            return false;
+        }
+        return true;
+    }
+
+    onWillSetInvalidField(record, fieldName) {
+        if (this.hasMousedownDiscard) {
+            this.nextActionAfterMouseup = () => record.setInvalidField(fieldName);
+            return false;
+        }
+        return true;
+    }
+}

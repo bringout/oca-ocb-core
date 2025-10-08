@@ -75,13 +75,17 @@ class Database(http.Controller):
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             if not re.match(DBNAME_PATTERN, name):
-                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
+                raise Exception(_('Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you\'ll be golden.'))
             # country code could be = "False" which is actually True in python
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code, post['phone']])
-            request.session.authenticate(name, post['login'], password)
-            request.session.db = name
-            return request.redirect('/web')
+            credential = {'login': post['login'], 'password': password, 'type': 'password'}
+            with odoo.modules.registry.Registry(name).cursor() as cr:
+                env = odoo.api.Environment(cr, None, {})
+                request.session.authenticate(env, credential)
+                request._save_session(env)
+                request.session.db = name
+            return request.redirect('/odoo')
         except Exception as e:
             _logger.exception("Database creation error.")
             error = "Database creation error: %s" % (str(e) or repr(e))
@@ -94,7 +98,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             if not re.match(DBNAME_PATTERN, new_name):
-                raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
+                raise Exception(_('Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you\'ll be golden.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name, neutralize_database])
             if request.db == name:
                 request.env.cr.close()  # duplicating a database leads to an unusable cursor
@@ -120,19 +124,22 @@ class Database(http.Controller):
             return self._render_template(error=error)
 
     @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
-    def backup(self, master_pwd, name, backup_format='zip'):
+    def backup(self, master_pwd, name, backup_format='zip', filestore=True):
+        filestore = str2bool(filestore)
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             odoo.service.db.check_super(master_pwd)
+            if name not in http.db_list():
+                raise Exception("Database %r is not known" % name)
             ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
             filename = "%s_%s.%s" % (name, ts, backup_format)
             headers = [
                 ('Content-Type', 'application/octet-stream; charset=binary'),
                 ('Content-Disposition', content_disposition(filename)),
             ]
-            dump_stream = odoo.service.db.dump_db(name, None, backup_format)
+            dump_stream = odoo.service.db.dump_db(name, None, backup_format, filestore)
             response = Response(dump_stream, headers=headers, direct_passthrough=True)
             return response
         except Exception as e:
@@ -140,7 +147,7 @@ class Database(http.Controller):
             error = "Database backup error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
-    @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
+    @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False, max_content_length=None)
     def restore(self, master_pwd, backup_file, name, copy=False, neutralize_database=False):
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
@@ -168,7 +175,7 @@ class Database(http.Controller):
             error = "Master password update error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
-    @http.route('/web/database/list', type='json', auth='none')
+    @http.route('/web/database/list', type='jsonrpc', auth='none')
     def list(self):
         """
         Used by Mobile application for listing database

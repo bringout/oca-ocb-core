@@ -1,15 +1,16 @@
-/** @odoo-module **/
-
+import { _t } from "@web/core/l10n/translation";
 import { browser } from "../browser/browser";
-import { ConnectionLostError, RPCError } from "../network/rpc_service";
+import { ConnectionLostError, RPCError, rpc } from "../network/rpc";
 import { registry } from "../registry";
+import { session } from "@web/session";
+import { user } from "@web/core/user";
 import {
     ClientErrorDialog,
     ErrorDialog,
     NetworkErrorDialog,
     RPCErrorDialog,
 } from "./error_dialogs";
-import { UncaughtClientError, UncaughtCorsError, UncaughtPromiseError } from "./error_service";
+import { UncaughtClientError, ThirdPartyScriptError, UncaughtPromiseError } from "./error_service";
 
 /**
  * @typedef {import("../../env").OdooEnv} OdooEnv
@@ -71,10 +72,13 @@ export function rpcErrorHandler(env, error, originalError) {
             subType: originalError.subType,
             code: originalError.code,
             type: originalError.type,
+            serverHost: error.event?.target?.location.host,
+            model: originalError.model,
         });
         return true;
     }
 }
+
 errorHandlerRegistry.add("rpcErrorHandler", rpcErrorHandler, { sequence: 97 });
 
 // -----------------------------------------------------------------------------
@@ -99,24 +103,20 @@ export function lostConnectionHandler(env, error, originalError) {
             return true;
         }
         connectionLostNotifRemove = env.services.notification.add(
-            env._t("Connection lost. Trying to reconnect..."),
+            _t("Connection lost. Trying to reconnect..."),
             { sticky: true }
         );
         let delay = 2000;
         browser.setTimeout(function checkConnection() {
-            env.services
-                .rpc("/web/webclient/version_info", {})
+            rpc("/web/webclient/version_info", {})
                 .then(function () {
                     if (connectionLostNotifRemove) {
                         connectionLostNotifRemove();
                         connectionLostNotifRemove = null;
                     }
-                    env.services.notification.add(
-                        env._t("Connection restored. You are back online."),
-                        {
-                            type: "info",
-                        }
-                    );
+                    env.services.notification.add(_t("Connection restored. You are back online."), {
+                        type: "info",
+                    });
                 })
                 .catch(() => {
                     // exponential backoff, with some jitter
@@ -136,7 +136,7 @@ errorHandlerRegistry.add("lostConnectionHandler", lostConnectionHandler, { seque
 const defaultDialogs = new Map([
     [UncaughtClientError, ClientErrorDialog],
     [UncaughtPromiseError, ClientErrorDialog],
-    [UncaughtCorsError, NetworkErrorDialog],
+    [ThirdPartyScriptError, NetworkErrorDialog],
 ]);
 
 /**
@@ -147,19 +147,40 @@ const defaultDialogs = new Map([
  * @param {UncaughError} error
  * @returns {boolean}
  */
-function defaultHandler(env, error) {
-    // As an error can occur before the dialog service (implicit service) is up and running, we have added a fallback to
-    // log any errors in the console if the dialog service hasn't been started.
-    if (env.services.dialog) {
-        const DialogComponent = defaultDialogs.get(error.constructor) || ErrorDialog;
-        env.services.dialog.add(DialogComponent, {
-            traceback: error.traceback,
-            message: error.message,
-            name: error.name,
-        });
-    } else {
-        console.error(error.traceback);
-    }
+export function defaultHandler(env, error) {
+    const DialogComponent = defaultDialogs.get(error.constructor) || ErrorDialog;
+    env.services.dialog.add(DialogComponent, {
+        traceback: error.traceback,
+        message: error.message,
+        name: error.name,
+        serverHost: error.event?.target?.location.host,
+    });
     return true;
 }
 errorHandlerRegistry.add("defaultHandler", defaultHandler, { sequence: 100 });
+
+// -----------------------------------------------------------------------------
+// Frontend visitors errors
+// -----------------------------------------------------------------------------
+
+/**
+ * We don't want to show tracebacks to non internal users. This handler swallows
+ * all errors if we're not an internal user (except in debug or test mode).
+ */
+export function swallowAllVisitorErrors(env, error, originalError) {
+    if (!user.isInternalUser && !odoo.debug && !session.test_mode) {
+        return true;
+    }
+}
+
+if (user.isInternalUser === undefined) {
+    // Only warn about this while on the "frontend": the session info might
+    // apparently not be present in all Odoo screens at the moment... TODO ?
+    if (session.is_frontend) {
+        console.warn(
+            "isInternalUser information is required for this handler to work. It must be available in the page."
+        );
+    }
+} else {
+    registry.category("error_handlers").add("swallowAllVisitorErrors", swallowAllVisitorErrors, { sequence: 0 });
+}

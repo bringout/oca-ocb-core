@@ -1,19 +1,13 @@
-/** @odoo-module **/
-
 import { registry } from "@web/core/registry";
+import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { FormRenderer } from "./form_renderer";
-import { RelationalModel } from "../basic_relational_model";
 import { FormArchParser } from "./form_arch_parser";
 import { FormController } from "./form_controller";
 import { FormCompiler } from "./form_compiler";
-import { FormControlPanel } from "./control_panel/form_control_panel";
 
 export const formView = {
     type: "form",
-    display_name: "Form",
-    multiRecord: false,
     searchMenuTypes: [],
-    ControlPanel: FormControlPanel,
     Controller: FormController,
     Renderer: FormRenderer,
     ArchParser: FormArchParser,
@@ -28,6 +22,9 @@ export const formView = {
 
         return {
             ...genericProps,
+            readonly:
+                genericProps.readonly ||
+                (archInfo.activeActions?.edit === false && genericProps.resId !== false),
             Model: view.Model,
             Renderer: view.Renderer,
             buttonTemplate: genericProps.buttonTemplate || view.buttonTemplate,

@@ -1,17 +1,16 @@
-/** @odoo-module **/
-
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
+import { Setting } from "./setting/setting";
 import { Field } from "@web/views/fields/field";
 import { browser } from "@web/core/browser/browser";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
+import { useDebounced, useThrottleForAnimation } from "@web/core/utils/timing";
 import { ButtonBox } from "@web/views/form/button_box/button_box";
 import { InnerGroup, OuterGroup } from "@web/views/form/form_group/form_group";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
-import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
-import { evalDomain } from "../utils";
 import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
@@ -28,43 +27,74 @@ import {
 } from "@odoo/owl";
 
 export class FormRenderer extends Component {
+    static template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
+    static components = {
+        Field,
+        FormLabel,
+        ButtonBox,
+        ViewButton,
+        Widget,
+        Notebook,
+        Setting,
+        OuterGroup,
+        InnerGroup,
+        StatusBarButtons,
+    };
+    static props = {
+        archInfo: Object,
+        Compiler: { type: Function, optional: true },
+        record: Object,
+        // Template props : added by the FormCompiler
+        class: { type: String, optional: 1 },
+        translateAlert: { type: [Object, { value: null }], optional: true },
+        onNotebookPageChange: { type: Function, optional: true },
+        activeNotebookPages: { type: Object, optional: true },
+        readonly: { type: Boolean, optional: true },
+        saveRecord: { type: Function, optional: true },
+        setFieldAsDirty: { type: Function, optional: true },
+        slots: { type: Object, optional: true },
+    };
+    static defaultProps = {
+        activeNotebookPages: {},
+        onNotebookPageChange: () => {},
+    };
+
     setup() {
+        this.evaluateBooleanExpr = evaluateBooleanExpr;
         const { archInfo, Compiler, record } = this.props;
-        const { arch, xmlDoc } = archInfo;
-        const templates = { FormRenderer: xmlDoc };
+        const templates = { FormRenderer: archInfo.xmlDoc };
         this.state = useState({}); // Used by Form Compiler
-        this.templates = useViewCompiler(
-            Compiler || FormCompiler,
-            arch,
-            templates,
-            this.compileParams
-        );
+        this.templates = useViewCompiler(Compiler || FormCompiler, templates);
         useSubEnv({ model: record.model });
-        useBounceButton(useRef("compiled_view_root"), (target) => {
-            return !record.isInEdition && !!target.closest(".oe_title, .o_inner_group");
-        });
         this.uiService = useService("ui");
         this.onResize = useDebounced(this.render, 200);
+        this.onScrollThrottled = useThrottleForAnimation(this.onScroll);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
 
-        const { autofocusFieldId } = archInfo;
+        const { autofocusFieldIds } = archInfo;
         const rootRef = useRef("compiled_view_root");
         if (this.shouldAutoFocus) {
             useEffect(
-                (isVirtual, rootEl) => {
+                (isNew, rootEl) => {
                     if (!rootEl) {
                         return;
                     }
                     let elementToFocus;
-                    if (isVirtual) {
+                    if (isNew) {
                         const focusableSelectors = [
                             'input[type="text"]',
                             "textarea",
                             "[contenteditable]",
                         ];
+                        for (const id of autofocusFieldIds) {
+                            elementToFocus = rootEl.querySelector(`#${id}`);
+                            if (elementToFocus) {
+                                break;
+                            }
+                        }
                         elementToFocus =
-                            (autofocusFieldId && rootEl.querySelector(`#${autofocusFieldId}`)) ||
+                            elementToFocus ||
                             rootEl.querySelector(
                                 focusableSelectors
                                     .map((sel) => `.o_content .o_field_widget ${sel}`)
@@ -75,7 +105,7 @@ export class FormRenderer extends Component {
                         elementToFocus.focus();
                     }
                 },
-                () => [this.props.record.isVirtual, rootRef.el]
+                () => [this.props.record.isNew, rootRef.el]
             );
         }
 
@@ -109,31 +139,11 @@ export class FormRenderer extends Component {
     }
 
     get shouldAutoFocus() {
-        return !this.props.archInfo.disableAutofocus;
+        return !hasTouch() && !this.props.archInfo.disableAutofocus;
     }
 
-    evalDomainFromRecord(record, expr) {
-        return evalDomain(expr, record.evalContext);
-    }
-
-    get compileParams() {
-        return {};
+    onScroll(ev) {
+        this.state.isStatusbarStickyPinned =
+            !this.env.inDialog && !this.env.isSmall && ev.target.scrollTop !== 0;
     }
 }
-
-FormRenderer.template = xml`<t t-call="{{ templates.FormRenderer }}" />`;
-FormRenderer.components = {
-    Field,
-    FormLabel,
-    ButtonBox,
-    ViewButton,
-    Widget,
-    Notebook,
-    OuterGroup,
-    InnerGroup,
-    StatusBarButtons,
-};
-FormRenderer.defaultProps = {
-    activeNotebookPages: {},
-    onNotebookPageChange: () => {},
-};

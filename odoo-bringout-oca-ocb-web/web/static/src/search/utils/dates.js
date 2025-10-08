@@ -1,41 +1,15 @@
-/** @odoo-module **/
-
-import { _lt } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-
-export const DEFAULT_PERIOD = "this_month";
+import { clamp } from "@web/core/utils/numbers";
+import { pick } from "@web/core/utils/objects";
 
 export const QUARTERS = {
-    1: { description: _lt("Q1"), coveredMonths: [1, 2, 3] },
-    2: { description: _lt("Q2"), coveredMonths: [4, 5, 6] },
-    3: { description: _lt("Q3"), coveredMonths: [7, 8, 9] },
-    4: { description: _lt("Q4"), coveredMonths: [10, 11, 12] },
-};
-
-export const MONTH_OPTIONS = {
-    this_month: {
-        id: "this_month",
-        groupNumber: 1,
-        format: "MMMM",
-        plusParam: {},
-        granularity: "month",
-    },
-    last_month: {
-        id: "last_month",
-        groupNumber: 1,
-        format: "MMMM",
-        plusParam: { months: -1 },
-        granularity: "month",
-    },
-    antepenultimate_month: {
-        id: "antepenultimate_month",
-        groupNumber: 1,
-        format: "MMMM",
-        plusParam: { months: -2 },
-        granularity: "month",
-    },
+    1: { description: _t("Q1"), coveredMonths: [1, 2, 3] },
+    2: { description: _t("Q2"), coveredMonths: [4, 5, 6] },
+    3: { description: _t("Q3"), coveredMonths: [7, 8, 9] },
+    4: { description: _t("Q4"), coveredMonths: [10, 11, 12] },
 };
 
 export const QUARTER_OPTIONS = {
@@ -69,59 +43,26 @@ export const QUARTER_OPTIONS = {
     },
 };
 
-export const YEAR_OPTIONS = {
-    this_year: {
-        id: "this_year",
-        groupNumber: 2,
-        format: "yyyy",
-        plusParam: {},
-        granularity: "year",
-    },
-    last_year: {
-        id: "last_year",
-        groupNumber: 2,
-        format: "yyyy",
-        plusParam: { years: -1 },
-        granularity: "year",
-    },
-    antepenultimate_year: {
-        id: "antepenultimate_year",
-        groupNumber: 2,
-        format: "yyyy",
-        plusParam: { years: -2 },
-        granularity: "year",
-    },
-};
-
-export const PERIOD_OPTIONS = Object.assign({}, MONTH_OPTIONS, QUARTER_OPTIONS, YEAR_OPTIONS);
-
 export const DEFAULT_INTERVAL = "month";
 
+/**
+ * Time interval options that users can select in the views.
+ */
 export const INTERVAL_OPTIONS = {
-    year: { description: _lt("Year"), id: "year", groupNumber: 1 },
-    quarter: { description: _lt("Quarter"), id: "quarter", groupNumber: 1 },
-    month: { description: _lt("Month"), id: "month", groupNumber: 1 },
-    week: { description: _lt("Week"), id: "week", groupNumber: 1 },
-    day: { description: _lt("Day"), id: "day", groupNumber: 1 },
+    year: { description: _t("Year"), id: "year", groupNumber: 1 },
+    quarter: { description: _t("Quarter"), id: "quarter", groupNumber: 1 },
+    month: { description: _t("Month"), id: "month", groupNumber: 1 },
+    week: { description: _t("Week"), id: "week", groupNumber: 1 },
+    day: { description: _t("Day"), id: "day", groupNumber: 1 },
 };
 
-// ComparisonMenu parameters
-export const COMPARISON_OPTIONS = {
-    previous_period: {
-        description: _lt("Previous Period"),
-        id: "previous_period",
-    },
-    previous_year: {
-        description: _lt("Previous Year"),
-        id: "previous_year",
-        plusParam: { years: -1 },
-    },
-};
-
-export const PER_YEAR = {
-    year: 1,
-    quarter: 4,
-    month: 12,
+/**
+ * Time interval options supported by the backend.
+ * These options are not available in the views UI, but can be used in dashboards.
+ */
+export const BACKEND_INTERVAL_OPTIONS = {
+    ...INTERVAL_OPTIONS,
+    hour: { description: _t("Hour"), id: "hour" },
 };
 
 //-------------------------------------------------------------------------
@@ -137,29 +78,21 @@ export const PER_YEAR = {
  * where leftBound_i and rightBound_i are date or datetime computed accordingly
  * to the given options and reference moment.
  */
-export function constructDateDomain(
-    referenceMoment,
-    fieldName,
-    fieldType,
-    selectedOptionIds,
-    comparisonOptionId
-) {
+export function constructDateDomain(referenceMoment, searchItem, selectedOptionIds) {
     let plusParam;
-    let selectedOptions;
-    if (comparisonOptionId) {
-        [plusParam, selectedOptions] = getComparisonParams(
-            referenceMoment,
-            selectedOptionIds,
-            comparisonOptionId
-        );
-    } else {
-        selectedOptions = getSelectedOptions(referenceMoment, selectedOptionIds);
+    const selectedOptions = getSelectedOptions(referenceMoment, searchItem, selectedOptionIds);
+    if ("withDomain" in selectedOptions) {
+        return {
+            description: selectedOptions.withDomain[0].description,
+            domain: Domain.and([selectedOptions.withDomain[0].domain, searchItem.domain]),
+        };
     }
     const yearOptions = selectedOptions.year;
     const otherOptions = [...(selectedOptions.quarter || []), ...(selectedOptions.month || [])];
     sortPeriodOptions(yearOptions);
     sortPeriodOptions(otherOptions);
     const ranges = [];
+    const { fieldName, fieldType } = searchItem;
     for (const yearOption of yearOptions) {
         const constructRangeParams = {
             referenceMoment,
@@ -188,10 +121,11 @@ export function constructDateDomain(
             ranges.push(range);
         }
     }
-    const domain = Domain.combine(
+    let domain = Domain.combine(
         ranges.map((range) => range.domain),
         "OR"
     );
+    domain = Domain.and([domain, searchItem.domain]);
     const description = ranges.map((range) => range.description).join("/");
     return { domain, description };
 }
@@ -238,122 +172,11 @@ export function constructDateRange(params) {
 }
 
 /**
- * Returns a version of the options in COMPARISON_OPTIONS with translated descriptions.
- * @see getOptionsWithDescriptions
- */
-export function getComparisonOptions() {
-    return getOptionsWithDescriptions(COMPARISON_OPTIONS);
-}
-
-/**
- * Returns the params plusParam and selectedOptions necessary for the computation
- * of a comparison domain.
- */
-export function getComparisonParams(referenceMoment, selectedOptionIds, comparisonOptionId) {
-    const comparisonOption = COMPARISON_OPTIONS[comparisonOptionId];
-    const selectedOptions = getSelectedOptions(referenceMoment, selectedOptionIds);
-    if (comparisonOption.plusParam) {
-        return [comparisonOption.plusParam, selectedOptions];
-    }
-    const plusParam = {};
-    let globalGranularity = "year";
-    if (selectedOptions.month) {
-        globalGranularity = "month";
-    } else if (selectedOptions.quarter) {
-        globalGranularity = "quarter";
-    }
-    const granularityFactor = PER_YEAR[globalGranularity];
-    const years = selectedOptions.year.map((o) => o.setParam.year);
-    const yearMin = Math.min(...years);
-    const yearMax = Math.max(...years);
-    let optionMin = 0;
-    let optionMax = 0;
-    if (selectedOptions.quarter) {
-        const quarters = selectedOptions.quarter.map((o) => o.setParam.quarter);
-        if (globalGranularity === "month") {
-            delete selectedOptions.quarter;
-            for (const quarter of quarters) {
-                for (const month of QUARTERS[quarter].coveredMonths) {
-                    const monthOption = selectedOptions.month.find(
-                        (o) => o.setParam.month === month
-                    );
-                    if (!monthOption) {
-                        selectedOptions.month.push({
-                            setParam: { month },
-                            granularity: "month",
-                        });
-                    }
-                }
-            }
-        } else {
-            optionMin = Math.min(...quarters);
-            optionMax = Math.max(...quarters);
-        }
-    }
-    if (selectedOptions.month) {
-        const months = selectedOptions.month.map((o) => o.setParam.month);
-        optionMin = Math.min(...months);
-        optionMax = Math.max(...months);
-    }
-    const num = -1 + granularityFactor * (yearMin - yearMax) + optionMin - optionMax;
-    const key =
-        globalGranularity === "year"
-            ? "years"
-            : globalGranularity === "month"
-            ? "months"
-            : "quarters";
-    plusParam[key] = num;
-    return [plusParam, selectedOptions];
-}
-
-/**
  * Returns a version of the options in INTERVAL_OPTIONS with translated descriptions.
  * @see getOptionsWithDescriptions
  */
 export function getIntervalOptions() {
     return getOptionsWithDescriptions(INTERVAL_OPTIONS);
-}
-
-/**
- * Returns a version of the options in PERIOD_OPTIONS with translated descriptions
- * and a key defautlYearId used in the control panel model when toggling a period option.
- */
-export function getPeriodOptions(referenceMoment) {
-    // adapt when solution for moment is found...
-    const options = [];
-    const originalOptions = Object.values(PERIOD_OPTIONS);
-    for (const option of originalOptions) {
-        const { id, groupNumber } = option;
-        let description;
-        let defaultYear;
-        switch (option.granularity) {
-            case "quarter":
-                description = option.description.toString();
-                defaultYear = referenceMoment.set(option.setParam).year;
-                break;
-            case "month":
-            case "year": {
-                const date = referenceMoment.plus(option.plusParam);
-                description = date.toFormat(option.format);
-                defaultYear = date.year;
-                break;
-            }
-        }
-        const setParam = getSetParam(option, referenceMoment);
-        options.push({ id, groupNumber, description, defaultYear, setParam });
-    }
-    const periodOptions = [];
-    for (const option of options) {
-        const { id, groupNumber, description, defaultYear } = option;
-        const yearOption = options.find((o) => o.setParam && o.setParam.year === defaultYear);
-        periodOptions.push({
-            id,
-            groupNumber,
-            description,
-            defaultYearId: yearOption.id,
-        });
-    }
-    return periodOptions;
 }
 
 /**
@@ -370,19 +193,105 @@ export function getOptionsWithDescriptions(OPTIONS) {
 }
 
 /**
+ * Returns the period options relative to the referenceMoment for a date filter, with translated
+ * descriptions and a key defautlYearId used in the control panel model when toggling a period option.
+ */
+export function getPeriodOptions(referenceMoment, optionsParams) {
+    return [
+        ...getMonthPeriodOptions(referenceMoment, optionsParams),
+        ...getQuarterPeriodOptions(optionsParams),
+        ...getYearPeriodOptions(referenceMoment, optionsParams),
+        ...getCustomPeriodOptions(optionsParams),
+    ];
+}
+
+export function toGeneratorId(unit, offset) {
+    if (!offset) {
+        return unit;
+    }
+    const sep = offset > 0 ? "+" : "-";
+    const val = Math.abs(offset);
+    return `${unit}${sep}${val}`;
+}
+
+function getMonthPeriodOptions(referenceMoment, optionsParams) {
+    const { startYear, endYear, startMonth, endMonth } = optionsParams;
+    return [...Array(endMonth - startMonth + 1).keys()]
+        .map((i) => {
+            const monthOffset = startMonth + i;
+            const date = referenceMoment.plus({
+                months: monthOffset,
+                years: clamp(0, startYear, endYear),
+            });
+            const yearOffset = date.year - referenceMoment.year;
+            return {
+                id: toGeneratorId("month", monthOffset),
+                defaultYearId: toGeneratorId("year", clamp(yearOffset, startYear, endYear)),
+                description: date.toFormat("MMMM"),
+                granularity: "month",
+                groupNumber: 1,
+                plusParam: { months: monthOffset },
+            };
+        })
+        .reverse();
+}
+
+function getQuarterPeriodOptions(optionsParams) {
+    const { startYear, endYear } = optionsParams;
+    const defaultYearId = toGeneratorId("year", clamp(0, startYear, endYear));
+    return Object.values(QUARTER_OPTIONS).map((quarter) => ({
+        ...quarter,
+        defaultYearId,
+    }));
+}
+
+function getYearPeriodOptions(referenceMoment, optionsParams) {
+    const { startYear, endYear } = optionsParams;
+    return [...Array(endYear - startYear + 1).keys()]
+        .map((i) => {
+            const offset = startYear + i;
+            const date = referenceMoment.plus({ years: offset });
+            return {
+                id: toGeneratorId("year", offset),
+                description: date.toFormat("yyyy"),
+                granularity: "year",
+                groupNumber: 2,
+                plusParam: { years: offset },
+            };
+        })
+        .reverse();
+}
+
+function getCustomPeriodOptions(optionsParams) {
+    const { customOptions } = optionsParams;
+    return customOptions.map((option) => ({
+        id: option.id,
+        description: option.description,
+        granularity: "withDomain",
+        groupNumber: 3,
+        domain: option.domain,
+    }));
+}
+
+/**
  * Returns a partial version of the period options whose ids are in selectedOptionIds
  * partitioned by granularity.
  */
-export function getSelectedOptions(referenceMoment, selectedOptionIds) {
+export function getSelectedOptions(referenceMoment, searchItem, selectedOptionIds) {
     const selectedOptions = { year: [] };
+    const periodOptions = getPeriodOptions(referenceMoment, searchItem.optionsParams);
     for (const optionId of selectedOptionIds) {
-        const option = PERIOD_OPTIONS[optionId];
-        const setParam = getSetParam(option, referenceMoment);
+        const option = periodOptions.find((option) => option.id === optionId);
         const granularity = option.granularity;
         if (!selectedOptions[granularity]) {
             selectedOptions[granularity] = [];
         }
-        selectedOptions[granularity].push({ granularity, setParam });
+        if (option.domain) {
+            selectedOptions[granularity].push(pick(option, "domain", "description"));
+        } else {
+            const setParam = getSetParam(option, referenceMoment);
+            selectedOptions[granularity].push({ granularity, setParam });
+        }
     }
     return selectedOptions;
 }
@@ -427,5 +336,5 @@ export function sortPeriodOptions(options) {
  * Checks if a year id is among the given array of period option ids.
  */
 export function yearSelected(selectedOptionIds) {
-    return selectedOptionIds.some((optionId) => Object.keys(YEAR_OPTIONS).includes(optionId));
+    return selectedOptionIds.some((optionId) => optionId.startsWith("year"));
 }

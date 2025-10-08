@@ -1,199 +1,238 @@
-/** @odoo-module **/
-
-import { browser } from "@web/core/browser/browser";
 import { isVisible } from "@web/core/utils/ui";
+import { delay } from "@web/core/utils/concurrency";
+import { validate } from "@odoo/owl";
 
-export const ACTION_HELPERS = {
-    click(el, _step) {
-        el.dispatchEvent(new MouseEvent("mouseover"));
-        el.dispatchEvent(new MouseEvent("mouseenter"));
-        el.dispatchEvent(new MouseEvent("mousedown"));
-        el.dispatchEvent(new MouseEvent("mouseup"));
-        el.click();
-        el.dispatchEvent(new MouseEvent("mouseout"));
-        el.dispatchEvent(new MouseEvent("mouseleave"));
+const macroSchema = {
+    name: { type: String, optional: true },
+    timeout: { type: Number, optional: true },
+    steps: {
+        type: Array,
+        element: {
+            type: Object,
+            shape: {
+                action: { type: [Function, String], optional: true },
+                timeout: { type: Number, optional: true },
+                trigger: { type: [Function, String], optional: true },
+            },
+            validate: (step) => step.action || step.trigger,
+        },
     },
-    text(el, step) {
-        // simulate an input (probably need to add keydown/keyup events)
-        this.click(el, step);
-        el.value = step.value;
-        el.dispatchEvent(new InputEvent("input", { bubbles: true }));
-        el.dispatchEvent(new InputEvent("change", { bubbles: true }));
-    },
+    onComplete: { type: Function, optional: true },
+    onStep: { type: Function, optional: true },
+    onError: { type: Function, optional: true },
 };
 
-class TimeoutError extends Error {}
-
-class Macro {
-    constructor(descr) {
-        this.name = descr.name || "anonymous";
-        this.timeoutDuration = descr.timeout || 0;
-        this.timeout = null;
-        this.currentIndex = 0;
-        this.interval = "interval" in descr ? Math.max(16, descr.interval) : 500;
-        this.isComplete = false;
-        this.steps = descr.steps;
-        this.onStep = descr.onStep || (() => {});
-        this.onError = descr.onError;
-        this.onTimeout = descr.onTimeout;
-        this.setTimer();
+class MacroError extends Error {
+    constructor(type, message, options) {
+        super(message, options);
+        this.type = type;
     }
+}
 
-    advance() {
-        if (this.isComplete) {
-            return;
-        }
-        const step = this.steps[this.currentIndex];
-        const trigger = step.trigger;
-        if (trigger) {
-            let el = null;
+async function performAction(trigger, action) {
+    if (!action) {
+        return;
+    }
+    try {
+        return await action(trigger);
+    } catch (error) {
+        throw new MacroError(
+            "Action",
+            error.stack || `ERROR during perform action: ${error.message}`,
+            {cause: error}
+        );
+    }
+}
+
+async function waitForTrigger(trigger) {
+    if (!trigger) {
+        return;
+    }
+    try {
+        await delay(50);
+        return await waitUntil(() => {
             if (typeof trigger === "function") {
-                const result = this.safeCall(trigger);
-                if (result instanceof HTMLElement) {
-                    el = result;
-                }
+                return trigger();
+            } else if (typeof trigger === "string") {
+                const triggerEl = document.querySelector(trigger);
+                return isVisible(triggerEl) && triggerEl;
             }
-            if (typeof trigger === "string") {
-                el = document.querySelector(trigger);
+        });
+    } catch (error) {
+        throw new MacroError("Trigger", `ERROR during find trigger:\n${error.message}`, {
+            cause: error,
+        });
+    }
+}
+
+export async function waitUntil(predicate) {
+    const result = predicate();
+    if (result) {
+        return Promise.resolve(result);
+    }
+    let handle;
+    return new Promise((resolve) => {
+        const runCheck = () => {
+            const result = predicate();
+            if (result) {
+                resolve(result);
             }
-            if (el && isVisible(el)) {
-                this.advanceStep(el, step);
-            }
-        } else {
-            // a step without a trigger is just an action
-            this.advanceStep(null, step);
+            handle = requestAnimationFrame(runCheck);
+        };
+        handle = requestAnimationFrame(runCheck);
+    }).finally(() => {
+        cancelAnimationFrame(handle);
+    });
+}
+
+export class Macro {
+    currentIndex = 0;
+    isComplete = false;
+    constructor(descr) {
+        try {
+            validate(descr, macroSchema);
+        } catch (error) {
+            throw new Error(
+                `Error in schema for Macro ${JSON.stringify(descr, null, 4)}\n${error.message}`
+            );
         }
+        Object.assign(this, descr);
+        this.onComplete = this.onComplete || (() => {});
+        this.onStep = this.onStep || (() => {});
+        this.onError =
+            this.onError ||
+            ((error, step, index) => {
+                console.error(error.message, step, index);
+            });
     }
 
-    advanceStep(el, step) {
-        this.safeCall(this.onStep, el, step);
-        const action = step.action;
-        if (action in ACTION_HELPERS) {
-            ACTION_HELPERS[action](el, step);
-        } else if (typeof action === "function") {
-            this.safeCall(action, el);
-        }
-        this.currentIndex++;
-        if (this.currentIndex === this.steps.length) {
-            this.isComplete = true;
-            browser.clearTimeout(this.timeout);
-        } else {
-            this.setTimer();
-            this.advance();
-        }
+    async start() {
+        await this.advance();
     }
 
-    safeCall(fn, ...args) {
-        if (this.isComplete) {
+    async advance() {
+        if (this.isComplete || this.currentIndex >= this.steps.length) {
+            this.stop();
             return;
         }
         try {
-            return fn(...args);
-        } catch (e) {
-            this.handleError(e);
+            const step = this.steps[this.currentIndex];
+            const timeoutDelay = step.timeout || this.timeout || 10000;
+            const executeStep = async () => {
+                const trigger = await waitForTrigger(step.trigger);
+                const result = await performAction(trigger, step.action);
+                await this.onStep({ step, trigger, index: this.currentIndex });
+                return result;
+            };
+            const launchTimer = async () => {
+                await delay(timeoutDelay);
+                throw new MacroError(
+                    "Timeout",
+                    `TIMEOUT step failed to complete within ${timeoutDelay} ms.`
+                );
+            };
+            // If falsy action result, it means the action worked properly.
+            // So we can proceed to the next step.
+            const actionResult = await Promise.race([executeStep(), launchTimer()]);
+            if (actionResult) {
+                this.stop();
+                return;
+            }
+        } catch (error) {
+            this.stop(error);
+            return;
         }
+        this.currentIndex++;
+        await this.advance();
     }
 
-    setTimer() {
-        if (this.timeoutDuration) {
-            browser.clearTimeout(this.timeout);
-            this.timeout = browser.setTimeout(() => {
-                if (this.onTimeout) {
-                    const index = this.currentIndex;
-                    const step = this.steps[index];
-                    this.safeCall(this.onTimeout, step, index);
-                } else {
-                    const error = new TimeoutError("Step timeout");
-                    this.handleError(error);
-                }
-            }, this.timeoutDuration);
+    stop(error) {
+        if (this.isComplete) {
+            return;
         }
-    }
-
-    handleError(error) {
-        // mark the macro as complete, so it can be cleaned up from the
-        // engine
         this.isComplete = true;
-        browser.clearTimeout(this.timeout);
-        if (this.onError) {
-            const index = this.currentIndex;
-            const step = this.steps[index];
-            this.onError(error, step, index);
-        } else {
-            console.error(error);
+        if (error) {
+            const step = this.steps[this.currentIndex];
+            this.onError({ error, step, index: this.currentIndex });
+        } else if (this.currentIndex === this.steps.length) {
+            this.onComplete();
         }
     }
 }
 
-export class MacroEngine {
-    constructor(target = document.body) {
-        this.isRunning = false;
-        this.timeout = null;
-        this.target = target;
-        this.interval = Infinity; // nbr of ms before we check the dom to advance macros
-        this.macros = new Set();
-        this.observer = new MutationObserver(this.delayedCheck.bind(this));
+export class MacroMutationObserver {
+    observerOptions = {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        characterData: true,
+    };
+    constructor(callback) {
+        this.callback = callback;
+        this.observer = new MutationObserver((mutationList, observer) => {
+            callback(mutationList);
+            mutationList.forEach((mutationRecord) =>
+                Array.from(mutationRecord.addedNodes).forEach((node) => {
+                    let iframes = [];
+                    if (String(node.tagName).toLowerCase() === "iframe") {
+                        iframes = [node];
+                    } else if (node instanceof HTMLElement) {
+                        iframes = Array.from(node.querySelectorAll("iframe"));
+                    }
+                    iframes.forEach((iframeEl) =>
+                        this.observeIframe(iframeEl, observer, () => callback())
+                    );
+                    this.findAllShadowRoots(node).forEach((shadowRoot) =>
+                        observer.observe(shadowRoot, this.observerOptions)
+                    );
+                })
+            );
+        });
     }
-
-    async activate(descr) {
-        // micro task tick to make sure we add the macro in a new call stack,
-        // so we are guaranteed that we are not iterating on the current macros
-        await Promise.resolve();
-        const macro = new Macro(descr);
-        this.interval = Math.min(this.interval, macro.interval);
-        this.macros.add(macro);
-        this.start();
+    disconnect() {
+        this.observer.disconnect();
     }
-
-    start() {
-        if (!this.isRunning) {
-            this.isRunning = true;
-            this.observer.observe(this.target, {
-                attributes: true,
-                childList: true,
-                subtree: true,
-                characterData: true,
-            });
+    findAllShadowRoots(node, shadowRoots = []) {
+        if (node.shadowRoot) {
+            shadowRoots.push(node.shadowRoot);
+            this.findAllShadowRoots(node.shadowRoot, shadowRoots);
         }
-        this.delayedCheck();
+        node.childNodes.forEach((child) => {
+            this.findAllShadowRoots(child, shadowRoots);
+        });
+        return shadowRoots;
     }
-
-    stop() {
-        if (this.isRunning) {
-            this.isRunning = false;
-            browser.clearTimeout(this.timeout);
-            this.timeout = null;
-            this.observer.disconnect();
-        }
+    observe(target) {
+        this.observer.observe(target, this.observerOptions);
+        //When iframes already exist at "this.target" initialization
+        target
+            .querySelectorAll("iframe")
+            .forEach((el) => this.observeIframe(el, this.observer, () => this.callback()));
+        //When shadowDom already exist at "this.target" initialization
+        this.findAllShadowRoots(target).forEach((shadowRoot) => {
+            this.observer.observe(shadowRoot, this.observerOptions);
+        });
     }
-
-    delayedCheck() {
-        if (this.timeout) {
-            browser.clearTimeout(this.timeout);
-        }
-        this.timeout = browser.setTimeout(this.advanceMacros.bind(this), this.interval);
-    }
-
-    advanceMacros() {
-        const toDelete = [];
-        for (const macro of this.macros) {
-            macro.advance();
-            if (macro.isComplete) {
-                toDelete.push(macro);
+    observeIframe(iframeEl, observer, callback) {
+        const observerOptions = {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            characterData: true,
+        };
+        const observeIframeContent = () => {
+            if (iframeEl.contentDocument) {
+                iframeEl.contentDocument.addEventListener("load", (event) => {
+                    callback();
+                    observer.observe(event.target, observerOptions);
+                });
+                if (!iframeEl.src || iframeEl.contentDocument.readyState === "complete") {
+                    callback();
+                    observer.observe(iframeEl.contentDocument, observerOptions);
+                }
             }
-        }
-        if (toDelete.length) {
-            for (const macro of toDelete) {
-                this.macros.delete(macro);
-            }
-            // recompute current interval, because it may need to be increased
-            this.interval = Infinity;
-            for (const macro of this.macros) {
-                this.interval = Math.min(this.interval, macro.interval);
-            }
-        }
-        if (this.macros.size === 0) {
-            this.stop();
-        }
+        };
+        observeIframeContent();
+        iframeEl.addEventListener("load", observeIframeContent);
     }
 }
