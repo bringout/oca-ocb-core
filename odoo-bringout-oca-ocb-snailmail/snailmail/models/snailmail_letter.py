@@ -4,23 +4,7 @@ import re
 import base64
 import io
 
-try:
-    from PyPDF2 import PdfWriter, PdfReader
-    
-    # Create compatibility classes for PyPDF2 3.0+
-    class PdfFileWriter(PdfWriter):
-        def addPage(self, page):
-            return self.add_page(page)
-        
-        def appendPagesFromReader(self, reader, after_page_append=None):
-            return self.append_pages_from_reader(reader, after_page_append)
-    
-    class PdfFileReader(PdfReader):
-        def getPage(self, page_num):
-            return self.pages[page_num]
-
-except ImportError:
-    from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileReader, PdfFileWriter
 from reportlab.platypus import Frame, Paragraph, KeepInFrame
 from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4

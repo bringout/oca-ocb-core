@@ -19,37 +19,16 @@ pip install odoo-bringout-oca-ocb-base_automation
 
 ## Dependencies
 
-This addon depends on:
 - base
 - resource
 - mail
 
-## Manifest Information
-
-- **Name**: Automated Action Rules
-- **Version**: 1.0
-- **Category**: Sales/Sales
-- **License**: LGPL-3
-- **Installable**: False
-
 ## Source
 
-Based on [OCA/OCB](https://github.com/OCA/OCB) branch 16.0, addon `base_automation`.
+- Repository: https://github.com/OCA/OCB
+- Branch: 16.0
+- Path: addons/base_automation
 
 ## License
 
-This package maintains the original LGPL-3 license from the upstream Odoo project.
-
-## Documentation
-
-- Overview: doc/OVERVIEW.md
-- Architecture: doc/ARCHITECTURE.md
-- Models: doc/MODELS.md
-- Controllers: doc/CONTROLLERS.md
-- Wizards: doc/WIZARDS.md
-- Install: doc/INSTALL.md
-- Usage: doc/USAGE.md
-- Configuration: doc/CONFIGURATION.md
-- Dependencies: doc/DEPENDENCIES.md
-- Troubleshooting: doc/TROUBLESHOOTING.md
-- FAQ: doc/FAQ.md
+This package preserves the original LGPL-3 license.

@@ -61,38 +61,17 @@ pip install odoo-bringout-oca-ocb-mail
 
 ## Dependencies
 
-This addon depends on:
 - base
 - base_setup
 - bus
 - web_tour
 
-## Manifest Information
-
-- **Name**: Discuss
-- **Version**: 1.10
-- **Category**: Productivity/Discuss
-- **License**: LGPL-3
-- **Installable**: True
-
 ## Source
 
-Based on [OCA/OCB](https://github.com/OCA/OCB) branch 16.0, addon `mail`.
+- Repository: https://github.com/OCA/OCB
+- Branch: 16.0
+- Path: addons/mail
 
 ## License
 
-This package maintains the original LGPL-3 license from the upstream Odoo project.
-
-## Documentation
-
-- Overview: doc/OVERVIEW.md
-- Architecture: doc/ARCHITECTURE.md
-- Models: doc/MODELS.md
-- Controllers: doc/CONTROLLERS.md
-- Wizards: doc/WIZARDS.md
-- Install: doc/INSTALL.md
-- Usage: doc/USAGE.md
-- Configuration: doc/CONFIGURATION.md
-- Dependencies: doc/DEPENDENCIES.md
-- Troubleshooting: doc/TROUBLESHOOTING.md
-- FAQ: doc/FAQ.md
+This package preserves the original LGPL-3 license.
