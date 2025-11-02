@@ -1133,6 +1133,141 @@ actual arch.
             transfer_modifiers_to_node(modifiers, node)
         return tree
 
+    def _apply_modern_modifiers(self, node):
+        """Translate OWL-style inline modifiers to classic attrs entries."""
+        convertible = ('invisible', 'readonly', 'required')
+        attrs_dict = None
+        updated = False
+
+        def ensure_attrs():
+            nonlocal attrs_dict, updated
+            if attrs_dict is None:
+                current = node.get('attrs')
+                attrs_dict = ast.literal_eval(current.strip()) if current else {}
+                updated = True
+            return attrs_dict
+
+        for attr in convertible:
+            raw_value = node.attrib.get(attr)
+            if not raw_value:
+                continue
+            value = raw_value.strip()
+            try:
+                str2bool(value)
+                continue
+            except ValueError:
+                pass
+
+            domain = self._expression_to_domain(value)
+            if domain is None:
+                continue
+
+            attrs = ensure_attrs()
+            existing = attrs.get(attr)
+            if isinstance(existing, bool):
+                if existing:
+                    node.attrib.pop(attr, None)
+                    continue
+                existing = []
+            elif isinstance(existing, (list, tuple)):
+                existing = list(existing)
+            else:
+                existing = []
+
+            attrs[attr] = existing + list(domain)
+            node.attrib.pop(attr, None)
+
+        if updated and attrs_dict is not None:
+            node.set('attrs', repr(attrs_dict))
+
+    def _expression_to_domain(self, expr):
+        try:
+            tree = ast.parse(expr, mode='eval')
+        except SyntaxError:
+            return None
+        return self._domain_from_ast(tree.body)
+
+    def _domain_from_ast(self, node):
+        if isinstance(node, ast.BoolOp):
+            domains = [self._domain_from_ast(value) for value in node.values]
+            if any(d is None for d in domains):
+                return None
+            if isinstance(node.op, ast.And):
+                result = []
+                for domain in domains:
+                    result.extend(domain)
+                return result
+            if isinstance(node.op, ast.Or):
+                result = []
+                for domain in domains:
+                    if not domain:
+                        continue
+                    if not result:
+                        result.extend(domain)
+                    else:
+                        result = ['|'] + result + list(domain)
+                return result
+            return None
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
+            domain = self._domain_from_ast(node.operand)
+            if domain is None:
+                return None
+            return ['!'] + domain
+        if isinstance(node, ast.Compare):
+            if len(node.ops) != 1 or len(node.comparators) != 1:
+                return None
+            field = self._field_name_from_ast(node.left)
+            value = self._literal_from_ast(node.comparators[0])
+            operator = self._operator_from_ast(node.ops[0])
+            if field is None or value is None or operator is None:
+                return None
+            return [(field, operator, value)]
+        if isinstance(node, ast.Name):
+            if node.id in ('True', 'False'):
+                return [] if node.id == 'True' else ['!', ('id', '!=', False)]
+            return [(node.id, '=', True)]
+        if isinstance(node, ast.Constant):
+            return [] if bool(node.value) else ['!', ('id', '!=', False)]
+        return None
+
+    @staticmethod
+    def _operator_from_ast(op):
+        mapping = {
+            ast.Eq: '=',
+            ast.NotEq: '!=',
+            ast.Gt: '>',
+            ast.GtE: '>=',
+            ast.Lt: '<',
+            ast.LtE: '<=',
+            ast.In: 'in',
+            ast.NotIn: 'not in',
+            ast.Is: '=',
+            ast.IsNot: '!=',
+        }
+        for ast_type, operator in mapping.items():
+            if isinstance(op, ast_type):
+                return operator
+        return None
+
+    @staticmethod
+    def _field_name_from_ast(node):
+        if isinstance(node, ast.Name):
+            return node.id
+        return None
+
+    def _literal_from_ast(self, node):
+        if isinstance(node, ast.Constant):
+            return node.value
+        if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.USub):
+            value = self._literal_from_ast(node.operand)
+            if isinstance(value, (int, float)):
+                return -value
+            return None
+        if isinstance(node, ast.NameConstant):
+            return node.value
+        return None
+
+
     def _postprocess_view(self, node, model_name, editable=True, parent_name_manager=None, **options):
         """ Process the given architecture, modifying it in-place to add and
         remove stuff.
@@ -1165,6 +1300,9 @@ actual arch.
         stack = [(root, editable)]
         while stack:
             node, editable = stack.pop()
+
+            if isinstance(node.tag, str):
+                self._apply_modern_modifiers(node)
 
             # compute default
             tag = node.tag

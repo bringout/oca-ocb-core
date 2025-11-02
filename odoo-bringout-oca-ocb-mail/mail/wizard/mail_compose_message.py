@@ -55,6 +55,21 @@ class MailComposer(models.TransientModel):
         if self._context.get('custom_layout') and 'default_email_layout_xmlid' not in self._context:
             self = self.with_context(default_email_layout_xmlid=self._context['custom_layout'])
 
+        if self._context.get('default_res_ids') and not self._context.get('default_res_id'):
+            res_ids = self._context['default_res_ids']
+            if isinstance(res_ids, str):
+                try:
+                    res_ids = ast.literal_eval(res_ids)
+                except (ValueError, SyntaxError):
+                    res_ids = [res_ids]
+            if isinstance(res_ids, int):
+                res_ids = [res_ids]
+            if res_ids:
+                new_ctx = dict(self._context)
+                new_ctx.setdefault('active_ids', res_ids)
+                new_ctx['default_res_id'] = res_ids[0]
+                self = self.with_context(**new_ctx)
+
         result = super(MailComposer, self).default_get(fields)
 
         # author

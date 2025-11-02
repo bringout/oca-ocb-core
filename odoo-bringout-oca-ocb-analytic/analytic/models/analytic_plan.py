@@ -188,6 +188,25 @@ class AccountAnalyticPlan(models.Model):
                 'company_id': self.env.company.id,
             })
 
+    def _find_plan_column(self, model='account.analytic.line'):
+        self.ensure_one()
+        if not model:
+            model = 'account.analytic.line'
+        try:
+            model_obj = self.env[model]
+        except KeyError:
+            return None
+        fields_map = model_obj._fields
+        candidate = f'account_id_plan_{self.id}'
+        field = fields_map.get(candidate)
+        if field:
+            setattr(field, '_account_move_export_plan_specific', True)
+            return field
+        fallback = fields_map.get('account_id')
+        if fallback:
+            setattr(fallback, '_account_move_export_plan_specific', False)
+        return fallback
+
 
 class AccountAnalyticApplicability(models.Model):
     _name = 'account.analytic.applicability'
