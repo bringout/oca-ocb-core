@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_iban
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 msgid ""
@@ -12,51 +12,73 @@ msgstr ""
 "PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bs\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
+# taken from hr.po
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr "Računi banke"
+msgstr "Bankovni računi"
 
+# taken from hr.po
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:67
+#: code:addons/base_iban/models/res_partner_bank.py
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
+msgstr "Nije moguće izračunati VBDI jer broj računa nije u IBAN formatu."
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:54
+#: code:addons/base_iban/models/res_partner_bank.py
 #, python-format
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
+# taken from hr.po
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:39
+#: code:addons/base_iban/models/res_partner_bank.py
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
+"Čini se da IBAN nije ispravan. Trebali bi upisati nešto poput %s\n"
+"Gdje je B= Nacionalni kod banke, S=VBDI Banke, C= broj računa, k=kontrolni broj"
 
+# taken from hr.po
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:35
+#: code:addons/base_iban/models/res_partner_bank.py
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "IBAN nije valida, trebao bi da počinje sa šifrom države"
 
+# taken from hr.po
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:31
+#: code:addons/base_iban/models/res_partner_bank.py
 #, python-format
 msgid "There is no IBAN code."
-msgstr ""
+msgstr "Nema IBAN šifre."
 
+# taken from hr.po
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:45
+#: code:addons/base_iban/models/res_partner_bank.py
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "Ovaj IBAN ne prolazi validaciju, molim provjerite!"
+
+# taken from hr.po
+#. module: base_iban
+#: code:addons/base_iban/static/src/js/legacy_iban_widget.js
+#, python-format
+msgid "Account isn't IBAN compliant."
+msgstr "Račun nije u IBAN standardu."
+
+# taken from hr.po
+#. module: base_iban
+#: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml
+#, python-format
+msgid "Account isn't a valid IBAN"
+msgstr "Broj računa nije valjani IBAN"

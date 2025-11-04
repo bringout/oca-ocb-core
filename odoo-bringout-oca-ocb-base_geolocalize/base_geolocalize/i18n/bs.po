@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_geolocalize
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 # Boško Stojaković <bluesoft83@gmail.com>, 2018
@@ -13,10 +13,10 @@ msgstr ""
 "PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bs\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: base_geolocalize
@@ -53,6 +53,7 @@ msgid ""
 "connection is up and running (%s)."
 msgstr ""
 
+# taken from hr.po
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
 msgid "Contact"
@@ -75,18 +76,223 @@ msgstr "Geo dužina"
 msgid "Geolocate"
 msgstr ""
 
+# taken from hr.po
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocation"
 msgstr "Geolokacija"
 
+# taken from hr.po
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__date_localization
-#: model:ir.model.fields,field_description:base_geolocalize.field_res_users__date_localization
 msgid "Geolocation Date"
-msgstr ""
+msgstr "Datum geolociranja"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignation"
 msgstr "Pridruživanje partnera"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
+msgid "API"
+msgstr "API"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py
+#, python-format
+msgid ""
+"API key for GeoCoding (Places) required.\n"
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+msgstr ""
+"API ključ za GeoCoding (Places) je potreban.\n"
+"Posjeti https://developers.google.com/maps/documentation/geocoding/get-api-key za više informacija."
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
+msgid "API:"
+msgstr "<span> : Lat : </span>"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Compute Localization"
+msgstr ""
+"API ključ za GeoCoding (mesta) je potreban.\n"
+"\n"
+"                          Sačuvajte ovaj ključ u sistemskim parametrima sa ključem: google.api_key_geocode, vrednost: <vaš api ključ>\n"
+"                          Posetite https://developers.google.com/maps/documentation/geocoding/get-api-key za više informacija."
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Compute based on address"
+msgstr "Izračunaj na osnovu adrese"
+
+# taken from hr.po
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_config_settings
+msgid "Config Settings"
+msgstr "Podešavanja konfiguracije"
+
+# taken from hr.po
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+# taken from hr.po
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+# taken from hr.po
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
+msgid "Display Name"
+msgstr "Naziv za prikaz"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py
+#, python-format
+msgid "Error with geolocation server:"
+msgstr "Greška sa serverom geolokacije:"
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_base_geocoder
+msgid "Geo Coder"
+msgstr "Geo koder"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geo Location"
+msgstr ""
+"Ne mogu da kontaktiram servere geolokacije. Molimo proverite da li je vaša "
+"internet veza aktivna i funkcioniše (%s)."
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_base_geo_provider
+msgid "Geo Provider"
+msgstr "Geo pružalac"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
+msgid "Google Map API Key"
+msgstr "Google Map API ključ"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
+msgid "Key:"
+msgstr "Ključ:"
+
+# taken from hr.po
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
+msgid "Last Modified on"
+msgstr "Zadnja izmjena"
+
+# taken from hr.po
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
+msgid "Last Updated by"
+msgstr "Zadnje ažurirao"
+
+# taken from hr.po
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_date
+msgid "Last Updated on"
+msgstr "Zadnje ažurirano"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Lat :"
+msgstr "Lat:"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Long:"
+msgstr "Geolociranje"
+
+# taken from hr.po
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__name
+msgid "Name"
+msgstr "Naziv"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py
+#, python-format
+msgid "No match found for %(partner_names)s address(es)."
+msgstr "Nema poklapanja za %(partner_names)s adresu(e)."
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Partner Assignment"
+msgstr "Dodjela partnera"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py
+#, python-format
+msgid "Provider %s is not implemented for geolocation service."
+msgstr "Pružalac %s nije implementiran za uslugu geolokacije."
+
+# taken from hr.po
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Refresh"
+msgstr "Osvježi"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Refresh Localization"
+msgstr "Osvježi lokalizaciju"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
+msgid "Tech Name"
+msgstr "Tehnički naziv"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/base_geocoder.py
+#, python-format
+msgid ""
+"Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+msgstr ""
+"Nije moguće odrediti geolokaciju, primljena je greška:\n"
+"%s\n"
+"\n"
+"Google je ovu funkciju učinio plaćenom.\n"
+"Prvo morate omogućiti naplatu na svom Google nalogu.\n"
+"Zatim otvorite Developer Console i omogućite API-je:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+
+#. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Updated on:"
+msgstr "Ažurirano dana:"
+
+#. module: base_geolocalize
+#: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
+" for more information."
+msgstr ""
+"Posjetite https://developers.google.com/maps/documentation/geocoding/get-"
+"api-key za više informacija."
+
+# taken from hr.po
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py
+#, python-format
+msgid "Warning"
+msgstr "Upozorenje"

@@ -1,12 +1,12 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * snailmail
-# 
+#
 # Translators:
 # Boško Stojaković <bluesoft83@gmail.com>, 2018
 # Bole <bole@dajmi5.com>, 2018
 # Martin Trigaux, 2018
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
@@ -15,10 +15,10 @@ msgstr ""
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bs\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: snailmail
@@ -28,11 +28,12 @@ msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:215
+#: code:addons/snailmail/models/snailmail_letter.py
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "Dogodila se nepoznata greška. Molimo kontaktirajte podršku."
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
 msgid "Attachment"
@@ -41,20 +42,23 @@ msgstr "Zakačka"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "Obostrano"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "Obostrano"
 
+# taken from hr.po
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Cancel"
 msgstr "Otkaži"
 
+# taken from hr.po
 #. module: snailmail
-#: selection:snailmail.letter,state:0
+#: selection:snailmail.letter,state
+#, python-format
 msgid "Canceled"
 msgstr "Otkazano"
 
@@ -68,59 +72,69 @@ msgstr ""
 msgid "Choose the layout to print documents"
 msgstr ""
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "Boja"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_company
 msgid "Companies"
 msgstr "Kompanije"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__company_id
 msgid "Company"
 msgstr "Kompanija"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Podešavanja konfiguracije"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_date
 msgid "Created on"
 msgstr "Kreirano"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__display_name
 msgid "Display Name"
 msgstr "Prikazani naziv"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__res_id
 msgid "Document ID"
-msgstr ""
+msgstr "ID dokumenta"
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Draft"
 msgstr "U pripremi"
 
+# taken from hr.po
 #. module: snailmail
-#: selection:snailmail.letter,state:0
+#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js
+#, python-format
 msgid "Error"
 msgstr "Greška"
 
@@ -129,37 +143,40 @@ msgstr "Greška"
 msgid "ID"
 msgstr "ID"
 
+# taken from hr.po
 #. module: snailmail
-#: selection:snailmail.letter,state:0
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__pending
 msgid "In Queue"
-msgstr ""
+msgstr "U redu čekanja"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__info_msg
 msgid "Information"
 msgstr "Informacije"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter____last_update
 msgid "Last Modified on"
 msgstr "Zadnje mijenjano"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
 msgid "Last Updated by"
 msgstr "Zadnji ažurirao"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_date
 msgid "Last Updated on"
 msgstr "Zadnje ažurirano"
 
 #. module: snailmail
-#: model:ir.actions.act_window,name:snailmail.action_mail_letters
-#: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "Odaberite tintu koja se koristi za štampanje dokumenata"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -167,15 +184,16 @@ msgid "Model"
 msgstr "Model"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:211
+#: code:addons/snailmail/models/snailmail_letter.py
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "Jedno ili više obaveznih polja je prazno."
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
 msgid "Optional report to print and attach"
-msgstr "Opcioni izvještaj za ispis i zakačku"
+msgstr "Opcioni izvještaj za ispis i email prilog"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:264
@@ -188,52 +206,57 @@ msgstr ""
 msgid "Postal Printings"
 msgstr ""
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
-msgstr ""
+msgstr "Štampaj obje strane"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "Štampaj u koloru"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
 msgstr ""
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
 msgid "Recipient"
 msgstr "Primalac"
 
+# taken from hr.po
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Akcija izvještaja"
 
+# taken from hr.po
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Send Now"
 msgstr "Pošalji odmah"
 
+# taken from hr.po
 #. module: snailmail
-#: selection:snailmail.letter,state:0
+#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js
+#, python-format
 msgid "Sent"
 msgstr "Poslano"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "Snailmail pismo"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
-#: model:ir.cron,cron_name:snailmail.snailmail_print
-#: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Snailmail: obradi red pisama"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -241,18 +264,20 @@ msgid "Status"
 msgstr "Status"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:213
+#: code:addons/snailmail/models/snailmail_letter.py
 #, python-format
 msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
 " contact the support if the problem persists."
 msgstr ""
+"Prilog pisma nije mogao biti poslan. Molimo provjerite njegov sadržaj i "
+"kontaktirajte podršku ako se problem nastavi."
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:209
+#: code:addons/snailmail/models/snailmail_letter.py
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "Zemlja partnera nije pokrivena Snailmail uslugom."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:242
@@ -275,17 +300,496 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:207
+#: code:addons/snailmail/models/snailmail_letter.py
 #, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"Nemate registriran IAP račun za ovu uslugu.<br>Molimo idite na <a href=%s "
+"target=\"new\">iap.odoo.com</a> kako biste preuzeli svoje besplatne kredite."
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:204
+#: code:addons/snailmail/models/snailmail_letter.py
 #, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"Nemate dovoljno kredita za izvršenje ove operacije.<br>Molimo idite na svoj "
+"<a href=%s target=\"new\">IAP račun</a>."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
+msgid "Add a Cover Page"
+msgstr "Dodaj naslovnu stranicu"
+
+# taken from hr.po
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Address"
+msgstr "Adresa"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/notification_group/notification_group.xml
+#, python-format
+msgid "An error occurred when sending a letter with Snailmail."
+msgstr "Došlo je do greške prilikom slanja pisma putem Snailmail-a."
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py
+#, python-format
+msgid "An error occurred when sending the document by post.<br>Error: %s"
+msgstr "Došlo je do greške prilikom slanja dokumenta poštom.<br>Greška: %s"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid "An unknown error occurred. Please contact our"
+msgstr "Dogodila se nepoznata greška. Molimo kontaktirajte našu"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_fname
+msgid "Attachment Filename"
+msgstr "Naziv datoteke priloga"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js
+#, python-format
+msgid "Awaiting Dispatch"
+msgstr "Čeka na otpremu"
+
+# taken from hr.po
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid "Buy credits"
+msgstr "Došlo je do greške pri slanju dokumenta poštom.<br>Greška: %s"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
+msgid "CREDIT_ERROR"
+msgstr "GREŠKA_KREDITA"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Cancel Letter"
+msgstr "Otkaži pismo"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid "Cancel letter"
+msgstr "Otkaži pismo"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Cancel notification in failure"
+msgstr "Otkaži obavijest u slučaju neuspjeha"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__city
+msgid "City"
+msgstr "Grad"
+
+# taken from hr.po
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid "Close"
+msgstr "Zatvori"
+
+# taken from hr.po
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "Confirm"
+msgstr "Potvrdi"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__country_id
+msgid "Country"
+msgstr "Država"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__cover
+msgid "Cover Page"
+msgstr "Naslovna stranica"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_datas
+msgid "Document"
+msgstr "Dokument"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_mail_thread
+msgid "Email Thread"
+msgstr "Nit e-pošte"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__format_error
+msgid "FORMAT_ERROR"
+msgstr "GREŠKA_FORMATA"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid "Failed letter"
+msgstr "Neuspjelo pismo"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
+msgid "Failure type"
+msgstr "Vrsta greške"
+
+#. module: snailmail
+#: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
+msgid "Format Error"
+msgstr "Greška u formatu"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_letter_format_error
+msgid "Format Error Sending a Snailmail Letter"
+msgstr "Greška u formatu prilikom slanja Snailmail pisma"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py
+#, python-format
+msgid "Invalid recipient name."
+msgstr "Nevažeće ime primaoca."
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_mail__letter_ids
+msgid "Letter"
+msgstr "Pismo"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py
+#, python-format
+msgid "Letter sent by post with Snailmail"
+msgstr "Pismo poslano poštom putem Snailmail-a"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__missing_required_fields
+msgid "MISSING_REQUIRED_FIELDS"
+msgstr "NEDOSTAJU_OBAVEZNA_POLJA"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_mail_message
+msgid "Message"
+msgstr "Poruka"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_mail_notification
+msgid "Message Notifications"
+msgstr "Obavjesti poruka"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr ""
+"Vrsta poruke: e-mail za e-mail poruke, priopćenja za sistemske poruke, "
+"komentari za druge poruke poput korisničkih odgovora"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_confirm__model_name
+msgid "Model Name"
+msgstr "Naziv modela"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
+msgid "NO_PRICE_AVAILABLE"
+msgstr "CIJENA_NIJE_DOSTUPNA"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py
+#, python-format
+msgid "Not enough credits for Snail Mail"
+msgstr "Odaberite layout za štampanje dokumenata"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
+msgid "Notification Type"
+msgstr "Vrsta obavijesti"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__notification_ids
+msgid "Notifications"
+msgstr "Obavijesti"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid ""
+"Our service cannot read your letter due to its format.<br/>\n"
+"                Please modify the format of the template or update your settings\n"
+"                to automatically add a blank cover page to all letters."
+msgstr ""
+"Naša usluga ne može pročitati vaše pismo zbog njegovog formata.<br/>\n"
+"                Molimo izmijenite format predloška ili ažurirajte svoje postavke\n"
+"                kako biste automatski dodali praznu naslovnu stranicu svim pismima."
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py
+#, python-format
+msgid "Please use an A4 Paper format."
+msgstr "Molimo koristite format papira A4."
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid "Re-send letter"
+msgstr "Ponovno pošalji pismo"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__reference
+msgid "Related Record"
+msgstr "Povezani zapis"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
+msgid "Sent by"
+msgstr "Pošaljilac"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py
+#, python-format
+msgid "Snail Mails are successfully sent"
+msgstr "Snail Mail pisma su uspješno poslana"
+
+# taken from hr.po
+#. module: snailmail
+#: code:addons/snailmail/wizard/snailmail_confirm.py
+#, python-format
+msgid "Snailmail"
+msgstr "Obična pošta"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_confirm
+msgid "Snailmail Confirm"
+msgstr "Snailmail potvrda"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "Snailmail Confirmation"
+msgstr "Snailmail potvrda"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
+msgid "Snailmail Credit Error"
+msgstr "Snailmail greška s kreditom"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/models/notification_group.js
+#, python-format
+msgid "Snailmail Failures"
+msgstr "Slanje pisma poštom: došlo je do greške."
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
+msgid "Snailmail Format Error"
+msgstr ""
+"Kada se pismo kreira, status je 'Nacrt'.\n"
+"Ako je pismo uspješno poslano, status prelazi u 'Poslano',\n"
+"Ako nije, prelazi u stanje 'Greška' i poruka greške će se prikazati u polju 'Poruka greške'."
+
+#. module: snailmail
+#: model:ir.actions.act_window,name:snailmail.action_mail_letters
+msgid "Snailmail Letters"
+msgstr "Snailmail pisma"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields
+msgid "Snailmail Missing Required Fields"
+msgstr "Snailmail nedostaju obavezna polja"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_price
+msgid "Snailmail No Price Available"
+msgstr "Snailmail cijena nije dostupna"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__message_id
+msgid "Snailmail Status Message"
+msgstr "Snailmail statusna poruka"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_trial
+msgid "Snailmail Trial Error"
+msgstr "Snailmail greška u probnom periodu"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
+msgid "Snailmail Unknown Error"
+msgstr "Snailmail nepoznata greška"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
+msgid "Snailmail message in error"
+msgstr "Snailmail poruka s greškom"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
+msgid "State"
+msgstr "Država/pokrajina"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street
+msgid "Street"
+msgstr "Ulica"
+
+# taken from hr.po
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Street 2..."
+msgstr "Poštansko štampanje"
+
+# taken from hr.po
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Street..."
+msgstr "Ulica..."
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street2
+msgid "Street2"
+msgstr "Ulica2"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__trial_error
+msgid "TRIAL_ERROR"
+msgstr "GREŠKA_PROBNOG_PERIODA"
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py
+#, python-format
+msgid "The address of the recipient is not complete"
+msgstr "Adresa primaoca nije potpuna"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
+msgstr ""
+"Zemlja u koju želite poslati pismo nije podržana od strane naše usluge."
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
+msgstr ""
+"Adresa kupca nije potpuna. Ažurirajte adresu ovdje i ponovno pošaljite "
+"pismo."
+
+#. module: snailmail
+#: code:addons/snailmail/models/snailmail_letter.py
+#, python-format
+msgid "The document was correctly sent by post.<br>The tracking id is %s"
+msgstr "Dokument je ispravno poslan poštom.<br>ID za praćenje je %s"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
+msgstr ""
+"Pismo nije moglo biti poslano zbog nedovoljno kredita na vašem IAP računu."
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
+msgid "Type"
+msgstr "Tip"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__unknown_error
+msgid "UNKNOWN_ERROR"
+msgstr "NEPOZNATA_GREŠKA"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
+msgid "Update Config and Re-send"
+msgstr "Ažuriraj konfiguraciju i ponovno pošalji"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "Update address and re-send"
+msgstr "Ažuriraj adresu i ponovno pošalji"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_letter_missing_required_fields
+msgid "Update address of partner"
+msgstr "Ažuriraj adresu partnera"
+
+#. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
+msgid ""
+"When a letter is created, the status is 'Pending'.\n"
+"If the letter is correctly sent, the status goes in 'Sent',\n"
+"If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
+msgstr ""
+"Kada se pismo kreira, status je 'Na čekanju'.\n"
+"Ako je pismo ispravno poslano, status prelazi u 'Poslano',\n"
+"Ako ne, preći će u stanje 'Greška' i poruka o grešci će biti prikazana u polju 'Poruka o grešci'."
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "You are about to send this"
+msgstr "Spremate se poslati ovo"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid "You need credits on your IAP account to send a letter."
+msgstr "Potrebni su vam krediti na vašem IAP računu za slanje pisma."
+
+# taken from hr.po
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
+msgid "ZIP"
+msgstr "Poštanski broj"
+
+# taken from hr.po
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__zip
+msgid "Zip"
+msgstr "Poštanski broj"
+
+#. module: snailmail
+#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
+msgid "by post. Are you sure you want to continue?"
+msgstr "poštom. Jeste li sigurni da želite nastaviti?"
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid "for further assistance."
+msgstr "za dalju pomoć."
+
+#. module: snailmail
+#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml
+#, python-format
+msgid "support"
+msgstr "podrška"
