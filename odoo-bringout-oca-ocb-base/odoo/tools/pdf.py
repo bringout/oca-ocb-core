@@ -14,26 +14,126 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 
 try:
-    # class were renamed in PyPDF2 > 2.0
-    # https://pypdf2.readthedocs.io/en/latest/user/migration-1-to-2.html#classes
-    from PyPDF2 import PdfReader
+    # PyPDF2 3.x compatibility: new class names and method names
+    from PyPDF2 import PdfReader, PdfWriter
     import PyPDF2
-    # monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
-    # https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
+
+    # Create comprehensive compatibility wrapper classes
+    class PdfFileWriter(PdfWriter):
+        """Compatibility wrapper for PyPDF2 3.x PdfWriter"""
+
+        def addPage(self, page):
+            """Compatibility method for add_page()"""
+            return self.add_page(page)
+
+        def addMetadata(self, metadata):
+            """Compatibility method for add_metadata()"""
+            return self.add_metadata(metadata)
+
+        def _addObject(self, obj):
+            """Compatibility method for _add_object()"""
+            return self._add_object(obj)
+
+        def appendPagesFromReader(self, reader):
+            """Compatibility method for append_pages_from_reader()"""
+            if hasattr(self, 'append_pages_from_reader'):
+                return self.append_pages_from_reader(reader)
+            else:
+                # Fallback: manually append pages
+                for page_num in range(len(reader.pages)):
+                    self.add_page(reader.pages[page_num])
+
+        def cloneReaderDocumentRoot(self, reader):
+            """Compatibility method for clone_reader_document_root()"""
+            return self.clone_reader_document_root(reader)
+
     class PdfFileReader(PdfReader):
+        """Compatibility wrapper for PyPDF2 3.x PdfReader"""
+
         def __init__(self, *args, **kwargs):
+            # Discard unused arguments for compatibility
             if "strict" not in kwargs and len(args) < 2:
                 kwargs["strict"] = True  # maintain the default
             kwargs = {k:v for k, v in kwargs.items() if k in ('strict', 'stream')}
             super().__init__(*args, **kwargs)
 
+        def getNumPages(self):
+            """Compatibility method for len(pages)"""
+            return len(self.pages)
+
+        def getPage(self, page_num):
+            """Compatibility method for pages[n]"""
+            return self.pages[page_num]
+
+        @property
+        def numPages(self):
+            """Compatibility property for number of pages"""
+            return len(self.pages)
+
+    # Register compatibility classes in PyPDF2 namespace
     PyPDF2.PdfFileReader = PdfFileReader
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-    PdfFileWriter._addObject = PdfFileWriter._add_object
+    PyPDF2.PdfFileWriter = PdfFileWriter
+
 except ImportError:
+    # Fallback to old API for PyPDF2 < 3.0
     from PyPDF2 import PdfFileWriter, PdfFileReader
 
-from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
+from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, NumberObject, createStringObject, ByteStringObject
+from PyPDF2.generic import DecodedStreamObject as _DecodedStreamObject
+
+# Create compatibility wrapper for DecodedStreamObject
+class DecodedStreamObject(_DecodedStreamObject):
+    """Compatibility wrapper for PyPDF2 3.x DecodedStreamObject"""
+
+    def setData(self, data):
+        """Compatibility method for set_data()"""
+        if hasattr(self, 'set_data'):
+            return self.set_data(data)
+        else:
+            # Fallback for older PyPDF2 versions
+            return super().setData(data)
+
+    def getData(self):
+        """Compatibility method for get_data()"""
+        if hasattr(self, 'get_data'):
+            return self.get_data()
+        else:
+            # Fallback for older PyPDF2 versions
+            return super().getData()
+
+# Monkey-patch PyPDF2 generic objects to add compatibility methods
+# This handles getObject() -> get_object() for IndirectObject and other base classes
+# In PyPDF2 3.x, old methods exist but raise DeprecationError, so we MUST override them
+try:
+    import PyPDF2.generic._base as pdf_base
+
+    # Override getObject to call get_object without deprecation warning
+    if hasattr(pdf_base.IndirectObject, 'get_object'):
+        def _getObject_compat(self):
+            return self.get_object()
+        # Force override even if getObject exists (it raises DeprecationError in 3.x)
+        pdf_base.IndirectObject.getObject = _getObject_compat
+
+    # Also patch in the generic module
+    from PyPDF2.generic import IndirectObject
+    if hasattr(IndirectObject, 'get_object'):
+        IndirectObject.getObject = _getObject_compat
+
+except (ImportError, AttributeError) as e:
+    # Older PyPDF2 versions don't have separate modules
+    pass
+
+try:
+    from PyPDF2.generic import StreamObject
+
+    # Override getData to call get_data without deprecation warning
+    if hasattr(StreamObject, 'get_data'):
+        def _getData_compat(self):
+            return self.get_data()
+        # Force override even if getData exists (it raises DeprecationError in 3.x)
+        StreamObject.getData = _getData_compat
+except (ImportError, AttributeError):
+    pass
 
 try:
     from fontTools.ttLib import TTFont

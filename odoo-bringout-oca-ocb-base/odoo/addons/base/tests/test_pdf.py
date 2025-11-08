@@ -23,6 +23,10 @@ class TestPdf(TransactionCase):
 
         pdf_writer = pdf.PdfFileWriter()
         pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        # Copy all pages from the reader to the writer (required for PyPDF2 3.x)
+        for page_num in range(self.minimal_pdf_reader.getNumPages()):
+            page = self.minimal_pdf_reader.getPage(page_num)
+            pdf_writer.addPage(page)
         pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
 
         attachments = list(self.minimal_pdf_reader.getAttachments())
@@ -34,6 +38,10 @@ class TestPdf(TransactionCase):
 
         pdf_writer = pdf.OdooPdfFileWriter()
         pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        # Copy all pages from the reader to the writer (required for PyPDF2 3.x)
+        for page_num in range(self.minimal_pdf_reader.getNumPages()):
+            page = self.minimal_pdf_reader.getPage(page_num)
+            pdf_writer.addPage(page)
 
         pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
         attachments = list(self.minimal_pdf_reader.getAttachments())
@@ -46,6 +54,10 @@ class TestPdf(TransactionCase):
     def test_odoo_pdf_file_reader_with_owner_encryption(self):
         pdf_writer = pdf.OdooPdfFileWriter()
         pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        # Copy all pages from the reader to the writer (required for PyPDF2 3.x)
+        for page_num in range(self.minimal_pdf_reader.getNumPages()):
+            page = self.minimal_pdf_reader.getPage(page_num)
+            pdf_writer.addPage(page)
 
         pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
         pdf_writer.addAttachment('another_attachment.txt', b'My awesome OTHER attachment')
@@ -76,6 +88,10 @@ class TestPdf(TransactionCase):
         # It's not easy to create a PDF with PyPDF2, so instead we copy minimal.pdf with our custom pdf writer
         pdf_writer = pdf.PdfFileWriter()  # BrandedFileWriter
         pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        # Copy all pages from the reader to the writer (required for PyPDF2 3.x)
+        for page_num in range(self.minimal_pdf_reader.getNumPages()):
+            page = self.minimal_pdf_reader.getPage(page_num)
+            pdf_writer.addPage(page)
         writer_buffer = io.BytesIO()
         pdf_writer.write(writer_buffer)
         branded_content = writer_buffer.getvalue()

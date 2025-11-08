@@ -24,7 +24,102 @@ from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
-from PyPDF2 import PdfFileWriter, PdfFileReader
+
+# PyPDF2 3.x compatibility
+try:
+    from PyPDF2 import PdfReader, PdfWriter
+
+    # Create local compatibility classes
+    class PdfFileWriter(PdfWriter):
+        """Compatibility wrapper for PyPDF2 3.x PdfWriter"""
+
+        def addPage(self, page):
+            """Compatibility method for add_page()"""
+            return self.add_page(page)
+
+        def addMetadata(self, metadata):
+            """Compatibility method for add_metadata()"""
+            return self.add_metadata(metadata)
+
+        def _addObject(self, obj):
+            """Compatibility method for _add_object()"""
+            return self._add_object(obj)
+
+        def appendPagesFromReader(self, reader):
+            """Compatibility method for append_pages_from_reader()"""
+            if hasattr(self, 'append_pages_from_reader'):
+                return self.append_pages_from_reader(reader)
+            else:
+                # Fallback: manually append pages
+                for page_num in range(len(reader.pages)):
+                    self.add_page(reader.pages[page_num])
+
+    class PdfFileReader(PdfReader):
+        """Compatibility wrapper for PyPDF2 3.x PdfReader"""
+
+        def getNumPages(self):
+            """Compatibility method for len(pages)"""
+            return len(self.pages)
+
+        def getPage(self, page_num):
+            """Compatibility method for pages[n]"""
+            return self.pages[page_num]
+
+        @property
+        def numPages(self):
+            """Compatibility property for number of pages"""
+            return len(self.pages)
+
+except ImportError:
+    # Fallback to old API for PyPDF2 < 3.0
+    from PyPDF2 import PdfFileWriter, PdfFileReader
+
+# Monkey-patch PyPDF2 generic objects to add compatibility methods
+# This handles getObject() -> get_object() for IndirectObject and other base classes
+# In PyPDF2 3.x, old methods exist but raise DeprecationError, so we MUST override them
+try:
+    import PyPDF2.generic._base as pdf_base
+
+    # Override getObject to call get_object without deprecation warning
+    if hasattr(pdf_base.IndirectObject, 'get_object'):
+        def _getObject_compat(self):
+            return self.get_object()
+        # Force override even if getObject exists (it raises DeprecationError in 3.x)
+        pdf_base.IndirectObject.getObject = _getObject_compat
+
+    # Also patch in the generic module
+    from PyPDF2.generic import IndirectObject
+    if hasattr(IndirectObject, 'get_object'):
+        IndirectObject.getObject = _getObject_compat
+
+except (ImportError, AttributeError):
+    # Older PyPDF2 versions don't have separate modules
+    pass
+
+try:
+    from PyPDF2.generic import StreamObject
+
+    # Override getData to call get_data without deprecation warning
+    if hasattr(StreamObject, 'get_data'):
+        def _getData_compat(self):
+            return self.get_data()
+        # Force override even if getData exists (it raises DeprecationError in 3.x)
+        StreamObject.getData = _getData_compat
+except (ImportError, AttributeError):
+    pass
+
+try:
+    from PyPDF2.generic import DecodedStreamObject as _DecodedStreamObject
+
+    # Override getData to call get_data without deprecation warning
+    if hasattr(_DecodedStreamObject, 'get_data'):
+        def _getData_compat_decoded(self):
+            return self.get_data()
+        # Force override even if getData exists (it raises DeprecationError in 3.x)
+        _DecodedStreamObject.getData = _getData_compat_decoded
+except (ImportError, AttributeError):
+    pass
+
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
