@@ -255,7 +255,13 @@ ROUTING_KEYS = {
     'alias', 'host', 'methods',
 }
 
-if parse_version(werkzeug.__version__) >= parse_version('2.0.2'):
+try:
+    _werkzeug_version = werkzeug.__version__
+except AttributeError:
+    from importlib.metadata import version as _get_version
+    _werkzeug_version = _get_version('werkzeug')
+
+if parse_version(_werkzeug_version) >= parse_version('2.0.2'):
     # Werkzeug 2.0.2 adds the websocket option. If a websocket request
     # (ws/wss) is trying to access an HTTP route, a WebsocketMismatch
     # exception is raised. On the other hand, Werkzeug 0.16 does not
