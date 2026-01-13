@@ -35,19 +35,19 @@ msgstr "<strong>Datum</strong>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Description</strong>"
-msgstr "<strong>Opis</strong><br/>"
+msgstr "<strong>Opis</strong>"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Product UoM</strong>"
-msgstr "<strong>Jedinica mjere</strong>"
+msgstr "<strong>JM proizvoda</strong>"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Qty</strong>"
-msgstr "<strong>Količina</strong>"
+msgstr "<strong>Kol</strong>"
 
 # taken from hr.po
 #. module: purchase_requisition
@@ -88,7 +88,7 @@ msgstr "<strong>Dobavljač </strong>"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
 msgid "Action Needed"
-msgstr "Potrebna radnja"
+msgstr "Potrebna akcija"
 
 # taken from hr.po
 #. module: purchase_requisition
@@ -132,7 +132,7 @@ msgstr "Analitičke oznake"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
 msgid "Attachment Count"
-msgstr "Broj priloga"
+msgstr "Broj zakački"
 
 # taken from hr.po
 #. module: purchase_requisition
@@ -174,7 +174,7 @@ msgstr "Otkaži"
 #. module: purchase_requisition
 #: selection:purchase.requisition,state
 msgid "Cancelled"
-msgstr "Otkazano"
+msgstr "Otkazan"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:116
@@ -279,7 +279,7 @@ msgstr "Ne kreiraj automatski stavke za ZZP"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Done"
-msgstr "Dovršeno"
+msgstr "Gotovo"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__move_dest_id
@@ -307,7 +307,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
 msgid "Followers"
-msgstr "Pratitelji"
+msgstr "Pratioci"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_channel_ids
@@ -318,7 +318,7 @@ msgstr "Pratioci (Kanali)"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Pratitelji (partneri)"
+msgstr "Pratioci (Partneri)"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -332,7 +332,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
-msgstr "Grupiši po..."
+msgstr "Grupiši po"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
@@ -356,7 +356,9 @@ msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
+msgstr ""
+"Kada je označena, ruta će biti izborna u Inventory tab-u forme proizvoda. "
+"Imaće prioritet nad rutom skladišta."
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -378,31 +380,31 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
 msgid "Is Follower"
-msgstr "Pratilac"
+msgstr "Je pratilac"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition____last_update
 msgid "Last Modified on"
-msgstr "Zadnja izmjena na"
+msgstr "Zadnje mijenjano"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_uid
 msgid "Last Updated by"
-msgstr "Zadnje ažuriranje izvršio"
+msgstr "Zadnji ažurirao"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_date
 msgid "Last Updated on"
-msgstr "Zadnje ažuriranje na"
+msgstr "Zadnje ažurirano"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
-msgstr "Stavke"
+msgstr "Retci"
 
 # taken from hr.po
 #. module: purchase_requisition
@@ -420,7 +422,7 @@ msgstr "Greška pri isporuci poruke"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
 msgid "Messages"
-msgstr "Nepročitane poruke"
+msgstr "Poruke"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -470,7 +472,11 @@ msgstr "Broj poruka koje zahtjevaju neku akciju"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Broj poruka sa greškama pri isporuci"
+msgstr ""
+"Kada je skladište odabrano za ovu rutu, ova ruta treba biti viđena kao "
+"defaultna ruta kada proizvodi prolaze kroz ovo skladište. Ovo ponašanje može"
+" biti prevazlađeno rutama na proizvodu/kategorijama proizvoda ili "
+"preferiranim rutama na nabavci"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
@@ -532,13 +538,13 @@ msgstr "Jedinica mjere proizvoda"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Products"
-msgstr "Proizvodi"
+msgstr "Artikli"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__line_ids
 msgid "Products to Purchase"
-msgstr "Proizvodi za nabavu"
+msgstr "Proizvodi za nabavku"
 
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
@@ -567,19 +573,19 @@ msgstr "Dogovori o nabavi"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
-msgstr "Zahtjevi za nabavom"
+msgstr "Narudžbenica"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Stavka zahtjeva za nabavu"
+msgstr "Stavka narudžbenice"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__purchase_ids
 msgid "Purchase Orders"
-msgstr "Zahtjevi za nabavom"
+msgstr "Narudžbenice"
 
 # taken from hr.po
 #. module: purchase_requisition
@@ -857,13 +863,13 @@ msgstr "Upozorenje za %s"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website Messages"
-msgstr "Nepročitane poruke"
+msgstr "Poruke sa website-a"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website communication history"
-msgstr "Povijest komunikacije Web stranice"
+msgstr "Historija komunikacije sa web stranice"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:178
@@ -931,19 +937,19 @@ msgstr "Aktivno"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_ids
 msgid "Activities"
-msgstr "Aktivnosti"
+msgstr "Aktivnosti kontrolne kartice"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Dekoracija izuzetka aktivnosti"
+msgstr "Dekoracija iznimke aktivnosti"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
 msgid "Activity State"
-msgstr "Status aktivnosti"
+msgstr "Stanje aktivnosti"
 
 # taken from hr.po
 #. module: purchase_requisition
@@ -1003,7 +1009,7 @@ msgstr "Pretraga analitičkih distribucija"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
 msgid "Analytic Precision"
-msgstr "Analitička preciznost"
+msgstr "Preciznost analitike"
 
 # taken from hr.po
 #. module: purchase_requisition
@@ -1025,7 +1031,7 @@ msgstr "Otkaži alternative"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
 msgid "Category"
-msgstr "Kategorija"
+msgstr "Korpa se smatra napuštenom nakon"
 
 # taken from hr.po
 #. module: purchase_requisition
@@ -1113,7 +1119,11 @@ msgstr "Prilagođeni opis"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome ikona npr. fa-tasks"
+msgstr ""
+"Kreiraj nacrt narudžbe nabavke: Na osnovu konfiguracije vašeg proizvoda, "
+"sistem će kreirati nacrt narudžbe nabavke. Predloži poziv za tender: Ako je "
+"instaliran 'purchase_requisition' modul i ova opcija je izabrana, sistem će "
+"kreirati nacrt poziva za tender."
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -1227,13 +1237,13 @@ msgstr "Krajnji rok za sljedeću aktivnost"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_summary
 msgid "Next Activity Summary"
-msgstr "Pregled sljedeće aktivnosti"
+msgstr "Sažetak sljedećih aktivnosti"
 
 # taken from hr.po
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tip sljedeće aktivnosti"
+msgstr "Sljedeća aktivnost - tip"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase.py
@@ -1295,7 +1305,7 @@ msgstr "Grupa nabavke"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Purchase Order Lines"
-msgstr "Stavke zahtjeva za nabavu"
+msgstr "Stavke naloga za nabavu"
 
 # taken from hr.po
 #. module: purchase_requisition
@@ -1445,7 +1455,7 @@ msgstr "Vrsta aktivnosti iznimke na zapisu."
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "UoM"
-msgstr "JMJ"
+msgstr "Ova napomena će se pojaviti na prodajnim narudžbama i fakturama."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__purchase_warn_msg

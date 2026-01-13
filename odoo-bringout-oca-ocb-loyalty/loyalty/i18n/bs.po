@@ -474,7 +474,7 @@ msgstr "A trigger with the same code as one of your coupon already exists."
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
 msgid "Action Needed"
-msgstr "Potrebna radnja"
+msgstr "Potrebna dodatna radnja"
 
 # taken from hr.po
 #. module: loyalty
@@ -543,7 +543,7 @@ msgstr "Prilikom kreiranja"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_attachment_count
 msgid "Attachment Count"
-msgstr "Broj priloga"
+msgstr "Je li dizajniran?"
 
 # taken from hr.po
 #. module: loyalty
@@ -906,7 +906,7 @@ msgstr "Popusti"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__display_name
 msgid "Display Name"
-msgstr "Prikazani naziv"
+msgstr "Naziv za prikaz"
 
 # taken from hr.po
 #. module: loyalty
@@ -1150,13 +1150,17 @@ msgstr "ID"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
+msgstr ""
+"Ovo polje drži sliku korišćenu kao sliku za varijantu proizvoda, ograničenu "
+"na 1024x1024px."
 
 # taken from hr.po
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
+msgstr ""
+"Kada je označena, ruta će biti izborna u Inventory tab-u forme proizvoda. "
+"Imaće prioritet nad rutom skladišta."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -1189,7 +1193,7 @@ msgstr "Invalid quantity."
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_is_follower
 msgid "Is Follower"
-msgstr "Pratilac"
+msgstr "Da li je pratilac"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__is_global_discount
@@ -1216,19 +1220,19 @@ msgstr "Stavke"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card____last_update
 msgid "Last Modified on"
-msgstr "Zadnja izmjena na"
+msgstr "Zadnja izmjena"
 
 # taken from hr.po
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__write_uid
 msgid "Last Updated by"
-msgstr "Zadnje ažuriranje izvršio"
+msgstr "Zadnje ažurirao"
 
 # taken from hr.po
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__write_date
 msgid "Last Updated on"
-msgstr "Zadnje ažuriranje na"
+msgstr "Zadnje ažurirano"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_mail_view_tree
@@ -1382,7 +1386,11 @@ msgstr "Broj poruka koje zahtijevaju aktivnost"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Broj poruka sa greškama pri isporuci"
+msgstr ""
+"Kada je skladište odabrano za ovu rutu, ova ruta treba biti viđena kao "
+"defaultna ruta kada proizvodi prolaze kroz ovo skladište. Ovo ponašanje može"
+" biti prevazlađeno rutama na proizvodu/kategorijama proizvoda ili "
+"preferiranim rutama na nabavci"
 
 #. module: loyalty
 #: code:addons/loyalty/models/loyalty_program.py

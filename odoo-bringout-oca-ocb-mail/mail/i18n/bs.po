@@ -416,7 +416,7 @@ msgstr "Pristupne grupe"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction
 msgid "Action Needed"
-msgstr "Potrebna radnja"
+msgstr "Potrebna akcija"
 
 # taken from hr.po
 #. module: mail
@@ -780,7 +780,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/activity/activity.xml
 #, python-format
 msgid "Assigned to"
-msgstr "Dodijeljeno"
+msgstr "Dodjeljeno"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py
@@ -808,7 +808,7 @@ msgstr "Zakačka"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_attachment_count
 msgid "Attachment Count"
-msgstr "Broj priloga"
+msgstr "Broj zakački"
 
 # taken from hr.po
 #. module: mail
@@ -1037,7 +1037,7 @@ msgstr "Otkazano"
 #. module: mail
 #: selection:mail.mail,state
 msgid "Cancelled"
-msgstr "Otkazano"
+msgstr "Otkazan"
 
 # taken from hr.po
 #. module: mail
@@ -1268,7 +1268,7 @@ msgstr "Mod sastavljanja"
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
 msgid "Config Settings"
-msgstr "Postavke konfiguracije"
+msgstr "Podešavanja konfiguracije"
 
 # taken from hr.po
 #. module: mail
@@ -1686,7 +1686,7 @@ msgstr "Naziv dokumenta"
 #: code:addons/mail/static/src/xml/activity.xml
 #, python-format
 msgid "Done"
-msgstr "Dovršeno"
+msgstr "Gotovo"
 
 # taken from hr.po
 #. module: mail
@@ -2143,7 +2143,7 @@ msgstr "Prati"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_followers
 msgid "Followers"
-msgstr "Pratitelji"
+msgstr "Pratioci"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_channel_ids
@@ -2157,7 +2157,7 @@ msgstr "Pratioci (Kanali)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Pratitelji (partneri)"
+msgstr "Pratioci (Partneri)"
 
 # taken from hr.po
 #. module: mail
@@ -2260,7 +2260,7 @@ msgstr "Dijagram"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Group By"
-msgstr "Grupiši po..."
+msgstr "Grupiši po"
 
 # taken from hr.po
 #. module: mail
@@ -2393,7 +2393,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__icon
 msgid "Icon"
-msgstr "Ikona"
+msgstr "Znak"
 
 # taken from hr.po
 #. module: mail
@@ -2427,7 +2427,9 @@ msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
+msgstr ""
+"Kada je označena, ruta će biti izborna u Inventory tab-u forme proizvoda. "
+"Imaće prioritet nad rutom skladišta."
 
 # taken from hr.po
 #. module: mail
@@ -2670,7 +2672,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
 msgid "Is Follower"
-msgstr "Pratilac"
+msgstr "Je pratilac"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification
@@ -2732,7 +2734,7 @@ msgstr "Jezik"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview____last_update
 msgid "Last Modified on"
-msgstr "Zadnja izmjena na"
+msgstr "Zadnje mijenjano"
 
 # taken from hr.po
 #. module: mail
@@ -2744,13 +2746,13 @@ msgstr "Zadnje viđeno"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__write_uid
 msgid "Last Updated by"
-msgstr "Zadnje ažuriranje izvršio"
+msgstr "Zadnji ažurirao"
 
 # taken from hr.po
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__write_date
 msgid "Last Updated on"
-msgstr "Zadnje ažuriranje na"
+msgstr "Zadnje ažurirano"
 
 # taken from hr.po
 #. module: mail
@@ -3223,7 +3225,7 @@ msgstr "Id-poruke"
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
 #, python-format
 msgid "Messages"
-msgstr "Nepročitane poruke"
+msgstr "Poruke"
 
 # taken from hr.po
 #. module: mail
@@ -3718,7 +3720,11 @@ msgstr "Broj poruka koje zahtjevaju neku akciju"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Broj poruka sa greškama pri isporuci"
+msgstr ""
+"Kada je skladište odabrano za ovu rutu, ova ruta treba biti viđena kao "
+"defaultna ruta kada proizvodi prolaze kroz ovo skladište. Ovo ponašanje može"
+" biti prevazlađeno rutama na proizvodu/kategorijama proizvoda ili "
+"preferiranim rutama na nabavci"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread_counter
@@ -4337,7 +4343,7 @@ msgstr "Pozdrav,"
 #: code:addons/mail/static/src/components/call_action_list/call_action_list.xml
 #, python-format
 msgid "Reject"
-msgstr "Odbij"
+msgstr "Odbaci"
 
 #. module: mail
 #. openerp-web
@@ -6936,7 +6942,7 @@ msgstr "Aktivnosti moraju biti povezane sa zapisom koji nema unešen res_id."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Dekoracija izuzetka aktivnosti"
+msgstr "Dekoracija iznimke aktivnosti"
 
 # taken from hr.po
 #. module: mail
