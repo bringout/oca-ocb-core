@@ -154,7 +154,7 @@ msgstr "<strong>Garancija:</strong>"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
 msgid "Action Needed"
-msgstr "Potrebna akcija"
+msgstr "Potrebna radnja"
 
 # taken from hr.po
 #. module: repair
@@ -194,7 +194,7 @@ msgstr "Poslije popravka"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "Broj zakački"
+msgstr "Broj priloga"
 
 # taken from hr.po
 #. module: repair
@@ -224,7 +224,7 @@ msgstr "Otkaži nalog za popravak"
 #. module: repair
 #: selection:repair.line,state
 msgid "Cancelled"
-msgstr "Otkazan"
+msgstr "Otkazano"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:244
@@ -351,7 +351,7 @@ msgstr "Želite li zaista želite kreirati fakturu(e)?"
 #. module: repair
 #: selection:repair.line,state
 msgid "Done"
-msgstr "Gotovo"
+msgstr "Dovršeno"
 
 # taken from hr.po
 #. module: repair
@@ -387,7 +387,7 @@ msgstr "Nadoknada"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
 msgid "Followers"
-msgstr "Pratioci"
+msgstr "Pratitelji"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_channel_ids
@@ -398,7 +398,7 @@ msgstr "Pratioci (Kanali)"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Pratioci (Partneri)"
+msgstr "Pratitelji (partneri)"
 
 # taken from hr.po
 #. module: repair
@@ -410,7 +410,7 @@ msgstr "Buduće aktivnosti"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Group By"
-msgstr "Grupiši po"
+msgstr "Grupiši po..."
 
 # taken from hr.po
 #. module: repair
@@ -449,9 +449,7 @@ msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Kada je označena, ruta će biti izborna u Inventory tab-u forme proizvoda. "
-"Imaće prioritet nad rutom skladišta."
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 # taken from hr.po
 #. module: repair
@@ -541,25 +539,25 @@ msgstr "Adresa za fakturu"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
 msgid "Is Follower"
-msgstr "Je pratilac"
+msgstr "Pratilac"
 
 # taken from hr.po
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel____last_update
 msgid "Last Modified on"
-msgstr "Zadnje mijenjano"
+msgstr "Zadnja izmjena na"
 
 # taken from hr.po
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel__write_uid
 msgid "Last Updated by"
-msgstr "Zadnji ažurirao"
+msgstr "Zadnje ažuriranje izvršio"
 
 # taken from hr.po
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel__write_date
 msgid "Last Updated on"
-msgstr "Zadnje ažurirano"
+msgstr "Zadnje ažuriranje na"
 
 # taken from hr.po
 #. module: repair
@@ -595,7 +593,7 @@ msgstr "Greška pri isporuci poruke"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
 msgid "Messages"
-msgstr "Poruke"
+msgstr "Nepročitane poruke"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
@@ -694,11 +692,7 @@ msgstr "Broj poruka koje zahtjevaju neku akciju"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-"Kada je skladište odabrano za ovu rutu, ova ruta treba biti viđena kao "
-"defaultna ruta kada proizvodi prolaze kroz ovo skladište. Ovo ponašanje može"
-" biti prevazlađeno rutama na proizvodu/kategorijama proizvoda ili "
-"preferiranim rutama na nabavci"
+msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
@@ -1044,7 +1038,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
-msgstr "Kretanje zalihe"
+msgstr "Skladišno kretanje"
 
 # taken from hr.po
 #. module: repair
@@ -1221,13 +1215,13 @@ msgstr "Isticanje garancije"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
 msgid "Website Messages"
-msgstr "Poruke sa website-a"
+msgstr "Nepročitane poruke"
 
 # taken from hr.po
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
 msgid "Website communication history"
-msgstr "Historija komunikacije sa web stranice"
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
@@ -1358,7 +1352,7 @@ msgstr "To može dovesti do nedosljednosti u vašoj zalihi."
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Dekoracija iznimke aktivnosti"
+msgstr "Dekoracija izuzetka aktivnosti"
 
 # taken from hr.po
 #. module: repair
@@ -1387,7 +1381,7 @@ msgstr "Dozvojeni tip preuzimanja"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_category_id
 msgid "Category"
-msgstr "Korpa se smatra napuštenom nakon"
+msgstr "Kategorija"
 
 # taken from hr.po
 #. module: repair
@@ -1769,7 +1763,7 @@ msgstr "Vrsta aktivnosti iznimke na zapisu."
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "UoM"
-msgstr "Ova napomena će se pojaviti na prodajnim narudžbama i fakturama."
+msgstr "JMJ"
 
 # taken from hr.po
 #. module: repair

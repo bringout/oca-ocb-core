@@ -145,7 +145,7 @@ msgstr "<strong>Datum:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Description</strong>"
-msgstr "<strong>Opis</strong>"
+msgstr "<strong>Opis</strong><br/>"
 
 # taken from hr.po
 #. module: purchase
@@ -173,7 +173,7 @@ msgstr "<strong>Proizvod</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Qty</strong>"
-msgstr "<strong>Kol</strong>"
+msgstr "<strong>Količina</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -254,7 +254,7 @@ msgstr "Upozorenje pristupu"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
 msgid "Action Needed"
-msgstr "Potrebna akcija"
+msgstr "Potrebna radnja"
 
 # taken from hr.po
 #. module: purchase
@@ -325,7 +325,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "Broj zakački"
+msgstr "Broj priloga"
 
 # taken from hr.po
 #. module: purchase
@@ -431,7 +431,7 @@ msgstr "Otkaži"
 #: code:addons/purchase/controllers/portal.py
 #, python-format
 msgid "Cancelled"
-msgstr "Otkazan"
+msgstr "Otkazano"
 
 # taken from hr.po
 #. module: purchase
@@ -481,7 +481,7 @@ msgstr "Kreiraj email:"
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings
 msgid "Config Settings"
-msgstr "Podešavanja konfiguracije"
+msgstr "Postavke konfiguracije"
 
 # taken from hr.po
 #. module: purchase
@@ -648,7 +648,7 @@ msgstr "Prikazani naziv"
 #. module: purchase
 #: selection:purchase.report,state
 msgid "Done"
-msgstr "Gotovo"
+msgstr "Dovršeno"
 
 # taken from hr.po
 #. module: purchase
@@ -695,7 +695,7 @@ msgstr "Fiskalna pozicija"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
 msgid "Followers"
-msgstr "Pratioci"
+msgstr "Pratitelji"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_channel_ids
@@ -706,7 +706,7 @@ msgstr "Pratioci (Kanali)"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Pratioci (Partneri)"
+msgstr "Pratitelji (partneri)"
 
 # taken from hr.po
 #. module: purchase
@@ -736,7 +736,7 @@ msgstr "Bruto težina"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Group By"
-msgstr "Grupiši po"
+msgstr "Grupiši po..."
 
 # taken from hr.po
 #. module: purchase
@@ -767,9 +767,7 @@ msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Kada je označena, ruta će biti izborna u Inventory tab-u forme proizvoda. "
-"Imaće prioritet nad rutom skladišta."
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 # taken from hr.po
 #. module: purchase
@@ -841,7 +839,7 @@ msgstr "Fakturisanje"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
 msgid "Is Follower"
-msgstr "Je pratilac"
+msgstr "Pratilac"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -852,19 +850,19 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
 msgid "Last Modified on"
-msgstr "Zadnje mijenjano"
+msgstr "Zadnja izmjena na"
 
 # taken from hr.po
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
 msgid "Last Updated by"
-msgstr "Zadnji ažurirao"
+msgstr "Zadnje ažuriranje izvršio"
 
 # taken from hr.po
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_date
 msgid "Last Updated on"
-msgstr "Zadnje ažurirano"
+msgstr "Zadnje ažuriranje na"
 
 # taken from hr.po
 #. module: purchase
@@ -999,7 +997,7 @@ msgstr "Poruka za stavku narudžbenice"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
 msgid "Messages"
-msgstr "Poruke"
+msgstr "Nepročitane poruke"
 
 # taken from hr.po
 #. module: purchase
@@ -1122,11 +1120,7 @@ msgstr "Broj poruka koje zahtjevaju neku akciju"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-"Kada je skladište odabrano za ovu rutu, ova ruta treba biti viđena kao "
-"defaultna ruta kada proizvodi prolaze kroz ovo skladište. Ovo ponašanje može"
-" biti prevazlađeno rutama na proizvodu/kategorijama proizvoda ili "
-"preferiranim rutama na nabavci"
+msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_unread_counter
@@ -1171,7 +1165,7 @@ msgstr "Stavke naloga"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__name
 msgid "Order Reference"
-msgstr "Referenca naloga"
+msgstr "Referenca zahtjeva"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__state
@@ -1313,7 +1307,7 @@ msgstr "Varijante artikala"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
 msgid "Products"
-msgstr "Artikli"
+msgstr "Proizvodi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_standard
@@ -1363,7 +1357,7 @@ msgstr "Dodatno vrijeme za nabavku"
 #: code:addons/purchase/controllers/portal.py
 #, python-format
 msgid "Purchase Order"
-msgstr "Narudžbenica"
+msgstr "Zahtjevi za nabavom"
 
 # taken from hr.po
 #. module: purchase
@@ -1397,13 +1391,13 @@ msgstr "Fiskalna pozicija nabavne narudžbe"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 msgid "Purchase Order Line"
-msgstr "Stavka narudžbenice"
+msgstr "Stavka zahtjeva za nabavu"
 
 # taken from hr.po
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Purchase Order Lines"
-msgstr "Stavke narudžbenice"
+msgstr "Stavke zahtjeva za nabavu"
 
 # taken from hr.po
 #. module: purchase
@@ -1431,7 +1425,7 @@ msgstr ""
 #: code:addons/purchase/models/analytic_account.py
 #, python-format
 msgid "Purchase Orders"
-msgstr "Narudžbe dobavljači"
+msgstr "Zahtjevi za nabavom"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -1540,7 +1534,7 @@ msgstr "Predračuni"
 #. module: purchase
 #: selection:purchase.order,state
 msgid "RFQ"
-msgstr "ZZP"
+msgstr "ZZP (RFQ)"
 
 # taken from hr.po
 #. module: purchase
@@ -1930,7 +1924,7 @@ msgstr "Ovo mijenja planirani datum svih linija narudžbe na dati datum"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__to_approve
 msgid "To Approve"
-msgstr "Za odobriti"
+msgstr "Odobriti"
 
 #. module: purchase
 #: selection:purchase.order,activity_state:0
@@ -2158,13 +2152,13 @@ msgstr "Upozorenja"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
 msgid "Website Messages"
-msgstr "Poruke sa website-a"
+msgstr "Nepročitane poruke"
 
 # taken from hr.po
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
 msgid "Website communication history"
-msgstr "Historija komunikacije sa web stranice"
+msgstr "Povijest komunikacije Web stranice"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -2529,7 +2523,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Dekoracija iznimke aktivnosti"
+msgstr "Dekoracija izuzetka aktivnosti"
 
 # taken from hr.po
 #. module: purchase
@@ -2656,7 +2650,7 @@ msgstr "Primjenjivost analitičkog plana"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
 msgid "Analytic Precision"
-msgstr "Preciznost analitike"
+msgstr "Analitička preciznost"
 
 # taken from hr.po
 #. module: purchase
@@ -2755,7 +2749,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
 msgid "Category"
-msgstr "Korpa se smatra napuštenom nakon"
+msgstr "Kategorija"
 
 # taken from hr.po
 #. module: purchase
