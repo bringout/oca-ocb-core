@@ -33053,6 +33053,12 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Field: %(field_name)s (%(field_tech_name)s)\n"
 msgstr ""
+"Operacija se ne može završiti:\n"
+"- Kreiranje/ažuriranje: obavezno polje nije postavljeno.\n"
+"- Brisanje: drugi model zahtijeva zapis koji se briše. Ako je moguće, umjesto toga ga arhivirajte.\n"
+"\n"
+"Model: %(model_name)s (%(model_tech_name)s)\n"
+"Polje: %(field_name)s (%(field_tech_name)s)\n"
 
 #. module: base
 #: code:addons/model.py
@@ -33091,6 +33097,13 @@ msgid ""
 "\n"
 "Therefore, changing decimal precisions in a running database is not recommended."
 msgstr ""
+"Preciznost je smanjena za %s.\n"
+"Imajte na umu da postojeći podaci NEĆE biti ažurirani ovom promjenom.\n"
+"\n"
+"Kako decimalne preciznosti utiču na cijeli sistem, ovo može izazvati kritične probleme.\n"
+"Npr. smanjenje preciznosti može poremetiti vaš finansijski balans.\n"
+"\n"
+"Zato se promjena decimalnih preciznosti u aktivnoj bazi podataka ne preporučuje."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py
@@ -33400,6 +33413,11 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Ovaj modul sadrži testove vezane za mail. Oni su\n"
+"prisotni u zasebnom modulu jer sadrži modele koji se koriste samo za izvođenje\n"
+"testova nezavisno od funkcionalnih aspekata drugih modela. Štaviše, većina\n"
+"modula koji se oslanjaju na mail (sms, snailmail, mail_enterprise) postavljena je kao zavisnosti\n"
+"kako bi se testirala cijela mail baza koda. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -33498,6 +33516,11 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"Ovaj modul sadrži testove vezane za website. Oni su\n"
+"prisotni u zasebnom modulu jer testiramo instalaciju/deinstalaciju/nadogradnju modula\n"
+"i ne želimo ponovo učitavati website modul svaki put, uključujući njegove moguće\n"
+"zavisnosti. Također ne želimo dodavati u website modul neke rute, prikaze i\n"
+"modele čija je jedina svrha pokretanje testova."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -33686,6 +33709,10 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Managing Partner."
 msgstr ""
+"Toni Rhodes radi u IT sektoru <b>već 10 godina</b>. Poznat je\n"
+"                naročito po prodaji mišolovki. Tom trikom je smanjio\n"
+"                IT budžet za skoro polovinu u posljednje 2 godine.\n"
+"                Poznati managing partner."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_async
@@ -34174,6 +34201,9 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
+"Mi smo tehnološko-konsultantska i strateška savjetodavna firma koja stvara rješenja koja povećavaju vrijednost koristeći napredni softver za naše klijente širom svijeta.\n"
+" <br> <br>\n"
+"U Lumber Inc donosimo operativno iskustvo kombinovano s tehnološkom stručnosti. Razumijemo da svaki softver koji podržava poslovne operacije mora biti dizajniran tako da olakša izvršavanje kritičnih operativnih procesa i da bude alat korisnicima, a ne prepreka. Naš pristup je prvo fokusiran na proces, osiguravajući da doprinosi ciljevima kompanije, zatim ga optimizujemo i dizajniramo softverska rješenja da ga najbolje podrže."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_cohort
