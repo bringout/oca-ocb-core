@@ -16399,6 +16399,11 @@ msgid ""
 "    - extended address fields\n"
 "    "
 msgstr ""
+"\n"
+"    Poveznički modul za proširenje vodiča za isporuku (Complemento XML Carta de Porte) za CFDI v4.0\n"
+"    - izvezena roba (COMEX)\n"
+"    - proširena polja adrese\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
@@ -16407,6 +16412,9 @@ msgid ""
 "    Configure IoT devices to be used in certain \n"
 "    steps for taking measures, taking pictures, ...\n"
 msgstr ""
+"\n"
+"    Konfigurišite IoT uređaje za upotrebu u određenim \n"
+"    koracima za mjerenja, fotografisanje, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -16414,6 +16422,8 @@ msgid ""
 "\n"
 "    Create customizable quality worksheet for workorder.\n"
 msgstr ""
+"\n"
+"    Kreirajte prilagodljivi radni list kvaliteta za radni nalog.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_control_worksheet
@@ -16421,6 +16431,8 @@ msgid ""
 "\n"
 "    Create customizable worksheet for Quality Control.\n"
 msgstr ""
+"\n"
+"    Kreirajte prilagodljivi radni list za kontrolu kvaliteta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr_euro
@@ -16434,6 +16446,14 @@ msgid ""
 "    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
 "    "
 msgstr ""
+"\n"
+"    Hrvatski kontni plan ažuriran (RRIF ver.2021) (u EUR!)\n"
+"    \n"
+"    Izvori:\n"
+"    https://www.rrif.hr/dok/preuzimanje/Bilanca-2016.pdf\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021.PDF\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -16453,6 +16473,12 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"    Litvanski SAF-T je standardni format datoteke za izvoz različitih vrsta računovodstvenih transakcionih podataka u XML formatu.\n"
+"    Korištena XSD verzija je v2.01 (od 2019). To je najnovija verzija koju koriste litvanske vlasti.\n"
+"    Prva verzija SAF-T Financial je ograničena na nivo glavne knjige uključujući transakcije kupaca i dobavljača.\n"
+"    Uključeni su i potrebni master podaci.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -16465,6 +16491,13 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"    Učini datum zaključavanja nepovratnim:\n"
+"\n"
+"    * Ne možete postaviti strožija ograničenja za računovođe nego za korisnike. Stoga datum zaključavanja za sve korisnike mora biti prije (ili jednak) datumu zaključavanja faktura/računa.\n"
+"    * Ne možete zaključati period koji još nije završen. Stoga datum zaključavanja za sve korisnike mora biti prije (ili jednak) posljednjem danu prethodnog mjeseca.\n"
+"    * Svaki novi datum zaključavanja za sve korisnike mora biti poslije (ili jednak) prethodnom.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_taxcloud
@@ -16488,6 +16521,24 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"    Upravljanje popustima u taxcloud obračunima.\n"
+"    Vidjeti https://taxcloud.com/support/discounts ili\n"
+"    https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"    Sažetak: svi popusti koje daje prodavac moraju se primijeniti na prodajnu cijenu prije obračuna poreza na promet.\n"
+"    Prodavci bi trebali objaviti svoju metodologiju kupcima u politici primjene popusta.\n"
+"\n"
+"    Algoritam je sljedeći:\n"
+"     - prvo se primjenjuju popusti po stavci, na stavke na koje se trebaju primijeniti.\n"
+"       To znači popuste po proizvodu ili popuste na najjeftiniju stavku.\n"
+"     - zatim se globalni popusti primjenjuju ravnomjerno na plaćene stavke, koliko je moguće.\n"
+"       Ako postoji ostatak, primjenjuje se sekvencijalno, po redoslijedu stavki,\n"
+"       dok ne nestane popusta ili stavke na koju se popust može primijeniti.\n"
+"\n"
+"    Imajte na umu da stavke popusta (sa negativnom cijenom) neće imati porez,\n"
+"    već će se iznos tih stavki oduzeti od stavki na koje se primjenjuju tokom obračuna poreza.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_taxcloud_delivery
@@ -16501,6 +16552,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"    Upravljanje popustima sa isporukama u taxcloud obračunima.\n"
+"    Ovaj modul slijedi istu logiku kao \"Account Taxcloud - Sale (coupon)\".\n"
+"    Više informacija o tome kako se obračunavaju popusti za TaxCloud dostupno je tamo.\n"
+"\n"
+"    Dodata je opcija popusta (besplatna dostava) na isporuke.\n"
+"    Kod isporuke s kuponom za prodaju, obračun popusta se ne primjenjuje na stavke isporuke.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_saft
@@ -16511,6 +16570,11 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"    Norveški SAF-T je standardni format datoteke za izvoz različitih vrsta računovodstvenih transakcionih podataka u XML formatu.\n"
+"    Prva verzija SAF-T Financial je ograničena na nivo glavne knjige uključujući transakcije kupaca i dobavljača.\n"
+"    Uključeni su i potrebni master podaci.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_planning
