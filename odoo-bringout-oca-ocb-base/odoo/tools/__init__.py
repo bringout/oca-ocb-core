@@ -18,3 +18,4 @@ from .translate import _, html_translate, xml_translate, LazyTranslate
 from .xml_utils import cleanup_xml_node, load_xsd_files_from_url, validate_xml_from_attachment
 from .convert import convert_csv_import, convert_file, convert_sql_import, convert_xml_import
 from .set_expression import SetDefinitions
+from .image import image_process, image_data_uri, base64_to_image, image_to_base64
