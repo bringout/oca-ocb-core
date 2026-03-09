@@ -17,3 +17,7 @@ class PdfWriter(_Writer):
 
     def _addObject(self, *args, **kwargs):
         return self._add_object(*args, **kwargs)
+
+    def cloneReaderDocumentRoot(self, reader):
+        # PyPDF2 3.0 renamed camelCase to snake_case and removed the old names
+        return self.clone_reader_document_root(reader)
