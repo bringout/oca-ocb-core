@@ -1,46 +1,54 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mail_group
-# 
-# Translators:
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Jukka Paulin <jukka.paulin@gmail.com>, 2022
-# Miika Nissi <miika.nissi@tawasta.fi>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Joni Winsten, 2022
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
-# Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Mikko Salmela <salmemik@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Sanna Edelman <direct@generare.com>, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# 
+# * mail_group
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-17 10:06+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"mail_group/fi/>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "#Members"
+msgstr "#Jäsenet"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "#Messages"
+msgstr "#Viestit"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "#To Review"
+msgstr "#Tarkastettava"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-msgid ""
-") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">and send them "
-"an email</span>."
+msgid ") <span invisible=\"not send_email\">and send them an email</span>."
 msgstr ""
-") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">ja lähetä "
-"heille sähköpostia</span>."
+") <span invisible=\"not send_email\">ja lähetä heille sähköpostia</span>."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<br/>\n"
+"                    Get the conversation started by sending an email to"
+msgstr ""
+"<br/>\n"
+"                    Aloita keskustelu lähettämällä sähköposti osoitteeseen"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -51,22 +59,30 @@ msgstr "<br/> Saat ilmoituksen, kun uutta sisältöä julkaistaan."
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hello,<br><br>\n"
-"                You have requested to be subscribed to the mailing list <strong t-out=\"object.name or ''\"></strong>.\n"
-"                <br><br>\n"
-"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
-"                <br><br>\n"
-"                If this was a mistake or you did not requested this action, please ignore this message.\n"
+"                Hello,<br/><br/>\n"
+"                You have requested to be subscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
 "            </div>\n"
 "        "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hei,<br><br>\n"
-"                Olet pyytänyt päästä postituslistalle <strong t-out=\"object.name or ''\"></strong>.\n"
-"               <br><br>\n"
-"                Vahvistaaksesi, käy seuraavassa linkissä: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
-"               <br><br>\n"
-"                Jos tämä oli virhe tai et pyytänyt tätä toimintoa, jätä tämä viesti huomiotta.\n"
+"                Hei,<br/><br/>\n"
+"                Olet pyytänyt liittymistä postituslistalle <strong t-"
+"out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Vahvista klikkaamalla linkkiä: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                Jos tämä oli vahinko tai et pyytänyt postituslistalle "
+"lisäämistä, voit jättää viestin huomioimatta.\n"
 "            </div>\n"
 "        "
 
@@ -74,22 +90,30 @@ msgstr ""
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hello,<br><br>\n"
-"                You have requested to be unsubscribed to the mailing list <strong t-out=\"object.name or ''\"></strong>.\n"
-"                <br><br>\n"
-"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
-"                <br><br>\n"
-"                If this was a mistake or you did not requested this action, please ignore this message.\n"
+"                Hello,<br/><br/>\n"
+"                You have requested to be unsubscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
 "            </div>\n"
 "        "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hei,<br><br>\n"
-"                Olet pyytänyt tulla poistetuksi postituslistalta <strong t-out=\"object.name or ''\"></strong>.\n"
-"               <br><br>\n"
-"                Vahvistaaksesi sen, käy seuraavassa linkissä: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
-"               <br><br>\n"
-"                Jos tämä oli virhe tai et pyytänyt tätä toimenpidettä, jätä tämä viesti huomiotta.\n"
+"                Hei,<br/><br/>\n"
+"                Olet pyytänyt tulla poistetuksi postituslistalta <strong t-"
+"out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Vahvista klikkaamalla linkkiä: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                Jos tämä oli vahinko tai et ole pyytänyt toimenpidettä, voit "
+"jättää viestin huomioimatta.\n"
 "            </div>\n"
 "        "
 
@@ -97,89 +121,56 @@ msgstr ""
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
 msgid ""
 "<div>\n"
-"                <p>Hello <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"                <p>Please find below the guidelines of the <t t-out=\"object.mail_group_id.name\"></t> mailing list.</p>\n"
-"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Please find below the guidelines of the <t t-"
+"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
 "            </div>\n"
 "        "
 msgstr ""
 "<div>\n"
-"                <p>Hei <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"                <p>Ohessa on <t t-out=\"object.mail_group_id.name\"></t> -postituslistan ohjeet.</p>\n"
-"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"                <p>Hei <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Löydät alta ohjeet <t t-out=\"object.mail_group_id.name\"/"
+"> postituslistaan liittyen.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
 "            </div>\n"
 "        "
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.group_message
-msgid ""
-"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
-"title=\"Previous message\"/>"
-msgstr ""
-"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
-"title=\"Previous message\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.group_message
-msgid ""
-"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Next message\" "
-"title=\"Next message\"/>"
-msgstr ""
-"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Next message\" "
-"title=\"Next message\"/>"
-
-#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
-msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid ""
-"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
-" title=\"Show attachments\"/>"
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
-" title=\"Show attachments\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
-msgid ""
-"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
-"title=\"Show replies\"/>"
-msgstr ""
-"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
-"title=\"Show replies\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
-msgid ""
-"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide "
-"attachments\" title=\"Hide attachments\"/>"
-msgstr ""
-"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide "
-"attachments\" title=\"Hide attachments\"/>"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
-msgid ""
-"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
-"title=\"Hide replies\"/>"
-msgstr ""
-"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
-"title=\"Hide replies\"/>"
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-msgid "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgid ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 msgstr ""
 "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
-msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
-msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
+msgid ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"title=\"Traffic\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"title=\"Liikenne\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -189,6 +180,60 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
 "title=\"Recipients\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Edellinen viesti\" "
+"title=\"Edellinen viesti\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Seuraava viesti\" "
+"title=\"Seuraava viesti\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
+"title=\"Show attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Näytä liitteet\" "
+"title=\"Näytä liitteet\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Näytä vastaukset\" "
+"title=\"Näytä vastaukset\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Kätke liitteet\" "
+"title=\"Kätke liitteet\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Kätke "
+"vastaukset\" title=\"Kätke vastaukset\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -198,11 +243,16 @@ msgstr "<span class=\"bg-warning\">Vireillä</span>"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid ""
-"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Whitelisted</span>\n"
-"                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">Whitelisted</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">Banned</span>"
 msgstr ""
-"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Valkoisessa luettelossa</span>\n"
-"                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Kielletty</span>"
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">Sallittujen luettelossa (whitelist)</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">Estetty osallistumasta (banned)</"
+"span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -229,8 +279,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python-kirjasto, joka evaluoidaan oletusarvoja varten, kun tätä aliasta "
-"varten luodaan uusia tietueita."
+"Python-hakemisto, jonka kyky tarjota oletusarvoja arvioidaan, kun tätä "
+"aliasta varten luodaan uusia tietueita."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -266,7 +316,6 @@ msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "Alias"
 msgstr "Alias"
 
@@ -276,9 +325,19 @@ msgid "Alias Contact Security"
 msgstr "Aliaksen kontaktien tietoturva"
 
 #. module: mail_group
-#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_fullname
-msgid "Alias Full Name"
-msgstr "Alias, Koko nimi"
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
+msgid "Alias Domain"
+msgstr "Alias-domain"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
+msgid "Alias Domain Name"
+msgstr "Alias-domainin nimi"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
+msgid "Alias Email"
+msgstr "Alias Email"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
@@ -286,9 +345,14 @@ msgid "Alias Name"
 msgstr "Aliaksen nimi"
 
 #. module: mail_group
-#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
-msgid "Alias domain"
-msgstr "Alias domain"
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
+msgid "Alias Status"
+msgstr "Alias Status"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr "Aliaksen tila arvioituna viimeksi vastaanotetun viestin perusteella."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
@@ -317,8 +381,7 @@ msgstr "Salli aina"
 
 #. module: mail_group
 #. odoo-javascript
-#: code:addons/mail_group/static/src/js/mail_group.js:0
-#, python-format
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
 msgid "An email with instructions has been sent."
 msgstr "Ohjeet sisältävä sähköposti on lähetetty."
 
@@ -350,8 +413,8 @@ msgstr "Kirjoittajan moderointistatus"
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
 msgstr ""
 "Viestin luoja. Jos tätä ei ole asetettu, viestin lähettäjä (email_from) voi "
 "olla osoite, joka ei täsmännyt mihinkään kumppaniin."
@@ -417,12 +480,28 @@ msgstr "Voi hallita jäseniä"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
 msgid "Children"
-msgstr "Alatunnukset"
+msgstr "Lapset"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-msgid "Configure a custom domain"
-msgstr "Mukautetun toimialueen määrittäminen"
+msgid "Choose or configure a custom domain"
+msgstr "Valitse tai määritä räätälöity domain"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Closed"
+msgstr "Suljettu"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
+msgid ""
+"Closed groups might still be accessed, but emails sent to it will bounce"
+msgstr ""
+"Suljetut ryhmät ovat yhä käytettävissä, mutta niihin lähetetyt sähköpostit "
+"eivät mene läpi"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -504,17 +583,18 @@ msgstr "Näyttönimi"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_tree
 msgid "Email"
 msgstr "Sähköposti"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "Email %s is invalid"
 msgstr "Sähköposti %s on virheellinen"
 
 #. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Email Alias"
 msgstr "Sähköpostialias"
@@ -532,6 +612,12 @@ msgid ""
 msgstr ""
 "Lähettäjän sähköpostiosoite. Tälle kentälle annetaan arvo kun lähettäjälle "
 "ei automaattisesti löydy kumppania. Korvaa author_id kentän keskustelussa."
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr ""
+"Sähköpostin verkkotunnus esim. 'example.com' kohdassa 'odoo@example.com'"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -569,12 +655,6 @@ msgid "Group"
 msgstr "Ryhmä"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
-msgid "Group By"
-msgstr "Ryhmittely"
-
-#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Group Message"
 msgstr "Ryhmän sisäinen ryhmäviesti"
@@ -587,10 +667,15 @@ msgstr "Ryhmän nimi"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, python-format
 msgid "Group message can only be linked to mail group. Current model is %s."
 msgstr ""
 "Ryhmäviesti voidaan yhdistää vain sähköpostiryhmään. Nykyinen malli on %s."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/controllers/portal.py:0
+msgid "Groups"
+msgstr "Ryhmät"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -609,6 +694,22 @@ msgid "Hello"
 msgstr "Hei"
 
 #. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
+msgid ""
+"Hello there,\n"
+"    <br/><br/>\n"
+"    The mailing list you are trying to reach has been closed, and will not "
+"accept new messages.\n"
+"    <br/><br/>\n"
+"    Kind Regards,"
+msgstr ""
+"Hei,\n"
+"    <br/><br/>\n"
+"    Hakemasi postituslista on suljettu eikä se hyväksy uusia viestejä.\n"
+"    <br/><br/>\n"
+"    Ystävällisin terveisin,"
+
+#. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__id
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__id
@@ -620,11 +721,11 @@ msgstr "ID"
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
-"Ylätason aliastietueen id (esim. tehtävien luontiin käytettävän aliaksen "
-"sisältävä projekti)"
+"Ylätason tietueen tunnus, jolla on alias (esim. tehtävien luontiin "
+"käytettävän aliaksen sisältävä projekti)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
@@ -643,18 +744,14 @@ msgstr "Kuva"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "Invalid action for URL generation (%s)"
 msgstr "URL-osoitteen luomisessa ei sallittu toiminto (%s)"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_moderation.py:0
-#: code:addons/mail_group/models/mail_group_moderation.py:0
-#, python-format
-msgid "Invalid email address %r"
-msgstr "Virheellinen sähköpostiosoite %r"
+msgid "Invalid email address “%s”"
+msgstr "Virheellinen sähköpostiosoite \"%s\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
@@ -672,6 +769,11 @@ msgid "Is Banned"
 msgstr "On estetty"
 
 #. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
+msgid "Is Closed"
+msgstr "On suljettu"
+
+#. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
 msgid "Is Group Moderated"
 msgstr "Onko ryhmä moderoitu"
@@ -686,15 +788,6 @@ msgstr "On jäsen"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Join"
 msgstr "Liity"
-
-#. module: mail_group
-#: model:ir.model.fields,field_description:mail_group.field_mail_group____last_update
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_member____last_update
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message____last_update
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject____last_update
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation____last_update
-msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
@@ -725,6 +818,11 @@ msgstr "Poissaolo"
 msgid "Let people subscribe to your list online or manually add them here."
 msgstr ""
 "Anna ihmisten tilata listasi verkossa tai lisää heidät manuaalisesti tänne."
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "Paikallisiin osiin perustuva saapuvien lähetysten havaitseminen"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group
@@ -761,7 +859,6 @@ msgstr "Sähköpostiryhmät"
 
 #. module: mail_group
 #: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
-#: model:ir.cron,cron_name:mail_group.ir_cron_mail_notify_group_moderators
 msgid "Mail List: Notify group moderators"
 msgstr "Sähköpostilista: Ilmoita ryhmän moderaattoreille"
 
@@ -805,16 +902,9 @@ msgid "Mailing-List:"
 msgstr "Sähköpostimarkkinoinnin lista:"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
-msgid "Member"
-msgstr "Jäsen"
-
-#. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_member_action
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "Members"
 msgstr "Jäsenet"
 
@@ -861,7 +951,6 @@ msgstr "Viestejä kuukaudessa"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "Messages are pending moderation"
 msgstr "Viestit, jotka odottavat moderointia"
 
@@ -871,17 +960,16 @@ msgid "Messages that need an action"
 msgstr "Viestit, jotka edellyttävät toimintaa"
 
 #. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
+msgid "Moderate"
+msgstr "Moderoi"
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Moderate Messages"
 msgstr "Moderoi viestiä"
 
 #. module: mail_group
-#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
-msgid "Moderate this group"
-msgstr "Moderoi tätä ryhmää"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Moderated"
 msgstr "Moderoitu"
@@ -909,7 +997,6 @@ msgstr "Tämän ryhmän moderoidut sähköpostit"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "Moderated group must have moderators."
 msgstr "Moderoiduissa ryhmissä on oltava moderaattoreita."
 
@@ -948,14 +1035,13 @@ msgstr "Moderaattorit"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "Moderators must have an email address."
-msgstr "Moderaattoreilla on oltava sähköpostiosoite"
+msgstr "Moderaattoreilla on oltava sähköpostiosoite."
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_1
 msgid "My Company News"
-msgstr "Oman yrityksen uutiset"
+msgstr "Oman yritykseni uutiset"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__name
@@ -965,19 +1051,18 @@ msgstr "Nimi"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
-"Need to unsubscribe? <br/>It's right here! <span class=\"fa fa-2x fa-arrow-"
+"Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
 "down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
-"Haluatko peruuttaa tilauksen? <br/>Toiminto löytyy täältä! <span class=\"fa "
-"fa-2x fa-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Lue "
+"Haluatko peruuttaa tilauksen? <br/>Sen voi tehdä täältä! <span class=\"oi "
+"fa-2x oi-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Lue "
 "tämä\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
 msgid ""
 "Newcomers on this moderated group will automatically receive the guidelines."
-msgstr ""
-"Tämän moderoidun ryhmän uudet tulokkaat saavat ohjeet automaattisesti."
+msgstr "Tämän moderoidun ryhmän uudet tulokkaat saavat ohjeet automaattisesti."
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
@@ -1017,7 +1102,6 @@ msgstr "Viestien määrä tässä ryhmässä"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid ""
 "Only an administrator or a moderator can send guidelines to group members."
 msgstr ""
@@ -1026,17 +1110,20 @@ msgstr ""
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "Only members can send email to the mailing list."
 msgstr "Vain jäsenet voivat lähettää sähköpostia postituslistalle."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "Only selected groups of users can send email to the mailing list."
 msgstr ""
 "Vain valitut käyttäjäryhmät voivat lähettää sähköpostia postituslistalle."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "Oops, there are no messages here."
+msgstr "Hups, täällä ei ole viestejä."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1045,14 +1132,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Valinnainen sen viestiketjun (tietueen) ID, johon kaikki saapuvat viestit "
-"liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, uusien "
-"tietueiden luominen estetään kokonaan."
-
-#. module: mail_group
-#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_user_id
-msgid "Owner"
-msgstr "Omistaja"
+"Valinnainen sen viestiketjun (tietueen) tunnus, johon kaikki saapuvat "
+"viestit liitetään, vaikka niihin ei vastattaisikaan. Jos tämä asetetaan, "
+"uusien tietueiden luominen estetään kokonaan."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
@@ -1067,13 +1149,13 @@ msgstr "Ylätason malli"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Ylätason keskustelun ID"
+msgstr "Ylätason tietueen viestiketjun tunnus"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Aliaksen hallussa oleva emomalli. Alias-viittauksen sisältävä malli ei "
@@ -1125,12 +1207,14 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Käytäntö, jolla lähetetään viesti asiakirjaan mailgatewayn avulla.\n"
 "- everyone: kaikki voivat lähettää viestin\n"
 "- partners: vain todennetut kumppanit\n"
-"- seuraajat: vain asiaan liittyvän asiakirjan seuraajat tai seuraavien kanavien jäsenet\n"
+"- seuraajat: vain asiaan liittyvän asiakirjan seuraajat tai seuraavien "
+"kanavien jäsenet\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
@@ -1156,19 +1240,18 @@ msgstr "Julkinen sähköpostituslista"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/wizard/mail_group_message_reject.py:0
-#, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Tietueen keskustelun ID"
+msgstr "Tietueen viestiketjun tunnus"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid "Reference"
-msgstr "Numero"
+msgstr "Viite"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
@@ -1207,8 +1290,8 @@ msgstr "Poista viesti selityksen kanssa"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-msgid "Responsible Users"
-msgstr "Vastuulliset käyttäjät"
+msgid "Responsibles"
+msgstr "Vastuulliset"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1229,6 +1312,11 @@ msgstr "Hae sähköpostiryhmä"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Search Moderation List"
 msgstr "Etsi moderointilistasta"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Select users"
+msgstr "Valitse käyttäjät"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
@@ -1257,26 +1345,26 @@ msgid "Send Email"
 msgstr "Lähetä sähköposti"
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-msgid "Send Guidelines"
-msgstr "Lähetä ohjeet"
-
-#. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
 msgid "Send an email to the author of the message"
 msgstr "Lähetä sähköpostia viestin kirjoittajalle"
 
 #. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
+msgid "Send email"
+msgstr "Lähetä sähköposti"
+
+#. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
-msgid "Send guidelines to new subscribers"
-msgstr "Lähetä ohjeistus uusille tilaajille"
+msgid "Send guidelines to new members"
+msgstr "Lähetä ohjeet uusille jäsenille"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
-"Lähetetään henkilöille, jotka ovat tilanneet postitusryhmän, jossa on ryhmän"
-" ohjeet"
+"Lähetetään henkilöille, jotka ovat tilanneet postitusryhmän, jossa on ryhmän "
+"ohjeet"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
@@ -1303,11 +1391,7 @@ msgid "Subject"
 msgstr "Aihe"
 
 #. module: mail_group
-#. odoo-javascript
-#: code:addons/mail_group/static/src/js/mail_group.js:0
-#: code:addons/mail_group/static/src/js/mail_group.js:0
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, python-format
 msgid "Subscribe"
 msgstr "Tilaa"
 
@@ -1319,10 +1403,9 @@ msgstr "Postitusryhmän tilauksen vahvistus"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid ""
-"Template \"mail_group.mail_template_guidelines\" was not found. No email has"
-" been sent. Please contact an administrator to fix this issue."
+"Template \"mail_group.mail_template_guidelines\" was not found. No email has "
+"been sent. Please contact an administrator to fix this issue."
 msgstr ""
 "Mallia \"mail_group.mail_template_guidelines\" ei löytynyt. Sähköpostia ei "
 "ole lähetetty. Ota yhteyttä ylläpitäjään ongelman korjaamiseksi."
@@ -1335,7 +1418,6 @@ msgstr "Kiitoksia!"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "The \"Authorized Group\" is missing."
 msgstr "\"Valtuutettu ryhmä\" puuttuu."
 
@@ -1347,41 +1429,37 @@ msgstr "Sähkoposti"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, python-format
 msgid "The email \"%s\" is not valid."
 msgstr "Sähköpostiosoite \"%s\" ei ole kelvollinen."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "The group of the message do not match."
 msgstr "Viestin ryhmä ei täsmää."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "The guidelines description is empty."
 msgstr "Ohjeiden kuvaus on tyhjä."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "The guidelines description is missing."
 msgstr "Suuntaviivojen kuvaus puuttuu."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
-"Malli (Odoo Document Kind), jota tämä alias vastaa. Kaikki saapuvat "
-"sähköpostiviestit, jotka eivät vastaa olemassa olevaan tietueeseen, "
-"aiheuttavat uuden tietueen luomisen tähän malliin (esim. projektitehtävä)"
+"Malli (Odoo Asiakirja tyyppiä), jota tämä alias vastaa. Kaikkista saapuvista "
+"sähköposteista, jotka eivät vastaa olemassa olevaan tietueeseen, luodaan "
+"uusi tietue tähän malliin (esim. projektitehtävä)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1395,56 +1473,36 @@ msgstr ""
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "The notification message is missing."
 msgstr "Ilmoitusviesti puuttuu."
 
 #. module: mail_group
-#: model:ir.model.fields,help:mail_group.field_mail_group__alias_user_id
-msgid ""
-"The owner of records created upon receiving emails on this alias. If this "
-"field is not set the system will attempt to find the right owner based on "
-"the sender (From) address, or will use the Administrator account if no "
-"system user is found for that address."
-msgstr ""
-"Tämän aliaksen sähköpostiviestien vastaanottamisen yhteydessä luotujen "
-"tietueiden omistaja. Jos tätä kenttää ei ole asetettu, järjestelmä yrittää "
-"löytää oikean omistajan lähettäjän (From) -osoitteen perusteella tai käyttää"
-" järjestelmänvalvojan tiliä, jos kyseisestä osoitteesta ei löydy "
-"järjestelmän käyttäjää."
-
-#. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
-#, python-format
 msgid "The partner can not be found."
 msgstr "Kumppania ei löydy."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, python-format
 msgid "The record of the message should be the group."
-msgstr "Viestin tallenteen pitäisi olla ryhmä."
+msgstr "Viestin tietueen pitäisi olla ryhmä."
 
 #. module: mail_group
 #. odoo-javascript
-#: code:addons/mail_group/static/src/js/mail_group.js:0
-#, python-format
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
 msgid "This email is already subscribed."
 msgstr "Tämä sähköposti on jo tilattu."
 
 #. module: mail_group
 #. odoo-javascript
-#: code:addons/mail_group/static/src/js/mail_group.js:0
-#, python-format
+#: code:addons/mail_group/static/src/interactions/mail_group.js:0
 msgid "This email is not subscribed."
 msgstr "Tätä sähköpostia ei ole tilattu."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, python-format
 msgid "This message can not be moderated"
 msgstr "Tätä viestiä ei voi moderoida"
 
@@ -1456,7 +1514,6 @@ msgstr "Tämä kumppani on jo tilattu ryhmään"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, python-format
 msgid "Those messages can not be moderated: %s."
 msgstr "Näitä viestejä ei voida moderoida: %s."
 
@@ -1466,11 +1523,7 @@ msgid "To Review"
 msgstr "Tarkastettavaksi"
 
 #. module: mail_group
-#. odoo-javascript
-#: code:addons/mail_group/static/src/js/mail_group.js:0
-#: code:addons/mail_group/static/src/js/mail_group.js:0
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-#, python-format
 msgid "Unsubscribe"
 msgstr "Lopeta kanavan tilaus"
 
@@ -1500,7 +1553,6 @@ msgstr "Valkoisessa luettelossa"
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
-#, python-format
 msgid "Wrong status (%s)"
 msgstr "Väärä tila (%s)"
 
@@ -1508,6 +1560,18 @@ msgstr "Väärä tila (%s)"
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
 msgid "You can create only one rule for a given email address in a group."
 msgstr "Voit luoda vain yhden säännön tietylle ryhmän sähköpostiosoitteelle."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "You can not join a closed group."
+msgstr "Et voi liittyä suljettuun ryhmään."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+msgid "You can not send guidelines for a closed group."
+msgstr "Et voi lähettää ohjeita suljettuun ryhmään."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1518,6 +1582,11 @@ msgstr "Sinulla on viestejä moderoitavana, siirry käsittelyyn."
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "_______________________________________________"
 msgstr "_______________________________________________"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "alias"
+msgstr "alias"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -1540,6 +1609,21 @@ msgid "e.g. \"Newsletter\""
 msgstr "esim. \"Uutiskirje\""
 
 #. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. \"This group is about ...\""
+msgstr "esim. \"Tämän ryhmän aihe on ...\""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. mycompany.com"
+msgstr "esim. mycompany.com"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g.\"Please be polite and ...\""
+msgstr "esim. \"Olethan kohtelias ja ...\""
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "group"
 msgstr "ryhmä"
@@ -1551,17 +1635,18 @@ msgstr "on"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-msgid ""
-"members<br/>\n"
-"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
-msgstr ""
-"jäsenet<br/>\n"
-"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Liikenne\" title=\"Liikenne\"/>"
+msgid "members<br/>"
+msgstr "jäsentä<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "messages / month"
 msgstr "viestejä / kuukausi"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "messages to review"
+msgstr "tarkastettavaa viestiä"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -1592,3 +1677,6 @@ msgstr "poistuit tilauksesta"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "your email..."
 msgstr "sähköpostisi..."
+
+#~ msgid "Group By"
+#~ msgstr "Ryhmittely"

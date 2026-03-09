@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* digest
-# 
+# * digest
+#
 # Translators:
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
@@ -13,33 +13,28 @@
 # Egon Raamat <egon@avalah.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Leaanika Randmets, 2022
-# Stevin Lilla, 2024
-# Anna, 2024
-# Tairi Tiimann, 2024
-# 
+# Anna, 2023
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tairi Tiimann, 2024\n"
-"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-16 15:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/digest/"
+"et/>\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "<i class=\"fa fa-arrow-right\"/> Check our Documentation"
-msgstr "<i class=\"fa fa-arrow-right\"/> Vaata meie dokumentatsiooni"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
-msgstr "<span class=\"button\" id=\"button_open_report\">Ava aruanne</span>"
+msgid "<span class=\"button\" id=\"button_open_report\">➔ Open Report</span>"
+msgstr "<span class=\"button\" id=\"button_open_report\">➔ Ava aruanne</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
@@ -48,8 +43,8 @@ msgstr "<span class=\"odoo_link_text\">Odoo</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
-msgstr "<span style=\"color: #8f8f8f;\">Tühista tellimine</span>"
+msgid "<span style=\"color: #878d97;\">Unsubscribe</span>"
+msgstr "<span style=\"color: #878d97;\">Tühista tellimus</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -80,11 +75,22 @@ msgid "Available Fields"
 msgstr "Saadaval väljad"
 
 #. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Check our Documentation"
+msgstr "Vaata meie dokumentatsiooni"
+
+#. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "Choose the metrics you care about"
 msgstr "Vali mõõdikud, mis sind huvitavad"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Click and hold on a Menu Item to reorder your Apps to your liking."
+msgstr ""
+"Klõpsa ja hoia mooduli ikoonil, et muuta App'ide järjekorda nii nagu sulle "
+"meeldib."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -104,7 +110,6 @@ msgstr "Konfigureeri meilid"
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "Connect"
 msgstr "Ühenda"
 
@@ -165,7 +170,6 @@ msgstr "Uudiskirja tellija meil"
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_digest_action
 #: model:ir.actions.server,name:digest.ir_cron_digest_scheduler_action_ir_actions_server
-#: model:ir.cron,cron_name:digest.ir_cron_digest_scheduler_action
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
@@ -174,7 +178,7 @@ msgstr "Uudiskirja tellija meilid"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
-msgstr "Kokkuvõtte tellimus"
+msgstr "Kokkuvõtte tellimused"
 
 #. module: digest
 #: model:ir.actions.act_window,name:digest.digest_tip_action
@@ -191,13 +195,10 @@ msgstr "Kokkuvõte pealkiri"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:digest.field_digest_tip__display_name
+#: model:ir.model.fields,field_description:digest.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:digest.field_res_users__display_name
 msgid "Display Name"
 msgstr "Näidatav nimi"
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "Documentation"
-msgstr "Dokumentatsioon"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -205,20 +206,22 @@ msgid "Email Address"
 msgstr "E-posti aadress"
 
 #. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Feeling eye strain? Give your eyes a break by switching to Dark Mode."
+msgstr ""
+"Tunned väsimust silmades? Anna oma silmadele puhkust ja lülita sisse Tume "
+"Režiim"
+
+#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "General"
 msgstr "Üldine"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
-msgid "Group by"
-msgstr "Rühmitamine"
-
-#. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
 msgid ""
-"Have a question about a document? Click on the responsible user's picture to"
-" start a conversation. If his avatar has a green dot, he is online."
+"Have a question about a document? Click on the responsible user's picture to "
+"start a conversation. If his avatar has a green dot, he is online."
 msgstr ""
 "Kas sul on dokumendi kohta küsimus? Kliki vastutava kasutaja pildile, et "
 "alustada vestlust. Kui tema avataril on roheline punkt, siis on ta online."
@@ -226,13 +229,14 @@ msgstr ""
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
 #: model:ir.model.fields,field_description:digest.field_digest_tip__id
+#: model:ir.model.fields,field_description:digest.field_res_config_settings__id
+#: model:ir.model.fields,field_description:digest.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: digest
 #. odoo-python
 #: code:addons/digest/controllers/portal.py:0
-#, python-format
 msgid "Invalid periodicity set on digest"
 msgstr "Kokkuvõttel on seatud kehtetu perioodilisus"
 
@@ -275,29 +279,20 @@ msgstr "Kpi Res ühendatud kasutajate väärtus"
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "Last 24 hours"
 msgstr "Viimased 24 tundi"
 
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "Last 30 Days"
 msgstr "Viimased 30 päeva"
 
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "Last 7 Days"
 msgstr "Viimased 7 päeva"
-
-#. module: digest
-#: model:ir.model.fields,field_description:digest.field_digest_digest____last_update
-#: model:ir.model.fields,field_description:digest.field_digest_tip____last_update
-msgid "Last Modified on"
-msgstr "Viimati muudetud"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__write_uid
@@ -330,8 +325,7 @@ msgstr "Nimi"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid ""
-"New users are automatically added as recipient of the following digest "
-"email."
+"New users are automatically added as recipient of the following digest email."
 msgstr ""
 "Uued kasutajad lisatakse automaatselt järgmise kokkuvõtva meili "
 "adressaatideks."
@@ -360,9 +354,8 @@ msgstr "Kiri saadetud läbi"
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
-msgid "Prefer a broader overview ?"
-msgstr "Kas eelistate laiemat ülevaadet?"
+msgid "Prefer a broader overview?"
+msgstr "Eelistate laiemat ülevaadet?"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
@@ -406,11 +399,6 @@ msgid "Sequence"
 msgstr "Järjestus"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "Statistics"
-msgstr "Statistika"
-
-#. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__state
 msgid "Status"
 msgstr "Staatus"
@@ -418,7 +406,6 @@ msgstr "Staatus"
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "Switch to weekly Digests"
 msgstr "Lülituge nädalaste kokkuvõtete peale"
 
@@ -444,9 +431,21 @@ msgstr ""
 "Nõuanne: Kuidas kasutada sisemisi märkmeid kolleegile märguande andmiseks?"
 
 #. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_5
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Tip: Join the Dark Side"
+msgstr "Nipp: liitu tumeda poolega"
+
+#. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid "Tip: Knowledge is power"
 msgstr "Nõuanne: Teadmised on jõud"
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_6
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Tip: Personalize your Home Menu"
+msgstr "Nipp: Isikupärasta oma avaleht"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
@@ -517,14 +516,12 @@ msgstr "Kas soovite lisada enda KPI'd?<br/>"
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "Want to customize this email?"
 msgstr "Kas soovite antud meili kohandada?"
 
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid ""
 "We have noticed you did not connect these last few days. We have "
 "automatically switched your preference to %(new_perioridicy_str)s Digests."
@@ -552,8 +549,10 @@ msgstr ""
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid ""
-"When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
-"Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
+"When following documents, use the pencil icon to fine-tune the information "
+"you want to receive.\n"
+"Follow a project / sales team to keep track of this project's tasks / this "
+"team's opportunities."
 msgstr ""
 "Dokumente jälgides kasutage teabe täpsustamiseks pliiatsi ikooni. Jälgige "
 "projekti/müügi meeskonda, et hoida silm peal selle projekti ülesannetel või "
@@ -577,20 +576,29 @@ msgstr "nt. Teie nädala kokkuvõte"
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "monthly"
 msgstr "igakuiselt"
 
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "quarterly"
 msgstr "kord kvartalis"
 
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-#, python-format
 msgid "weekly"
 msgstr "iganädalane"
+
+#~ msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
+#~ msgstr "<span class=\"button\" id=\"button_open_report\">Ava aruanne</span>"
+
+#~ msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
+#~ msgstr "<span style=\"color: #8f8f8f;\">Tühista tellimine</span>"
+
+#~ msgid "Group by"
+#~ msgstr "Rühmitamine"
+
+#~ msgid "Statistics"
+#~ msgstr "Statistika"

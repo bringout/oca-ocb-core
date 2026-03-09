@@ -12,9 +12,17 @@ for customization purpose.
     'category': 'Hidden/Tools',
     'depends': ['web'],
     'installable': True,
+    'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
-        'views/base_import_module_view.xml'
+        'views/base_import_module_view.xml',
+        'views/ir_module_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'base_import_module/static/src/**/*',
+        ]
+    },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

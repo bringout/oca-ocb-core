@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'IBAN Bank Accounts',
-    'category': 'Hidden/Tools',
+    'category': 'Accounting/Accounting',
     'description': """
 This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for it's validity.
 ======================================================================================================================
@@ -19,11 +19,11 @@ with a single statement.
     'assets': {
         'web.assets_backend': [
             'base_iban/static/src/components/**/*',
-            'base_iban/static/src/js/*.js',
         ],
-        'web.qunit_suite_tests': [
+        'web.assets_unit_tests': [
             'base_iban/static/src/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -1,33 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
+from odoo.http import root, SESSION_ROTATION_INTERVAL
+from odoo.tests import JsonRpcException
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 class TestWebsocketController(HttpCaseWithUserDemo):
-    def _make_rpc(self, route, params, headers=None):
-        data = json.dumps({
-            'id': 0,
-            'jsonrpc': '2.0',
-            'method': 'call',
-            'params': params,
-        }).encode()
-        headers = headers or {}
-        headers['Content-Type'] = 'application/json'
-        return self.url_open(route, data, headers=headers)
-
     def test_websocket_peek(self):
-        response = json.loads(
-            self._make_rpc('/websocket/peek_notifications', {
-                'channels': [],
-                'last': 0,
-                'is_first_poll': True,
-            }).content.decode()
-        )
+        result = self.make_jsonrpc_request('/websocket/peek_notifications', {
+            'channels': [],
+            'last': 0,
+            'is_first_poll': True,
+        })
+
         # Response containing channels/notifications is retrieved and is
         # conform to excpectations.
-        result = response.get('result')
         self.assertIsNotNone(result)
         channels = result.get('channels')
         self.assertIsNotNone(channels)
@@ -36,20 +23,18 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.assertIsNotNone(notifications)
         self.assertIsInstance(notifications, list)
 
-        response = json.loads(
-            self._make_rpc('/websocket/peek_notifications', {
-                'channels': [],
-                'last': 0,
-                'is_first_poll': False,
-            }).content.decode()
-        )
+        result = self.make_jsonrpc_request('/websocket/peek_notifications', {
+            'channels': [],
+            'last': 0,
+            'is_first_poll': False,
+        })
+
         # Reponse is received as long as the session is valid.
-        self.assertIn('result', response)
+        self.assertIsNotNone(result)
 
     def test_websocket_peek_session_expired_login(self):
-        session = self.authenticate(None, None)
         # first rpc should be fine
-        self._make_rpc('/websocket/peek_notifications', {
+        self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],
             'last': 0,
             'is_first_poll': True,
@@ -57,36 +42,42 @@ class TestWebsocketController(HttpCaseWithUserDemo):
 
         self.authenticate('admin', 'admin')
         # rpc with outdated session should lead to error.
-        headers = {'Cookie': f'session_id={session.sid};'}
-        response = json.loads(
-            self._make_rpc('/websocket/peek_notifications', {
+        with self.assertRaises(JsonRpcException, msg='odoo.http.SessionExpiredException'):
+            self.make_jsonrpc_request('/websocket/peek_notifications', {
                 'channels': [],
                 'last': 0,
                 'is_first_poll': False,
-            }, headers=headers).content.decode()
-        )
-        error = response.get('error')
-        self.assertIsNotNone(error, 'Sending a poll with an outdated session should lead to error')
-        self.assertEqual('odoo.http.SessionExpiredException', error['data']['name'])
+            })
 
     def test_websocket_peek_session_expired_logout(self):
-        session = self.authenticate('demo', 'demo')
+        self.authenticate('demo', 'demo')
         # first rpc should be fine
-        self._make_rpc('/websocket/peek_notifications', {
+        self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],
             'last': 0,
             'is_first_poll': True,
         })
         self.url_open('/web/session/logout')
         # rpc with outdated session should lead to error.
-        headers = {'Cookie': f'session_id={session.sid};'}
-        response = json.loads(
-            self._make_rpc('/websocket/peek_notifications', {
+        with self.assertRaises(JsonRpcException, msg='odoo.http.SessionExpiredException'):
+            self.make_jsonrpc_request('/websocket/peek_notifications', {
                 'channels': [],
                 'last': 0,
                 'is_first_poll': False,
-            }, headers=headers).content.decode()
-        )
-        error = response.get('error')
-        self.assertIsNotNone(error, 'Sending a poll with an outdated session should lead to error')
-        self.assertEqual('odoo.http.SessionExpiredException', error['data']['name'])
+            })
+
+    def test_do_not_rotate_session_when_peeking_notifications(self):
+        self.authenticate('admin', 'admin')
+        self.url_open('/odoo')
+        original_session = self.opener.cookies['session_id']
+        original_session_obj = root.session_store.get(original_session)
+        original_session_obj['create_time'] -= SESSION_ROTATION_INTERVAL
+        root.session_store.save(original_session_obj)
+        self.make_jsonrpc_request('/websocket/peek_notifications', {
+            'channels': [],
+            'last': 0,
+            'is_first_poll': True,
+        })
+        self.assertEqual(self.opener.cookies['session_id'], original_session)
+        self.url_open("/odoo")
+        self.assertNotEqual(self.opener.cookies['session_id'], original_session)

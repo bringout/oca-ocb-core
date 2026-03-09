@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from odoo import Command
 from odoo.addons.event_booth.tests.common import TestEventBoothCommon
 from odoo.fields import Datetime as FieldsDatetime
-from odoo.tests.common import users, Form, tagged
+from odoo.tests import Form, users, tagged
 from odoo.tools import mute_logger
 
 
@@ -67,7 +67,7 @@ class TestEventData(TestEventBoothCommon):
         event.event_booth_ids[1].write({'partner_id': self.event_customer.id})
         self.assertEqual(event.event_booth_count, 2)
         self.assertEqual(event.event_booth_count_available, 2)
-        self.assertEqual(event.event_booth_ids[1].message_partner_ids, self.event_customer)
+        self.assertEqual(event.event_booth_ids[1].message_partner_ids, self.env['res.partner'])
 
         # one booth is sold
         event.event_booth_ids[1].write({'state': 'unavailable'})

@@ -1,30 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* privacy_lookup
-# 
-# Translators:
-# Simo Suurla <simo@suurla.fi>, 2022
-# Jussi Lehto <jussi@gulfeo.com>, 2022
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# 
+# * privacy_lookup
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-17 10:06+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"privacy_lookup/fi/>\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__additional_note
@@ -47,9 +42,9 @@ msgid "Archive Selection"
 msgstr "Arkistoi valinta"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-#, python-format
 msgid "Archived"
 msgstr "Arkistoitu"
 
@@ -61,7 +56,12 @@ msgstr "Voidaan arkistoida"
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_res_partner
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
+
+#. module: privacy_lookup
+#: model:ir.model,website_form_label:privacy_lookup.model_res_partner
+msgid "Create a Customer"
+msgstr "Luo asiakas"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__create_uid
@@ -93,8 +93,8 @@ msgid "Delete Selection"
 msgstr "Poista valinta"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Deleted"
 msgstr "Poistettu"
 
@@ -102,6 +102,7 @@ msgstr "Poistettu"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__display_name
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -128,11 +129,6 @@ msgid "Found Records"
 msgstr "Löydetyt tietueet"
 
 #. module: privacy_lookup
-#: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-msgid "Group By"
-msgstr "Ryhmittely"
-
-#. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__user_id
 msgid "Handled By"
 msgstr "Käsittelijä"
@@ -146,9 +142,16 @@ msgstr "On aktiivinen"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__id
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__id
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid "ID"
 msgstr "ID"
+
+#. module: privacy_lookup
+#. odoo-python
+#: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
+msgid "Invalid email address “%s”"
+msgstr "Virheellinen sähköpostiosoite \"%s\""
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_active
@@ -159,13 +162,6 @@ msgstr "On aktiivinen"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_unlinked
 msgid "Is Unlinked"
 msgstr "On linkittymätön"
-
-#. module: privacy_lookup
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line____last_update
-msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__write_uid
@@ -236,12 +232,12 @@ msgid "Privacy Logs"
 msgstr "Tietosuojalokit"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #: model:ir.actions.act_window,name:privacy_lookup.action_privacy_lookup_wizard
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_partner
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_user
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
-#, python-format
 msgid "Privacy Lookup"
 msgstr "Yksityisyydensuojan haku"
 
@@ -253,12 +249,12 @@ msgstr "Yksityisyydensuojan hakurivi"
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_privacy_lookup_wizard
 msgid "Privacy Lookup Wizard"
-msgstr "Ohjattu yksityisyyden haku"
+msgstr "Ohjattu yksityisyydensuojan haku"
 
 #. module: privacy_lookup
 #: model:ir.model,name:privacy_lookup.model_privacy_lookup_wizard_line
 msgid "Privacy Lookup Wizard Line"
-msgstr "Ohjattu yksityisyydensuojan haku -rivi"
+msgstr "Ohjattu yksityisyydensuojan hakurivi"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__resource_ref
@@ -268,7 +264,7 @@ msgstr "Tietue"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__records_description
 msgid "Records Description"
-msgstr "Tietueen kuvaus"
+msgstr "Tietueiden kuvaus"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
@@ -296,14 +292,14 @@ msgid "Search References"
 msgstr "Etsi Referensseistä"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "The record is already unlinked."
-msgstr "Tietue on jo irrotettu."
+msgstr "Tietueen linkitys on jo poistettu."
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/models/privacy_log.py:0
-#, python-format
 msgid "This email address is not valid (%s)"
 msgstr "Tämä sähköpostiosoite ei ole voimassa (%s)"
 
@@ -311,13 +307,13 @@ msgstr "Tämä sähköpostiosoite ei ole voimassa (%s)"
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid ""
 "This operation is irreversible. Do you wish to proceed to the record "
-"deletion ?"
+"deletion?"
 msgstr ""
-"Tämä toimenpide on peruuttamaton. Haluatko jatkaa tietueen poistamista?"
+"Tämä toimenpide on peruuttamaton. Haluatko jatkaa tietueen poistamiseen?"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Unarchived"
 msgstr "Arkistoimaton"
 
@@ -325,3 +321,6 @@ msgstr "Arkistoimaton"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__wizard_id
 msgid "Wizard"
 msgstr "Ohjattu toiminto"
+
+#~ msgid "Group By"
+#~ msgstr "Ryhmittely"

@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* privacy_lookup
-# 
-# Translators:
-# Martin Trigaux, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
-# Junko Augias, 2025
-# 
+# * privacy_lookup
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-02 13:44+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"privacy_lookup/ja/>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__additional_note
@@ -45,7 +45,6 @@ msgstr "選択をアーカイブ"
 #. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-#, python-format
 msgid "Archived"
 msgstr "アーカイブ済"
 
@@ -58,6 +57,11 @@ msgstr "アーカイブ可能"
 #: model:ir.model,name:privacy_lookup.model_res_partner
 msgid "Contact"
 msgstr "連絡先"
+
+#. module: privacy_lookup
+#: model:ir.model,website_form_label:privacy_lookup.model_res_partner
+msgid "Create a Customer"
+msgstr "顧客を作成"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__create_uid
@@ -91,7 +95,6 @@ msgstr "選択を削除"
 #. module: privacy_lookup
 #. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Deleted"
 msgstr "削除済"
 
@@ -99,6 +102,7 @@ msgstr "削除済"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__display_name
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__display_name
 msgid "Display Name"
 msgstr "表示名"
 
@@ -110,7 +114,7 @@ msgstr "ドキュメントモデル"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__email
 msgid "Email"
-msgstr "Eメール"
+msgstr "メール"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__execution_details
@@ -125,11 +129,6 @@ msgid "Found Records"
 msgstr "発見されたレコード"
 
 #. module: privacy_lookup
-#: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-msgid "Group By"
-msgstr "グループ化"
-
-#. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__user_id
 msgid "Handled By"
 msgstr "取扱者"
@@ -137,32 +136,32 @@ msgstr "取扱者"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__has_active
 msgid "Has Active"
-msgstr "有効化済み"
+msgstr "有効データあり"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__id
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__id
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid "ID"
 msgstr "ID"
 
 #. module: privacy_lookup
+#. odoo-python
+#: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
+msgid "Invalid email address “%s”"
+msgstr "無効なEメールアドレス “%s”"
+
+#. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_active
 msgid "Is Active"
-msgstr "アクティブです"
+msgstr "有効"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_unlinked
 msgid "Is Unlinked"
 msgstr "リンク解除済"
-
-#. module: privacy_lookup
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line____last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__write_uid
@@ -181,7 +180,7 @@ msgstr "最終更新日"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__line_ids
 msgid "Line"
-msgstr "行"
+msgstr "ライン"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__line_count
@@ -211,7 +210,7 @@ msgstr "名称"
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid "Open Record"
-msgstr "レコードを開く"
+msgstr "オープンレコード"
 
 #. module: privacy_lookup
 #: model:ir.ui.menu,name:privacy_lookup.privacy_menu
@@ -239,7 +238,6 @@ msgstr "プライバシーログ"
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_partner
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_user
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
-#, python-format
 msgid "Privacy Lookup"
 msgstr "プライバシーLookup"
 
@@ -296,14 +294,12 @@ msgstr "参照を検索"
 #. module: privacy_lookup
 #. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "The record is already unlinked."
 msgstr "このレコードは既にリンク解除されています。"
 
 #. module: privacy_lookup
 #. odoo-python
 #: code:addons/privacy_lookup/models/privacy_log.py:0
-#, python-format
 msgid "This email address is not valid (%s)"
 msgstr "このEメールアドレスは無効です(%s)"
 
@@ -311,13 +307,12 @@ msgstr "このEメールアドレスは無効です(%s)"
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid ""
 "This operation is irreversible. Do you wish to proceed to the record "
-"deletion ?"
-msgstr ""
+"deletion?"
+msgstr "この操作は元に戻せません。記録の削除を行いますか？"
 
 #. module: privacy_lookup
 #. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Unarchived"
 msgstr "アーカイブ解除された"
 
@@ -325,3 +320,6 @@ msgstr "アーカイブ解除された"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__wizard_id
 msgid "Wizard"
 msgstr "ウィザード"
+
+#~ msgid "Group By"
+#~ msgstr "グループ化"

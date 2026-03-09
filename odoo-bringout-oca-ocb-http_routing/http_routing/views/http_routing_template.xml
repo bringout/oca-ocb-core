@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="http_error">
+    <template id="http_error" name="HTTP Error">
         <t t-call="web.frontend_layout">
             <div id="wrap">
                 <div class="oe_structure">
@@ -39,13 +39,10 @@
                 <div id="error_qweb" class="collapse show">
                     <div class="card-body">
                         <p>
-                            <strong>Error message:</strong>
-                            <pre t-esc="exception"/>
+                            The error occurred while rendering the template <code t-esc="qweb_exception.template"/>
+                            <t t-if="qweb_exception.element">and evaluating the following expression: <code t-esc="qweb_exception.element"/></t>
                         </p>
-                        <p>
-                            The error occurred while rendering the template <code t-esc="qweb_exception.name"/> 
-                            <t t-if="qweb_exception.html">and evaluating the following expression: <code t-esc="qweb_exception.html"/></t>
-                        </p>
+                        <pre t-esc="str(exception)"/>
                     </div>
                 </div>
             </div>
@@ -62,12 +59,31 @@
         </div>
     </template>
 
-    <template id="400">
+    <template id="4xx">
         <t t-call="web.frontend_layout">
             <div id="wrap">
                 <div class="container">
                     <h1 class="mt-5">Oops! Something went wrong.</h1>
                     <p>Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
+        </t>
+    </template>
+
+    <template id="400">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">400: Bad Request</h1>
+                    <p>The server couldn't understand the request. Take a look at the error message below.</p>
                 </div>
                 <t t-if="editable or debug">
                     <t t-call="http_routing.http_error_debug"/>
@@ -109,7 +125,7 @@
                         <div class="container">
                             <div class="row align-items-center">
                                 <div class="col-lg-4 pb32">
-                                    <img class="img img-fluid mx-auto" src="/web_editor/shape/http_routing/404.svg?c2=o-color-2"/>
+                                    <img class="img img-fluid mx-auto" src="/html_editor/shape/http_routing/404.svg?c2=o-color-2" alt=""/>
                                 </div>
                                 <div class="col-lg-8 text-lg-start text-center my-auto">
                                     <h1 class="visually-hidden">Error 404</h1>
@@ -136,6 +152,44 @@
         </t>
     </template>
 
+    <template id="415">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">415: Unsupported Media Type</h1>
+                    <p>It looks like the URL you are accessing doesn't support the format of the request. Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
+        </t>
+    </template>
+
+    <template id="422">
+        <t t-call="web.frontend_layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt-5">Oops! Something went wrong.</h1>
+                    <p>Take a look at the error message below.</p>
+                </div>
+                <t t-if="editable or debug">
+                    <t t-call="http_routing.http_error_debug"/>
+                </t>
+                <t t-else="">
+                    <div class="container">
+                        <t t-call="http_routing.error_message"/>
+                    </div>
+                </t>
+        </div>
+        </t>
+    </template>
+
     <template id="500">
         <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
         <!-- This template should not use any variable except those provided by http_routing.ir_http._handle_exception  -->
@@ -148,10 +202,12 @@
 
                 <link rel="stylesheet" href="/web/static/lib/bootstrap/dist/css/bootstrap.css"/>
                 <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/util/index.js"/>
                 <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/data.js"/>
                 <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/event-handler.js"/>
                 <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/manipulator.js"/>
                 <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/dom/selector-engine.js"/>
+                <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/util/config.js"/>
                 <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/base-component.js"/>
                 <script type="text/javascript" src="/web/static/lib/bootstrap/js/dist/collapse.js"/>
                 <style>

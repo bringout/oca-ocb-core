@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* utm
-# 
+# * utm
+#
 # Translators:
 # Matus Krnac <matus.krnac@gmail.com>, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
@@ -11,29 +11,31 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Martin Trigaux, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
-# 
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:32+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2022\n"
-"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-03-06 17:52+0000\n"
+"Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/utm/sk/>\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.16.1\n"
 
 #. module: utm
 #. odoo-python
 #: code:addons/utm/models/utm_source.py:0
-#, python-format
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__active
 #: model:ir.model.fields,field_description:utm.field_utm_medium__active
 msgid "Active"
 msgstr "Aktívne"
@@ -46,19 +48,24 @@ msgstr ""
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Approval-based Flow"
 msgstr ""
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Approved"
 msgstr "Schválené"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Archive"
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Archived"
 msgstr "Archivovaný"
 
@@ -70,7 +77,6 @@ msgstr ""
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Audience-driven Flow"
 msgstr ""
 
@@ -105,7 +111,7 @@ msgstr "Štádium kampane"
 #: model:ir.actions.act_window,name:utm.action_view_utm_tag
 #: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_tree
 msgid "Campaign Tags"
-msgstr "Tagy kampane"
+msgstr "Štítky kampane"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_campaign_action
@@ -122,6 +128,11 @@ msgid ""
 msgstr ""
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Campaigns that are assigned to me"
+msgstr ""
+
+#. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
 msgid "Christmas Special"
 msgstr "Vianočný špeciál"
@@ -129,7 +140,6 @@ msgstr "Vianočný špeciál"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Collect ideas, design creative content and publish it once reviewed."
 msgstr ""
 
@@ -142,7 +152,6 @@ msgstr "Index farieb"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Copywriting"
 msgstr "Copywriting"
 
@@ -187,7 +196,6 @@ msgstr "Vytvorené"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Creative Flow"
 msgstr ""
 
@@ -199,30 +207,29 @@ msgstr "Zmazať"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Deploy"
 msgstr "Rozmiestniť"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Deployed"
 msgstr ""
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_2
-#, python-format
 msgid "Design"
 msgstr "Dizajn"
 
 #. module: utm
+#: model:ir.model.fields,field_description:utm.field_ir_http__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_medium__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_source__display_name
+#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_stage__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_tag__display_name
 msgid "Display Name"
@@ -231,16 +238,8 @@ msgstr "Zobrazovaný názov"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Done"
 msgstr "Hotové"
-
-#. module: utm
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
-msgid "Dropdown menu"
-msgstr "Rozbaľovacie menu"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
@@ -260,30 +259,22 @@ msgstr "Emailová kampaň - služby"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Event-driven Flow"
 msgstr ""
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Gather Data"
 msgstr ""
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid ""
 "Gather data, build a recipient list and write content based on your "
 "Marketing target."
 msgstr ""
-
-#. module: utm
-#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
-msgid "Group By"
-msgstr "Zoskupiť podľa"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
@@ -291,9 +282,12 @@ msgid "HTTP Routing"
 msgstr "HTTP smerovanie"
 
 #. module: utm
+#: model:ir.model.fields,field_description:utm.field_ir_http__id
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__id
 #: model:ir.model.fields,field_description:utm.field_utm_medium__id
+#: model:ir.model.fields,field_description:utm.field_utm_mixin__id
 #: model:ir.model.fields,field_description:utm.field_utm_source__id
+#: model:ir.model.fields,field_description:utm.field_utm_source_mixin__id
 #: model:ir.model.fields,field_description:utm.field_utm_stage__id
 #: model:ir.model.fields,field_description:utm.field_utm_tag__id
 msgid "ID"
@@ -302,19 +296,8 @@ msgstr "ID"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Ideas"
 msgstr "Nápady"
-
-#. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign____last_update
-#: model:ir.model.fields,field_description:utm.field_utm_medium____last_update
-#: model:ir.model.fields,field_description:utm.field_utm_source____last_update
-#: model:ir.model.fields,field_description:utm.field_utm_stage____last_update
-#: model:ir.model.fields,field_description:utm.field_utm_tag____last_update
-msgid "Last Modified on"
-msgstr "Posledná úprava"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
@@ -337,7 +320,6 @@ msgstr "Naposledy upravované"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Later"
 msgstr "Neskôr"
 
@@ -349,7 +331,6 @@ msgstr "Sledovač linky"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "List-Building"
 msgstr ""
 
@@ -377,9 +358,15 @@ msgid "Mediums"
 msgstr "Mediá"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "My Campaigns"
+msgstr ""
+
+#. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
 #: model:ir.model.fields,field_description:utm.field_utm_stage__name
 #: model:ir.model.fields,field_description:utm.field_utm_tag__name
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 msgid "Name"
 msgstr "Meno"
 
@@ -394,23 +381,28 @@ msgid "No Sources yet!"
 msgstr ""
 
 #. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_medium.py:0
+msgid ""
+"Oops, you can't delete the Medium '%s'.\n"
+"Doing so would be like tearing down a load-bearing wall — not the best idea."
+msgstr ""
+
+#. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Pre-Launch"
 msgstr ""
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Prepare Campaigns and get them approved before making them go live."
 msgstr ""
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid ""
 "Prepare your Campaign, test it with part of your audience and deploy it "
 "fully afterwards."
@@ -419,7 +411,6 @@ msgstr ""
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Report"
 msgstr "Report"
 
@@ -430,17 +421,19 @@ msgid "Responsible"
 msgstr "Zodpovedný"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Restore"
+msgstr ""
+
+#. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Review"
 msgstr "Prehľad"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Running"
 msgstr "Aktuálne"
 
@@ -462,17 +455,13 @@ msgstr "Vyhľadajte médium UTM"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Send"
 msgstr "Poslať"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_3
-#, python-format
 msgid "Sent"
 msgstr "Poslané"
 
@@ -484,14 +473,12 @@ msgstr "Postupnosť"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Soft-Launch"
 msgstr ""
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Soft-Launch Flow"
 msgstr ""
 
@@ -521,6 +508,7 @@ msgid "Stage"
 msgstr "Štádium"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_search
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_tree
 msgid "Stages"
@@ -529,11 +517,9 @@ msgstr "Štádia"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
 msgid ""
-"Stages allow you to organize your workflow  (e.g. : plan, design, in "
-"progress,  done, …)."
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress, "
+"done, …)."
 msgstr ""
-"Fázy vám umožňujú usporiadať pracovný postup (napr. plán, návrh, prebieh, "
-"hotové, ...)."
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
@@ -544,22 +530,14 @@ msgstr ""
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
-msgid "Tag name already exists !"
-msgstr "Názov značky už existuje!"
+msgid "Tag name already exists!"
+msgstr ""
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Tags"
-msgstr "Tagy"
-
-#. module: utm
-#. odoo-python
-#: code:addons/utm/models/utm_medium.py:0
-#, python-format
-msgid ""
-"The UTM medium '%s' cannot be deleted as it is used in some main functional "
-"flows, such as the recruitment and the mass mailing."
-msgstr ""
+msgstr "Štítky"
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
@@ -571,22 +549,20 @@ msgstr ""
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "This Month"
 msgstr "Tento mesiac"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "This Week"
 msgstr "Tento týždeň"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts, "
+"e.g. Fall_Drive, Christmas_Special"
 msgstr ""
 "Toto je názov, ktorý vám pomáha sledovať vaše rôzne kampane, napr. "
 "Fall_Drive, Christmas_Special"
@@ -603,23 +579,21 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"Toto je zdroj odkazu, napr. vyhľadávací prostriedok, iná doména, alebo názov"
-" emailového zoznamu"
+"Toto je zdroj odkazu, napr. vyhľadávací prostriedok, iná doména, alebo názov "
+"emailového zoznamu"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "To be Approved"
 msgstr ""
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid ""
-"Track incoming events (e.g. : Christmas, Black Friday, ...) and publish "
-"timely content."
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely "
+"content."
 msgstr ""
 
 #. module: utm
@@ -643,7 +617,7 @@ msgstr "UTM médium"
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
-"\"Website\", \"Twitter\", ...)."
+"\"Website\", \"X\", ...)."
 msgstr ""
 
 #. module: utm
@@ -664,8 +638,8 @@ msgstr ""
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
 msgid ""
-"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
-"...)."
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", "
+"\"\", ...)."
 msgstr ""
 
 #. module: utm
@@ -676,7 +650,7 @@ msgstr "UTM štádium"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_tag
 msgid "UTM Tag"
-msgstr "UTM tag"
+msgstr "UTM štítok"
 
 #. module: utm
 #: model:ir.ui.menu,name:utm.marketing_utm
@@ -686,8 +660,36 @@ msgstr "UTMs"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#, python-format
 msgid "Use This For My Campaigns"
+msgstr ""
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+msgid "You cannot delete the 'Referral' UTM source record."
+msgstr ""
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
+msgid "e.g. \"Brainstorming\""
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
+msgid "e.g. \"Christmas Mailing\""
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+msgid "e.g. \"Email\""
 msgstr ""
 
 #. module: utm
@@ -695,3 +697,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
 msgid "e.g. Black Friday"
 msgstr ""
+
+#~ msgid "Group By"
+#~ msgstr "Zoskupiť podľa"

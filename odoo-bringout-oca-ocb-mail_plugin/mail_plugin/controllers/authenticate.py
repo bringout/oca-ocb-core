@@ -9,7 +9,7 @@ import logging
 import odoo
 import werkzeug
 
-from odoo import http
+from odoo import _, http
 from odoo.http import request
 from werkzeug.exceptions import NotFound
 
@@ -27,6 +27,8 @@ class Authenticate(http.Controller):
          old route name "/mail_client_extension/auth is deprecated as of saas-14.3,it is not needed for newer
          versions of the mail plugin but necessary for supporting older versions
          """
+        if not request.env.user._is_internal():
+            return request.render('mail_plugin.app_error', {'error': _('Access Error: Only Internal Users can link their inboxes to this database.')})
         return request.render('mail_plugin.app_auth', values)
 
     @http.route(['/mail_client_extension/auth/confirm', '/mail_plugin/auth/confirm'], type='http', auth="user", methods=['POST'])
@@ -53,8 +55,14 @@ class Authenticate(http.Controller):
         updated_redirect = parsed_redirect.replace(query=werkzeug.urls.url_encode(params))
         return request.redirect(updated_redirect.to_url(), local=False)
 
+    @http.route(['/mail_plugin/auth/check_version'], type='jsonrpc', auth="none", cors="*",
+                methods=['POST', 'OPTIONS'])
+    def auth_check_version(self):
+        """Allow to know if the module is installed and which addin version is supported."""
+        return 1
+
     # In this case, an exception will be thrown in case of preflight request if only POST is allowed.
-    @http.route(['/mail_client_extension/auth/access_token', '/mail_plugin/auth/access_token'], type='json', auth="none", cors="*",
+    @http.route(['/mail_client_extension/auth/access_token', '/mail_plugin/auth/access_token'], type='jsonrpc', auth="none", cors="*",
                 methods=['POST', 'OPTIONS'])
     def auth_access_token(self, auth_code='', **kw):
         """
@@ -71,7 +79,11 @@ class Authenticate(http.Controller):
             return {"error": "Invalid code"}
         request.update_env(user=auth_message['uid'])
         scope = 'odoo.plugin.' + auth_message.get('scope', '')
-        api_key = request.env['res.users.apikeys']._generate(scope, auth_message['name'])
+        api_key = request.env['res.users.apikeys']._generate(
+            scope,
+            auth_message['name'],
+            datetime.datetime.now() + datetime.timedelta(days=1)
+        )
         return {'access_token': api_key}
 
     def _get_auth_code_data(self, auth_code):
@@ -100,7 +112,7 @@ class Authenticate(http.Controller):
             'name': name,
             'timestamp': int(datetime.datetime.utcnow().timestamp()),
             # <- elapsed time should be < 3 mins when verifying
-            'uid': request.uid,
+            'uid': request.env.uid,
         }
         auth_message = json.dumps(auth_dict, sort_keys=True).encode()
         signature = odoo.tools.misc.hmac(request.env(su=True), 'mail_plugin', auth_message).encode()

@@ -1,37 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_booth
-# 
-# Translators:
-# Mads Søndergaard, 2022
-# Martin Trigaux, 2022
-# lhmflexerp <lhm@flexerp.dk>, 2023
-# Sanne Kristensen <sanne@vkdata.dk>, 2024
-# Kira Petersen, 2025
-# 
+# * event_booth
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Kira Petersen, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-09-14 21:20+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
+"event_booth/da/>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_booked_template
 msgid "<b>Renter Email</b>:"
 msgstr "<b>Lejers e-mailadresse</b>:"
-
-#. module: event_booth
-#: model_terms:ir.ui.view,arch_db:event_booth.event_booth_booked_template
-msgid "<b>Renter Mobile</b>:"
-msgstr ""
 
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_booked_template
@@ -47,17 +38,6 @@ msgstr "<b>Lejers telefonnummer</b>:"
 #: model_terms:ir.ui.view,arch_db:event_booth.event_event_view_form
 msgid "<span class=\"o_stat_text\">Booths</span>"
 msgstr "<span class=\"o_stat_text\">Stande</span>"
-
-#. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_standard
-msgid "<span class=\"text-white\">4m²</span>"
-msgstr ""
-
-#. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_vip
-msgid "<span class=\"text-white\">8m²</span>"
-msgstr "<span class=\"text-white\">8m²</span>"
 
 #. module: event_booth
 #: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
@@ -105,8 +85,19 @@ msgstr "<span>46\" skærme</span>"
 
 #. module: event_booth
 #: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
+#: model_terms:event.booth.category,description:event_booth.event_booth_category_standard
+msgid "<span>4m²</span>"
+msgstr "<span>4m²</span>"
+
+#. module: event_booth
+#: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
 msgid "<span>50 words description on website</span>"
 msgstr "<span>50 ords beskrivelse på hjemmeside</span>"
+
+#. module: event_booth
+#: model_terms:event.booth.category,description:event_booth.event_booth_category_vip
+msgid "<span>8m²</span>"
+msgstr "<span>8m²</span>"
 
 #. module: event_booth
 #: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
@@ -133,17 +124,17 @@ msgstr "Aktiviteter"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitet undtagelse markering"
+msgstr "Markering af undtagelsesaktivitet"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_state
 msgid "Activity State"
-msgstr "Aktivitetstilstand"
+msgstr "Aktivitetsstatus"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitets Type Ikon"
+msgstr "Aktivitetstypeikon"
 
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_category_view_form
@@ -165,7 +156,7 @@ msgstr "Til rådighed"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_event__event_booth_count_available
 msgid "Available Booths"
-msgstr "Stande til rådighed"
+msgstr "Ledige stande"
 
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_booked_template
@@ -288,6 +279,8 @@ msgstr "Beskrivelse"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__display_name
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__display_name
+#: model:ir.model.fields,field_description:event_booth.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_booth.field_event_type__display_name
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__display_name
 msgid "Display Name"
 msgstr "Vis navn"
@@ -303,23 +296,23 @@ msgstr "Arrangement"
 #: model:ir.model,name:event_booth.model_event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
 msgid "Event Booth"
-msgstr "Stand til arrangementer"
+msgstr "Eventstand"
 
 #. module: event_booth
 #: model:ir.model,name:event_booth.model_event_booth_category
 #: model:ir.model.fields,field_description:event_booth.field_event_event__event_booth_category_ids
 msgid "Event Booth Category"
-msgstr "Standkategori til arrangementer"
+msgstr "Eventstandkategori"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_event__event_booth_category_available_ids
 msgid "Event Booth Category Available"
-msgstr "Standkategori til arrangementer, der er til rådighed"
+msgstr "Eventstandkategori med ledige stande"
 
 #. module: event_booth
 #: model:ir.model,name:event_booth.model_event_type_booth
 msgid "Event Booth Template"
-msgstr "Skabelon til stand"
+msgstr "Eventstandskabelon"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__event_type_id
@@ -335,20 +328,20 @@ msgstr "Begivenhed Skabelon"
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_type_booth_view_form_from_type
 msgid "Event Type Booth"
-msgstr "Arrangementstypestand"
+msgstr "Eventstandtype"
 
 #. module: event_booth
 #: model:ir.actions.act_window,name:event_booth.event_type_booth_action
 #: model_terms:ir.ui.view,arch_db:event_booth.event_type_booth_view_search
 #: model_terms:ir.ui.view,arch_db:event_booth.event_type_booth_view_tree_from_type
 msgid "Event Type Booths"
-msgstr "Arrangementstypestande"
+msgstr "Eventstandtype"
 
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_graph
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_pivot
 msgid "Event booth"
-msgstr "Stand til arrangementer"
+msgstr "Eventstand"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_follower_ids
@@ -363,7 +356,7 @@ msgstr "Følgere (partnere)"
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Skrifttype awesome icon f.eks. fa-opgaver"
+msgstr "Font Awesome-ikon, f.eks. fa-opgaver"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_20_event_7
@@ -381,12 +374,6 @@ msgid "Gold Booth 3"
 msgstr "Guldstand 3"
 
 #. module: event_booth
-#: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
-#: model_terms:ir.ui.view,arch_db:event_booth.event_type_booth_view_search
-msgid "Group By"
-msgstr "Sortér efter"
-
-#. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__has_message
 msgid "Has Message"
 msgstr "Har besked"
@@ -394,6 +381,8 @@ msgstr "Har besked"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__id
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__id
+#: model:ir.model.fields,field_description:event_booth.field_event_event__id
+#: model:ir.model.fields,field_description:event_booth.field_event_type__id
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__id
 msgid "ID"
 msgstr "ID"
@@ -411,13 +400,14 @@ msgstr "Ikon for uventet aktivitet."
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Hvis afkrydset, kræver nye beskeder din opmærksomhed "
+msgstr "Hvis dette felt er markeret, kræver nye beskeder din opmærksomhed."
 
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_has_error
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Hvis afkrydset har nogle beskeder en leveringsfejl"
+msgstr ""
+"Hvis dette felt er markeret, indeholder nogle beskeder en leveringsfejl."
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__image_1920
@@ -455,13 +445,6 @@ msgid "Is Follower"
 msgstr "Er følger"
 
 #. module: event_booth
-#: model:ir.model.fields,field_description:event_booth.field_event_booth____last_update
-#: model:ir.model.fields,field_description:event_booth.field_event_booth_category____last_update
-#: model:ir.model.fields,field_description:event_booth.field_event_type_booth____last_update
-msgid "Last Modified on"
-msgstr "Sidst ændret den"
-
-#. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__write_uid
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__write_uid
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__write_uid
@@ -476,11 +459,6 @@ msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
 #. module: event_booth
-#: model:ir.model.fields,field_description:event_booth.field_event_booth__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "Vedhæftning"
-
-#. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_has_error
 msgid "Message Delivery error"
 msgstr "Besked ved leveringsfejl"
@@ -493,7 +471,7 @@ msgstr "Beskeder"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mine Aktiviteter Deadline"
+msgstr "Deadline på mine aktiviteter"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__name
@@ -508,7 +486,7 @@ msgstr "Navn"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Næste Aktivitet Kalender Arrangement"
+msgstr "Næste aktivitet i kalenderen"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_date_deadline
@@ -538,7 +516,7 @@ msgstr "Antal fejl"
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Antal meddelelser der kræver handling"
+msgstr "Antal meddelelser, der kræver handling"
 
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_has_error_counter
@@ -568,9 +546,9 @@ msgid "Pick a Booth Category..."
 msgstr "Vælg en standkategori ..."
 
 #. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
-msgid "Premium"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_form_from_event
+msgid "Pick a Renter..."
+msgstr "Vælg en lejer ..."
 
 #. module: event_booth
 #: model:event.booth.category,name:event_booth.event_booth_category_premium
@@ -584,15 +562,22 @@ msgstr "Premium-stand A4"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_2_event_2
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_conference_2
+#: model:event.booth,name:event_booth.event_booth_2_event_3
+#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_2
 msgid "Premium Showbooth 1"
 msgstr "Premium-udstillingsstand 1"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_3_event_2
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_conference_3
+#: model:event.booth,name:event_booth.event_booth_3_event_3
+#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_3
 msgid "Premium Showbooth 2"
 msgstr "Premium-udstillingsstand 2"
+
+#. module: event_booth
+#: model:ir.model.fields,field_description:event_booth.field_event_booth__rating_ids
+msgid "Ratings"
+msgstr "Bedømmelser"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__partner_id
@@ -604,11 +589,6 @@ msgstr "Lejer"
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
 msgid "Renter Email"
 msgstr "Lejers e-mail"
-
-#. module: event_booth
-#: model:ir.model.fields,field_description:event_booth.field_event_booth__contact_mobile
-msgid "Renter Mobile"
-msgstr ""
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__contact_name
@@ -629,7 +609,7 @@ msgstr "Ansvarlig bruger"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS leveringsfejl"
+msgstr "Fejl ved SMS-levering"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__sequence
@@ -638,20 +618,17 @@ msgstr "Sekvens"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_0_event_2
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_conference_0
+#: model:event.booth,name:event_booth.event_booth_0_event_3
+#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_0
 msgid "Showbooth 1"
 msgstr "Udstillingsstand 1"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_1_event_2
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_conference_1
+#: model:event.booth,name:event_booth.event_booth_1_event_3
+#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_1
 msgid "Showbooth 2"
 msgstr "Udstillingsstand 2"
-
-#. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_standard
-msgid "Standard"
-msgstr "Standard"
 
 #. module: event_booth
 #: model:event.booth.category,name:event_booth.event_booth_category_standard
@@ -672,9 +649,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Status baseret på aktiviteter\n"
-"Forfaldne: Forfaldsdato er allerede overskredet\n"
-"I dag: Aktivitetsdato er i dag\n"
-"Planlagt: Fremtidige aktiviteter."
+"Forfaldne: Aktivitetens forfaldsdato er overskredet\n"
+"I dag: Aktiviteten er planlagt til i dag\n"
+"Planlagt: Kommende aktiviteter."
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_event__event_booth_count
@@ -684,18 +661,13 @@ msgstr "Samlede antal stande"
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type af undtagelsesaktivitet registreret "
+msgstr "Type registreret undtagelsesaktivitet."
 
 #. module: event_booth
 #: model:ir.model.fields.selection,name:event_booth.selection__event_booth__state__unavailable
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
 msgid "Unavailable"
 msgstr "Ikke ledig"
-
-#. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_vip
-msgid "VIP"
-msgstr "VIP"
 
 #. module: event_booth
 #: model:event.booth.category,name:event_booth.event_booth_category_vip
@@ -715,7 +687,7 @@ msgstr "Beskeder fra hjemmesiden"
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__website_message_ids
 msgid "Website communication history"
-msgstr "Website kommunikations historik"
+msgstr "Hjemmesidens kommunikationshistorik"
 
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_category_view_form
@@ -733,3 +705,6 @@ msgstr "f.eks. første standrække 1"
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_category_view_form
 msgid "e.g. Premium Booth"
 msgstr "f.eks. Premium-stand"
+
+#~ msgid "Group By"
+#~ msgstr "Sortér efter"

@@ -1,26 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* privacy_lookup
-# 
-# Translators:
-# Martin Trigaux, 2022
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# 
+# * privacy_lookup
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 22:02+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-19/privacy_lookup/zh_Hans/>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__additional_note
@@ -43,9 +41,9 @@ msgid "Archive Selection"
 msgstr "归档选择"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-#, python-format
 msgid "Archived"
 msgstr "已归档"
 
@@ -60,6 +58,11 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: privacy_lookup
+#: model:ir.model,website_form_label:privacy_lookup.model_res_partner
+msgid "Create a Customer"
+msgstr "创建客户"
+
+#. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__create_uid
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__create_uid
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__create_uid
@@ -71,7 +74,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__create_date
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建日期"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__date
@@ -89,8 +92,8 @@ msgid "Delete Selection"
 msgstr "删除选择"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Deleted"
 msgstr "已删除"
 
@@ -98,6 +101,7 @@ msgstr "已删除"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__display_name
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -109,7 +113,7 @@ msgstr "单据模型"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__email
 msgid "Email"
-msgstr "Email"
+msgstr "电子邮件"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__execution_details
@@ -124,11 +128,6 @@ msgid "Found Records"
 msgstr "找到的记录"
 
 #. module: privacy_lookup
-#: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-msgid "Group By"
-msgstr "分组"
-
-#. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__user_id
 msgid "Handled By"
 msgstr "处理人"
@@ -136,32 +135,32 @@ msgstr "处理人"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__has_active
 msgid "Has Active"
-msgstr "已启用"
+msgstr "有效"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__id
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__id
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid "ID"
 msgstr "ID"
 
 #. module: privacy_lookup
+#. odoo-python
+#: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
+msgid "Invalid email address “%s”"
+msgstr "无效电子邮件地址 “%s”"
+
+#. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_active
 msgid "Is Active"
-msgstr "处于启用状态"
+msgstr "处于有效状态"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_unlinked
 msgid "Is Unlinked"
 msgstr "被取消链接"
-
-#. module: privacy_lookup
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line____last_update
-msgid "Last Modified on"
-msgstr "最后修改时间"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__write_uid
@@ -175,7 +174,7 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__write_date
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "上次更新日期"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__line_ids
@@ -190,7 +189,7 @@ msgstr "行数"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__log_id
 msgid "Log"
-msgstr "记录"
+msgstr "日志"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
@@ -232,12 +231,12 @@ msgid "Privacy Logs"
 msgstr "隐私日志"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #: model:ir.actions.act_window,name:privacy_lookup.action_privacy_lookup_wizard
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_partner
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_user
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
-#, python-format
 msgid "Privacy Lookup"
 msgstr "隐私查询"
 
@@ -274,7 +273,7 @@ msgstr "参考"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__res_model_id
 msgid "Related Document Model"
-msgstr "相关的单据模型"
+msgstr "相关单据模型"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__res_id
@@ -292,14 +291,14 @@ msgid "Search References"
 msgstr "搜索引用"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "The record is already unlinked."
 msgstr "记录已经被取消链接。"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/models/privacy_log.py:0
-#, python-format
 msgid "This email address is not valid (%s)"
 msgstr "该电子邮件地址无效(%s)"
 
@@ -307,16 +306,19 @@ msgstr "该电子邮件地址无效(%s)"
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid ""
 "This operation is irreversible. Do you wish to proceed to the record "
-"deletion ?"
-msgstr "此操作是不可逆的。 你想继续删除记录吗?"
+"deletion?"
+msgstr "此操作无法撤回。您想继续删除记录吗？"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Unarchived"
-msgstr "取消存档"
+msgstr "取消归档"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__wizard_id
 msgid "Wizard"
 msgstr "向导"
+
+#~ msgid "Group By"
+#~ msgstr "分组方式"

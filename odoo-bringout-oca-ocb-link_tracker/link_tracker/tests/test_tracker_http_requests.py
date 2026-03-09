@@ -10,7 +10,7 @@ class TestTrackerHttpRequests(MockLinkTracker, common.HttpCase):
     def test_no_preview_tracking(self):
         """Ensure that requests with a user agent matching known preview user agents will not be registered as a click"""
         link_tracker = self.env['link.tracker'].create({
-                'url': 'https://odoo.com',
+                'url': '/',
                 'title': 'Odoo',
             })
         self.assertEqual(len(link_tracker.link_click_ids), 0)

@@ -1,4 +1,4 @@
-# Onboarding toolbox
+# Onboarding Toolbox
 
 
 This module allows to manage onboardings and their progress
@@ -13,37 +13,14 @@ pip install odoo-bringout-oca-ocb-onboarding
 
 ## Dependencies
 
-This addon depends on:
-- base
-
-## Manifest Information
-
-- **Name**: Onboarding toolbox
-- **Version**: 1.0
-- **Category**: Hidden
-- **License**: LGPL-3
-- **Installable**: True
+- web
 
 ## Source
 
-Based on [OCA/OCB](https://github.com/OCA/OCB) branch 16.0, addon `onboarding`.
+- Repository: https://github.com/OCA/OCB
+- Branch: 19.0
+- Path: addons/onboarding
 
 ## License
 
-This package maintains the original LGPL-3 license from the upstream Odoo project.
-
-## Documentation
-
-- Overview: doc/OVERVIEW.md
-- Architecture: doc/ARCHITECTURE.md
-- Models: doc/MODELS.md
-- Controllers: doc/CONTROLLERS.md
-- Wizards: doc/WIZARDS.md
-- Reports: doc/REPORTS.md
-- Security: doc/SECURITY.md
-- Install: doc/INSTALL.md
-- Usage: doc/USAGE.md
-- Configuration: doc/CONFIGURATION.md
-- Dependencies: doc/DEPENDENCIES.md
-- Troubleshooting: doc/TROUBLESHOOTING.md
-- FAQ: doc/FAQ.md
+This package preserves the original LGPL-3 license.

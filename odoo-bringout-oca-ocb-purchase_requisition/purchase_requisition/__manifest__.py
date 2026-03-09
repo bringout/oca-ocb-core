@@ -2,7 +2,7 @@
 {
     'name': 'Purchase Agreements',
     'version': '0.1',
-    'category': 'Inventory/Purchase',
+    'category': 'Supply Chain/Purchase',
     'description': """
 This module allows you to manage your Purchase Agreements.
 ===========================================================
@@ -20,6 +20,7 @@ are agreements you have with vendors to benefit from a predetermined pricing.
         'views/product_views.xml',
         'views/purchase_views.xml',
         'views/purchase_requisition_views.xml',
+        'views/res_config_settings_views.xml',
         'report/purchase_requisition_report.xml',
         'report/report_purchaserequisition.xml',
         'wizard/purchase_requisition_alternative_warning.xml',
@@ -33,5 +34,6 @@ are agreements you have with vendors to benefit from a predetermined pricing.
             'purchase_requisition/static/src/*/**.xml',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

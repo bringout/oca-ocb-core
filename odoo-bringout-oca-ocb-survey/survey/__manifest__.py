@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Surveys',
-    'version': '3.5',
+    'version': '3.7',
     'category': 'Marketing/Surveys',
     'description': """
 Create beautiful surveys and visualize answers
@@ -23,9 +23,12 @@ sent mails with personal token for the invitation of the survey.
         'web_tour',
         'gamification'],
     'data': [
-        'views/survey_report_templates.xml',
-        'views/survey_reports.xml',
+        'report/survey_templates.xml',
+        'report/survey_reports.xml',
+        'data/ir_actions_server_data.xml',
+        'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
+        'data/survey_tour.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
         'views/survey_menus.xml',
@@ -50,9 +53,6 @@ sent mails with personal token for the invitation of the survey.
         'data/survey_demo_certification.xml',
         'data/survey_demo_certification_user_input.xml',
         'data/survey_demo_certification_user_input_line.xml',
-        'data/survey_demo_quiz.xml',
-        'data/survey_demo_quiz_user_input.xml',
-        'data/survey_demo_quiz_user_input_line.xml',
         'data/survey_demo_conditional.xml',
     ],
     'installable': True,
@@ -60,31 +60,28 @@ sent mails with personal token for the invitation of the survey.
     'sequence': 220,
     'assets': {
         'survey.survey_assets': [
-            'web/static/lib/Chart/Chart.js',
-            'survey/static/src/js/survey_image_zoomer.js',
-            '/survey/static/src/xml/survey_image_zoomer_templates.xml',
-            'survey/static/src/js/survey_quick_access.js',
-            'survey/static/src/js/survey_timer.js',
-            'survey/static/src/js/survey_breadcrumb.js',
-            'survey/static/src/js/survey_form.js',
+            ('include', "web.chartjs_lib"),
+            'survey/static/src/utils.js',
+            '/survey/static/src/interactions/survey_image_zoomer_templates.xml',
             'survey/static/src/js/survey_preload_image_mixin.js',
-            'survey/static/src/js/survey_print.js',
-            'survey/static/src/js/survey_result.js',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
             'survey/static/src/scss/survey_templates_form.scss',
             'survey/static/src/scss/survey_templates_results.scss',
-            'survey/static/src/xml/survey_breadcrumb_templates.xml',
+            'survey/static/src/interactions/survey_breadcrumb_templates.xml',
+            'survey/static/src/xml/survey_paginated_results_rows_template.xml',
+            'survey/static/src/interactions/*',
         ],
         'survey.survey_user_input_session_assets': [
-            'survey/static/src/js/libs/chartjs-plugin-datalabels.min.js',
-            'survey/static/src/js/survey_session_colors.js',
-            'survey/static/src/js/survey_session_chart.js',
-            'survey/static/src/js/survey_session_text_answers.js',
-            'survey/static/src/js/survey_session_leaderboard.js',
-            'survey/static/src/js/survey_session_manage.js',
+            'survey/static/src/interactions/survey_session_colors.js',
+            'survey/static/src/interactions/survey_session_chart.js',
+            'survey/static/src/interactions/survey_session_text_answers.js',
+            'survey/static/src/interactions/survey_session_leaderboard.js',
+            'survey/static/src/interactions/survey_session_manage.js',
             'survey/static/src/xml/survey_session_text_answer_template.xml',
         ],
         'web.report_assets_common': [
@@ -92,27 +89,26 @@ sent mails with personal token for the invitation of the survey.
         ],
         'web.assets_backend': [
             'survey/static/src/question_page/*',
-            'survey/static/src/js/fields_section_one2many.js',
-            'survey/static/src/js/fields_form_page_description.js',
-            'survey/static/src/views/*.js',
+            'survey/static/src/views/**/*.js',
+            'survey/static/src/views/**/*.xml',
             'survey/static/src/scss/survey_survey_views.scss',
             'survey/static/src/scss/survey_question_views.scss',
+            'survey/static/src/js/tours/survey_tour.js',
         ],
-        "web.dark_mode_assets_backend": [
+        "web.assets_web_dark": [
             'survey/static/src/scss/*.dark.scss',
         ],
         'web.assets_tests': [
             'survey/static/tests/tours/*.js',
         ],
-        'web.qunit_suite_tests': [
-            'survey/static/tests/components/*.js',
-        ],
-        'web.assets_common': [
-            'survey/static/src/js/tours/survey_tour.js',
+        'web.assets_unit_tests': [
+            'survey/static/tests/components/*.test.js',
+            'survey/static/tests/fields/*.test.js',
         ],
         'web.assets_frontend': [
             'survey/static/src/js/tours/survey_tour.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

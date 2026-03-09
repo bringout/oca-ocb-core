@@ -1,29 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_geolocalize
-# 
+# * base_geolocalize
+#
 # Translators:
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Simon S, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
 # Martin Trigaux, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
-# Lasse L, 2023
-# 
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Lasse L, 2023\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-25 14:42+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
+"base_geolocalize/sv/>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
@@ -33,13 +35,14 @@ msgstr "API"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-#, python-format
 msgid ""
 "API key for GeoCoding (Places) required.\n"
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
 msgstr ""
 "API nyckel för GeoCoding (Platser) är nödvändig.\n"
-"Besök https://developers.google.com/maps/documentation/geocoding/get-api-key för mer information."
+"Besök https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"för mer information."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -49,12 +52,12 @@ msgstr "API:"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Compute Localization"
-msgstr "Positionsberegning"
+msgstr "Hitta lokalisering"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Compute based on address"
-msgstr "Beräkna baserat på adress"
+msgstr "Välj lokalisering baserat på adress"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_config_settings
@@ -67,6 +70,11 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: base_geolocalize
+#: model:ir.model,website_form_label:base_geolocalize.model_res_partner
+msgid "Create a Customer"
+msgstr "Skapa en kund"
+
+#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
 msgid "Created by"
 msgstr "Skapad av"
@@ -74,19 +82,21 @@ msgstr "Skapad av"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-#, python-format
-msgid "Error with geolocation server:"
-msgstr "Fel med geolokaliseringsserver:"
+msgid "Error with geolocation server: %s"
+msgstr "Fel med geolokaliseringsserver: %s"
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -121,6 +131,9 @@ msgstr "API-nyckel för Google Maps"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -130,11 +143,6 @@ msgid "Key:"
 msgstr "Nyckel:"
 
 #. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
-msgid "Last Modified on"
-msgstr "Senast redigerad den"
-
-#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
@@ -142,7 +150,7 @@ msgstr "Senast uppdaterad av"
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -162,9 +170,14 @@ msgstr "Namn"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
-#, python-format
 msgid "No match found for %(partner_names)s address(es)."
 msgstr "Ingen matchning hittades för %(partner_names)s adress(er)."
+
+#. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "OpenStreetMap calls disabled in testing environment."
+msgstr "OpenStreetMap-anrop inaktiverade i testmiljön."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -174,30 +187,28 @@ msgstr "Partnertilldelning"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-#, python-format
 msgid "Provider %s is not implemented for geolocation service."
 msgstr "Leverantören %s är inte implementerad för geolokaliseringstjänsten."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh"
-msgstr "Ladda om"
+msgstr "Uppdatera"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh Localization"
-msgstr "Uppdatera Position"
+msgstr "Uppdatera lokalisering"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
-msgid "Tech Name"
+msgid "Technical Name"
 msgstr "Tekniskt namn"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-#, python-format
 msgid ""
 "Unable to geolocate, received the error:\n"
 "%s\n"
@@ -216,6 +227,12 @@ msgstr ""
 "Geokodning, Statiska kartor, Javascript för kartor.\n"
 
 #. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "Unknown"
+msgstr "Okänd"
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
 msgstr "Uppdaterad den:"
@@ -223,15 +240,14 @@ msgstr "Uppdaterad den:"
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid ""
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
-" for more information."
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
 msgstr ""
-"Besök https://developers.google.com/maps/documentation/geocoding/get-api-key"
-" för mer information."
+"Besök https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"för mer information."
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
-#, python-format
 msgid "Warning"
 msgstr "Varning"

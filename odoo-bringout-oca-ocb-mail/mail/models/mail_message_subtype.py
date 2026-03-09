@@ -45,15 +45,15 @@ class MailMessageSubtype(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
+        self.env.registry.clear_cache()  # _get_auto_subscription_subtypes
         return super(MailMessageSubtype, self).create(vals_list)
 
     def write(self, vals):
-        self.clear_caches()
+        self.env.registry.clear_cache()  # _get_auto_subscription_subtypes
         return super(MailMessageSubtype, self).write(vals)
 
     def unlink(self):
-        self.clear_caches()
+        self.env.registry.clear_cache()  # _get_auto_subscription_subtypes
         return super(MailMessageSubtype, self).unlink()
 
     @tools.ormcache('model_name')
@@ -89,7 +89,7 @@ class MailMessageSubtype(models.Model):
                 child_ids += subtype.ids
                 if subtype.default:
                     def_ids += subtype.ids
-            elif subtype.relation_field:
+            if subtype.relation_field:
                 parent[subtype.id] = subtype.parent_id.id
                 relation.setdefault(subtype.res_model, set()).add(subtype.relation_field)
             # required for backward compatibility

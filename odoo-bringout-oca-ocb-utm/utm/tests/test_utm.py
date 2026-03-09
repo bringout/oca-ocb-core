@@ -57,6 +57,52 @@ class TestUtm(TestUTMCommon):
         self.assertNotIn(source_4, source_1 | source_2 | source_3 | source_3_2 | source_4_2)
         self.assertEqual(source_4.name, 'Source 4')
 
+    def test_fetch_or_create_medium(self):
+        new_medium = self.env['utm.medium'].create({'name': 'New Medium'})
+        self.env['ir.model.data'].create({
+                'model': 'utm.medium',
+                'module': 'utm',
+                'name': 'utm_medium_new_medium',
+                'res_id': new_medium.id,
+            })
+        # fetch existing medium
+        self.assertEqual(new_medium, self.env.ref('utm.utm_medium_new_medium'))
+        self.assertEqual(new_medium, self.env['utm.medium']._fetch_or_create_utm_medium('New Medium'))
+        self.assertEqual(new_medium, self.env['utm.medium']._fetch_or_create_utm_medium('new medium'))
+        self.assertEqual(new_medium, self.env['utm.medium']._fetch_or_create_utm_medium('new_medium'))
+        self.assertEqual(new_medium, self.env['utm.medium']._fetch_or_create_utm_medium('new.Medium'))
+
+        # create and fetch medium
+        other_medium = self.env['utm.medium']._fetch_or_create_utm_medium('Another Medium')
+        self.assertEqual(other_medium, self.env['utm.medium']._fetch_or_create_utm_medium('Another Medium'))
+        self.assertEqual(other_medium, self.env.ref('utm.utm_medium_another_medium'))
+        self.assertEqual(other_medium, self.env['utm.medium']._fetch_or_create_utm_medium('another medium'))
+
+    def test_find_or_create_record_case(self):
+        """ Find-or-create should be case insensitive to avoid useless duplication """
+        name = "LinkedIn Plus"
+        source = self.env["utm.mixin"]._find_or_create_record("utm.source", name)
+        self.assertEqual(source.name, name)
+
+        # case insensitive equal (also strip spaces)
+        for src in ("linkedin plus", "Linkedin plus", "LINKEDIN PLUS", f"{name} ", f" {name}"):
+            with self.subTest(src=src):
+                found = self.env['utm.mixin']._find_or_create_record("utm.source", src)
+                self.assertEqual(found, source)
+        # not equal, just to be sure we don't do a pure ilike
+        for src in ("LinkedIn", "Plus"):
+            with self.subTest(src=src):
+                found = self.env['utm.mixin']._find_or_create_record("utm.source", src)
+                self.assertNotEqual(found, source)
+
+    def test_find_or_create_with_archived_record(self):
+        archived_campaign = self.env['utm.campaign'].create([{
+            'active': False,
+            'name': 'Archived Campaign',
+        }])
+        campaign = self.env['utm.mixin']._find_or_create_record('utm.campaign', 'Archived Campaign')
+        self.assertEqual(archived_campaign, campaign, "An archived record must be found instead of re-created.")
+
     def test_name_generation(self):
         """Test that the name is always unique. A counter must be added at the
         end of the name if it's not the case."""

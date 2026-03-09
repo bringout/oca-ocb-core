@@ -4,6 +4,7 @@ import {
     edit,
     manuallyDispatchProgrammaticEvent,
     queryAll,
+    queryAllProperties,
     queryFirst,
     setInputFiles,
     waitFor,
@@ -18,6 +19,7 @@ import {
     onRpc,
     pagerNext,
     contains,
+    webModels,
 } from "@web/../tests/web_test_helpers";
 
 import { getOrigin } from "@web/core/utils/urls";
@@ -349,14 +351,7 @@ test("ImageField preview is updated when an image is uploaded", async () => {
     await click(".o_select_file_button");
     await setInputFiles(imageFile);
     // It can take some time to encode the data as a base64 url
-    await runAllTimers();
-    // Wait for a render
-    await animationFrame();
-    expect("div[name=document] img").toHaveAttribute(
-        "data-src",
-        `data:image/png;base64,${MY_IMAGE}`,
-        { message: "the image should have the new src" }
-    );
+    await waitFor(`div[name=document] img[data-src="data:image/png;base64,${MY_IMAGE}"]`);
 });
 
 test("clicking save manually after uploading new image should change the unique of the image src", async () => {
@@ -877,4 +872,25 @@ test("convert image to webp", async () => {
         { message: "image field should not be set" }
     );
     await setFiles(imageFile);
+});
+
+test.tags("desktop");
+test("ImageField with width attribute in list", async () => {
+    const { ResCompany, ResPartner, ResUsers } = webModels;
+    defineModels([ResCompany, ResPartner, ResUsers]);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <list>
+                <field name="document" widget="image" width="30"/>
+                <field name="foo"/>
+            </list>
+        `,
+    });
+
+    expect(".o_data_row").toHaveCount(3);
+    expect(".o_field_widget[name=document] img").toHaveCount(3);
+    expect(queryAllProperties(".o_list_table th[data-name=document]", "offsetWidth")).toEqual([39]);
 });

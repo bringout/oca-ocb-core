@@ -1,26 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* privacy_lookup
-# 
-# Translators:
-# Martin Trigaux, 2022
-# JH CHOI <hwangtog@gmail.com>, 2022
-# Sarah Park, 2023
-# Daye Jeong, 2023
-# 
+# * privacy_lookup
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
-"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 17:52+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"privacy_lookup/ko/>\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__additional_note
@@ -43,9 +41,9 @@ msgid "Archive Selection"
 msgstr "보관 선택"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-#, python-format
 msgid "Archived"
 msgstr "보관됨"
 
@@ -58,6 +56,11 @@ msgstr "보관 가능"
 #: model:ir.model,name:privacy_lookup.model_res_partner
 msgid "Contact"
 msgstr "연락처"
+
+#. module: privacy_lookup
+#: model:ir.model,website_form_label:privacy_lookup.model_res_partner
+msgid "Create a Customer"
+msgstr "고객 만들기"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__create_uid
@@ -76,7 +79,7 @@ msgstr "작성일자"
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__date
 msgid "Date"
-msgstr "일자"
+msgstr "날짜"
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
@@ -89,8 +92,8 @@ msgid "Delete Selection"
 msgstr "삭제 선택"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Deleted"
 msgstr "삭제됨"
 
@@ -98,6 +101,7 @@ msgstr "삭제됨"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__display_name
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__display_name
 msgid "Display Name"
 msgstr "표시명"
 
@@ -124,11 +128,6 @@ msgid "Found Records"
 msgstr "검색된 정보"
 
 #. module: privacy_lookup
-#: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-msgid "Group By"
-msgstr "그룹별"
-
-#. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__user_id
 msgid "Handled By"
 msgstr "담당자"
@@ -142,9 +141,16 @@ msgstr "활성화됨"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__id
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__id
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid "ID"
 msgstr "ID"
+
+#. module: privacy_lookup
+#. odoo-python
+#: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
+msgid "Invalid email address “%s”"
+msgstr "잘못된 이메일 주소입니다. “%s”"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_active
@@ -155,13 +161,6 @@ msgstr "활성화"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_unlinked
 msgid "Is Unlinked"
 msgstr "연결 해제됨"
-
-#. module: privacy_lookup
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line____last_update
-msgid "Last Modified on"
-msgstr "최근 수정일"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__write_uid
@@ -232,12 +231,12 @@ msgid "Privacy Logs"
 msgstr "개인 정보 로그"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #: model:ir.actions.act_window,name:privacy_lookup.action_privacy_lookup_wizard
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_partner
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_user
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
-#, python-format
 msgid "Privacy Lookup"
 msgstr "개인 정보 조회"
 
@@ -292,14 +291,14 @@ msgid "Search References"
 msgstr "참조 검색"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "The record is already unlinked."
 msgstr "레코드가 이미 연결 해제되었습니다."
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/models/privacy_log.py:0
-#, python-format
 msgid "This email address is not valid (%s)"
 msgstr "이 이메일 주소는 올바르지 않습니다 (%s)"
 
@@ -307,12 +306,12 @@ msgstr "이 이메일 주소는 올바르지 않습니다 (%s)"
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid ""
 "This operation is irreversible. Do you wish to proceed to the record "
-"deletion ?"
-msgstr ""
+"deletion?"
+msgstr "이 작업은 되돌릴 수 없습니다. 기록 삭제를 계속 진행하시겠습니까?"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Unarchived"
 msgstr "보관 취소됨"
 
@@ -320,3 +319,6 @@ msgstr "보관 취소됨"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__wizard_id
 msgid "Wizard"
 msgstr "마법사"
+
+#~ msgid "Group By"
+#~ msgstr "그룹별"

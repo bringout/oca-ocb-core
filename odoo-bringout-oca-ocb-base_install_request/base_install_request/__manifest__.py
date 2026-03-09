@@ -9,7 +9,7 @@
 Allow internal users requesting a module installation
 =====================================================
     """,
-    'auto_install': False,
+    'auto_install': True,
     'data':[
         'security/ir.model.access.csv',
         'wizard/base_module_install_request_views.xml',
@@ -17,6 +17,7 @@ Allow internal users requesting a module installation
         'data/mail_templates_module_install.xml',
         'views/ir_module_module_views.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'post_init_hook': '_auto_install_apps'
 }

@@ -5,6 +5,7 @@ import base64
 import json
 import logging
 import requests
+from markupsafe import Markup
 from werkzeug.exceptions import Forbidden
 
 from odoo import http, tools, _
@@ -17,7 +18,7 @@ _logger = logging.getLogger(__name__)
 
 class MailPluginController(http.Controller):
 
-    @http.route('/mail_client_extension/modules/get', type="json", auth="outlook", csrf=False, cors="*")
+    @http.route('/mail_client_extension/modules/get', type="jsonrpc", auth="outlook", csrf=False, cors="*")
     def modules_get(self, **kwargs):
         """
             deprecated as of saas-14.3, not needed for newer versions of the mail plugin but necessary
@@ -26,7 +27,7 @@ class MailPluginController(http.Controller):
         return {'modules': ['contacts', 'crm']}
 
     @http.route('/mail_plugin/partner/enrich_and_create_company',
-                type="json", auth="outlook", cors="*")
+                type="jsonrpc", auth="outlook", cors="*")
     def res_partner_enrich_and_create_company(self, partner_id):
         """
         Route used when the user clicks on the create and enrich partner button
@@ -49,14 +50,14 @@ class MailPluginController(http.Controller):
         company, enrichment_info = self._create_company_from_iap(normalized_email)
 
         if company:
-            partner.write({'parent_id': company})
+            partner.write({'parent_id': company.id})
 
         return {
             'enrichment_info': enrichment_info,
             'company': self._get_company_data(company),
         }
 
-    @http.route('/mail_plugin/partner/enrich_and_update_company', type='json', auth='outlook', cors='*')
+    @http.route('/mail_plugin/partner/enrich_and_update_company', type='jsonrpc', auth='outlook', cors='*')
     def res_partner_enrich_and_update_company(self, partner_id):
         """
         Enriches an existing company using IAP
@@ -117,10 +118,10 @@ class MailPluginController(http.Controller):
 
         partner.write(partner_values)
 
-        partner.message_post_with_view(
+        partner.message_post_with_source(
             'iap_mail.enrich_company',
-            values=iap_data,
-            subtype_id=request.env.ref('mail.mt_note').id,
+            render_values=iap_data,
+            subtype_xmlid='mail.mt_note',
         )
 
         return {
@@ -129,7 +130,7 @@ class MailPluginController(http.Controller):
         }
 
     @http.route(['/mail_client_extension/partner/get', '/mail_plugin/partner/get']
-        , type="json", auth="outlook", cors="*")
+        , type="jsonrpc", auth="outlook", cors="*")
     def res_partner_get(self, email=None, name=None, partner_id=None, **kwargs):
         """
         returns a partner given it's id or an email and a name.
@@ -152,8 +153,8 @@ class MailPluginController(http.Controller):
         if not normalized_email:
             return {'error': _('Bad Email.')}
 
-        notification_email = request.env['ir.mail_server']._get_default_from_address()
-        if normalized_email == tools.email_normalize(notification_email):
+        notification_emails = request.env['mail.alias.domain'].sudo().search([]).mapped('default_from_email')
+        if normalized_email in notification_emails:
             return {
                 'partner': {
                     'name': _('Notification'),
@@ -182,7 +183,7 @@ class MailPluginController(http.Controller):
             }
             company = self._find_existing_company(normalized_email)
 
-            can_create_partner = request.env['res.partner'].check_access_rights('create', raise_exception=False)
+            can_create_partner = request.env['res.partner'].has_access('create')
 
             if not company and can_create_partner:  # create and enrich company
                 company, enrichment_info = self._create_company_from_iap(normalized_email)
@@ -191,7 +192,7 @@ class MailPluginController(http.Controller):
 
         return response
 
-    @http.route('/mail_plugin/partner/search', type="json", auth="outlook", cors="*")
+    @http.route('/mail_plugin/partner/search', type="jsonrpc", auth="outlook", cors="*")
     def res_partners_search(self, search_term, limit=30, **kwargs):
         """
         Used for the plugin search contact functionality where the user types a string query in order to search for
@@ -205,7 +206,7 @@ class MailPluginController(http.Controller):
         if normalized_email:
             filter_domain = [('email_normalized', 'ilike', search_term)]
         else:
-            filter_domain = ['|', '|', ('display_name', 'ilike', search_term), ('ref', '=', search_term),
+            filter_domain = ['|', '|', ('complete_name', 'ilike', search_term), ('ref', '=', search_term),
                              ('email', 'ilike', search_term)]
 
         # Search for the partner based on the email.
@@ -219,15 +220,15 @@ class MailPluginController(http.Controller):
         return {"partners": partners}
 
     @http.route(['/mail_client_extension/partner/create', '/mail_plugin/partner/create'],
-                type="json", auth="outlook", cors="*")
+                type="jsonrpc", auth="outlook", cors="*")
     def res_partner_create(self, email, name, company):
         """
         params email: email of the new partner
         params name: name of the new partner
         params company: parent company id of the new partner
         """
-        notification_email = request.env['ir.mail_server']._get_default_from_address()
-        if tools.email_normalize(email) == tools.email_normalize(notification_email):
+        notification_emails = request.env['mail.alias.domain'].sudo().search([]).mapped('default_from_email')
+        if tools.email_normalize(email) in notification_emails:
             raise Forbidden()
         # old route name "/mail_client_extension/partner/create is deprecated as of saas-14.3,it is not needed for newer
         # versions of the mail plugin but necessary for supporting older versions
@@ -246,7 +247,7 @@ class MailPluginController(http.Controller):
         response = {'id': partner.id}
         return response
 
-    @http.route('/mail_plugin/log_mail_content', type="json", auth="outlook", cors="*")
+    @http.route('/mail_plugin/log_mail_content', type="jsonrpc", auth="outlook", cors="*")
     def log_mail_content(self, model, res_id, message, attachments=None):
         """Log the email on the given record.
 
@@ -265,10 +266,10 @@ class MailPluginController(http.Controller):
                 for name, content in attachments
             ]
 
-        request.env[model].browse(res_id).message_post(body=message, attachments=attachments)
+        request.env[model].browse(res_id).message_post(body=Markup(message), attachments=attachments)
         return True
 
-    @http.route('/mail_plugin/get_translations', type="json", auth="outlook", cors="*")
+    @http.route('/mail_plugin/get_translations', type="jsonrpc", auth="outlook", cors="*")
     def get_translations(self):
         return self._prepare_translations()
 
@@ -313,12 +314,11 @@ class MailPluginController(http.Controller):
             return {'id': -1}
 
         try:
-            company.check_access_rights('read')
-            company.check_access_rule('read')
+            company.check_access('read')
         except AccessError:
             return {'id': company.id, 'name': _('No Access')}
 
-        fields_list = ['id', 'name', 'phone', 'mobile', 'email', 'website']
+        fields_list = ['id', 'name', 'phone', 'email', 'website']
 
         company_values = dict((fname, company[fname]) for fname in fields_list)
         company_values['address'] = {'street': company.street,
@@ -356,7 +356,7 @@ class MailPluginController(http.Controller):
                 if response.ok:
                     new_company_info['image_1920'] = base64.b64encode(response.content)
             except Exception as e:
-                _logger.warning('Download of image for new company %s failed, error %s', new_company_info.name, e)
+                _logger.warning('Download of image for new company %s failed, error %s', new_company_info['name'], e)
 
         if iap_data.get('country_code'):
             country = request.env['res.country'].search([('code', '=', iap_data['country_code'].upper())])
@@ -377,17 +377,17 @@ class MailPluginController(http.Controller):
 
         new_company = request.env['res.partner'].create(new_company_info)
 
-        new_company.message_post_with_view(
+        new_company.message_post_with_source(
             'iap_mail.enrich_company',
-            values=iap_data,
-            subtype_id=request.env.ref('mail.mt_note').id,
+            render_values=iap_data,
+            subtype_xmlid='mail.mt_note',
         )
 
         return new_company, {'type': 'company_created'}
 
     def _get_partner_data(self, partner):
 
-        fields_list = ['id', 'name', 'email', 'phone', 'mobile', 'is_company']
+        fields_list = ['id', 'name', 'email', 'phone', 'is_company']
 
         partner_values = dict((fname, partner[fname]) for fname in fields_list)
         partner_values['image'] = partner.image_128
@@ -395,17 +395,15 @@ class MailPluginController(http.Controller):
         partner_values['enrichment_info'] = None
 
         try:
-            partner.check_access_rights('write')
-            partner.check_access_rule('write')
+            partner.check_access('write')
             partner_values['can_write_on_partner'] = True
         except AccessError:
             partner_values['can_write_on_partner'] = False
 
         if not partner_values['name']:
             # Always ensure that the partner has a name
-            name, email = request.env['res.partner']._parse_partner_name(
-                partner_values['email'])
-            partner_values['name'] = name or email
+            name, email_normalized = tools.parse_contact_from_email(partner_values['email'])
+            partner_values['name'] = name or email_normalized
 
         return partner_values
 
@@ -428,8 +426,7 @@ class MailPluginController(http.Controller):
         return {
             'partner': partner_response,
             'user_companies': request.env.user.company_ids.ids,
-            'can_create_partner': request.env['res.partner'].check_access_rights(
-                'create', raise_exception=False),
+            'can_create_partner': request.env['res.partner'].has_access('create'),
         }
 
     def _mail_content_logging_models_whitelist(self):
@@ -457,8 +454,8 @@ class MailPluginController(http.Controller):
         return ['mail_plugin']
 
     def _prepare_translations(self):
-        lang = request.env['res.users'].browse(request.uid).lang
-        translations_per_module = request.env["ir.http"].get_translations_for_webclient(
+        lang = request.env['res.users'].browse(request.env.uid).lang
+        translations_per_module = request.env["ir.http"]._get_translations_for_webclient(
             self._translation_modules_whitelist(), lang)[0]
         translations_dict = {}
         for module in self._translation_modules_whitelist():

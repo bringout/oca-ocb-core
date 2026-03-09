@@ -6,8 +6,8 @@ from collections import defaultdict
 import itertools
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 
 
 class UtmMixin(models.AbstractModel):
@@ -15,11 +15,11 @@ class UtmMixin(models.AbstractModel):
     _name = 'utm.mixin'
     _description = 'UTM Mixin'
 
-    campaign_id = fields.Many2one('utm.campaign', 'Campaign',
+    campaign_id = fields.Many2one('utm.campaign', 'Campaign', index='btree_not_null',
                                   help="This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
-    source_id = fields.Many2one('utm.source', 'Source',
+    source_id = fields.Many2one('utm.source', 'Source', index='btree_not_null',
                                 help="This is the source of the link, e.g. Search Engine, another domain, or name of email list")
-    medium_id = fields.Many2one('utm.medium', 'Medium',
+    medium_id = fields.Many2one('utm.medium', 'Medium', index='btree_not_null',
                                 help="This is the method of delivery, e.g. Postcard, Email, or Banner Ad")
 
     @api.model
@@ -30,13 +30,13 @@ class UtmMixin(models.AbstractModel):
         if not self.env.is_superuser() and self.env.user.has_group('sales_team.group_sale_salesman'):
             return values
 
-        for url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():
+        for _url_param, field_name, cookie_name in self.env['utm.mixin'].tracking_fields():
             if field_name in fields:
                 field = self._fields[field_name]
                 value = False
                 if request:
                     # ir_http dispatch saves the url params in a cookie
-                    value = request.httprequest.cookies.get(cookie_name)
+                    value = request.cookies.get(cookie_name)
                 # if we receive a string for a many2one, we search/create the id
                 if field.type == 'many2one' and isinstance(value, str) and value:
                     record = self._find_or_create_record(field.comodel_name, value)
@@ -59,15 +59,43 @@ class UtmMixin(models.AbstractModel):
             ('utm_medium', 'medium_id', 'odoo_utm_medium'),
         ]
 
+    def _tracking_models(self):
+        fnames = {fname for _, fname, _ in self.tracking_fields()}
+        return {
+            self._fields[fname].comodel_name
+            for fname in fnames
+            if fname in self._fields and self._fields[fname].type == "many2one"
+        }
+
+    @api.model
+    def find_or_create_record(self, model_name, name):
+        """ Version of ``_find_or_create_record`` used in frontend notably in
+        website_links. For UTM models it calls _find_or_create_record. For other
+        models (as through inheritance custom models could be used notably in
+        website links) it simply calls a create. In the end it relies on
+        standard ACLs, and is mainly a wrapper for UTM models.
+
+        :return: id of newly created or found record. As the magic of call_kw
+            for create is not called anymore we have to manually return an id
+            instead of a recordset.
+        """
+        if model_name in self._tracking_models():
+            record = self._find_or_create_record(model_name, name)
+        else:
+            record = self.env[model_name].create({self.env[model_name]._rec_name: name})
+        return {'id': record.id, 'name': record.display_name}
+
     def _find_or_create_record(self, model_name, name):
         """Based on the model name and on the name of the record, retrieve the corresponding record or create it."""
         Model = self.env[model_name]
 
-        record = Model.search([('name', '=', name)], limit=1)
+        cleaned_name = name.strip()
+        if cleaned_name:
+            record = Model.with_context(active_test=False).search([('name', '=ilike', cleaned_name)], limit=1)
 
         if not record:
             # No record found, create a new one
-            record_values = {'name': name}
+            record_values = {'name': cleaned_name}
             if 'is_auto_campaign' in record._fields:
                 record_values['is_auto_campaign'] = True
             record = Model.create(record_values)
@@ -97,12 +125,9 @@ class UtmMixin(models.AbstractModel):
         names_without_counter = {self._split_name_and_count(name)[0] for name in names}
 
         # Retrieve existing similar names
-        search_domain = expression.OR([[('name', 'ilike', name)] for name in names_without_counter])
+        search_domain = Domain.OR(Domain('name', 'ilike', name) for name in names_without_counter)
         if skip_record_ids:
-            search_domain = expression.AND([
-                [('id', 'not in', skip_record_ids)],
-                search_domain
-            ])
+            search_domain &= Domain('id', 'not in', skip_record_ids)
         existing_names = {vals['name'] for vals in self.env[model_name].search_read(search_domain, ['name'])}
 
         # Counter for each names, based on the names list given in argument

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_sparse_field
-# 
+#
 # Translators:
 # Tina Milas, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
@@ -9,20 +9,21 @@
 # Martin Trigaux, 2022
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2022
 # Bole <bole@dajmi5.com>, 2023
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_base
@@ -37,7 +38,6 @@ msgstr "Logička"
 #. module: base_sparse_field
 #. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
-#, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "Promjena sistema skladištenja za polje \"%s\" nije dozvoljena."
 
@@ -62,6 +62,7 @@ msgid "Data"
 msgstr "Podaci"
 
 #. module: base_sparse_field
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__display_name
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
 msgstr "Naziv"
@@ -82,6 +83,7 @@ msgid "Float"
 msgstr "Decimalni"
 
 #. module: base_sparse_field
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__id
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
 msgid "ID"
 msgstr "ID"
@@ -101,11 +103,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
 msgstr "Cijeli broj"
-
-#. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
-msgid "Last Modified on"
-msgstr "Zadnja promjena"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
@@ -130,7 +127,6 @@ msgstr "Partner"
 #. module: base_sparse_field
 #. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
-#, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Preimenovanje polja \"%s\" nije dopušteno"
 
@@ -147,9 +143,10 @@ msgstr "Serijalizirano polje"
 #. module: base_sparse_field
 #. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
-#, python-format
-msgid "Serialization field %r not found for sparse field %s!"
-msgstr "Serijalizacijsko polje %r nije pronađeno za pomoćno polje %s!"
+msgid ""
+"Serialization field \"%(serialization_field)s\" not found for sparse field %"
+"(sparse_field)s!"
+msgstr ""
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
@@ -165,3 +162,9 @@ msgstr "Dva"
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
 msgid "serialized"
 msgstr "serijalizirano"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Zadnja promjena"
+
+#~ msgid "Serialization field %r not found for sparse field %s!"
+#~ msgstr "Serijalizacijsko polje %r nije pronađeno za pomoćno polje %s!"

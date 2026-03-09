@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_geolocalize
-# 
+# * base_geolocalize
+#
 # Translators:
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2022
@@ -10,20 +10,25 @@
 # Martin Trigaux, 2022
 # Jonas Zinkevicius <jozi@odoo.com>, 2022
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
-# 
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022\n"
-"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-10 13:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
+"base_geolocalize/lt/>\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
+"1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_id
@@ -33,10 +38,10 @@ msgstr "API"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-#, python-format
 msgid ""
 "API key for GeoCoding (Places) required.\n"
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
 msgstr ""
 
 #. module: base_geolocalize
@@ -65,6 +70,11 @@ msgid "Contact"
 msgstr "Kontaktas"
 
 #. module: base_geolocalize
+#: model:ir.model,website_form_label:base_geolocalize.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
@@ -76,15 +86,17 @@ msgstr "Sukurta"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-#, python-format
-msgid "Error with geolocation server:"
-msgstr "Įvyko klaida su geolokacijos serveriu:"
+msgid "Error with geolocation server: %s"
+msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -119,6 +131,9 @@ msgstr "Google žemėlapio API raktas"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -126,11 +141,6 @@ msgstr "ID"
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
 msgid "Key:"
 msgstr ""
-
-#. module: base_geolocalize
-#: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider____last_update
-msgid "Last Modified on"
-msgstr "Paskutinį kartą keista"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__write_uid
@@ -160,8 +170,13 @@ msgstr "Pavadinimas"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
-#, python-format
 msgid "No match found for %(partner_names)s address(es)."
+msgstr ""
+
+#. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "OpenStreetMap calls disabled in testing environment."
 msgstr ""
 
 #. module: base_geolocalize
@@ -172,14 +187,13 @@ msgstr "Partnerio priskyrimas"
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-#, python-format
 msgid "Provider %s is not implemented for geolocation service."
 msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Refresh"
-msgstr ""
+msgstr "Atnaujinti"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -189,13 +203,12 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__tech_name
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__geoloc_provider_techname
-msgid "Tech Name"
-msgstr ""
+msgid "Technical Name"
+msgstr "Techninis pavadinimas"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-#, python-format
 msgid ""
 "Unable to geolocate, received the error:\n"
 "%s\n"
@@ -207,6 +220,12 @@ msgid ""
 msgstr ""
 
 #. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "Unknown"
+msgstr "Nežinomas"
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
 msgstr ""
@@ -214,13 +233,15 @@ msgstr ""
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
 msgid ""
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key"
-" for more information."
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
 msgstr ""
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
-#, python-format
 msgid "Warning"
 msgstr "Įspėjimas"
+
+#~ msgid "Error with geolocation server:"
+#~ msgstr "Įvyko klaida su geolokacijos serveriu:"

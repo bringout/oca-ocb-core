@@ -1,47 +1,72 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
-    rating_ids = fields.One2many('rating.rating', 'message_id', groups='base.group_user', string='Related ratings')
+    rating_ids = fields.One2many("rating.rating", "message_id", string="Related ratings")
+    rating_id = fields.Many2one("rating.rating", compute="_compute_rating_id")
     rating_value = fields.Float(
         'Rating Value', compute='_compute_rating_value', compute_sudo=True,
         store=False, search='_search_rating_value')
 
+    @api.depends("rating_ids.consumed")
+    def _compute_rating_id(self):
+        for message in self:
+            message.rating_id = message.rating_ids.filtered(lambda rating: rating.consumed).sorted(
+                "create_date", reverse=True
+            )[:1]
+
     @api.depends('rating_ids', 'rating_ids.rating')
     def _compute_rating_value(self):
-        ratings = self.env['rating.rating'].search([('message_id', 'in', self.ids), ('consumed', '=', True)], order='create_date DESC')
-        mapping = dict((r.message_id.id, r.rating) for r in ratings)
         for message in self:
-            message.rating_value = mapping.get(message.id, 0.0)
+            message.rating_value = message.rating_id.rating if message.rating_id else 0.0
 
     def _search_rating_value(self, operator, operand):
-        ratings = self.env['rating.rating'].sudo().search([
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        ratings = self.env['rating.rating'].sudo()._search([
             ('rating', operator, operand),
-            ('message_id', '!=', False)
+            ('message_id', '!=', False),
+            ('consumed', '=', True),
         ])
-        return [('id', 'in', ratings.mapped('message_id').ids)]
+        domain = Domain("id", "in", ratings.subselect("message_id"))
+        if operator == "in" and 0 in operand:
+            return domain | Domain("rating_ids", "=", False)
+        return domain
 
-    def message_format(self, format_reply=True):
-        message_values = super().message_format(format_reply=format_reply)
-        rating_mixin_messages = self.filtered(lambda message:
-            message.model
-            and message.res_id
-            and issubclass(self.pool[message.model], self.pool['rating.mixin'])
-        )
-        if rating_mixin_messages:
-            ratings = self.env['rating.rating'].sudo().search([('message_id', 'in', rating_mixin_messages.ids), ('consumed', '=', True)])
-            rating_by_message_id = dict((r.message_id.id, r) for r in ratings)
-            for vals in message_values:
-                if vals['id'] in rating_by_message_id:
-                    rating = rating_by_message_id[vals['id']]
-                    vals['rating'] = {
-                        'id': rating.id,
-                        'ratingImageUrl': rating.rating_image_url,
-                        'ratingText': rating.rating_text,
-                    }
-        return message_values
+    def _to_store_defaults(self, target):
+        # sudo: mail.message - guest and portal user can receive rating of accessible message
+        return super()._to_store_defaults(target) + [
+            Store.One("rating_id", sudo=True),
+            "record_rating",
+        ]
+
+    def _to_store(self, store: Store, fields, **kwargs):
+        super()._to_store(store, [f for f in fields if f != "record_rating"], **kwargs)
+        if "record_rating" in fields:
+            for records in self._records_by_model_name().values():
+                if (
+                    issubclass(self.pool[records._name], self.pool["rating.mixin"])
+                    and records._has_field_access(records._fields["rating_avg"], 'read')
+                ):
+                    all_stats = {}
+                    if records._allow_publish_rating_stats():
+                        all_stats = records._rating_get_stats_per_record()
+                    record_fields = [
+                        "rating_avg",
+                        "rating_count",
+                        Store.Attr(
+                            "rating_stats",
+                            lambda record, all_stats=all_stats: all_stats.get(record.id),
+                            predicate=lambda record: record._allow_publish_rating_stats(),
+                        ),
+                    ]
+                    store.add(records, record_fields, as_thread=True)
+
+    def _is_empty(self):
+        return super()._is_empty() and not self.rating_id

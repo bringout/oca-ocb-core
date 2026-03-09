@@ -2,9 +2,9 @@
 
 from hashlib import sha1
 
-from odoo import fields
+from odoo import api, fields
 from odoo.http import request
-from odoo.tools import consteq, float_round, ustr
+from odoo.tools import consteq, float_round
 from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
@@ -12,7 +12,7 @@ from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 
 # Access token management
 
-def generate_access_token(*values):
+def generate_access_token(*values, env=None):
     """ Generate an access token based on the provided values.
 
     The token allows to later verify the validity of a request, based on a given set of values.
@@ -21,11 +21,14 @@ def generate_access_token(*values):
     All values must be convertible to a string.
 
     :param list values: The values to use for the generation of the token
+    :param api.Environment env: The environment to use for the generation of the token
     :return: The generated access token
     :rtype: str
     """
+    env = env or (request and request.env)
+    assert isinstance(env, api.Environment), "Environment required to generate access token."
     token_str = '|'.join(str(val) for val in values)
-    access_token = hmac_tool(request.env(su=True), 'generate_access_token', token_str)
+    access_token = hmac_tool(env(su=True), 'generate_access_token', token_str)
     return access_token
 
 
@@ -41,7 +44,52 @@ def check_access_token(access_token, *values):
     :rtype: bool
     """
     authentic_token = generate_access_token(*values)
-    return access_token and consteq(ustr(access_token), authentic_token)
+    return access_token and consteq(access_token, authentic_token)
+
+
+# Availability report.
+
+def add_to_report(report, records, available=True, reason=''):
+    """ Add records to the report with the provided values.
+
+        Structure of the report:
+        report = {
+            'providers': {
+                provider_record : {
+                    'available': true|false,
+                    'reason': "",
+                },
+            },
+            'payment_methods': {
+                pm_record : {
+                    'available': true|false,
+                    'reason': "",
+                    'supported_providers': [(provider_record, report['providers'][p]['available'])],
+                },
+            },
+        }
+
+    :param dict report: The availability report for providers and payment methods.
+    :param payment.provider|payment.method records: The records to add to the report.
+    :param bool available: Whether the records are available.
+    :param str reason: The reason for which records are not available, if any.
+    :return: None
+    """
+    if report is None or not records:  # The report might not be initialized, or no records to add.
+        return
+
+    category = 'providers' if records._name == 'payment.provider' else 'payment_methods'
+    report.setdefault(category, {})
+    for r in records:
+        report[category][r] = {
+            'available': available,
+            'reason': reason,
+        }
+        if category == 'payment_methods' and 'providers' in report:
+            report[category][r]['supported_providers'] = [
+                (p, report['providers'][p]['available'])
+                for p in r.provider_ids if p in report['providers']
+            ]
 
 
 # Transaction values formatting
@@ -90,9 +138,8 @@ def to_major_currency_units(minor_amount, currency, arbitrary_decimal_number=Non
     :return: The amount in major units of its currency
     :rtype: int
     """
-    currency.ensure_one()
-
     if arbitrary_decimal_number is None:
+        currency.ensure_one()
         decimal_number = CURRENCY_MINOR_UNITS.get(currency.name, currency.decimal_places)
     else:
         decimal_number = arbitrary_decimal_number
@@ -115,12 +162,14 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
     :return: The amount in minor units of its currency
     :rtype: int
     """
-    if arbitrary_decimal_number is not None:
-        decimal_number = arbitrary_decimal_number
-    else:
+    if arbitrary_decimal_number is None:
         currency.ensure_one()
         decimal_number = CURRENCY_MINOR_UNITS.get(currency.name, currency.decimal_places)
-    return int(float_round(major_amount * (10**decimal_number), precision_digits=0))
+    else:
+        decimal_number = arbitrary_decimal_number
+    return int(
+        float_round(major_amount * (10**decimal_number), precision_digits=0, rounding_method='DOWN')
+    )
 
 
 # Partner values formatting
@@ -145,7 +194,11 @@ def split_partner_name(partner_name):
     :return: The splitted first name and last name
     :rtype: tuple
     """
-    return " ".join(partner_name.split()[:-1]), partner_name.split()[-1]
+    parts = partner_name.split()
+    if len(parts) == 1:
+        return parts[0], ""
+
+    return " ".join(parts[:-1]), parts[-1]
 
 
 # Security
@@ -163,8 +216,7 @@ def check_rights_on_recordset(recordset):
     :param recordset: The recordset for which the rights should be checked.
     :return: None
     """
-    recordset.check_access_rights('write')
-    recordset.check_access_rule('write')
+    recordset.check_access('write')
 
 
 # Idempotency

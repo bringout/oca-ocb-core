@@ -8,19 +8,17 @@
     'summary': 'Add OdooBot in discussions',
     'website': 'https://www.odoo.com/app/discuss',
     'depends': ['mail'],
-    'auto_install': False,
+    'auto_install': True,
     'installable': True,
     'data': [
         'views/res_users_views.xml',
         'data/mailbot_data.xml',
-    ],
-    'demo': [
-        'data/mailbot_demo.xml',
     ],
     'assets': {
         'web.assets_backend': [
             'mail_bot/static/src/scss/odoobot_style.scss',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -44,6 +44,23 @@ class TestMailGroupMessage(TestMailListCommon):
         # 42 -1 as the sender doesn't get an email
         self.assertEqual(len(mails), 41, 'Should have send one and only one email per recipient')
 
+    def test_group_closed(self):
+        """Test that the email will bounce if the group is closed."""
+        self.test_group.is_closed = True
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                GROUP_TEMPLATE, self.test_group_member_1.email,
+                self.test_group.alias_id.display_name,
+                subject='Test subject', target_model='mail.group')
+
+        self.assertSentEmail(
+            self.mailer_daemon_email,
+            ['whatever-2a840@postmaster.twitter.com'],
+            subject='Re: Test subject',
+        )
+        self.assertIn('The mailing list you are trying to reach has been closed', self._mails[0]['body'])
+
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail_group.models.mail_group_message')
     def test_email_duplicated(self):
         """ Test gateway does not accept two times same incoming email """
@@ -89,11 +106,11 @@ class TestMailGroupMessage(TestMailListCommon):
 
         # Message pending
         with self.assertRaises(AccessError, msg='Portal should not have access to pending messages'):
-            self.test_group_msg_1_pending.with_user(self.user_portal).check_access_rule('read')
+            self.test_group_msg_1_pending.with_user(self.user_portal).check_access('read')
 
-        self.user_portal.groups_id |= user_group
+        self.user_portal.group_ids |= user_group
         with self.assertRaises(AccessError, msg='Non moderator should have access to only accepted message'):
-            self.test_group_msg_1_pending.with_user(self.user_portal).check_access_rule('read')
+            self.test_group_msg_1_pending.with_user(self.user_portal).check_access('read')
 
         self.test_group_msg_1_pending.invalidate_recordset()
         self.assertEqual(self.test_group_msg_1_pending.with_user(self.user_employee).moderation_status, 'pending_moderation',
@@ -104,9 +121,9 @@ class TestMailGroupMessage(TestMailListCommon):
         self.assertEqual(self.test_group_msg_2_accepted.with_user(self.user_portal).moderation_status, 'accepted',
                          msg='Portal should have access to accepted messages')
 
-        self.user_portal.groups_id -= user_group
+        self.user_portal.group_ids -= user_group
         with self.assertRaises(AccessError, msg='User not in the group should not have access to accepted message'):
-            self.test_group_msg_2_accepted.with_user(self.user_portal).check_access_rule('read')
+            self.test_group_msg_2_accepted.with_user(self.user_portal).check_access('read')
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     def test_mail_group_message_security_public(self):
@@ -114,10 +131,10 @@ class TestMailGroupMessage(TestMailListCommon):
 
         # Message pending
         with self.assertRaises(AccessError, msg='Portal should not have access to pending messages'):
-            self.test_group_msg_1_pending.with_user(self.user_portal).check_access_rule('read')
+            self.test_group_msg_1_pending.with_user(self.user_portal).check_access('read')
 
         with self.assertRaises(AccessError, msg='Non moderator should have access to only accepted message'):
-            self.test_group_msg_1_pending.with_user(self.user_employee_2).check_access_rule('read')
+            self.test_group_msg_1_pending.with_user(self.user_employee_2).check_access('read')
 
         self.test_group_msg_1_pending.invalidate_recordset()
         self.assertEqual(self.test_group_msg_1_pending.with_user(self.user_employee).moderation_status, 'pending_moderation',
@@ -125,7 +142,7 @@ class TestMailGroupMessage(TestMailListCommon):
 
         # Message rejected
         with self.assertRaises(AccessError, msg='Portal should not have access to pending messages'):
-            self.test_group_msg_1_pending.with_user(self.user_portal).check_access_rule('read')
+            self.test_group_msg_1_pending.with_user(self.user_portal).check_access('read')
 
         # Message accepted
         self.assertEqual(self.test_group_msg_2_accepted.with_user(self.user_portal).moderation_status, 'accepted',

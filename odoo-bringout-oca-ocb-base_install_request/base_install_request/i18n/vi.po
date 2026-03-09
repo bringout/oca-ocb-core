@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_install_request
-# 
-# Translators:
-# Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
-# 
+# * base_install_request
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
-"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-11-25 03:07+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"base_install_request/vi/>\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_install_request
 #: model:mail.template,body_html:base_install_request.mail_template_base_install_request
@@ -26,51 +26,74 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hello,\n"
-"        <br><br>\n"
-"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"></span> has requested to activate the <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"></span> module. This module is included in your subscription. It has <span style=\"color: #875A7B; font-weight: bold;\">no extra cost</span>, but an administrator role is required to activate it.\n"
-"        <br><br>\n"
-"        <blockquote>\n"
-"            <t t-out=\"object.body_html\"></t>\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> "
+"has requested to activate the <span style=\"font-weight: bold;\" t-"
+"out=\"object.module_id.shortdesc\"/> module.\n"
+"        <br/><br/>\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-"
+"quote=\"1\">\n"
+"            <t t-out=\"object.body_html\"/>\n"
 "        </blockquote>\n"
-"        <br><br>\n"
-"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/web?#action=base_install_request.action_base_module_install_review&amp;active_id={{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
-"        <br><br>\n"
+"        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
+"        <a t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"padding:8px 16px 8px 16px; text-decoration:none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-"
+"base_install_request.action_base_module_install_review?"
+"menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
+"        <br/><br/>\n"
 "        Thanks,\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
 "        </t>\n"
-"        <br><br>\n"
-"    </p>\n"
+"        <br/><br/>\n"
+"    \n"
 "</div>\n"
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Xin chào,\n"
-"        <br><br>\n"
-"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"></span> đã yêu cầu kích hoạt phân hệ <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"></span>. Phân hệ này nằm trong gói đăng ký của bạn. Do đó, bạn <span style=\"color: #875A7B; font-weight: bold;\">không cần trả thêm phí</span>, nhưng chỉ người có vai trò quản trị viên mới có thể kích hoạt phân hệ.\n"
-"        <br><br>\n"
-"        <blockquote>\n"
-"            <t t-out=\"object.body_html\"></t>\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> "
+"đã yêu cầu kích hoạt phân hệ <span style=\"font-weight: bold;\" t-"
+"out=\"object.module_id.shortdesc\"/>.\n"
+"        <br/><br/>\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-"
+"quote=\"1\">\n"
+"            <t t-out=\"object.body_html\"/>\n"
 "        </blockquote>\n"
-"        <br><br>\n"
-"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/web?#action=base_install_request.action_base_module_install_review&amp;active_id={{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">Xem lại yêu cầu</a>\n"
-"        <br><br>\n"
-"        Xin cảm ơn!\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
+"        <a t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"padding:8px 16px 8px 16px; text-decoration:none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-"
+"base_install_request.action_base_module_install_review?"
+"menu_id={{ ctx['menu_id'] }}\">Xem lại yêu cầu</a>\n"
+"        <br/><br/>\n"
+"        Cảm ơn!\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
 "        </t>\n"
-"        <br><br>\n"
-"    </p>\n"
+"        <br/><br/>\n"
+"    \n"
 "</div>\n"
 "            "
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/models/ir_module_module.py:0
-#, python-format
 msgid "Activation Request of \"%s\""
 msgstr "Yêu cầu kích hoạt của \"%s\""
 
@@ -105,12 +128,14 @@ msgstr "Ứng dụng phụ thuộc"
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__display_name
+#: model:ir.model.fields,field_description:base_install_request.field_ir_module_module__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__id
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__id
+#: model:ir.model.fields,field_description:base_install_request.field_ir_module_module__id
 msgid "ID"
 msgstr "ID"
 
@@ -120,16 +145,10 @@ msgid "Install App"
 msgstr "Cài đặt ứng dụng"
 
 #. module: base_install_request
-#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request____last_update
-#: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review____last_update
-msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
-
-#. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_date
@@ -147,7 +166,7 @@ msgstr "Thư: Yêu cầu cài đặt"
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__module_id
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_id
 msgid "Module"
-msgstr "Mô đun"
+msgstr "Phân hệ"
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
@@ -170,14 +189,8 @@ msgid "Modules Description"
 msgstr "Mô tả phân hệ"
 
 #. module: base_install_request
-#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
-msgid "No extra cost, this application is free."
-msgstr "Bạn không cần trả thêm phí, đây là một ứng dụng miễn phí."
-
-#. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
-#, python-format
 msgid "No module selected."
 msgstr "Không có phân hệ nào được chọn."
 
@@ -205,19 +218,8 @@ msgstr "Các ứng dụng sau sẽ được cài đặt:"
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
-#, python-format
 msgid "The module is already installed."
 msgstr "Phân hệ này đã được cài đặt."
-
-#. module: base_install_request
-#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
-msgid ""
-"This app is included in your subscription. It's free to activate, but only "
-"an administrator can do it. Fill this form to send an activation request."
-msgstr ""
-"Ứng dụng này nằm trong gói đăng ký của bạn. Việc kích hoạt phân hệ là hoàn "
-"toàn miễn phí, nhưng chỉ quản trị viên mới có thể thực hiện việc đó. Điền "
-"vào biểu mẫu này để gửi yêu cầu kích hoạt."
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
@@ -226,8 +228,8 @@ msgstr "Người dùng"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
-msgid "Why do you need this module ?"
-msgstr ""
+msgid "Why do you need this module?"
+msgstr "Vì sao bạn cần phân hệ này?"
 
 #. module: base_install_request
 #: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
@@ -237,7 +239,6 @@ msgstr "Bạn chuẩn bị cài đặt một ứng dụng bổ sung"
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
-#, python-format
 msgid "Your request has been successfully sent"
 msgstr "Yêu cầu của bạn đã được gửi đi thành công"
 
@@ -249,4 +250,4 @@ msgid ""
 msgstr ""
 "VD: Tôi muốn sử dụng phân hệ Marketing qua SMS để tổ chức quảng bá các sự "
 "kiện nội bộ và triển lãm của chúng tôi. Tôi cần quyền truy cập cho 3 người "
-"trong đội ngũ của mình."
+"trong bộ phận của mình."

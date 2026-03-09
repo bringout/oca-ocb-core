@@ -8,7 +8,7 @@ from odoo.http import Controller, route, request
 
 class Board(Controller):
 
-    @route('/board/add_to_dashboard', type='json', auth='user')
+    @route('/board/add_to_dashboard', type='jsonrpc', auth='user')
     def add_to_dashboard(self, action_id, context_to_save, domain, view_mode, name=''):
         # Retrieve the 'My Dashboard' action from its xmlid
         action = request.env.ref('board.open_board_my_dash_action').sudo()
@@ -34,7 +34,7 @@ class Board(Controller):
                     })
                     column.insert(0, new_action)
                     arch = ElementTree.tostring(board_arch, encoding='unicode')
-                    request.env['ir.ui.view.custom'].create({
+                    request.env['ir.ui.view.custom'].sudo().create({
                         'user_id': request.session.uid,
                         'ref_id': view_id,
                         'arch': arch

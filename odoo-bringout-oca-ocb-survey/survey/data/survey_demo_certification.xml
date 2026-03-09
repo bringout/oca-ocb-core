@@ -21,6 +21,7 @@
             <field name="certification_give_badge">True</field>
             <field name="certification_badge_id" ref="vendor_certification_badge"/>
             <field name="background_image" type="base64" file="survey/static/src/img/survey_background_2.jpg"/>
+            <field name="lang_ids" eval="False"/>
         </record>
         <!-- Page 1 -->
         <record model="survey.question" id="vendor_certification_page_1">
@@ -336,7 +337,7 @@
             <field name="is_scored_question" eval="True" />
             <field name="answer_datetime">2021-01-07 00:00:01</field>
             <field name="answer_score">1.0</field>
-            <field name="question_placeholder">Beware of leap years !</field>
+            <field name="question_placeholder">Beware of leap years!</field>
         </record>
         <!-- Question and predefined answer 12 -->
         <record model="survey.question" id="vendor_certification_page_3_question_4">

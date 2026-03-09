@@ -3,7 +3,7 @@
 {
     'name': 'Web Routing',
     'summary': 'Web Routing',
-    'sequence': '9100',
+    'sequence': 9100,
     'category': 'Hidden',
     'description': """
 Proposes advanced routing options not available in web or base to keep
@@ -15,5 +15,6 @@ base modules simple.
     ],
     'post_init_hook': '_post_init_hook',
     'depends': ['web'],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

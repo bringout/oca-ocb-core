@@ -1,34 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* link_tracker
-# 
+#
 # Translators:
 # Hamid Darabi, 2023
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Hanna Kheradroosta, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2023\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:0
-#: code:addons/link_tracker/models/link_tracker.py:0
-#, python-format
-msgid "%r is not a valid link, links cannot redirect to the current page."
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
+msgid "# Clicks"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
+msgid ""
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "<span class=\"o_stat_text\">Visit Page</span>"
 msgstr ""
 
 #. module: link_tracker
@@ -72,10 +80,25 @@ msgid "Codes"
 msgstr "کدها"
 
 #. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid ""
+"Combinations of Link Tracker values (URL, campaign, medium, source, and "
+"label) must be unique.\n"
+"The following combinations are already used: \n"
+"- %(error_lines)s"
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__country_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
 msgid "Country"
 msgstr "کشور"
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
+msgid "Create Date"
+msgstr ""
 
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
@@ -98,9 +121,8 @@ msgid "Created on"
 msgstr "ایجادشده در"
 
 #. module: link_tracker
+#. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
-#: code:addons/link_tracker/models/link_tracker.py:0
-#, python-format
 msgid "Creating a Link Tracker without URL is not possible"
 msgstr ""
 
@@ -108,14 +130,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__display_name
+#: model:ir.model.fields,field_description:link_tracker.field_mail_render_mixin__display_name
+#: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
-msgid "Group By"
-msgstr "گروه‌بندی برمبنای"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url_host
@@ -126,6 +144,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__id
+#: model:ir.model.fields,field_description:link_tracker.field_mail_render_mixin__id
+#: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__id
 msgid "ID"
 msgstr "شناسه"
 
@@ -133,13 +153,6 @@ msgstr "شناسه"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__ip
 msgid "Internet Protocol"
 msgstr ""
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker____last_update
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click____last_update
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code____last_update
-msgid "Last Modified on"
-msgstr "آخرین اصلاح در"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__write_uid
@@ -159,6 +172,7 @@ msgstr "آخرین بروز رسانی در"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__link_id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__link_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Link"
 msgstr "لینک"
 
@@ -176,6 +190,9 @@ msgstr ""
 #: model:ir.actions.act_window,name:link_tracker.link_tracker_action
 #: model:ir.model,name:link_tracker.model_link_tracker
 #: model:ir.ui.menu,name:link_tracker.link_tracker_menu_main
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
 msgid "Link Tracker"
 msgstr "پیگیری لینک"
 
@@ -190,19 +207,11 @@ msgid "Link Tracker Code"
 msgstr ""
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:0
-#, python-format
-msgid ""
-"Link Tracker values (URL, campaign, medium and source) must be unique (%s, "
-"%s, %s, %s)."
-msgstr ""
-
-#. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
 msgid "Links"
-msgstr "لینک ها"
+msgstr ""
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_tree
@@ -212,7 +221,7 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr "Mail Render Mixin"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
@@ -241,6 +250,12 @@ msgid "Page Title"
 msgstr "عنوان صفحه"
 
 #. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid "Please enter valid short URL code."
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__redirected_url
 msgid "Redirected URL"
 msgstr ""
@@ -267,6 +282,11 @@ msgid "Statistics of Clicks"
 msgstr ""
 
 #. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "Target Link"
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__url
 msgid "Target URL"
 msgstr ""
@@ -275,11 +295,11 @@ msgstr ""
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
 #: model:ir.model.fields,help:link_tracker.field_link_tracker_click__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts, "
+"e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"این یک نام است که کمک می کند تا مسیر شما را از تلاش کمپین‌های مختلف، به "
-"عنوان مثال: Fall_Drive، Christmas_Special"
+"این یک نام است که کمک می کند تا مسیر شما را از تلاش کمپین‌های مختلف، به عنوان "
+"مثال: Fall_Drive، Christmas_Special"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
@@ -292,11 +312,6 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr "این منبع لینک است، مانند موتور جستجو، دامنه دیگر، یا نام لیست ایمیل"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
-msgid "Title and URL"
-msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url
@@ -313,11 +328,6 @@ msgstr ""
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
-msgid "URL"
-msgstr "URL"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "UTM"
 msgstr ""
 
@@ -329,13 +339,12 @@ msgstr "کمپین UTM"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
 msgid "Visit Page"
 msgstr ""
 
 #. module: link_tracker
+#. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
-#, python-format
 msgid "Visit Webpage"
 msgstr ""
 
@@ -343,3 +352,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Website Link"
 msgstr "لینک وبسایت"
+
+#. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid "“%s” is not a valid link, links cannot redirect to the current page."
+msgstr ""
+
+#~ msgid "Group By"
+#~ msgstr "گروه‌بندی برمبنای"
+
+#~ msgid "URL"
+#~ msgstr "URL"

@@ -1,28 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* data_recycle
-# 
-# Translators:
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Yihya Hugirat <hugirat@gmail.com>, 2022
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
-# Ha Ketem <haketem@gmail.com>, 2024
-# or balmas, 2025
-# 
+# * data_recycle
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: or balmas, 2025\n"
-"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2025-11-16 15:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/"
+"data_recycle/he/>\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification
@@ -36,7 +32,6 @@ msgstr ""
 #. module: data_recycle
 #. odoo-python
 #: code:addons/data_recycle/models/data_recycle_record.py:0
-#, python-format
 msgid "**Record Deleted**"
 msgstr "**רשומה נמחקה**"
 
@@ -96,9 +91,14 @@ msgstr "ניקוי נתונים"
 
 #. module: data_recycle
 #: model:ir.actions.server,name:data_recycle.ir_cron_clean_records_ir_actions_server
-#: model:ir.cron,cron_name:data_recycle.ir_cron_clean_records
 msgid "Data Recycle: Clean Records"
 msgstr "מחזור נתונים: מחיקת רשומות"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+msgid "Data to Recycle"
+msgstr "נתונים למחזור"
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__days
@@ -158,12 +158,6 @@ msgstr "מזהה"
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__include_archived
 msgid "Include Archived"
 msgstr "כלול בארכיון"
-
-#. module: data_recycle
-#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model____last_update
-#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record____last_update
-msgid "Last Modified on"
-msgstr "שינוי אחרון ב"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__last_notification
@@ -306,7 +300,7 @@ msgstr "ממחזר רשומה"
 #. module: data_recycle
 #: model:ir.actions.act_window,name:data_recycle.action_data_recycle_config
 msgid "Recyle Records Rules"
-msgstr "כללי מיחזור רשומות "
+msgstr "כללי מיחזור רשומות"
 
 #. module: data_recycle
 #: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
@@ -331,7 +325,6 @@ msgstr "תדירות ההודעות צריכה להיות יותר מ-0"
 #. module: data_recycle
 #. odoo-python
 #: code:addons/data_recycle/models/data_recycle_model.py:0
-#, python-format
 msgid "This model doesn't manage archived records. Only deletion is possible."
 msgstr "מודל זה לא מנהל רשומות בארכיון. ניתן רק למחוק."
 
@@ -343,14 +336,12 @@ msgstr "שדה זמן"
 #. module: data_recycle
 #. odoo-python
 #: code:addons/data_recycle/models/data_recycle_record.py:0
-#, python-format
 msgid "Undefined Name"
 msgstr "שם לא מוגדר"
 
 #. module: data_recycle
 #. odoo-javascript
 #: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
-#, python-format
 msgid "Unselect"
 msgstr "הסרת בחירה"
 
@@ -358,7 +349,6 @@ msgstr "הסרת בחירה"
 #. odoo-javascript
 #: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
-#, python-format
 msgid "Validate"
 msgstr "אשר"
 

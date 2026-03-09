@@ -1,34 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* link_tracker
-# 
+# * link_tracker
+#
 # Translators:
 # Odoo Thaidev <odoothaidev@gmail.com>, 2022
 # Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2022
-# Rasareeyar Lappiam, 2024
-# 
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 21:15+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
+"link_tracker/th/>\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:0
-#: code:addons/link_tracker/models/link_tracker.py:0
-#, python-format
-msgid "%r is not a valid link, links cannot redirect to the current page."
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
+msgid "# Clicks"
 msgstr ""
-"%r ไม่ใช่ลิงก์ที่ถูกต้อง ลิงก์ไม่สามารถเปลี่ยนเส้นทางไปยังหน้าปัจจุบันได้"
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
+msgid ""
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"คลิก\" role=\"รูปภาพ\"/>"
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "<span class=\"o_stat_text\">Visit Page</span>"
+msgstr "<span class=\"o_stat_text\">เยี่ยมชมหน้า</span>"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__absolute_url
@@ -71,10 +81,28 @@ msgid "Codes"
 msgstr "โค้ด"
 
 #. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid ""
+"Combinations of Link Tracker values (URL, campaign, medium, source, and "
+"label) must be unique.\n"
+"The following combinations are already used: \n"
+"- %(error_lines)s"
+msgstr ""
+"ชุดค่าผสมของค่าตัวติดตามลิงก์ (URL, แคมเปญ, สื่อ, แหล่งที่มาและป้ายกำกับ) จะต้องไม่ซ้ำกัน\n"
+"มีการใช้ชุดค่าผสมต่อไปนี้แล้ว: \n"
+"- %(error_lines)s"
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__country_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
 msgid "Country"
 msgstr "ประเทศ"
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
+msgid "Create Date"
+msgstr ""
 
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
@@ -97,9 +125,8 @@ msgid "Created on"
 msgstr "สร้างเมื่อ"
 
 #. module: link_tracker
+#. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
-#: code:addons/link_tracker/models/link_tracker.py:0
-#, python-format
 msgid "Creating a Link Tracker without URL is not possible"
 msgstr "ไม่สามารถสร้างตัวติดตามลิงก์โดยไม่มี URL ได้"
 
@@ -107,14 +134,10 @@ msgstr "ไม่สามารถสร้างตัวติดตามล
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__display_name
+#: model:ir.model.fields,field_description:link_tracker.field_mail_render_mixin__display_name
+#: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
-msgid "Group By"
-msgstr "กลุ่มโดย"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url_host
@@ -125,6 +148,8 @@ msgstr "โฮสต์ของ URL แบบสั้น"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__id
+#: model:ir.model.fields,field_description:link_tracker.field_mail_render_mixin__id
+#: model:ir.model.fields,field_description:link_tracker.field_utm_campaign__id
 msgid "ID"
 msgstr "ไอดี"
 
@@ -132,13 +157,6 @@ msgstr "ไอดี"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__ip
 msgid "Internet Protocol"
 msgstr "มาตรการอินเทอร์เน็ต"
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker____last_update
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click____last_update
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code____last_update
-msgid "Last Modified on"
-msgstr "แก้ไขครั้งล่าสุดเมื่อ"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__write_uid
@@ -158,6 +176,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__link_id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__link_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Link"
 msgstr "ลิงก์"
 
@@ -175,6 +194,9 @@ msgstr "การคลิ๊กลิงค์"
 #: model:ir.actions.act_window,name:link_tracker.link_tracker_action
 #: model:ir.model,name:link_tracker.model_link_tracker
 #: model:ir.ui.menu,name:link_tracker.link_tracker_menu_main
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
 msgid "Link Tracker"
 msgstr "ตัวติดตามลิงก์"
 
@@ -187,16 +209,6 @@ msgstr "ระบบติดตามคลิ๊ก"
 #: model:ir.model,name:link_tracker.model_link_tracker_code
 msgid "Link Tracker Code"
 msgstr "ลิงค์รหัสติดตาม"
-
-#. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:0
-#, python-format
-msgid ""
-"Link Tracker values (URL, campaign, medium and source) must be unique (%s, "
-"%s, %s, %s)."
-msgstr ""
-"ค่าตัวติดตามลิงก์ (URL, แคมเปญ, สื่อและแหล่งที่มา) จะต้องไม่ซ้ำกัน (%s, %s, "
-"%s, %s)."
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
@@ -219,7 +231,7 @@ msgstr "มิกซ์อินการแสดงผลอีเมล"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Medium"
-msgstr "สื่อกลาง"
+msgstr "วิธีที่เข้ามา"
 
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_click_action_statistics
@@ -240,6 +252,12 @@ msgstr "จำนวนคลิกที่สร้างโดยแคมเ
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__title
 msgid "Page Title"
 msgstr "หัวข้อเพจ"
+
+#. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid "Please enter valid short URL code."
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__redirected_url
@@ -268,6 +286,11 @@ msgid "Statistics of Clicks"
 msgstr "สถิติการคลิก"
 
 #. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "Target Link"
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__url
 msgid "Target URL"
 msgstr "URL เป้าหมาย"
@@ -276,29 +299,22 @@ msgstr "URL เป้าหมาย"
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
 #: model:ir.model.fields,help:link_tracker.field_link_tracker_click__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts, "
+"e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"ชื่อนี้ช่วยให้คุณติดตามความพยายามของแคมเปญต่าง ๆ เช่น Fall_Drive, "
-"Christmas_Special"
+"ชื่อนี้ช่วยให้คุณติดตามความพยายามของแคมเปญต่าง ๆ เช่น Fall_Drive, Christmas_Special"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "นี้เป็นวิธีการจัดส่งเช่น โปสการ์ด อีเมล หรือโฆษณาแบนเนอร์"
+msgstr "นี้เป็นวิธีการจัดส่งเช่น โปสการ์ด อีเมล หรือป้ายโฆษณา"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr ""
-"นี่เป็นที่มาของลิงก์ เช่น เครื่องมือค้นหา โดเมนอื่นๆ หรือชื่อรายการอีเมล"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
-msgid "Title and URL"
-msgstr "ชื่อเรื่องและ URL"
+msgstr "นี่เป็นที่มาของลิงก์ เช่น เครื่องมือค้นหา โดเมนอื่นๆ หรือชื่อรายการอีเมล"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url
@@ -315,11 +331,6 @@ msgstr "ตัวติดตามใช้เพื่อรวบรวมจ
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
-msgid "URL"
-msgstr "URL"
-
-#. module: link_tracker
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "UTM"
 msgstr "UTM"
 
@@ -327,17 +338,16 @@ msgstr "UTM"
 #: model:ir.model,name:link_tracker.model_utm_campaign
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__campaign_id
 msgid "UTM Campaign"
-msgstr "แคมเปญ UTM "
+msgstr "แคมเปญ UTM"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
-#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
 msgid "Visit Page"
 msgstr "เยี่ยมชมหน้า"
 
 #. module: link_tracker
+#. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
-#, python-format
 msgid "Visit Webpage"
 msgstr "เยี่ยมชมหน้าเว็บ"
 
@@ -345,3 +355,15 @@ msgstr "เยี่ยมชมหน้าเว็บ"
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "Website Link"
 msgstr "ลิงก์ของเว็บไซต์"
+
+#. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+msgid "“%s” is not a valid link, links cannot redirect to the current page."
+msgstr "“%s” ไม่ใช่ลิงก์ที่ถูกต้อง ลิงก์ไม่สามารถเปลี่ยนเส้นทางไปยังหน้าปัจจุบันได้"
+
+#~ msgid "Group By"
+#~ msgstr "กลุ่มโดย"
+
+#~ msgid "URL"
+#~ msgstr "URL"

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "mail_bot_hr",
+    'name': "OdooBot - HR",
     'summary': """Bridge module between hr and mailbot.""",
     'description': """This module adds the OdooBot state and notifications in the user form modified by hr.""",
     'website': "https://www.odoo.com/app/discuss",
@@ -12,5 +12,6 @@
     'data': [
         'views/res_users_views.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

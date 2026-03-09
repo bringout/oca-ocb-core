@@ -1,31 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* data_recycle
-# 
-# Translators:
-# karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Michal Veselý <michal@veselyberanek.net>, 2022
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Martin Trigaux, 2022
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jiří Podhorecký <jirka.p@volny.cz>, 2022
-# Jakub Smolka, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
-# Marta Wacławek, 2025
-# 
+# * data_recycle
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2025-09-17 17:30+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
+"data_recycle/cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification
@@ -37,7 +29,6 @@ msgstr ""
 #. module: data_recycle
 #. odoo-python
 #: code:addons/data_recycle/models/data_recycle_record.py:0
-#, python-format
 msgid "**Record Deleted**"
 msgstr ""
 
@@ -65,7 +56,7 @@ msgstr "Automaticky"
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__company_id
 msgid "Company"
-msgstr "Firma"
+msgstr "Společnost"
 
 #. module: data_recycle
 #: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config
@@ -82,13 +73,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_uid
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_date
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
 
 #. module: data_recycle
 #: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_root
@@ -97,8 +88,13 @@ msgstr "Čištění dat"
 
 #. module: data_recycle
 #: model:ir.actions.server,name:data_recycle.ir_cron_clean_records_ir_actions_server
-#: model:ir.cron,cron_name:data_recycle.ir_cron_clean_records
 msgid "Data Recycle: Clean Records"
+msgstr ""
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+msgid "Data to Recycle"
 msgstr ""
 
 #. module: data_recycle
@@ -136,7 +132,7 @@ msgstr "Zahozeno"
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
 
 #. module: data_recycle
 #: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record
@@ -161,12 +157,6 @@ msgid "Include Archived"
 msgstr ""
 
 #. module: data_recycle
-#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model____last_update
-#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record____last_update
-msgid "Last Modified on"
-msgstr "Naposled změněno"
-
-#. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__last_notification
 msgid "Last Notification"
 msgstr "Poslední notifikace"
@@ -175,13 +165,13 @@ msgstr "Poslední notifikace"
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_uid
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_date
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: data_recycle
 #: model:ir.model.fields,help:data_recycle.field_data_recycle_model__notify_user_ids
@@ -214,7 +204,7 @@ msgstr "měsíců"
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__name
 msgid "Name"
-msgstr "Jméno"
+msgstr "Název"
 
 #. module: data_recycle
 #: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
@@ -332,7 +322,6 @@ msgstr "Frekvence notifikací by měla být větší než 0"
 #. module: data_recycle
 #. odoo-python
 #: code:addons/data_recycle/models/data_recycle_model.py:0
-#, python-format
 msgid "This model doesn't manage archived records. Only deletion is possible."
 msgstr ""
 
@@ -344,14 +333,12 @@ msgstr ""
 #. module: data_recycle
 #. odoo-python
 #: code:addons/data_recycle/models/data_recycle_record.py:0
-#, python-format
 msgid "Undefined Name"
 msgstr ""
 
 #. module: data_recycle
 #. odoo-javascript
 #: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
-#, python-format
 msgid "Unselect"
 msgstr "Odznačit"
 
@@ -359,9 +346,8 @@ msgstr "Odznačit"
 #. odoo-javascript
 #: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
-#, python-format
 msgid "Validate"
-msgstr "Ověřit"
+msgstr "Potvrdit"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification

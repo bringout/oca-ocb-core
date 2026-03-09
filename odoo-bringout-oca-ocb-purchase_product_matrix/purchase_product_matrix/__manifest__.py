@@ -2,14 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Purchase Matrix",
-    'summary': """
-       Add variants to your purchase orders through an Order Grid Entry.
-    """,
+    'summary': "Add variants to your purchase orders through an Order Grid Entry.",
     'description': """
-        This module allows to fill Purchase Orders rapidly
-        by choosing product variants quantity through a Grid Entry.
+This module allows to fill Purchase Orders rapidly
+by choosing product variants quantity through a Grid Entry.
     """,
-    'category': 'Inventory/Purchase',
+    'category': 'Supply Chain/Purchase',
     'version': '1.0',
     'depends': ['purchase', 'product_matrix'],
     'data': [
@@ -25,5 +23,6 @@
             'purchase_product_matrix/static/tests/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

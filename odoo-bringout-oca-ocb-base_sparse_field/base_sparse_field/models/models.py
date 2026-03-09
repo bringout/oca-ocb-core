@@ -43,7 +43,7 @@ class IrModelFields(models.Model):
 
         # set 'serialization_field_id' on sparse fields; it is done here to
         # ensure that the serialized field is reflected already
-        cr = self._cr
+        cr = self.env.cr
 
         # retrieve existing values
         query = """
@@ -62,8 +62,11 @@ class IrModelFields(models.Model):
                 try:
                     value = existing[(model_name, field.sparse)][0] if field.sparse else None
                 except KeyError:
-                    msg = _("Serialization field %r not found for sparse field %s!")
-                    raise UserError(msg % (field.sparse, field))
+                    raise UserError(_(
+                        'Serialization field "%(serialization_field)s" not found for sparse field %(sparse_field)s!',
+                        serialization_field=field.sparse,
+                        sparse_field=field,
+                    ))
                 if current_value != value:
                     updates[value].append(field_id)
 
@@ -86,7 +89,7 @@ class IrModelFields(models.Model):
         return attrs
 
 
-class TestSparse(models.TransientModel):
+class Sparse_FieldsTest(models.TransientModel):
     _name = 'sparse_fields.test'
     _description = 'Sparse fields Test'
 

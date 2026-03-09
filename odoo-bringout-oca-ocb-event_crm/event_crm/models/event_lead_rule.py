@@ -4,7 +4,7 @@
 from ast import literal_eval
 from collections import defaultdict
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class EventLeadRule(models.Model):
@@ -55,7 +55,7 @@ class EventLeadRule(models.Model):
 
     If conditions are met, leads are created with pre-filled informations defined
     on the rule (type, user_id, team_id). Contact information coming from the
-    registrations are computed (customer, name, email, phone, mobile, contact_name).
+    registrations are computed (customer, name, email, phone, contact_name).
 
     SPECIFICATIONS: OTHER POINTS
 
@@ -64,7 +64,7 @@ class EventLeadRule(models.Model):
     intended in order to give more freedom to the user using the automatic
     lead generation.
     """
-    _name = "event.lead.rule"
+    _name = 'event.lead.rule'
     _description = "Event Lead Rules"
 
     # Definition
@@ -77,19 +77,19 @@ class EventLeadRule(models.Model):
     lead_creation_basis = fields.Selection([
         ('attendee', 'Per Attendee'), ('order', 'Per Order')],
         string='Create', default='attendee', required=True,
-        help='Per Attendee : A Lead is created for each Attendee (B2C).\n'
-             'Per Order : A single Lead is created per Ticket Batch/Sale Order (B2B)')
+        help='Per Attendee: A Lead is created for each Attendee (B2C).\n'
+             'Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)')
     lead_creation_trigger = fields.Selection([
         ('create', 'Attendees are created'),
-        ('confirm', 'Attendees are confirmed'),
+        ('confirm', 'Attendees are registered'),
         ('done', 'Attendees attended')],
         string='When', default='create', required=True,
         help='Creation: at attendee creation;\n'
-             'Confirmation: when attendee is confirmed, manually or automatically;\n'
+             'Registered: at attendee registration, manually or automatically;\n'
              'Attended: when attendance is confirmed and registration set to done;')
     # Filters
     event_type_ids = fields.Many2many(
-        'event.type', string='Event Categories',
+        'event.type', string='Event Templates',
         help='Filter the attendees to include those of this specific event category. If not set, no event category restriction will be applied.')
     event_id = fields.Many2one(
         'event.event', string='Event',
@@ -102,13 +102,18 @@ class EventLeadRule(models.Model):
     # Lead default_value fields
     lead_type = fields.Selection([
         ('lead', 'Lead'), ('opportunity', 'Opportunity')], string="Lead Type", required=True,
-        default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
+        default=lambda self: 'lead' if self.env.user.has_group('crm.group_use_lead') else 'opportunity',
         help="Default lead type when this rule is applied.")
     lead_sales_team_id = fields.Many2one(
         'crm.team', string='Sales Team', ondelete="set null",
         help="Automatically assign the created leads to this Sales Team.")
     lead_user_id = fields.Many2one('res.users', string='Salesperson', help="Automatically assign the created leads to this Salesperson.")
     lead_tag_ids = fields.Many2many('crm.tag', string='Tags', help="Automatically add these tags to the created leads.")
+
+    @api.onchange('lead_sales_team_id')
+    def _onchange_lead_sales_team_id(self):
+        if self.lead_sales_team_id and self.lead_sales_team_id.user_id:
+            self.lead_user_id = self.lead_sales_team_id.user_id
 
     def _run_on_registrations(self, registrations):
         """ Create or update leads based on rule configuration. Two main lead
@@ -137,13 +142,16 @@ class EventLeadRule(models.Model):
           self have to run. Triggers should already be checked, only filters are
           applied here.
 
-        :return leads: newly-created leads. Updated leads are not returned.
+        :returns: newly-created leads. Updated leads are not returned.
         """
+        if not self:
+            return self.env['crm.lead']
+
         # order by ID, ensure first created wins
         registrations = registrations.sorted('id')
 
-        # first: ensure no duplicate by searching existing registrations / rule
-        existing_leads = self.env['crm.lead'].search([
+        # first: ensure no duplicate by searching existing registrations / rule (include lost leads)
+        existing_leads = self.env['crm.lead'].with_context(active_test=False).search([
             ('registration_ids', 'in', registrations.ids),
             ('event_lead_rule_id', 'in', self.ids)
         ])
@@ -173,7 +181,7 @@ class EventLeadRule(models.Model):
                     lead_vals_list.append(registration._get_lead_values(rule))
             else:
                 # check if registrations are part of a group, for example a sale order, to know if we update or create leads
-                for (toupdate_leads, group_key, group_registrations) in rule_group_info[rule]:
+                for toupdate_leads, _group_key, group_registrations in rule_group_info[rule]:
                     if toupdate_leads:
                         additionnal_description = group_registrations._get_lead_description(_("New registrations"), line_counter=True)
                         for lead in toupdate_leads:
@@ -185,6 +193,10 @@ class EventLeadRule(models.Model):
                         lead_vals_list.append(group_registrations._get_lead_values(rule))
 
         return self.env['crm.lead'].create(lead_vals_list)
+
+    def action_execute_rule(self):
+        events = self.event_id or self.env['event.event'].search([('is_finished', '!=', True)])
+        return events.action_generate_leads(event_lead_rules=self)
 
     def _filter_registrations(self, registrations):
         """ Keep registrations matching rule conditions. Those are

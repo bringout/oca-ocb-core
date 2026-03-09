@@ -23,6 +23,10 @@ class IrModel(models.Model):
         """ Delete mail data (followers, messages, activities) associated with
         the models being deleted.
         """
+        if not self:
+            return True
+
+        # Delete followers, messages and attachments for models that will be unlinked.
         mail_models = self.search([
             ('model', 'in', ('mail.activity', 'mail.activity.type', 'mail.followers', 'mail.message'))
         ], order='id')
@@ -78,10 +82,11 @@ class IrModel(models.Model):
             res = super(IrModel, self).write(vals)
             self.env.flush_all()
             # setup models; this reloads custom models in registry
-            self.pool.setup_models(self._cr)
+            model_names = self.mapped('model')
+            self.pool._setup_models__(self.env.cr, model_names)
             # update database schema of models
-            models = self.pool.descendants(self.mapped('model'), '_inherits')
-            self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
+            model_names = self.pool.descendants(model_names, '_inherits')
+            self.pool.init_models(self.env.cr, model_names, dict(self.env.context, update_custom_fields=True))
         else:
             res = super(IrModel, self).write(vals)
         return res
@@ -94,30 +99,44 @@ class IrModel(models.Model):
         return vals
 
     @api.model
-    def _instanciate(self, model_data):
-        model_class = super(IrModel, self)._instanciate(model_data)
-        if model_data.get('is_mail_blacklist') and model_class._name != 'mail.thread.blacklist':
-            parents = model_class._inherit or []
+    def _instanciate_attrs(self, model_data):
+        attrs = super()._instanciate_attrs(model_data)
+        if model_data.get('is_mail_blacklist') and attrs['_name'] != 'mail.thread.blacklist':
+            parents = attrs.get('_inherit') or []
             parents = [parents] if isinstance(parents, str) else parents
-            model_class._inherit = parents + ['mail.thread.blacklist']
-            if model_class._custom:
-                model_class._primary_email = 'x_email'
-        elif model_data.get('is_mail_thread') and model_class._name != 'mail.thread':
-            parents = model_class._inherit or []
+            attrs['_inherit'] = parents + ['mail.thread.blacklist']
+            if attrs['_custom']:
+                attrs['_primary_email'] = 'x_email'
+        elif model_data.get('is_mail_thread') and attrs['_name'] != 'mail.thread':
+            parents = attrs.get('_inherit') or []
             parents = [parents] if isinstance(parents, str) else parents
-            model_class._inherit = parents + ['mail.thread']
-        if model_data.get('is_mail_activity') and model_class._name != 'mail.activity.mixin':
-            parents = model_class._inherit or []
+            attrs['_inherit'] = parents + ['mail.thread']
+        if model_data.get('is_mail_activity') and attrs['_name'] != 'mail.activity.mixin':
+            parents = attrs.get('_inherit') or []
             parents = [parents] if isinstance(parents, str) else parents
-            model_class._inherit = parents + ['mail.activity.mixin']
-        return model_class
+            attrs['_inherit'] = parents + ['mail.activity.mixin']
+        return attrs
 
-    def _get_model_definitions(self, model_names_to_fetch):
-        fields_by_model_names = super()._get_model_definitions(model_names_to_fetch)
-        for model_name, field_by_fname in fields_by_model_names.items():
+    def _get_definitions(self, model_names):
+        model_definitions = super()._get_definitions(model_names)
+        for model_name, model_definition in model_definitions.items():
             model = self.env[model_name]
             tracked_field_names = model._track_get_fields() if 'mail.thread' in model._inherit else []
-            for fname, field in field_by_fname.items():
+            for fname in tracked_field_names:
+                if fname in model_definition["fields"]:
+                    model_definition["fields"][fname]["tracking"] = True
+            if isinstance(self.env[model_name], self.env.registry['mail.activity.mixin']):
+                model_definition["has_activities"] = True
+        return model_definitions
+
+    def _get_model_definitions(self, model_names_to_fetch):
+        model_definitions = super()._get_model_definitions(model_names_to_fetch)
+        for model_name, model_definition in model_definitions.items():
+            model = self.env[model_name]
+            tracked_field_names = model._track_get_fields() if 'mail.thread' in model._inherit else []
+            for fname, field in model_definition["fields"].items():
                 if fname in tracked_field_names:
                     field['tracking'] = True
-        return fields_by_model_names
+            if isinstance(self.env[model_name], self.env.registry['mail.activity.mixin']):
+                model_definition["has_activities"] = True
+        return model_definitions

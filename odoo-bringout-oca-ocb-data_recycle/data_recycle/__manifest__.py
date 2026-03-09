@@ -16,7 +16,6 @@
         'views/data_recycle_templates.xml',
         'security/ir.model.access.csv',
     ],
-    'auto_install': False,
     'installable': True,
     'application': True,
     'assets': {
@@ -25,5 +24,6 @@
             'data_recycle/static/src/views/*.xml',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
