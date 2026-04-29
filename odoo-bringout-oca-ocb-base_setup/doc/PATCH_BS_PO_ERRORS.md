@@ -91,11 +91,10 @@ Critical bug fix to ensure proper functioning of Odoo views with Bosnian languag
 **Important Workflow Note**: 
 For future updates to Bosnian translations (bs.po files), the proper workflow is:
 
-1. **Update the master translation file**: `packages/TRANSLATION_BS.xlsx`
-2. **Use translation scripts**: Run `scripts/translation_bs*` scripts to propagate changes
-3. **Avoid direct .po file editing**: Direct editing of individual .po files should be avoided as it bypasses the centralized translation management system
+1. **Use the v2 translation assistant**: `translate_bosnian/scripts/translation_assistant_bs_v2.py` (backed by `packages/translations_bs.db`)
+2. **Avoid direct .po file editing**: Direct editing of individual .po files should be avoided as it bypasses the centralized translation management system
 
-This ensures consistency across all modules and prevents translation drift between the master Excel file and individual .po files.
+This ensures consistency across all modules and prevents translation drift.
 
 **Translation Quality**: If any of the translations in this patch need improvement, they should be corrected in the next translation cycle using the proper workflow above.
 
@@ -167,4 +166,4 @@ msgstr ""
 **Patch Created:** 2025-08-27  
 **Applied By:** Claude Code Assistant  
 **Severity:** Critical - System functionality impact  
-**Note**: Emergency patch - future translation updates should follow proper workflow via TRANSLATION_BS.xlsx
+**Note**: Emergency patch - future translation updates should follow the v2 workflow (`translate_bosnian/scripts/translation_assistant_bs_v2.py`)
