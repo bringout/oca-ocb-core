@@ -121,6 +121,19 @@ class HOOTCommon(odoo.tests.HttpCase):
             filter += f'&id={h}'
         return filter
 
+    def _get_canonical_tags_params(self, log=None):
+        result = super()._get_canonical_tags_params(log)
+        if log:
+            message = log.msg
+            if log.args:
+                message = log.msg % log.args
+            if '[HOOT] Test "@' in message:
+                match = re.search(r'\[HOOT\] Test "(@([^/]+)/[^"]+)"', message)
+                if match:
+                    test = match.group(1)
+                    result['params'] = test
+        return result
+
     def test_generate_hoot_hash(self):
         self.assertEqual(self._generate_hash('@web/core'), 'e39ce9ba')
         self.assertEqual(self._generate_hash('@web/core/autocomplete'), '69a6561d') # suite
@@ -145,7 +158,7 @@ class WebSuite(QunitCommon, HOOTCommon):
     @odoo.tests.no_retry
     def test_unit_desktop(self):
         # Unit tests suite (desktop)
-        self.browser_js(f'/web/tests?headless&loglevel=2&preset=desktop&timeout=15000{self.hoot_filters}', "", "", login='admin', timeout=3000, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+        self.browser_js(f'/web/tests?headless&loglevel=2&preset=desktop&timeout=15000{self.hoot_filters}', "", "", login='admin', timeout=3600, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
 
     @odoo.tests.no_retry
     def test_hoot(self):

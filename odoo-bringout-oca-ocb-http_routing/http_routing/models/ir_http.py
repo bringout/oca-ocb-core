@@ -628,14 +628,3 @@ class IrHttp(models.AbstractModel):
         except werkzeug.exceptions.NotFound:
             new_url = path
         return new_url or path, endpoint and endpoint[0]
-
-
-# Backward-compatible module-level functions that delegate to IrHttp class methods.
-# In Odoo 19.0 these were moved to IrHttp._slug/_unslug, but many addons
-# still import them as standalone functions.
-def slug(value):
-    return IrHttp._slug(value)
-
-
-def unslug(value):
-    return IrHttp._unslug(value)
