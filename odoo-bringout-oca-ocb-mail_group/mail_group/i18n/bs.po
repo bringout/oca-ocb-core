@@ -15,28 +15,27 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Members"
-msgstr ""
+msgstr "#Članovi"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Messages"
-msgstr ""
+msgstr "#Poruke"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#To Review"
-msgstr ""
+msgstr "#Za pregled"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid ") <span invisible=\"not send_email\">and send them an email</span>."
-msgstr ""
+msgstr ") <span invisible=\"not send_email\">i pošaljite im email</span>."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -44,79 +43,90 @@ msgid ""
 "<br/>\n"
 "                    Get the conversation started by sending an email to"
 msgstr ""
+"<br/>\n"
+"                    Započnite razgovor slanjem emaila na"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "<br/> You'll be notified as soon as some new content is posted."
-msgstr ""
+msgstr "<br/> Bit ćete obavješteni čim se objavi novi sadržaj."
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
-"                You have requested to be subscribed to the mailing list "
-"<strong t-out=\"object.name or ''\"/>.\n"
+"                You have requested to be subscribed to the mailing list <strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                To confirm, please visit the following link: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
-"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
-"                If this was a mistake or you did not requested this action, "
-"please ignore this message.\n"
+"                If this was a mistake or you did not requested this action, please ignore this message.\n"
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Pozdrav,<br/><br/>\n"
+"                Zatražili ste pretplatu na mailing listu <strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Za potvrdu, posjetite sljedeći link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                Ako je ovo bila greška ili niste zatražili ovu akciju, molimo zanemarite ovu poruku.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
-"                You have requested to be unsubscribed to the mailing list "
-"<strong t-out=\"object.name or ''\"/>.\n"
+"                You have requested to be unsubscribed to the mailing list <strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                To confirm, please visit the following link: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
-"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
-"                If this was a mistake or you did not requested this action, "
-"please ignore this message.\n"
+"                If this was a mistake or you did not requested this action, please ignore this message.\n"
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Pozdrav,<br/><br/>\n"
+"                Zatražili ste odjavu sa mailing liste <strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Za potvrdu, posjetite sljedeći link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                Ako je ovo bila greška ili niste zatražili ovu akciju, molimo zanemarite ovu poruku.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Please find below the guidelines of the <t t-"
-"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
-"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
-"or ''\"/></p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Pozdrav <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>U nastavku se nalaze smjernice za <t t-out=\"object.mail_group_id.name\"/> mailing listu.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
-msgid ""
-"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Datum\" title=\"Datum\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-msgid ""
-"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
-"title=\"Alias\"/>"
+msgid "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
-msgid ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
-"title=\"Alias\"/>"
+msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 msgstr ""
 
 #. module: mail_group
@@ -125,6 +135,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Promet\" "
+"title=\"Promet\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -132,6 +144,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
 "title=\"Recipients\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Primatelji\" "
+"title=\"Primatelji\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -139,6 +153,8 @@ msgid ""
 "<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
 "title=\"Previous message\"/>"
 msgstr ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Prethodna poruka\" "
+"title=\"Prethodna poruka\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -146,13 +162,17 @@ msgid ""
 "<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
 "title=\"Next message\"/>"
 msgstr ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Sljedeća poruka\" "
+"title=\"Sljedeća poruka\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid ""
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
-"title=\"Show attachments\"/>"
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
+" title=\"Show attachments\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Prikaži priloge\" "
+"title=\"Prikaži priloge\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -160,6 +180,8 @@ msgid ""
 "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
 "title=\"Show replies\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Prikaži odgovore\""
+" title=\"Prikaži odgovore\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -167,6 +189,8 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
 "attachments\" title=\"Hide attachments\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Sakrij priloge\" "
+"title=\"Sakrij priloge\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -174,20 +198,22 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
 "title=\"Hide replies\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Sakrij odgovore\""
+" title=\"Sakrij odgovore\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "<span class=\"bg-warning\">Pending</span>"
-msgstr ""
+msgstr "<span class=\"bg-warning\">U toku</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid ""
-"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
-"'allow'\">Whitelisted</span>\n"
-"                            <span class=\"ms-2 badge text-bg-danger\" "
-"invisible=\"author_moderation != 'ban'\">Banned</span>"
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != 'allow'\">Whitelisted</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" invisible=\"author_moderation != 'ban'\">Banned</span>"
 msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != 'allow'\">Na bijeloj listi</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" invisible=\"author_moderation != 'ban'\">Zabranjen</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -197,7 +223,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "<span>By thread</span>"
-msgstr ""
+msgstr "<span>Po niti</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -205,596 +231,621 @@ msgid ""
 "<span>No Mail Group yet.</span>\n"
 "                    <br/>"
 msgstr ""
+"<span>Još nema grupa e-pošte.</span>\n"
+"                    <br/>"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Python rječnik koji će biti evaluiran kako bi pružio standardne vrijednosti "
+"prilikom kreiranja novih zapisa za ovaj alias."
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Accept"
-msgstr ""
+msgstr "Prihvati"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__accepted
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Accepted"
-msgstr ""
+msgstr "Prihvaćeno"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
 msgid "Action"
-msgstr ""
+msgstr "Akcija"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__active
 msgid "Active"
-msgstr ""
+msgstr "Aktivno"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid ""
 "Add this email address to white list of people and accept all pending "
 "messages from the same author."
 msgstr ""
+"Dodaj ovu e-mail adresu na bijelu listu ljudi i prihvati sve poruke na "
+"čekanju od istog autora."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
 msgid "Alias"
 msgstr ""
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Alias kontakt za osiguranje"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
 msgid "Alias Domain"
-msgstr ""
+msgstr "Domen aliasa"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Naziv domena aliasa"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "Email alias"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Alias ime"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Status aliasa"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Status aliasa procijenjen na osnovu posljednje primljene poruke."
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "Zamjenski model"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "All messages of this group"
-msgstr ""
+msgstr "Sve poruke ove grupe"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Allowed Emails"
-msgstr ""
+msgstr "Dozvoljene e-mail adrese"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Alone we can do so little, together we can do so much"
-msgstr ""
+msgstr "Sami možemo napraviti malo, zajedno možemo napraviti više"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
 msgid "Always Allow"
-msgstr ""
+msgstr "Uvijek dozvoli"
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
+#, python-format
 msgid "An email with instructions has been sent."
-msgstr ""
+msgstr "E-pošta sa instrukcijama je poslana."
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Archived"
-msgstr ""
+msgstr "Arhivirano"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "Archives"
-msgstr ""
+msgstr "Arhive"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__attachment_ids
 msgid "Attachments"
-msgstr ""
+msgstr "Privitci"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_id
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
 msgid "Author Moderation Status"
-msgstr ""
+msgstr "Status moderacije autora"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that "
-"did not match any partner."
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
 msgstr ""
+"Autor poruke. Ako nije postavljen, email_from može sadržavati adresu e-pošte"
+" koja nije odgovarala niti jednom partneru."
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
 msgid "Authorized Group"
-msgstr ""
+msgstr "Ovlaštena grupa"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify
 msgid "Automatic notification"
-msgstr ""
+msgstr "Automatsko obavještenje"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__ban
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Ban"
-msgstr ""
+msgstr "Baniraj"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Ban the author of the message ("
-msgstr ""
+msgstr "Baniraj autora poruke ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid ""
 "Ban this email address and reject all pending messages from the same author "
 "and send an email to the author"
 msgstr ""
+"Baniraj ovu e-mail adresu i odbaci sve poruke na čekanju od istog autora i "
+"pošalji e-poštu autoru"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
 msgid "Banned"
-msgstr ""
+msgstr "Banovan"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Banned Emails"
-msgstr ""
+msgstr "Banovane e-mail adrese"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "By date"
-msgstr ""
+msgstr "Po datumu"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
 msgid "Can Manage"
-msgstr ""
+msgstr "Može upravljati"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
 msgid "Can manage the members"
-msgstr ""
+msgstr "Može upravljati članovima"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
 msgid "Children"
-msgstr ""
+msgstr "Dijete"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Choose or configure a custom domain"
-msgstr ""
+msgstr "Odaberite ili konfigurišite prilagođeni domen"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Closed"
-msgstr ""
+msgstr "Zatvoreno"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
 msgstr ""
+"Zatvorenim grupama je i dalje moguć pristup, ali emailovi poslani na njih će"
+" biti odbijeni"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
 msgid "Confirm subscription to {{ object.name }}"
-msgstr ""
+msgstr "Potvrdite pretplatu na {{ object.name }}"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
 msgid "Confirm unsubscription to {{ object.name }}"
-msgstr ""
+msgstr "Potvrdite odjavu pretplate sa {{ object.name }}"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__body
 msgid "Contents"
-msgstr ""
+msgstr "Sadržaj"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
 msgid "Create a Mail Group"
-msgstr ""
+msgstr "Kreiraj grupu e-pošte"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Create a new group"
-msgstr ""
+msgstr "Kreiraj novu grupu"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_uid
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_uid
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Kreirao"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_date
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Kreirano"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
 msgid "Current user is a moderator of the group"
-msgstr ""
+msgstr "Trenutni korisnik je moderator grupe"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Prilagođena poruka odbijanja"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "Zadane vrijednosti"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__description
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Discard"
-msgstr ""
+msgstr "Odbaci"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__display_name
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Naziv za prikaz"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_tree
 msgid "Email"
 msgstr ""
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "Email %s is invalid"
-msgstr ""
+msgstr "E-pošta %s nije važeća"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Email Alias"
-msgstr ""
+msgstr "E-mail alias"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
 msgid "Email From"
-msgstr ""
+msgstr "E-pošta od"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"E-mail adresa pošiljatelja. Ovo se polje postavlja kada nije pronađen "
+"nijedan partner i zamjenjuje autor_id polje u chatu."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Email domen npr. 'example.com' u 'odoo@example.com'"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails"
-msgstr ""
+msgstr "E-mailovi"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails waiting an action for this group"
-msgstr ""
+msgstr "E-pošte koje čekaju akciju za ovu grupu"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
 msgid "Everyone"
-msgstr ""
+msgstr "Svi"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid "Follow-Ups"
-msgstr ""
+msgstr "Praćenja"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "From"
-msgstr ""
+msgstr "Od"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__mail_group_id
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_group_id
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__mail_group_id
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Group"
-msgstr ""
+msgstr "Grupa"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Group Message"
-msgstr ""
+msgstr "Poruka grupe"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Group Name"
-msgstr ""
+msgstr "Naziv grupe"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
 msgid "Group message can only be linked to mail group. Current model is %s."
 msgstr ""
+"Poruka grupe se može povezati samo sa grupom e-pošte. Trenutni model je %s."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
 msgid "Groups"
-msgstr ""
+msgstr "Grupe"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Guidelines"
-msgstr ""
+msgstr "Smjernice"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_guidelines
 msgid "Guidelines of group {{ object.mail_group_id.name }}"
-msgstr ""
+msgstr "Smjernice grupe {{ object.mail_group_id.name }}"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Hello"
-msgstr ""
+msgstr "Pozdrav"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
 msgid ""
 "Hello there,\n"
 "    <br/><br/>\n"
-"    The mailing list you are trying to reach has been closed, and will not "
-"accept new messages.\n"
+"    The mailing list you are trying to reach has been closed, and will not accept new messages.\n"
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"Pozdrav,\n"
+"    <br/><br/>\n"
+"    Mailing lista koju pokušavate kontaktirati je zatvorena i neće prihvatati nove poruke.\n"
+"    <br/><br/>\n"
+"    Srdačan pozdrav,"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__id
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__id
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__id
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task "
-"creation alias)"
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
 msgstr ""
+"ID nadređenog zapisa koji drži alias (primjer: projekt koji drži alias za "
+"kreiranje zadatka)"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Ako je postavljeno, ovaj sadržaj će automatski biti poslan neovlaštenim "
+"korisnicima umjesto standardne poruke."
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
 msgid "Image"
-msgstr ""
+msgstr "Slika"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "Invalid action for URL generation (%s)"
-msgstr ""
+msgstr "Neispravna akcija za generiranje URL-a (%s)"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_moderation.py:0
 msgid "Invalid email address “%s”"
-msgstr ""
+msgstr "Nevažeća email adresa “%s”"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
-msgstr ""
+msgstr "Link za potvrdu je nevažeći ili je istekao."
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Is Allowed"
-msgstr ""
+msgstr "Dopušteno"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Is Banned"
-msgstr ""
+msgstr "Zabranjeno"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
 msgid "Is Closed"
-msgstr ""
+msgstr "Je zatvoreno"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
 msgid "Is Group Moderated"
-msgstr ""
+msgstr "Je grupa moderirana"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
 msgid "Is Member"
-msgstr ""
+msgstr "Je član"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "Pridruži se"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_uid
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_uid
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_uid
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnji ažurirao"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_date
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_date
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_date
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_date
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnje ažurirano"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "Odsustvo"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "Let people subscribe to your list online or manually add them here."
 msgstr ""
+"Neka se ljudi pretplate na vašu listu online ili ih ručno dodajte ovdje."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Detekcija dolaznih poruka na osnovu lokalnog dijela"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Mail Group"
-msgstr ""
+msgstr "Grupa e-pošte"
 
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
 msgid "Mail Group Administrator"
-msgstr ""
+msgstr "Administrator grupe e-pošte"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr ""
+msgstr "Grupa e-pošte: Pretplata na listu za slanje"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr ""
+msgstr "Grupa e-pošte: Odjava pretplate sa liste za slanje"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
 msgid "Mail Group: Send Guidelines"
-msgstr ""
+msgstr "Grupa e-pošte: Pošalji smjernice"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
-#: model:ir.ui.menu,name:mail_group.mail_group_menu
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Mail Groups"
-msgstr ""
+msgstr "Grupe e-pošte"
 
 #. module: mail_group
 #: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
 msgid "Mail List: Notify group moderators"
-msgstr ""
+msgstr "Lista e-pošte: Obavijesti moderatore grupe"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
 msgid "Mail Message"
-msgstr ""
+msgstr "Poruka e-pošte"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_member
 msgid "Mailing List Member"
-msgstr ""
+msgstr "Član liste za slanje"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message
 msgid "Mailing List Message"
-msgstr ""
+msgstr "Poruka liste za slanje"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_moderation
 msgid "Mailing List black/white list"
-msgstr ""
+msgstr "Crna/bijela lista za slanje"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
 msgid "Mailing Lists"
-msgstr ""
+msgstr "Liste za slanje mailova"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
@@ -802,158 +853,166 @@ msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
 msgstr ""
+"Grupe e-pošte su zajednice koje vole diskutovati određenu temu zajedno."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Mailing-List:"
-msgstr ""
+msgstr "Lista za slanje:"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_member_action
-#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Members"
-msgstr ""
+msgstr "Članovi"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
 msgid "Members Count"
-msgstr ""
+msgstr "Broj članova"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Members of this group"
-msgstr ""
+msgstr "Članovi ove grupe"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
 msgid "Members only"
-msgstr ""
+msgstr "Samo članovi"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
 msgid "Message"
-msgstr ""
+msgstr "Poruka"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
 msgid "Message Rejection Explanation"
-msgstr ""
+msgstr "Objašnjenje odbacivanja poruke"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_action
 msgid "Messages"
-msgstr ""
+msgstr "Poruke"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
 msgid "Messages Count"
-msgstr ""
+msgstr "Broj poruka"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
 msgid "Messages Per Month"
-msgstr ""
+msgstr "Poruke po mjesecu"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "Messages are pending moderation"
-msgstr ""
+msgstr "Poruke čekaju moderaciju"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
 msgid "Messages that need an action"
-msgstr ""
+msgstr "Poruke koje trebaju akciju"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate"
-msgstr ""
+msgstr "Moderiraj"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Moderate Messages"
-msgstr ""
+msgstr "Moderiraj poruke"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Moderated"
-msgstr ""
+msgstr "Moderirano"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "Moderirano od"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
 msgid "Moderated Emails"
-msgstr ""
+msgstr "Moderirane e-pošte"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
 msgid "Moderated emails count"
-msgstr ""
+msgstr "Broj moderiranih e-pošta"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderated emails in this group"
-msgstr ""
+msgstr "Moderirane e-pošte u ovoj grupi"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "Moderated group must have moderators."
-msgstr ""
+msgstr "Moderirana grupa mora imati moderatore."
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Moderation"
-msgstr ""
+msgstr "Moderiranje"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
 msgid "Moderation Lists"
-msgstr ""
+msgstr "Lista za moderiranje"
 
 #. module: mail_group
 #: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
 msgid "Moderation Rules"
-msgstr ""
+msgstr "Pravila moderacije"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderations"
-msgstr ""
+msgstr "Moderacije"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
 msgid "Moderator"
 msgstr ""
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderator_ids
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Moderators"
-msgstr ""
+msgstr "Moderatori"
 
+# taken from hr.po
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "Moderators must have an email address."
-msgstr ""
+msgstr "Moderatori moraju imati email adresu"
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_1
 msgid "My Company News"
-msgstr ""
+msgstr "Novosti moje kompanije"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__name
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -961,72 +1020,81 @@ msgid ""
 "Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
 "down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
+"Potrebno je odjaviti se? <br/>Ovdje je! <span class=\"oi fa-2x oi-arrow-down"
+" float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
 msgid ""
 "Newcomers on this moderated group will automatically receive the guidelines."
-msgstr ""
+msgstr "Novi članovi u ovoj moderiranoj grupi automatski će dobiti smjernice."
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
 msgid "No Members in this list yet!"
-msgstr ""
+msgstr "Još nema članova u ovoj listi!"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid "No Messages in this list yet!"
-msgstr ""
+msgstr "Još nema poruka u ovoj listi!"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normalizirani Email"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
 msgid "Normalized From"
-msgstr ""
+msgstr "Normalizovano od"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
 msgid "Notification message"
-msgstr ""
+msgstr "Poruka obavještenja"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Notify Members"
-msgstr ""
+msgstr "Obavijesti članove"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
 msgid "Number of message in this group"
-msgstr ""
+msgstr "Broj poruka u ovoj grupi"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid ""
 "Only an administrator or a moderator can send guidelines to group members."
 msgstr ""
+"Samo administrator ili moderator mogu poslati smjernice članovima grupe."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "Only members can send email to the mailing list."
-msgstr ""
+msgstr "Samo članovi mogu poslati e-poštu na listu za slanje."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "Only selected groups of users can send email to the mailing list."
 msgstr ""
+"Samo odabrane grupe korisnika mogu poslati e-poštu na listu za slanje."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "Ups, ovdje nema poruka."
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
 msgid ""
@@ -1034,54 +1102,65 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Opcionalni ID niti (zapisa) na koju će sve dolazne poruke biti priložene, "
+"čak i ako nisu odgovorile na nju. Ako je postavljeno, ovo će potpuno "
+"onemogućiti kreiranje novih zapisa."
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Nadređeno"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "Ishodni Model"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ID zapisa nadređenog"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Nadređeni model koji drži alias. Model koji drži referencu aliasa nije nužno"
+" model dat u alias_model_id (primjer: projekt (nadređeni_model) i zadatak "
+"(model))"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
 msgid "Partners Member"
-msgstr ""
+msgstr "Partner član"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
 msgid "Pending Messages"
-msgstr ""
+msgstr "Poruke na čekanju"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
 msgid "Pending Messages Count"
-msgstr ""
+msgstr "Broj poruka na čekanju"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
 msgid "Pending Moderation"
-msgstr ""
+msgstr "Čeka na moderiranje"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_notify
@@ -1089,464 +1168,748 @@ msgid ""
 "People receive an automatic notification about their message being waiting "
 "for moderation."
 msgstr ""
+"Osobe primaju automatsku obavijest da njihova poruka čeka na moderaciju."
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
 msgid "Permanent Ban"
-msgstr ""
+msgstr "Trajna zabrana"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following "
-"channels\n"
+"- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Pravilo za objavljivanje poruke na dokumentu koristeći mail gateway.\n"
+"- svi: svi mogu objavljivati\n"
+"- partneri: samo autentificirani partneri\n"
+"- pratioci: samo pratioci povezanog dokumenta ili članovi kanala koje prate\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Post to:"
-msgstr ""
+msgstr "Objavi na:"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
 msgid "Posted"
-msgstr ""
+msgstr "Proknjiženo"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Privacy"
-msgstr ""
+msgstr "Privatnost"
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_2
 msgid "Public Mailing List"
-msgstr ""
+msgstr "Javna lista za slanje"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/wizard/mail_group_message_reject.py:0
+#, python-format
 msgid "Re: %s"
 msgstr ""
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ID niti zapisa"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
 msgid "Reference"
-msgstr ""
+msgstr "Referenca"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Reject"
-msgstr ""
+msgstr "Odbijeno"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message_reject
 msgid "Reject Group Message"
-msgstr ""
+msgstr "Odbaci poruku grupe"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject Silently"
-msgstr ""
+msgstr "Tiho odbaci"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject the message"
-msgstr ""
+msgstr "Odbaci poruku"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 msgid "Rejected"
-msgstr ""
+msgstr "Odbijeno"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Remove message with explanation"
-msgstr ""
+msgstr "Ukloni poruku sa objašnjenjem"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Responsibles"
-msgstr ""
+msgstr "Odgovorni"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "Search Group Message"
-msgstr ""
+msgstr "Pretraži poruku grupe"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
 msgid "Search Mail Group Member"
-msgstr ""
+msgstr "Pretraži člana grupe e-pošte"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
 msgid "Search Mail group"
-msgstr ""
+msgstr "Pretraži grupu e-pošte"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Search Moderation List"
-msgstr ""
+msgstr "Pretraži listu moderacije"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Select users"
-msgstr ""
+msgstr "Odaberite korisnike"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
 msgid "Selected group of users"
-msgstr ""
+msgstr "Odabrana grupa korisnika"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Send"
-msgstr ""
+msgstr "Pošalji"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Ban"
-msgstr ""
+msgstr "Pošalji i baniraj"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Reject"
-msgstr ""
+msgstr "Pošalji i odbaci"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
 msgid "Send Email"
-msgstr ""
+msgstr "Pošalji e-mail"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
 msgid "Send an email to the author of the message"
-msgstr ""
+msgstr "Pošalji e-poštu autoru poruke"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
 msgid "Send email"
-msgstr ""
+msgstr "Pošalji email"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "Pošalji smjernice novim članovima"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
+"Poslano ljudima koji su se pretplatili na grupu za slanje sa smjernicama "
+"grupe"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr ""
+msgstr "Poslano ljudima koji su se odjavili s pretplate sa grupe za slanje"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__status
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Status"
 msgstr ""
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Stay in touch with our Community"
-msgstr ""
+msgstr "Ostanite u kontaktu sa našom zajednicom"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__subject
 msgid "Subject"
-msgstr ""
+msgstr "Predmet"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, python-format
 msgid "Subscribe"
-msgstr ""
+msgstr "Pretplatite se"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr ""
+msgstr "Potvrda pretplate na grupu za slanje"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid ""
-"Template \"mail_group.mail_template_guidelines\" was not found. No email has "
-"been sent. Please contact an administrator to fix this issue."
+"Template \"mail_group.mail_template_guidelines\" was not found. No email has"
+" been sent. Please contact an administrator to fix this issue."
 msgstr ""
+"Predložak \"mail_group.mail_template_guidelines\" nije pronađen. Nijedna "
+"e-pošta nije poslana. Molimo kontaktirajte administratora da riješi ovaj "
+"problem."
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Thank you!"
-msgstr ""
+msgstr "Hvala vam!"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "The \"Authorized Group\" is missing."
-msgstr ""
+msgstr "\"Ovlaštena grupa\" nedostaje."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "The email"
-msgstr ""
+msgstr "E-pošta"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
 msgid "The email \"%s\" is not valid."
-msgstr ""
+msgstr "E-pošta \"%s\" nije važeća."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "The group of the message do not match."
-msgstr ""
+msgstr "Grupa poruke se ne poklapa."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "The guidelines description is empty."
-msgstr ""
+msgstr "Opis smjernica je prazan."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "The guidelines description is missing."
-msgstr ""
+msgstr "Opis smjernica nedostaje."
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
-"email that does not reply to an existing record will cause the creation of a "
-"new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Model (vrsta Odoo dokumenta) kome odgovara ovaj alias. Bilo koji dolazni "
+"email koji ne odgovara postojećem zapisu će uzrokovati kreiranje novog "
+"zapisa ovog modela (npr. projektni zadatak)"
 
+# taken from hr.po
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Naziv email aliasa, npr. 'jobs' ako želite primati emailove za "
+"<jobs@example.odoo.com>"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "The notification message is missing."
-msgstr ""
+msgstr "Poruka obavještenja nedostaje."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, python-format
 msgid "The partner can not be found."
-msgstr ""
+msgstr "Partner se ne može pronaći."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
 msgid "The record of the message should be the group."
-msgstr ""
+msgstr "Zapis poruke treba biti grupa."
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
+#, python-format
 msgid "This email is already subscribed."
-msgstr ""
+msgstr "Ova e-pošta je već pretplaćena."
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
+#, python-format
 msgid "This email is not subscribed."
-msgstr ""
+msgstr "Ova e-pošta nije pretplaćena."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
 msgid "This message can not be moderated"
-msgstr ""
+msgstr "Ova poruka se ne može moderirati"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
 msgid "This partner is already subscribed to the group"
-msgstr ""
+msgstr "Ovaj partner je već pretplaćen na grupu"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
 msgid "Those messages can not be moderated: %s."
-msgstr ""
+msgstr "Ove poruke se ne mogu moderirati: %s."
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "To Review"
-msgstr ""
+msgstr "Za provjeru"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, python-format
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Odjava"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Unsubscribe:"
-msgstr ""
+msgstr "Odjava pretplate:"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid ""
 "When people send an email to the alias of the list, they will appear here."
-msgstr ""
+msgstr "Kada ljudi pošalju e-poštu na alias liste, pojavit će se ovdje."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Whitelist"
-msgstr ""
+msgstr "Bijela lista"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
 msgid "Whitelisted"
-msgstr ""
+msgstr "Na bijeloj listi"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
 msgid "Wrong status (%s)"
-msgstr ""
+msgstr "Pogrešan status (%s)"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
 msgid "You can create only one rule for a given email address in a group."
-msgstr ""
+msgstr "Možete kreirati samo jedno pravilo za datu e-mail adresu u grupi."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "Ne možete se pridružiti zatvorenoj grupi."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "Ne možete poslati smjernice za zatvorenu grupu."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
-msgstr ""
+msgstr "Imate poruke za moderaciju, molimo idite na postupke."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "alias"
-msgstr ""
+msgstr "alijas"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "and send an email to the author ("
-msgstr ""
+msgstr "i pošalji e-poštu autoru ("
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid "attachments"
-msgstr ""
+msgstr "Privitci"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid "by"
-msgstr ""
+msgstr "od"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"Newsletter\""
-msgstr ""
+msgstr "npr. \"Bilten\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "npr. \"Ova grupa je o ...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "npr. mojakompanija.com"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "npr.\"Molimo budite ljubazni i ...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "group"
-msgstr ""
+msgstr "grupa"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "has been"
-msgstr ""
+msgstr "je bio"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "članovi<br/>"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "messages / month"
-msgstr ""
+msgstr "poruke / mjesec"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "messages to review"
-msgstr ""
+msgstr "poruke za pregled"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "more replies"
-msgstr ""
+msgstr "više odgovora"
 
+# taken from hr.po
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "replies"
-msgstr ""
+msgstr "odgovori"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "subscribed to"
-msgstr ""
+msgstr "pretplaćen na"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "the list"
-msgstr ""
+msgstr "listu"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "unsubscribed from"
+msgstr "odjavljen pretplate sa"
+
+# taken from hr.po
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "your email..."
+msgstr "Vaš e-mail..."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid ""
+") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">and send them "
+"an email</span>."
+msgstr ""
+") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">i pošaljite im"
+" e-poštu</span>."
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_subscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br><br>\n"
+"                You have requested to be subscribed to the mailing list <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                If this was a mistake or you did not requested this action, please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Zdravo,<br><br>\n"
+"                Zatražili ste pretplatu na listu za slanje <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Da potvrdite, molimo posjetite sljedeći link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                Ako je ovo bila greška ili niste zatražili ovu akciju, molimo zanemarite ovu poruku.\n"
+"            </div>"
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br><br>\n"
+"                You have requested to be unsubscribed to the mailing list <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                If this was a mistake or you did not requested this action, please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Zdravo,<br><br>\n"
+"                Zatražili ste odjavu pretplate sa liste za slanje <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                Da potvrdite, molimo posjetite sljedeći link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                Ako je ovo bila greška ili niste zatražili ovu akciju, molimo zanemarite ovu poruku.\n"
+"            </div>"
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_guidelines
+msgid ""
+"<div>\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object.mail_group_id.name\"></t> mailing list.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"                <p>Zdravo <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
+"                <p>Molimo pronađite ispod smjernice liste za slanje <t t-out=\"object.mail_group_id.name\"></t>.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
+"            </div>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+"<i class=\"fa fa-arrow-left\" role=\"img\" aria-label=\"Prethodna poruka\" "
+"title=\"Prethodna poruka\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+"<i class=\"fa fa-arrow-right\" role=\"img\" aria-label=\"Sljedeća poruka\" "
+"title=\"Sljedeća poruka\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
+" title=\"Show attachments\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Prikaži priloge\" "
+"title=\"Prikaži priloge\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-down\" role=\"img\" aria-label=\"Prikaži odgovore\""
+" title=\"Prikaži odgovore\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Sakrij priloge\" "
+"title=\"Sakrij priloge\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Sakrij odgovore\""
+" title=\"Sakrij odgovore\"/>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid ""
+"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Whitelisted</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
+msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Na bijeloj listi</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_fullname
+msgid "Alias Full Name"
+msgstr "Puno ime aliasa"
+
+# taken from hr.po
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
+msgid "Alias domain"
+msgstr "Alias domena"
+
+# taken from hr.po
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Configure a custom domain"
+msgstr "Konfiguriraj prilagođenu domenu"
+
+# taken from hr.po
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+msgid "Group By"
+msgstr "Grupiši po"
+
+# taken from hr.po
+#. module: mail_group
+#: code:addons/mail_group/models/mail_group_moderation.py:0
+#, python-format
+msgid "Invalid email address %r"
+msgstr "Nepostojeća email adresa %r"
+
+# taken from hr.po
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group____last_update
+msgid "Last Modified on"
+msgstr "Zadnja izmjena"
+
+# taken from hr.po
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Member"
+msgstr "Član"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
+msgid "Moderate this group"
+msgstr "Moderiraj ovu grupu"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"Need to unsubscribe? <br/>It's right here! <span class=\"fa fa-2x fa-arrow-"
+"down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
+msgstr ""
+"Trebate se odjaviti s pretplate? <br/>Evo ovdje! <span class=\"fa fa-2x fa-"
+"arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Pročitajte ovo "
+"!\"/>"
+
+# taken from hr.po
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_user_id
+msgid "Owner"
+msgstr "Vlasnik"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Responsible Users"
+msgstr "Odgovorni korisnici"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Send Guidelines"
+msgstr "Pošalji smjernice"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
+msgid "Send guidelines to new subscribers"
+msgstr "Pošalji smjernice novim pretplatnicima"
+
+# taken from hr.po
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_user_id
+msgid ""
+"The owner of records created upon receiving emails on this alias. If this "
+"field is not set the system will attempt to find the right owner based on "
+"the sender (From) address, or will use the Administrator account if no "
+"system user is found for that address."
+msgstr ""
+"Vlasnik zapisa kreiranih nakon primanja emailova na ovaj alias. Ako ovo "
+"polje nije postavljeno, sistem će pokušati pronaći pravog vlasnika na osnovu"
+" adrese pošiljaoca (From), ili će koristiti račun administratora ako nije "
+"pronađen sistemski korisnik za tu adresu."
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "_______________________________________________"
 msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
-msgid "your email..."
+msgid ""
+"members<br/>\n"
+"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
+"članovi<br/>\n"
+"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Promet\" title=\"Promet\"/>"
