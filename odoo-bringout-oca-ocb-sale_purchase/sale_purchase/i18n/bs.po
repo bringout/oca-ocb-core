@@ -58,9 +58,6 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
-"If ticked, each time you sell this product through a SO, a RfQ is "
-"automatically created to buy the product. Tip: don't forget to set a vendor "
-"on the product."
 
 # taken from hr.po
 #. module: sale_purchase
@@ -80,7 +77,7 @@ msgstr "Broj generiranih nabavnih stavki"
 
 # taken from hr.po
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order_line.py
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Naručene količine su umanjene!"
@@ -97,7 +94,7 @@ msgid "Product Template"
 msgstr "Predlog proizvoda"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/product_template.py
+#: code:addons/sale_purchase/models/product_template.py:0
 #, python-format
 msgid "Product that is not a service can not create RFQ."
 msgstr "Proizvod koji nije usluga ne može kreirati RFQ."
@@ -112,7 +109,7 @@ msgstr ""
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
-msgstr "Narudžbenica"
+msgstr "Nalog za nabavu"
 
 # taken from hr.po
 #. module: sale_purchase
@@ -154,10 +151,10 @@ msgstr "Prodajni nalog"
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Stavka prodajne narudžbe"
+msgstr "Stavka narudžbe"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:273
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -167,7 +164,7 @@ msgstr ""
 "primarnog dobavljača za ovaj proizvod."
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -236,7 +233,7 @@ msgstr "Broj izvornih prodaja"
 
 # taken from hr.po
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/product_template.py
+#: code:addons/sale_purchase/models/product_template.py:0
 #, python-format
 msgid ""
 "Please define the vendor from whom you would like to purchase this service "
@@ -258,16 +255,16 @@ msgstr "Upozorenje nabavnog naloga"
 
 # taken from hr.po
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py
+#: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
-msgstr "Nalog za nabavu generiran iz %s"
+msgstr "Nalog za nabavku generiran iz %s"
 
 # taken from hr.po
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order
 msgid "Sales Order"
-msgstr "Prodajni nalog"
+msgstr "Narudžba"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_cancel
@@ -275,7 +272,7 @@ msgid "Sales Order Cancel"
 msgstr "Otkazivanje prodajnog naloga"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/purchase_order.py
+#: code:addons/sale_purchase/models/purchase_order.py:0
 #, python-format
 msgid "Sources Sale Orders %s"
 msgstr "Izvorni prodajni nalozi %s"
@@ -285,3 +282,24 @@ msgstr "Izvorni prodajni nalozi %s"
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
 msgid "Subcontract Service"
 msgstr "Usluga podizvođača"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
+msgid "Display Name"
+msgstr "Naziv za prikaz"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "Purchase"
+msgstr "Nabavka"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__has_sale_order
+msgid ""
+"Technical field for whether the purchase order has associated sale orders"
+msgstr "Tehničko polje za to da li nalog nabavke ima povezane prodajne naloge"

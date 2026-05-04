@@ -115,7 +115,7 @@ msgstr "Zadnja izmjena"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__write_uid
 msgid "Last Updated by"
-msgstr "Zadnje ažurirao"
+msgstr "Zadnji ažurirao"
 
 # taken from hr.po
 #. module: onboarding
@@ -125,7 +125,7 @@ msgstr "Zadnje ažurirano"
 
 # taken from hr.po
 #. module: onboarding
-#: code:addons/onboarding/models/onboarding_step.py
+#: code:addons/onboarding/models/onboarding_onboarding_step.py:0
 #, python-format
 msgid "Let's do it"
 msgstr "Učinimo to!"
@@ -273,7 +273,7 @@ msgid "Progress Steps Trackers"
 msgstr "Praćenje koraka napretka"
 
 #. module: onboarding
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__progress_id
+#: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__progress_ids
 msgid "Related Onboarding Progress Tracker"
 msgstr "Povezano praćenje napretka uvođenja"
 
@@ -286,7 +286,7 @@ msgstr "Povezano uvođenje koje se prati"
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__sequence
 msgid "Sequence"
-msgstr "Preostala odsustva"
+msgstr "Redoslijed"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__is_per_company
@@ -294,7 +294,7 @@ msgid "Should be done per company?"
 msgstr "Treba li raditi po kompaniji?"
 
 #. module: onboarding
-#: code:addons/onboarding/models/onboarding_step.py
+#: code:addons/onboarding/models/onboarding_step.py:0
 #, python-format
 msgid "Step Completed! - Click to review"
 msgstr "Korak završen! - Kliknite za pregled"
@@ -356,4 +356,108 @@ msgstr "Da li je panel zatvoren?"
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_panel
 msgid "onboarding.onboarding.step"
-msgstr "onboarding.onboarding.step"
+msgstr ""
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_step
+msgid "All done!"
+msgstr "Sve je gotovo!"
+
+#. module: onboarding
+#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image_alt
+msgid "Alt Text for the Step Image"
+msgstr "Alternativni tekst za sliku koraka"
+
+#. module: onboarding
+#: code:addons/onboarding/models/onboarding_onboarding_step.py:0
+msgid ""
+"An \"Opening Action\" is required for the following steps to be linked to an"
+" onboarding panel: %(step_titles)s"
+msgstr ""
+"Potrebna je \"Akcija otvaranja\" da bi se sljedeći koraci povezali sa "
+"onboarding panelom: %(step_titles)s"
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
+msgid "Are you sure you want to hide these configuration steps?"
+msgstr "Jeste li sigurni da želite sakriti ove korake konfiguracije?"
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
+msgid "Close"
+msgstr "Zatvori"
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
+msgid "Close Panel"
+msgstr "Zatvori panel"
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
+msgid "Close the onboarding panel"
+msgstr "Zatvori onboarding panel"
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
+msgid "Get them out of my sight!"
+msgstr "Skloni ih s mojih očiju!"
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
+msgid "Hide Onboarding Tips"
+msgstr "Sakrij savjete za onboarding"
+
+#. module: onboarding
+#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__is_per_company
+msgid "Is per company"
+msgstr "Je po kompaniji"
+
+#. module: onboarding
+#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__text_completed
+msgid "Message at completion"
+msgstr "Poruka pri završetku"
+
+#. module: onboarding
+#: code:addons/onboarding/models/onboarding_onboarding.py:0
+msgid "Nice work! Your configuration is done."
+msgstr "Odlično! Vaša konfiguracija je gotova."
+
+#. module: onboarding
+#: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__step_image_alt
+msgid "Show when impossible to load the image"
+msgstr "Prikaži kada nije moguće učitati sliku"
+
+#. module: onboarding
+#: code:addons/onboarding/models/onboarding_onboarding_step.py:0
+msgid "Step Completed!"
+msgstr "Korak završen!"
+
+#. module: onboarding
+#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image
+msgid "Step Image"
+msgstr "Slika koraka"
+
+#. module: onboarding
+#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image_filename
+msgid "Step Image Filename"
+msgstr "Naziv datoteke slike koraka"
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_form
+msgid "Steps"
+msgstr "Koraci"
+
+#. module: onboarding
+#: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__text_completed
+msgid "Text shown on onboarding when completed"
+msgstr "Tekst prikazan na onboarding-u kada je završen"
+
+#. module: onboarding
+#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_step
+msgid "o_onboarding_confetti"
+msgstr "o_onboarding_confetti"

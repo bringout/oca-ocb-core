@@ -37,7 +37,7 @@ msgstr "(%d više)"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
@@ -48,7 +48,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:582
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
@@ -56,6 +56,9 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Nepoznata greška se desila prilikom uvoza (možda prekid konekcije, limit u "
+"veličini podataka ili nedostatak memorije). Molimo pokušajte ponovo. U "
+"slučaju ponavljanja, podijelite fajl na više djelova."
 
 # taken from hr.po
 #. module: base_import
@@ -78,21 +81,21 @@ msgstr "Mapiranje u baznom uvozu"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Otkaži"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr "Kolona %s sadrži netačne vrijednosti (vrijednost: %s)"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
 msgstr "Kolona %s sadrži neispravne vrijednosti. Greška na liniji %d: %s"
@@ -106,18 +109,19 @@ msgstr "Ime kolone"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
 msgstr "Zarez"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:825
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Ne mogu preuzeti URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. openerp-web
@@ -156,7 +160,7 @@ msgstr "Valuta"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
 msgstr "ID baze podataka"
@@ -164,7 +168,7 @@ msgstr "ID baze podataka"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Date Format:"
 msgstr "Datumski format:"
@@ -172,7 +176,7 @@ msgstr "Datumski format:"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Datetime Format:"
 msgstr "Datum-vrijeme format:"
@@ -180,7 +184,7 @@ msgstr "Datum-vrijeme format:"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Decimal Separator:"
 msgstr "Decimalni separator:"
@@ -196,7 +200,7 @@ msgstr ""
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 msgid "Display Name"
-msgstr "Prikazani naziv"
+msgstr "Naziv za prikaz"
 
 #. module: base_import
 #. openerp-web
@@ -208,7 +212,7 @@ msgstr ""
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
 msgstr "Tačka"
@@ -216,7 +220,7 @@ msgstr "Tačka"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Download"
 msgstr "Preuzimanje"
@@ -229,14 +233,14 @@ msgstr ""
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Encoding:"
 msgstr "Enkodiranje:"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
 msgstr "Greška u čitanju datuma [%s:L%d]: %s"
@@ -250,7 +254,7 @@ msgstr ""
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Everything seems valid."
 msgstr "Čini se da je sve u redu."
@@ -264,7 +268,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
 msgstr "Externi ID"
@@ -295,10 +299,10 @@ msgstr "Tip datoteke"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr "File size exceeds configured maximum (%s bytes)"
+msgstr ""
 
 # taken from hr.po
 #. module: base_import
@@ -308,7 +312,7 @@ msgstr "Datoteke za provjeru i/ili uvoz, sirovi binarni ( ne base64)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
 msgstr "Za CSV datoteke, možda trebate odabrati ispravan razdjelnik."
@@ -337,29 +341,13 @@ msgstr "Evo mogućih vrijednosti:"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
 msgstr "Ovo je početni dio datoteke koju nismo uspjeli uvesti:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
-#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
 msgid "ID"
 msgstr "ID"
 
@@ -397,7 +385,7 @@ msgstr ""
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Import"
 msgstr "Uvoz"
@@ -405,7 +393,7 @@ msgstr "Uvoz"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Import FAQ"
 msgstr "Uvoz FAQ"
@@ -413,7 +401,7 @@ msgstr "Uvoz FAQ"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "Import a File"
 msgstr ""
@@ -431,7 +419,7 @@ msgstr ""
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import preview failed due to:"
 msgstr "Predpregled uvoza nije uspio zbog:"
@@ -450,7 +438,7 @@ msgstr ""
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
 msgid "Last Modified on"
-msgstr "Zadnje mijenjano"
+msgstr "Zadnja izmjena"
 
 # taken from hr.po
 #. module: base_import
@@ -467,7 +455,7 @@ msgstr "Zadnje ažurirano"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Load File"
 msgstr "Učitaj fajl"
@@ -488,20 +476,21 @@ msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
+#, python-format
 msgid "Model"
-msgstr "Model"
+msgstr ""
 
 # taken from hr.po
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
 #, python-format
 msgid "Name"
-msgstr "Naziv:"
+msgstr "Naziv"
 
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Need Help?"
 msgstr "Trebate pomoć?"
@@ -509,7 +498,7 @@ msgstr "Trebate pomoć?"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "No Separator"
 msgstr "Bez separatora"
@@ -531,12 +520,12 @@ msgstr "Druga varijabla"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__parent_id
 msgid "Parent"
-msgstr "Nasljeđeni"
+msgstr "Nadređeno"
 
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
 msgid "Relation Fields"
 msgstr "Relacijska polja"
@@ -564,7 +553,7 @@ msgstr ""
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Semicolon"
 msgstr "Tačka-zarez"
@@ -572,10 +561,10 @@ msgstr "Tačka-zarez"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Separator:"
-msgstr "Separator:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -593,7 +582,7 @@ msgstr "Neka vrijednost"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Space"
 msgstr "Razmak"
@@ -601,7 +590,7 @@ msgstr "Razmak"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Tab"
 msgstr "Tab"
@@ -691,7 +680,7 @@ msgstr "Testovi: Base Import Model Float"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Text Delimiter:"
 msgstr "Razdjelnik teksta:"
@@ -708,7 +697,7 @@ msgstr ""
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Thousands Separator:"
 msgstr "Separator hiljada:"
@@ -716,14 +705,14 @@ msgstr "Separator hiljada:"
 # taken from hr.po
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Track history during import"
 msgstr "Prati povijest tijekom uvoza"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
@@ -732,7 +721,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
@@ -757,7 +746,7 @@ msgid "Value2"
 msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "You can not import images via URL, check with your administrator or support "
@@ -768,7 +757,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "Definirajte barem jedno polje za uvoz"
@@ -789,76 +778,76 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported"
 msgstr "%d zapisa uspješno uveženo"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
 msgid "Additional Fields"
 msgstr "Dodatna polja"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Advanced"
 msgstr "Napredno"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Allow matching with subfields"
-msgstr "Allow matching with subfields"
+msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Batch Import"
 msgstr "Skupni uvoz"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Batch limit"
 msgstr "Skupni limit"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr "Kliknite \"Nastavi\" za nastavak uvoza od stavke"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Comments"
 msgstr "Komentari"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Create new values"
 msgstr "Kreiraj nove vrijednosti"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download Template"
 msgstr "Odloži kalkulaciju roditelj/dete"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Error while importing records: Text Delimiter should be a single character."
@@ -867,7 +856,7 @@ msgstr ""
 "karakter."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
@@ -880,42 +869,42 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Estimated time left:"
 msgstr "Procjena preostalog vremena:"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Excel files are recommended as formatting is automatic."
 msgstr "Excel datoteke su preporučene jer je formatiranje automatsko."
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "File Column"
 msgstr "Kolona u datoteci"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
 msgstr "Dovršavam trenutnu skupinu prije prekida..."
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Formatting"
 msgstr "Formatiranje"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Found invalid image data, images should be imported as either URLs or "
@@ -926,20 +915,20 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Go to Import FAQ"
 msgstr "Idi na često postavljana pitanja oko uvoza"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Help"
 msgstr "Pomoć"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid ""
 "If the file contains\n"
@@ -953,7 +942,7 @@ msgstr ""
 "                    jednostavnijim, posebno kada datoteka ima mnogo kolona."
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
@@ -963,7 +952,7 @@ msgstr ""
 "poslati obaveštenja tokom uvoza, ali će dovesti do sporijih uvoza."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
@@ -973,34 +962,34 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
 msgstr "Datoteka za uvoz ne sadrži podatke ili je oštećena"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/import_records/import_records.xml
+#: code:addons/base_import/static/src/import_records/import_records.xml:0
 #, python-format
 msgid "Import records"
 msgstr "Uvezi zapise"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Imported file"
 msgstr "Uvežena datoteka"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "Importing"
 msgstr "Uvozim"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
@@ -1010,210 +999,210 @@ msgstr ""
 " formatom: %(cell_format)s, kao (%(format_type)s) formatov nisu podržani."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
+msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Label"
 msgstr "Oznaka"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "Loading file..."
 msgstr "Učitavam datoteku ..."
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "Multiple errors occurred"
 msgstr "Pojavilo se više grešaka"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for"
 msgstr "Map your columns to Uvezi"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for the following"
 msgstr "Nema poklapanja za sljedeće"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Odoo Field"
 msgstr "Polje"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Prevent import"
 msgstr "Zabrani uvoz"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Preview"
 msgstr "Pregled"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Resume"
 msgstr "Nastavi"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Search for a field..."
 msgstr "Traži polje ..."
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "See possible values"
 msgstr "Vidi moguće vrijednosti"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Selected Sheet:"
 msgstr "Odabran list:"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to:"
 msgstr "Izaberite CSV ili Excel datoteku za uvoz."
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: False"
 msgstr "Postavi na : Netočno"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set to: True"
 msgstr "Postavi na : Točno"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Set value as empty"
 msgstr "Postavi vrijednost kao praznu"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Sheet:"
 msgstr "List"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Skip record"
 msgstr "Preskoči zapis"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
 msgid "Standard Fields"
 msgstr "Standardna polja"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Start at line"
 msgstr "Prikaži fields of relation fields (Napredno)"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Stop Import"
 msgstr "Zaustavi uvoz"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 #, python-format
 msgid "Suggested Fields"
 msgstr "Predložena polja"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Test"
-msgstr "Test"
+msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "Testing"
 msgstr "Testiranje"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
 msgstr "Datoteka sadrži blokirajuće greške (vidi ispod)"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains non-blocking warnings (see below)"
 msgstr "Datoteka sadrži neborkirajuća upozorenja (vidi ispod)"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "The file will be imported by batches"
 msgstr "Datoteka će biti uvežena u grupama"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "This column will be concatenated in field"
 msgstr "Ova kolona će biti spojena u polje"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
 msgstr "Ova datoteka je uspješno uvezena do reda %d."
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "To import multiple values, separate them by a comma"
 msgstr ""
@@ -1222,33 +1211,33 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "To import, select a field..."
 msgstr "Za uvoz odaberite polje..."
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/js/import_action.js
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Type"
 msgstr "Tip"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "Untitled"
 msgstr "Bez naslova"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload an Excel or CSV file to import"
 msgstr "Postavite Excel ili CSV datoteku za uvoz"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Use first row as header"
 msgstr "Koristi prvi red kao zaglavlje"
@@ -1260,7 +1249,7 @@ msgid "User"
 msgstr "Vaša registracija za ${object.event_id.name}"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid ""
 "Warning: ignores the labels line, empty lines and lines composed only of "
@@ -1270,13 +1259,13 @@ msgstr ""
 " praznih ćelija"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
 #, python-format
 msgid "When a value cannot be matched:"
 msgstr "Kada vrijednost ne može biti poklopljena:"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
@@ -1284,53 +1273,321 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "at multiple rows"
 msgstr "u više redaka"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "at row"
 msgstr "u retku"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "batch"
 msgstr "grupa"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "in field"
 msgstr "u polju"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "minutes"
 msgstr "minuta"
 
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "more)"
 msgstr "više)"
 
 # taken from hr.po
 #. module: base_import
-#: code:addons/base_import/static/src/legacy/xml/base_import.xml
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "out of"
-msgstr "out of"
+msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
 msgstr "nepoznat kod greške %s"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "%(number)s file(s) selected"
+msgstr "%(number)s odabranih datoteka"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr "%(property_string)s (%(parent_name)s)"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "%s at multiple rows"
+msgstr "%s u više redova"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "%s records successfully imported"
+msgstr "%s zapisa uspješno uvezeno"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
+msgstr ""
+"Pronađena je samo jedna kolona u datoteci, ovo često znači da je separator "
+"datoteke pogrešan."
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"After each batch import, this delay is applied to avoid unthrottled calls"
+msgstr ""
+"Nakon svakog grupnog uvoza, primjenjuje se ova odgoda kako bi se izbjegli "
+"neograničeni pozivi"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Batch"
+msgstr "Grupa"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "But, you can also use .csv files"
+msgstr "Ali, takođe možete koristiti .csv datoteke"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Click 'Resume' to proceed with the import, resuming at line %s."
+msgstr "Kliknite 'Nastavi' za nastavak uvoza, počinje od linije %s."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr "Kolona %(column)s sadrži pogrešne vrijednosti (vrijednost: %(value)s)"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
+msgstr ""
+"Kolona %(column)s sadrži pogrešne vrijednosti. Greška u liniji %(line)d: "
+"%(error)s"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Data to import"
+msgstr "Podaci za uvoz"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Decimals Separator:"
+msgstr "Separator decimala:"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Defines how many megabytes can be imported in each batch import"
+msgstr "Definiše koliko megabajta se može uvesti u svakom grupnom uvozu"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Delay after each batch"
+msgstr "Odgoda nakon svake grupe"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Drop or upload a file to import"
+msgstr "Ispustite ili otpremite datoteku za uvoz"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr "Greška pri parsiranju datuma [%(field)s:L%(line)d]: %(error)s"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr "Greška u redu %(row)s: \"%(error)s\""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
+msgstr ""
+"Greška pri uvozu zapisa: svi redovi trebaju biti iste veličine, ali red "
+"naslova ima %(title_row_entries)d unosa dok prvi red ima "
+"%(first_row_entries)d. Možda treba promijeniti znak separatora."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+msgid "Field '%(field)s' does not accept date/time values."
+msgstr "Polje '%(field)s' ne prihvata vrijednosti datuma/vremena."
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Files to import"
+msgstr "Datoteke za uvoz"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Import preview failed due to: \""
+msgstr "Pregled uvoza nije uspio zbog: \""
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Imported records"
+msgstr "Uvezeni zapisi"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Load Data File"
+msgstr "Učitaj datoteku podataka"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_block_ui.xml:0
+msgid "Loading..."
+msgstr "Učitavanje..."
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Max size per batch"
+msgstr "Maks. veličina po grupi"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Mb"
+msgstr "Mb"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "No file selected"
+msgstr "Nije odabrana datoteka"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "No matching records found for the following name"
+msgstr "Nije pronađen odgovarajući zapis za sljedeći naziv"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload a single file."
+msgstr "Molimo otpremite jednu datoteku."
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
+msgstr "Molimo otpremite Excel (.xls ili .xlsx) ili .csv datoteku za uvoz."
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr "Traka napretka"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Reimport"
+msgstr "Ponovni uvoz"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+msgid "Search a field..."
+msgstr "Pretraži polje..."
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
+msgid "Set to: %s"
+msgstr "Postavi na: %s"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+"Došlo je do problema pri dekodiranju datoteke koristeći kodiranje „%s“.\n"
+"Ovo kodiranje je automatski detektovano."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+"Došlo je do problema pri dekodiranju datoteke koristeći kodiranje „%s“.\n"
+"Ovo kodiranje je ručno odabrano."
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "To import multiple values, separate them by a comma."
+msgstr "Za uvoz više vrijednosti, odvojite ih zarezom."
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Upload Data File"
+msgstr "Otpremi datoteku podataka"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Upload your files"
+msgstr "Otpremite svoje datoteke"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided."
+" Leave empty to let Odoo guess the format (recommended)"
+msgstr ""
+"Koristite HH za sate u 24h sistemu, koristite II u kombinaciji sa 'p' za 12h"
+" sistem. Možete koristiti prilagođeni format pored ponuđenih prijedloga. "
+"Ostavite prazno da Odoo pogodi format (preporučeno)"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include"
+" separators such as a dot, forward slash or dash. You can use a custom "
+"format in addition to the suggestions provided. Leave empty to let Odoo "
+"guess the format (recommended)"
+msgstr ""
+"Koristite YYYY za prikaz godine, MM za mjesec i DD za dan. Uključite "
+"separatore kao što su tačka, kosa crta ili crtica. Možete koristiti "
+"prilagođeni format pored ponuđenih prijedloga. Ostavite prazno da Odoo "
+"pogodi format (preporučeno)"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"You can not import file via URL, check with your administrator or support "
+"for the reason."
+msgstr ""
+"Ne možete uvesti datoteku putem URL-a, provjerite s administratorom ili "
+"podrškom za razlog."
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+msgid "more"
+msgstr "više"
+
+#. module: base_import
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "seconds"
+msgstr "sekundi"

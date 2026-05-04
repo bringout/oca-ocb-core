@@ -24,7 +24,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
 msgid "Active"
-msgstr "Aktivan"
+msgstr "Aktivno"
 
 # taken from hr.po
 #. module: uom
@@ -68,13 +68,13 @@ msgstr ""
 
 # taken from hr.po
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
 # taken from hr.po
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__create_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
 msgid "Created on"
 msgstr "Kreirano"
 
@@ -85,9 +85,9 @@ msgstr "Dan(i)"
 
 # taken from hr.po
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__display_name
+#: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Prikazani naziv"
+msgstr "Naziv za prikaz"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
@@ -119,7 +119,6 @@ msgstr ""
 "1 * (referentna jedinica) = omjer * (ova jedinica)"
 
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__id
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
@@ -128,17 +127,17 @@ msgstr "ID"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category____last_update
 msgid "Last Modified on"
-msgstr "Zadnje mijenjano"
+msgstr "Zadnja izmjena"
 
 # taken from hr.po
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
 msgstr "Zadnji ažurirao"
 
 # taken from hr.po
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category__write_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
 msgid "Last Updated on"
 msgstr "Zadnje ažurirano"
 
@@ -297,13 +296,13 @@ msgstr "kom (komad)"
 
 # taken from hr.po
 #. module: uom
-#: selection:uom.category,measure_type
+#: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
 msgstr "Jedinice"
 
 # taken from hr.po
 #. module: uom
-#: model:ir.actions.act_window,name:uom.product_uom_form_action
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Units of Measure"
 msgstr "Jedinice mjere"
 
@@ -335,7 +334,7 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
@@ -504,7 +503,7 @@ msgid "Hours"
 msgstr "Sati"
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
 "Some critical fields have been modified on %s.\n"
@@ -524,7 +523,7 @@ msgstr ""
 "Zato se menjanje osnovnih mernih jedinica u aktivnoj bazi podataka ne preporučuje."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
@@ -538,7 +537,7 @@ msgstr ""
 "istoj kategoriji."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "The value of ratio could not be Zero"
 msgstr "Vrednost odnosa ne može biti nula"
@@ -550,7 +549,7 @@ msgid "Units of Measure Categories"
 msgstr "Kategorije jedinica mjera"
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
@@ -558,7 +557,7 @@ msgstr ""
 "jedinicu."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
 msgstr "Kategorija mernih jedinica %s treba da ima referentnu mernu jedinicu."
@@ -571,7 +570,7 @@ msgstr "Jmj"
 
 # taken from hr.po
 #. module: uom
-#: code:addons/uom/models/uom_uom.py
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "Warning for %s"
 msgstr "Upozorenje za %s"
@@ -588,6 +587,215 @@ msgid "lb"
 msgstr "galon(i)"
 
 #. module: uom
-#: model:uom.uom,name:uom.uom_square_meter
+#: model:uom.uom,name:uom.product_uom_square_meter
 msgid "m²"
 msgstr "oz(s)"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor
+msgid "Absolute Quantity"
+msgstr "Apsolutna količina"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__relative_factor
+msgid "Contains"
+msgstr "Sadrži"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_dozen
+msgid "Dozens"
+msgstr "Stotice"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__relative_factor
+msgid ""
+"How much bigger or smaller this unit is compared to the reference UoM for "
+"this unit"
+msgstr ""
+"Koliko je ova jedinica veća ili manja u odnosu na referentnu mjernu jedinicu"
+" za ovu jedinicu"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_kwh
+msgid "KWH"
+msgstr "KWH"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_litre
+msgid "L"
+msgstr "L"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_minute
+msgid "Minutes"
+msgstr "Minute"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_pack_6
+msgid "Pack of 6"
+msgstr "Pakovanje od 6"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__parent_path
+msgid "Parent Path"
+msgstr "Putanja roditelja"
+
+#. module: uom
+#: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
+msgid "Product Field Name"
+msgstr "Naziv polja proizvoda"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: uom
+#: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
+msgid "Quantity Field Name"
+msgstr "Naziv polja količine"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__relative_uom_id
+msgid "Reference Unit"
+msgstr "Referentna jedinica"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+msgid "Reference unit of measure is missing."
+msgstr "Nedostaje referentna mjerna jedinica."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__related_uom_ids
+msgid "Related UoMs"
+msgstr "Povezane mjerne jedinice"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Search UOM"
+msgstr "Traži JMJ"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__sequence
+msgid "Sequence"
+msgstr "Redoslijed"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
+"Izmijenjena su neka kritična polja na %s.\n"
+"Imajte na umu da postojeći podaci NEĆE biti ažurirani ovom promjenom.\n"
+"\n"
+"Kako mjerne jedinice utiču na cijeli sistem, ovo može uzrokovati kritične probleme.\n"
+"Stoga se mijenjanje osnovnih mjernih jedinica u radnoj bazi podataka ne preporučuje."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+msgstr ""
+"Sljedeće jedinice mjere su korištene i ne mogu biti izbrisane: %s\n"
+"Možete ih arhivirati."
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_ton
+msgid "Ton"
+msgstr "Tona"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__name
+msgid "Unit Name"
+msgstr "Naziv jedinice"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_form_action
+msgid "Units & Packagings"
+msgstr "Jedinice i pakovanja"
+
+#. module: uom
+#: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
+msgid "Unnamed"
+msgstr "Bez naziva"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_floz
+msgid "fl oz (US)"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_foot
+msgid "ft"
+msgstr "ft"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_square_foot
+msgid "ft²"
+msgstr "ft²"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_foot
+msgid "ft³"
+msgstr "ft³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_gram
+msgid "g"
+msgstr "g"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_gal
+msgid "gal (US)"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_inch
+msgid "in³"
+msgstr "in³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_meter
+msgid "m"
+msgstr "m"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_mile
+msgid "mi"
+msgstr "mi"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_milliliter
+msgid "ml"
+msgstr "ml"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_millimeter
+msgid "mm"
+msgstr "mm"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_meter
+msgid "m³"
+msgstr "m³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_oz
+msgid "oz"
+msgstr "oz"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_qt
+msgid "qt (US)"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_yard
+msgid "yd"
+msgstr "yd"

@@ -28,7 +28,7 @@ msgstr "Logički"
 
 # taken from hr.po
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py
+#: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "Izmjena sistema čuvanja za polje \"%s\" nije dozvoljeno."
@@ -59,9 +59,9 @@ msgstr "Podaci"
 
 # taken from hr.po
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__display_name
 msgid "Display Name"
-msgstr "Prikazani naziv"
+msgstr "Naziv za prikaz"
 
 # taken from hr.po
 #. module: base_sparse_field
@@ -82,7 +82,7 @@ msgid "Float"
 msgstr "Decimalni broj"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__id
 msgid "ID"
 msgstr "ID"
 
@@ -108,7 +108,7 @@ msgstr "Cijeli broj"
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
 msgid "Last Modified on"
-msgstr "Zadnje mijenjano"
+msgstr "Zadnja izmjena"
 
 # taken from hr.po
 #. module: base_sparse_field
@@ -135,7 +135,7 @@ msgstr "Partner"
 
 # taken from hr.po
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py
+#: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Izmjena imena proređenog polja \"%s\" nije dozvoljeno"
@@ -259,7 +259,16 @@ msgstr "Osnova"
 
 # taken from hr.po
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py
+#: code:addons/base_sparse_field/models/models.py:0
 #, python-format
 msgid "Serialization field %r not found for sparse field %s!"
 msgstr "Serijalizacijsko polje %r nije pronađeno za pomoćno polje %s!"
+
+#. module: base_sparse_field
+#: code:addons/base_sparse_field/models/models.py:0
+msgid ""
+"Serialization field \"%(serialization_field)s\" not found for sparse field "
+"%(sparse_field)s!"
+msgstr ""
+"Polje serijalizacije \"%(serialization_field)s\" nije pronađeno za rijetko "
+"polje %(sparse_field)s!"

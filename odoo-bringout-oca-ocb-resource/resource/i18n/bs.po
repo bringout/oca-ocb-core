@@ -22,16 +22,16 @@ msgstr ""
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
 
 # taken from hr.po
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_resource__active
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__active
 msgid "Active"
-msgstr "Aktivan"
+msgstr "Aktivno"
 
 # taken from hr.po
 #. module: resource
@@ -119,9 +119,9 @@ msgstr ""
 
 # taken from hr.po
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:resource.field_res_company__display_name
 msgid "Display Name"
-msgstr "Prikazani naziv"
+msgstr "Naziv za prikaz"
 
 # taken from hr.po
 #. module: resource
@@ -131,13 +131,13 @@ msgstr "Faktor efikasnosti"
 
 # taken from hr.po
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_to
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_to
 msgid "End Date"
-msgstr "Datum Završetka"
+msgstr "Završni datum"
 
 # taken from hr.po
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
 msgid "Friday"
 msgstr "Petak"
 
@@ -149,7 +149,7 @@ msgstr "Petak veče"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Morning"
 msgstr "Petak jutro"
@@ -179,12 +179,7 @@ msgid "Human"
 msgstr "Čovjek"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar__id
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__id
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__id
-#: model:ir.model.fields,field_description:resource.field_resource_mixin__id
-#: model:ir.model.fields,field_description:resource.field_resource_resource__id
-#: model:ir.model.fields,field_description:resource.field_resource_test__id
+#: model:ir.model.fields,field_description:resource.field_res_company__id
 msgid "ID"
 msgstr "ID"
 
@@ -216,7 +211,7 @@ msgstr "Neaktivan"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar____last_update
 msgid "Last Modified on"
-msgstr "Zadnje mijenjano"
+msgstr "Zadnja izmjena"
 
 # taken from hr.po
 #. module: resource
@@ -261,7 +256,7 @@ msgstr "Materijal"
 
 # taken from hr.po
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
 msgid "Monday"
 msgstr "Ponedjeljak"
 
@@ -273,7 +268,7 @@ msgstr "Ponedeljak veče"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Morning"
 msgstr "Ponedjeljak ujutro"
@@ -288,11 +283,11 @@ msgstr "Ujutro"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__name
 msgid "Name"
-msgstr "Naziv:"
+msgstr "Naziv"
 
 # taken from hr.po
 #. module: resource
-#: selection:resource.calendar.leaves,time_type
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
 msgid "Other"
 msgstr "Drugo"
 
@@ -310,7 +305,7 @@ msgstr "Povezano korisničko ime za resurs da upravlja njegovim pristupom."
 
 # taken from hr.po
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
 msgid "Resource"
 msgstr "Resursi"
 
@@ -373,7 +368,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 msgid "Saturday"
 msgstr "Subota"
 
@@ -396,7 +391,7 @@ msgstr "Pretraži radno vrijeme"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/res_company.py
+#: code:addons/resource/models/res_company.py:0
 #, python-format
 msgid "Standard 40 hours/week"
 msgstr "Standardno 40 sati u sedmici"
@@ -405,7 +400,7 @@ msgstr "Standardno 40 sati u sedmici"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
 msgid "Start Date"
-msgstr "Datum početka"
+msgstr "Početni Datum"
 
 # taken from hr.po
 #. module: resource
@@ -431,7 +426,7 @@ msgstr "Početni datum odsustva"
 
 # taken from hr.po
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 msgid "Sunday"
 msgstr "Nedjelja"
 
@@ -478,7 +473,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
 msgid "Thursday"
 msgstr "Četvrtak"
 
@@ -490,7 +485,7 @@ msgstr "Četvrtak veče"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Morning"
 msgstr "Četvrtak jutro"
@@ -515,7 +510,7 @@ msgstr "Vremenska zona"
 
 # taken from hr.po
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
 msgstr "Utorak"
 
@@ -527,20 +522,20 @@ msgstr "Utorak veče"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Morning"
 msgstr "Utorak ujutro"
 
 # taken from hr.po
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+#: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
 msgid "Type"
 msgstr "Tip"
 
 # taken from hr.po
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_resource__user_id
+#: model:ir.model,name:resource.model_res_users
 msgid "User"
 msgstr "Korisnik"
 
@@ -551,7 +546,7 @@ msgstr "Korisnici"
 
 # taken from hr.po
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
 msgid "Wednesday"
 msgstr "Srijeda"
 
@@ -563,7 +558,7 @@ msgstr "Srijeda veče"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Morning"
 msgstr "Srijeda ujutro"
@@ -606,7 +601,7 @@ msgstr "Radni sati"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Working Hours of %s"
 msgstr "Radni sati %s"
@@ -630,7 +625,7 @@ msgstr "Radno vrijeme"
 
 # taken from hr.po
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Archived"
 msgstr "Arhivirano"
 
@@ -654,7 +649,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Attendances can't overlap."
 msgstr "Prisustva se ne mogu preklapati."
@@ -691,14 +686,14 @@ msgstr "Prvi"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "First week"
 msgstr "Prvi tjedan"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Afternoon"
 msgstr "Petak poslije podne"
@@ -735,7 +730,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
@@ -744,7 +739,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Afternoon"
 msgstr "Ponedjeljak poslije podne"
@@ -752,7 +747,7 @@ msgstr "Ponedjeljak poslije podne"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Period"
-msgstr "Period"
+msgstr ""
 
 # taken from hr.po
 #. module: resource
@@ -785,7 +780,7 @@ msgstr "Drugi"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "Second week"
 msgstr "Drugi tjedan"
@@ -800,7 +795,7 @@ msgstr "Odlomak"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__sequence
 msgid "Sequence"
-msgstr "Preostala odsustva"
+msgstr "Redoslijed"
 
 # taken from hr.po
 #. module: resource
@@ -821,14 +816,14 @@ msgid "Technical field for UX purpose."
 msgstr "Tehničko područje za UX namjenu."
 
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The current week (from %s to %s) correspond to the  %s one."
 msgstr "Trenutni tjedan (od %s do %s) odgovara %s jednom."
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
 msgstr "Početni datum odsustva mora biti prije završnog."
@@ -849,7 +844,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Afternoon"
 msgstr "Četvrtak poslije podne"
@@ -868,14 +863,14 @@ msgstr "Pomak vremenskog pojasa"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Afternoon"
 msgstr "Utorak poslije podne"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Afternoon"
 msgstr "Srijeda poslije podne"
@@ -896,35 +891,426 @@ msgstr "Treba li ovo računati kao odsustvo ili radno vrijeme (npr: Obilazak)"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "You can't delete section between weeks."
 msgstr "Nije moguće brisanje odjeljaka između tjedana."
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "first"
 msgstr "prvi"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "other week"
 msgstr "drugi tjedan"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "second"
 msgstr "drugi"
 
 # taken from hr.po
 #. module: resource
-#: code:addons/resource/models/resource.py
+#: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "this week"
 msgstr "ovaj tjedan"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "# Work Resources"
+msgstr "# Radnih resursa"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar_attendance.py:0
+msgid ""
+"%(att)s is a break attendance, You should not have such record on duration "
+"based calendar"
+msgstr ""
+"%(att)s je evidencija pauze. Takav zapis ne biste trebali imati u kalendaru "
+"zasnovanom na trajanju"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "2 Week's Calendar"
+msgstr "Dvosedmični kalendar"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-1\">%</span>"
+msgstr "<span class=\"ms-1\">%</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-2\">hours/day</span>"
+msgstr "<span class=\"ms-2\">sati/dan</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-2\">hours/week</span>"
+msgstr "<span class=\"ms-2\">sati/sedmica</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"o_stat_text\">Time Off</span>"
+msgstr "<span class=\"o_stat_text\">Odsustvo</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span>hours/week</span>"
+msgstr "<span>sati/sedmica</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"Are you sure you want to switch to a 1-week calendar? All work entries will "
+"be lost."
+msgstr ""
+"Da li ste sigurni da želite preći na jednosedmični kalendar? Svi radni unosi"
+" će biti izgubljeni."
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"Are you sure you want to switch to a 2-week calendar? All work entries will "
+"be lost."
+msgstr ""
+"Da li ste sigurni da želite preći na dvosedmični kalendar? Svi radni unosi "
+"će biti izgubljeni."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__duration_based
+msgid "Attendance based on duration"
+msgstr "Prisustvo zasnovano na trajanju"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__avatar_128
+msgid "Avatar 128"
+msgstr "Avatar 128"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Avg"
+msgstr "Prosj"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
+msgid "Break"
+msgstr "Pauza"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__schedule_type
+msgid ""
+"Choose which level of definition you want to define on your Schedule\n"
+"- Flexible : Define an amount of hours to work on the week.\n"
+"- Fully Fixed : define the days, periods and the start & end time for each period of the day"
+msgstr ""
+"Odaberite nivo definicije koji želite postaviti na svom rasporedu\n"
+"- Fleksibilno: Definišite broj sati za rad u sedmici.\n"
+"- Potpuno fiksno: definišite dane, periode i vrijeme početka i završetka za svaki period dana"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Confirm"
+msgstr "Potvrdi"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Date"
+msgstr "Datum"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Define Amount of Hours per day"
+msgstr "Definiši broj sati po danu"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_res_users__resource_calendar_id
+msgid ""
+"Define the working schedule of the resource. If not set, the resource will "
+"have fully flexible working hours."
+msgstr ""
+"Definišite radni raspored resursa. Ako nije postavljeno, resurs će imati "
+"potpuno fleksibilno radno vrijeme."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_days
+msgid "Duration (days)"
+msgstr "Trajanje (dani)"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_hours
+msgid "Duration (hours)"
+msgstr "Trajanje (sati)"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__email
+msgid "Email"
+msgstr "Email"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource__share
+msgid ""
+"External user with limited access, created only for the purpose of sharing "
+"data."
+msgstr ""
+"Eksterni korisnik sa ograničenim pristupom, kreiran samo u svrhu dijeljenja "
+"podataka."
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar__schedule_type__flexible
+msgid "Flexible"
+msgstr "Fleksibilno"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__flexible_hours
+msgid "Flexible Hours"
+msgstr "Fleksibilni sati"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Friday Lunch"
+msgstr "Petak ručak"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__full_day
+msgid "Full Day"
+msgstr "Puni dan"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__full_time_required_hours
+msgid "Full Time Equivalent"
+msgstr "Ekvivalent punog radnog vremena"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar__schedule_type__fully_fixed
+msgid "Fully Fixed"
+msgstr "Potpuno fiksno"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+msgid "Fully Flexible"
+msgstr "Potpuno fleksibilno"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
+msgid "Hours per Week"
+msgstr "Sati po sedmici"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"If checked, the working schedule will be based on an amount of hours "
+"(defined for each day) and not a start & end time anymore.Do you confirm ?"
+msgstr ""
+"Ako je označeno, radni raspored će se zasnivati na broju sati (definisanom "
+"za svaki dan), a ne na vremenu početka i završetka. Potvrđujete li?"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid ""
+"If unchecked, the working schedule will be based on a defined start and end "
+"hours.Do you confirm ?"
+msgstr ""
+"Ako nije označeno, radni raspored će se zasnivati na definisanim početnim i "
+"završnim satima. Potvrđujete li?"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__is_fulltime
+msgid "Is Full Time"
+msgstr "Puno radno vrijeme"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Monday Lunch"
+msgstr "Ponedjeljak ručak"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__full_time_required_hours
+msgid ""
+"Number of hours to work on the company schedule to be considered as "
+"fulltime."
+msgstr ""
+"Broj sati rada prema rasporedu kompanije da bi se smatralo punim radnim "
+"vremenom."
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Partial working schedules"
+msgstr "Djelimični radni rasporedi"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__phone
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Provided datetimes needs to be timezoned"
+msgstr "Pruženi datumi/vremena moraju imati vremensku zonu"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Required Full Time"
+msgstr "Potrebno puno radno vrijeme"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Schedule Total Time"
+msgstr "Ukupno vrijeme rasporeda"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__schedule_type
+msgid "Schedule Type"
+msgstr "Tip rasporeda"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__share
+msgid "Share User"
+msgstr "Korisnik dijeljenja"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Starting Date of Time Off"
+msgstr "Datum početka odsustva"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch"
+msgstr "Prebaci"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 1-week calendar"
+msgstr "Prebaci na jednosedmični kalendar"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to 2-weeks calendar"
+msgstr "Prebaci na dvosedmični kalendar"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to Duration based attendance"
+msgstr "Prebaci na prisustvo zasnovano na trajanju"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch to fixed attendance"
+msgstr "Prebaci na fiksno prisustvo"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar.py:0
+msgid ""
+"The current week (from %(first_day)s to %(last_day)s) corresponds to "
+"%(number)s week."
+msgstr ""
+"Trenutna sedmica (od %(first_day)s do %(last_day)s) odgovara %(number)s "
+"sedmici."
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__duration_based
+msgid ""
+"The hours will be centered around 12:00 to cover the duration for the day"
+msgstr "Sati će biti centrirani oko 12:00 da pokriju trajanje dana"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Thursday Lunch"
+msgstr "Četvrtak ručak"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+msgid "Time Off Detail"
+msgstr "Detalji odsustva"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Total"
+msgstr "Ukupno"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Tuesday Lunch"
+msgstr "Utorak ručak"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Visible to all"
+msgstr "Vidljivo svima"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "Wednesday Lunch"
+msgstr "Srijeda ručak"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Week 1 Working Hours"
+msgstr "Radni sati 1. sedmice"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Week 2 Working Hours"
+msgstr "Radni sati 2. sedmice"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__flexible_hours
+msgid ""
+"When enabled, it will allow employees to work flexibly, without relying on "
+"the company's working schedule (working hours)."
+msgstr ""
+"Kada je omogućeno, dozvoliće zaposlenima da rade fleksibilno, bez oslanjanja"
+" na radni raspored kompanije (radne sate)."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__work_resources_count
+msgid "Work Resources count"
+msgstr "Broj radnih resursa"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+msgid "Work Time Rate"
+msgstr "Stopa radnog vremena"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__work_time_rate
+msgid ""
+"Work time rate versus full time working schedule, should be between 0 and "
+"100 %."
+msgstr ""
+"Stopa radnog vremena u odnosu na puni radni raspored, treba biti između 0 i "
+"100 %."
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+msgid "Working Schedules"
+msgstr "Radni rasporedi"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids_1st_week
+msgid "Working Time 1st Week"
+msgstr "Radno vrijeme 1. sedmice"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids_2nd_week
+msgid "Working Time 2nd Week"
+msgstr "Radno vrijeme 2. sedmice"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "even"
+msgstr "parno"
+
+#. module: resource
+#: code:addons/resource/models/resource_calendar.py:0
+msgid "odd"
+msgstr "neparno"

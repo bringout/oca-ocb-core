@@ -163,12 +163,12 @@ msgstr "Kreirano"
 
 # taken from hr.po
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__display_name
 msgid "Display Name"
-msgstr "Prikazani naziv"
+msgstr "Naziv za prikaz"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__id
 msgid "ID"
 msgstr "ID"
 
@@ -188,7 +188,7 @@ msgstr "Je sinhronizirano"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync____last_update
 msgid "Last Modified on"
-msgstr "Zadnje mijenjano"
+msgstr "Zadnja izmjena"
 
 # taken from hr.po
 #. module: partner_autocomplete
@@ -219,7 +219,7 @@ msgid "Partner Autocomplete Sync"
 msgstr "Sinhronizacija automatskog popunjavanja partnera"
 
 #. module: partner_autocomplete
-#: code:addons/partner_autocomplete/models/res_partner.py
+#: code:addons/partner_autocomplete/models/res_partner.py:0
 #, python-format
 msgid "Partner created by Odoo Partner Autocomplete Service"
 msgstr "Partner kreiran Odoo servisom za automatsko popunjavanje partnera"
@@ -227,14 +227,14 @@ msgstr "Partner kreiran Odoo servisom za automatsko popunjavanje partnera"
 # taken from hr.po
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Placeholder"
 msgstr "Rezervirano"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_fieldchar.js
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_fieldchar.js:0
 #, python-format
 msgid "Searching Autocomplete..."
 msgstr "Pretraživanje automatskog popunjavanja..."
@@ -251,7 +251,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: partner_autocomplete
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Buy more credits"
 msgstr ""
@@ -259,7 +259,7 @@ msgstr ""
 "                <b>Procenjeni godišnji prihod:</b>"
 
 #. module: partner_autocomplete
-#: code:addons/partner_autocomplete/models/res_company.py
+#: code:addons/partner_autocomplete/models/res_company.py:0
 #, python-format
 msgid "Company auto-completed by Odoo Partner Autocomplete Service"
 msgstr ""
@@ -279,7 +279,7 @@ msgstr "HTTP usmjeravanje"
 
 # taken from hr.po
 #. module: partner_autocomplete
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 #, python-format
 msgid "IAP Account Token missing"
 msgstr ""
@@ -292,26 +292,51 @@ msgid "IAP Partner Autocomplete API"
 msgstr "IAP API za automatsko popunjavanje partnera"
 
 #. module: partner_autocomplete
-#: code:addons/partner_autocomplete/models/iap_autocomplete_api.py
+#: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 #, python-format
 msgid "No account token"
 msgstr "<span>&times;</span>"
 
 # taken from hr.po
 #. module: partner_autocomplete
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 #, python-format
 msgid "Not enough credits for Partner Autocomplete"
 msgstr "Nema dovoljno kredita za automatsko popunjavanje partnera"
 
 #. module: partner_autocomplete
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Set Your Account Token"
 msgstr "Postavite token vašeg računa"
 
 #. module: partner_autocomplete
-#: code:addons/partner_autocomplete/models/iap_autocomplete_api.py
+#: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 #, python-format
 msgid "Test mode"
 msgstr "Test režim"
+
+#. module: partner_autocomplete
+#: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Automatically enrich your contact base with corporate data."
+msgstr "Automatski obogatite svoju bazu kontakata korporativnim podacima."
+
+#. module: partner_autocomplete
+#: model:ir.model,website_form_label:partner_autocomplete.model_res_partner
+msgid "Create a Customer"
+msgstr "Kreiraj kupca"
+
+#. module: partner_autocomplete
+#: model:iap.service,unit_name:partner_autocomplete.iap_service_partner_autocomplete
+msgid "Enrichments"
+msgstr "Obogaćivanja"
+
+#. module: partner_autocomplete
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
+msgid "Search Worldwide 🌎"
+msgstr "Pretraži širom svijeta 🌎"
+
+#. module: partner_autocomplete
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr "Nije moguće obogatiti kompaniju (nije potrošen kredit)."

@@ -56,7 +56,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: base_install_request
-#: code:addons/base_install_request/models/ir_module_module.py
+#: code:addons/base_install_request/models/ir_module_module.py:0
 #, python-format
 msgid "Activation Request of \"%s\""
 msgstr "Zahtjev za aktivacijom \"%s\""
@@ -118,7 +118,7 @@ msgstr "Zadnja izmjena"
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
 msgid "Last Updated by"
-msgstr "Zadnje ažurirao"
+msgstr "Zadnji ažurirao"
 
 # taken from hr.po
 #. module: base_install_request
@@ -170,7 +170,7 @@ msgstr "Nema dodatnog troška, ova je aplikacija besplatna."
 
 # taken from hr.po
 #. module: base_install_request
-#: code:addons/base_install_request/wizard/base_module_install_request.py
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "No module selected."
 msgstr "Nema odabranih modula."
@@ -201,7 +201,7 @@ msgstr "Sljedeće aplikacije će biti instalirane:"
 
 # taken from hr.po
 #. module: base_install_request
-#: code:addons/base_install_request/wizard/base_module_install_request.py
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "The module is already installed."
 msgstr "Ovaj modul je već instaliran."
@@ -237,7 +237,7 @@ msgstr "Sada će biti instalirana sljedeće aplikacija"
 
 # taken from hr.po
 #. module: base_install_request
-#: code:addons/base_install_request/wizard/base_module_install_request.py
+#: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "Your request has been successfully sent"
 msgstr "Vaš je zahtjev uspječno poslan"
@@ -250,3 +250,55 @@ msgid ""
 msgstr ""
 "npr. Želim koristiti SMS Marketing modul da organizujem promociju naših "
 "internih događaja i izložbi. Trebam pristup za 3 osobe iz mog tima."
+
+#. module: base_install_request
+#: model:mail.template,body_html:base_install_request.mail_template_base_install_request
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello,\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> has requested to activate the <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/> module.\n"
+"        <br/><br/>\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-quote=\"1\">\n"
+"            <t t-out=\"object.body_html\"/>\n"
+"        </blockquote>\n"
+"        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
+"        <a t-attf-style=\"background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding:8px 16px 8px 16px; text-decoration:none; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-base_install_request.action_base_module_install_review?menu_id={{ ctx['menu_id'] }}\">Review Request</a>\n"
+"        <br/><br/>\n"
+"        Thanks,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    \n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Pozdrav,\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> je zatražio aktivaciju modula <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/>.\n"
+"        <br/><br/>\n"
+"        </p><blockquote data-o-mail-quote-node=\"1\" data-o-mail-quote=\"1\">\n"
+"            <t t-out=\"object.body_html\"/>\n"
+"        </blockquote>\n"
+"        <br data-o-mail-quote=\"1\"/><br data-o-mail-quote=\"1\"/>\n"
+"        <a t-attf-style=\"background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding:8px 16px 8px 16px; text-decoration:none; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius:5px\" t-attf-href=\"/odoo/{{ object.module_id.id }}/action-base_install_request.action_base_module_install_review?menu_id={{ ctx['menu_id'] }}\">Pregledaj zahtjev</a>\n"
+"        <br/><br/>\n"
+"        Hvala,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    \n"
+"</div>\n"
+"            "
+
+#. module: base_install_request
+#: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
+msgid "Why do you need this module?"
+msgstr "Zašto vam je potreban ovaj modul?"

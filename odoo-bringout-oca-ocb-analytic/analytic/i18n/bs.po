@@ -30,7 +30,7 @@ msgstr "Potrebna akcija"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
 msgid "Active"
-msgstr "Aktivan"
+msgstr "Aktivno"
 
 # taken from hr.po
 #. module: analytic
@@ -82,7 +82,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 msgid "Analytic Accounts"
-msgstr "Analitički računi"
+msgstr "Analitička konta"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_group
@@ -90,8 +90,7 @@ msgid "Analytic Categories"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
-#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "Analitička raspodjela"
 
@@ -154,7 +153,7 @@ msgstr "Vezani partner"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
 msgid "Attachment Count"
-msgstr "Broj zakački"
+msgstr "Broj priloga"
 
 # taken from hr.po
 #. module: analytic
@@ -178,7 +177,7 @@ msgstr "Analitički kontni plan"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
 msgid "Childrens"
-msgstr "Podređeni"
+msgstr "Djeca"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
@@ -187,7 +186,7 @@ msgstr ""
 
 # taken from hr.po
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__color
 msgid "Color Index"
 msgstr "Indeks boje"
 
@@ -267,7 +266,7 @@ msgstr "Duguje"
 
 # taken from hr.po
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__description
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
 msgid "Description"
 msgstr "Opis"
 
@@ -275,7 +274,7 @@ msgstr "Opis"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
 msgid "Display Name"
-msgstr "Prikazani naziv"
+msgstr "Naziv za prikaz"
 
 # taken from hr.po
 #. module: analytic
@@ -292,7 +291,7 @@ msgstr "Pratioci (Kanali)"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Pratioci (Partneri)"
+msgstr "Pratioci (partneri)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -308,10 +307,6 @@ msgstr "Grupiši po..."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__id
 msgid "ID"
 msgstr "ID"
 
@@ -324,15 +319,13 @@ msgstr "Ako je označeno nove poruke će zahtjevati vašu pažnju."
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
+msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
 
 # taken from hr.po
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Kada je označena, ruta će biti izborna u Inventory tab-u forme proizvoda. "
-"Imaće prioritet nad rutom skladišta."
+msgstr "Ako je označeno, neke poruke imaju grešku pri dostavi."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
@@ -362,7 +355,7 @@ msgstr "Je pratilac"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account____last_update
 msgid "Last Modified on"
-msgstr "Zadnje mijenjano"
+msgstr "Zadnja izmjena"
 
 # taken from hr.po
 #. module: analytic
@@ -380,13 +373,13 @@ msgstr "Zadnje ažurirano"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Glavna zakačka"
+msgstr "Glavni prilog"
 
 # taken from hr.po
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
 msgid "Message Delivery error"
-msgstr "Greška pri isporuci poruke"
+msgstr "Greška dostave poruke"
 
 # taken from hr.po
 #. module: analytic
@@ -396,9 +389,9 @@ msgstr "Poruke"
 
 # taken from hr.po
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__name
 msgid "Name"
-msgstr "Naziv:"
+msgstr "Naziv"
 
 # taken from hr.po
 #. module: analytic
@@ -432,11 +425,7 @@ msgstr "Broj poruka koje zahtjevaju neku akciju"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-"Kada je skladište odabrano za ovu rutu, ova ruta treba biti viđena kao "
-"defaultna ruta kada proizvodi prolaze kroz ovo skladište. Ovo ponašanje može"
-" biti prevazlađeno rutama na proizvodu/kategorijama proizvoda ili "
-"preferiranim rutama na nabavci"
+msgstr "Broj poruka sa greškom pri dostavi"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
@@ -447,7 +436,7 @@ msgstr "Broj nepročitanih poruka"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
 msgid "Parent"
-msgstr "Nasljeđeni"
+msgstr "Nadređeno"
 
 # taken from hr.po
 #. module: analytic
@@ -461,14 +450,14 @@ msgid "Parent tag"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_id
 msgid "Partner"
 msgstr "Partner"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__percentage
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Percentage"
-msgstr "Procenat"
+msgstr "Postotak"
 
 # taken from hr.po
 #. module: analytic
@@ -571,14 +560,14 @@ msgstr "npr. Projekt XYZ"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py
+#: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "(no accounts)"
 msgstr "(nema konta)"
@@ -609,7 +598,7 @@ msgstr "Broj svih analitičkih konta"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "Analytic"
 msgstr "Analitika"
@@ -622,7 +611,7 @@ msgstr "Broj analitičkih konta"
 
 # taken from hr.po
 #. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_distribution_model
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 msgid "Analytic Distribution Model"
 msgstr "Model analitičke distribucije"
 
@@ -640,7 +629,7 @@ msgstr "Pretraga analitičkih distribucija"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Analytic Distribution Template"
 msgstr "Predložak analitičke distribucije"
@@ -689,14 +678,14 @@ msgstr "Analitička distribucija za primjeniti"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/models/analytic_plan.py
+#: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Accounts"
 msgstr "Konta analitike"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/models/analytic_plan.py
+#: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Plans"
 msgstr "Analitički planovi"
@@ -780,21 +769,21 @@ msgstr "Ima poruku"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Invalid"
 msgstr "Neispravno"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Loading..."
 msgstr "Učitavanje..."
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
 #, python-format
 msgid "Mandatory"
 msgstr "Obavezno"
@@ -807,21 +796,21 @@ msgstr "Razno"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "New Model"
 msgstr "Novi model"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "No Analytic Accounts for this plan"
 msgstr "Nema analitičkih konta za ovaj plan"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "No plans available"
 msgstr "Nema raspoloživih planova"
@@ -836,32 +825,32 @@ msgstr "Broj grešaka"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Broj poruka koje zahtijevaju aktivnost"
+msgstr "Broj poruka koje zahtijevaju akciju"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "OK"
 msgstr "OK"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/models/analytic_mixin.py
+#: code:addons/analytic/models/analytic_mixin.py:0
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
 msgstr "Jedna ili više stavaka traže analitičku distribuciju od 100%."
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/models/analytic_mixin.py
+#: code:addons/analytic/models/analytic_mixin.py:0
 #, python-format
 msgid "Operation not supported"
 msgstr "Operacija nije podržana"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
 #, python-format
 msgid "Optional"
 msgstr "Opcionalno"
@@ -880,7 +869,7 @@ msgstr "Kategorija partnera"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Quick search: %s"
 msgstr "Brzo pretraživanje: %s"
@@ -893,14 +882,14 @@ msgstr "Korjenski plan"
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Search More..."
 msgstr "Traži dalje..."
 
 # taken from hr.po
 #. module: analytic
-#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Search: Analytic Account"
 msgstr "Traži analitički konto"
@@ -945,7 +934,7 @@ msgid "Subplans"
 msgstr "Podplanovi"
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_line.py
+#: code:addons/analytic/models/analytic_line.py:0
 #, python-format
 msgid ""
 "The selected account belongs to another company than the one you're trying "
@@ -970,10 +959,10 @@ msgstr "Kategorija JM"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "View"
-msgstr "Pogledaj"
+msgstr "Pregled"
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py
+#: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
 "You can't set a different company on your analytic account since there are "
@@ -983,7 +972,7 @@ msgstr ""
 " analitičke stavke povezane sa njim."
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_distribution_model.py
+#: code:addons/analytic/models/analytic_distribution_model.py:0
 #, python-format
 msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
@@ -992,3 +981,313 @@ msgstr ""
 "Definisali ste distribuciju sa analitičkim konto(ima) koji pripadaju "
 "specifičnoj kompaniji, ali sa modelom koji je dijeljen između kompanija ili "
 "sa drugom kompanijom"
+
+#. module: analytic
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "%s analytic lines created"
+msgstr "%s analitičkih stavki kreirano"
+
+#. module: analytic
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid ""
+"A 'Project' plan needs to exist and its id needs to be set as "
+"`analytic.project_plan` in the system variables"
+msgstr ""
+"Plan 'Projekta' mora postojati i njegov id treba biti postavljen kao "
+"`analytic.project_plan` u sistemskim varijablama"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Account field"
+msgstr "Polje konta"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_agrolait
+msgid "Acme Corporation"
+msgstr "Acme Corporation"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_active_account
+msgid "Active account"
+msgstr "Aktivni konto"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Add a Line"
+msgstr "Dodaj stavku"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_administratif
+msgid "Administrative"
+msgstr "Administrativno"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Amount field"
+msgstr "Polje iznosa"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_analytic_plan_fields_mixin
+msgid "Analytic Plan Fields"
+msgstr "Polja analitičkog plana"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_asustek
+msgid "Asustek"
+msgstr "Asustek"
+
+#. module: analytic
+#: code:addons/analytic/models/analytic_line.py:0
+msgid "At least one analytic account must be set"
+msgstr "Najmanje jedan analitički konto mora biti postavljen"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Business domain"
+msgstr "Poslovna domena"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
+msgid "Camp to Camp"
+msgstr "Camp to Camp"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_integration_c2c
+msgid "CampToCamp"
+msgstr "CampToCamp"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Close"
+msgstr "Zatvori"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_commercial_marketing
+msgid "Commercial & Marketing"
+msgstr "Komercijala i marketing"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Conditions to meet"
+msgstr "Uvjeti za ispuniti"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_deltapc
+msgid "Delta PC"
+msgstr "Delta PC"
+
+#. module: analytic
+#: model:account.analytic.plan,name:analytic.analytic_plan_departments
+msgid "Departments"
+msgstr "Odjeli"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
+msgid "Desertic - Hispafuentes"
+msgstr "Desertic - Hispafuentes"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Disable save"
+msgstr "Onemogući spremanje"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Analitički konto raspodjele"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Distribution to apply"
+msgstr "Analitička distribucija za primijeniti"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Don't update"
+msgstr "Ne ažuriraj"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Dynamic Placeholder"
+msgstr "Dinamički placeholder"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_finance
+msgid "Finance"
+msgstr "Finansije"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Force applicability"
+msgstr "Nametni primjenjivost"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_hr
+msgid "Human Resources"
+msgstr "Ljudski resursi"
+
+#. module: analytic
+#: model:account.analytic.plan,name:analytic.analytic_plan_internal
+msgid "Internal"
+msgstr "Interni"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_legal
+msgid "Legal"
+msgstr "Pravo"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_think_big_systems
+msgid "Lumber Inc"
+msgstr "Lumber Inc"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_luminous_technologies
+msgid "Luminous Technologies"
+msgstr "Luminous Technologies"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_millennium_industries
+msgid "Millennium Industries"
+msgstr "Millennium Industries"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Multi edit"
+msgstr "Višestruko uređivanje"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_nebula
+msgid "Nebula"
+msgstr "Nebula"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "No analytic plans found"
+msgstr "Nisu pronađeni analitički planovi"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_internal
+msgid "Operating Costs"
+msgstr "Operativni troškovi"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_our_super_product
+msgid "Our Super Product"
+msgstr "Naš super proizvod"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
+msgid "Plan"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
+msgid "Product field"
+msgstr "Polje proizvoda"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_production
+msgid "Production"
+msgstr "Proizvodnja"
+
+#. module: analytic
+#: model:account.analytic.plan,name:analytic.analytic_plan_projects
+msgid "Project"
+msgstr "Projekt"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
+msgid "Project Account"
+msgstr "Projektni konto"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_rd_department
+msgid "Research & Development"
+msgstr "Istraživanje i razvoj"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
+msgid "Root"
+msgstr "Korijenski"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Save as new analytic distribution model"
+msgstr "Spremi kao novi model analitičke distribucije"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_seagate_p2
+msgid "Seagate P2"
+msgstr "Seagate P2"
+
+#. module: analytic
+#: code:addons/analytic/models/analytic_account.py:0
+msgid "See them"
+msgstr "Pogledaj ih"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__sequence
+msgid "Sequence"
+msgstr "Redoslijed"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_spark
+msgid "Spark Systems"
+msgstr "Spark Systems"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Sistemski parametar"
+
+#. module: analytic
+#: code:addons/analytic/models/ir_config_parameter.py:0
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr ""
+"Vrijednost za %s mora biti ID važećeg analitičkog plana koji nije podplan"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_absences
+msgid "Time Off"
+msgstr "Odsustvo"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
+msgid "Unit"
+msgstr "Jedinica"
+
+#. module: analytic
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+msgid "Update"
+msgstr "Ažuriraj"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Visible to all"
+msgstr "Vidljivo svima"
+
+#. module: analytic
+#: code:addons/analytic/models/analytic_account.py:0
+msgid ""
+"Whoa there! Making this change would wipe out your current data. Let's avoid"
+" that, shall we?"
+msgstr ""
+"Hej! Ova promjena bi izbrisala vaše trenutne podatke. Hajde da to "
+"izbjegnemo, zar ne?"
+
+#. module: analytic
+#: code:addons/analytic/models/analytic_account.py:0
+msgid ""
+"You can't change the company of an analytic account that already has "
+"analytic items! It's a recipe for an analytical disaster!"
+msgstr ""
+"Ne možete promijeniti kompaniju analitičkog konta koji već ima analitičke "
+"stavke! To je recept za analitičku katastrofu!"
+
+#. module: analytic
+#: code:addons/analytic/models/analytic_plan.py:0
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr "Ne možete dodati nadređenog osnovnom planu '%s'"
