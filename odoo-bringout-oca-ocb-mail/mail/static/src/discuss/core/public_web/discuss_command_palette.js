@@ -1,53 +1,20 @@
 import { cleanTerm } from "@mail/utils/common/format";
+import { useState } from "@web/owl2/utils";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { ImStatus } from "@mail/core/common/im_status";
 import { useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
-import { ChannelInvitation } from "../common/channel_invitation";
+import { highlightText } from "@web/core/utils/html";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
 
 const NEW_CHANNEL = "NEW_CHANNEL";
-const NEW_GROUP_CHAT = "NEW_GROUP_CHAT";
-
-class CreateChatDialog extends Component {
-    static components = { ChannelInvitation, Dialog };
-    static props = ["close", "name?"];
-    static template = "mail.CreateChatDialog";
-
-    setup() {
-        super.setup();
-        this.store = useService("mail.store");
-        this.invitePeopleState = useState({
-            selectablePartners: [],
-            selectedPartners: [],
-            searchStr: this.props.name,
-        });
-    }
-
-    get createText() {
-        if (this.invitePeopleState.selectedPartners.length === 1) {
-            return _t("Open Chat");
-        }
-        return _t("Create Group Chat");
-    }
-
-    onClickConfirm() {
-        const selectedPartnersId = this.invitePeopleState.selectedPartners.map((p) => p.id);
-        const partners_to = [...new Set([this.store.self.id, ...selectedPartnersId])];
-        if (partners_to.length === 1) {
-            this.store.createGroupChat({ partners_to });
-        } else {
-            this.store.startChat(partners_to);
-        }
-        this.props.close();
-    }
-}
+const VIEW_HIDDEN = "VIEW_HIDDEN";
 
 class CreateChannelDialog extends Component {
     static components = { Dialog };
@@ -58,7 +25,11 @@ class CreateChannelDialog extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.orm = useService("orm");
-        this.state = useState({ name: this.props.name || "", isInvalid: false });
+        this.state = useState({
+            name: this.props.name || "",
+            isInvalid: false,
+            is_readonly: false,
+        });
     }
 
     /** @param {KeyboardEvent} ev */
@@ -78,18 +49,18 @@ class CreateChannelDialog extends Component {
             this.state.isInvalid = true;
             return;
         }
-        await makeNewChannel(name, this.store);
+        await makeNewChannel(name, this.store, this.state.is_readonly);
         this.props.close();
     }
 }
 
-class DiscussCommand extends Component {
-    static components = { ImStatus };
+export class DiscussCommand extends Component {
+    static components = { DiscussAvatar };
     static template = "mail.DiscussCommand";
     static props = {
         counter: { type: Number, optional: true },
         executeCommand: Function,
-        imgUrl: { String, optional: true },
+        imgUrl: { type: String, optional: true },
         name: String,
         persona: { type: Object, optional: true },
         channel: { type: Object, optional: true },
@@ -103,6 +74,14 @@ class DiscussCommand extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
     }
+
+    get formattedEmail() {
+        return highlightText(this.props.searchValue, this.email, "fw-bolder text-primary");
+    }
+
+    get email() {
+        return this.props.persona?.email;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -112,20 +91,20 @@ commandSetupRegistry.add("@", {
     debounceDelay: 200,
     emptyMessage: _t("No conversation found"),
     name: _t("conversations"),
-    placeholder: _t("Search a conversation"),
+    placeholder: _t("Search conversations"),
 });
 
 /**
  * @param {string} name
  * @param {import("models").Store} store
  */
-async function makeNewChannel(name, store) {
+async function makeNewChannel(name, store, is_readonly = false) {
     const { channel } = await store.fetchStoreData(
         "/discuss/create_channel",
-        { name, group_id: store.internalUserGroupId },
-        { readonly: false, requestData: true }
+        { name, group_id: store.internalUserGroupId, is_readonly },
+        { requestData: true }
     );
-    await channel.open({ focus: true, bypassCompact: true });
+    channel.open({ focus: true, bypassCompact: true });
 }
 
 export class DiscussCommandPalette {
@@ -157,31 +136,32 @@ export class DiscussCommandPalette {
         const TOTAL_LIMIT = this.ui.isSmall ? 7 : 10;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
         let partners = [];
-        if (this.store.self_partner) {
+        if (this.store.self_user?.share === false) {
             partners = Object.values(this.store["res.partner"].records).filter(
                 (partner) =>
                     partner.main_user_id?.share === false &&
-                    cleanTerm(partner.displayName).includes(this.cleanedTerm) &&
+                    (cleanTerm(partner.displayName).includes(this.cleanedTerm) ||
+                        cleanTerm(partner.email).includes(this.cleanedTerm)) &&
                     (!filtered || !filtered.has(partner))
             );
             partners = this.suggestion
                 .sortPartnerSuggestions(partners, this.cleanedTerm)
                 .slice(0, TOTAL_LIMIT);
         }
-        const selfPartner = this.store.self_partner?.in(partners)
-            ? this.store.self_partner
+        const selfPartner = this.store.self_user?.partner_id?.in(partners)
+            ? this.store.self_user.partner_id
             : undefined;
         if (selfPartner) {
             // selfPersona filtered here to put at the bottom as lowest priority
             partners = partners.filter((p) => p.notEq(selfPartner));
         }
-        const channels = Object.values(this.store.Thread.records)
+        const channels = Object.values(this.store["discuss.channel"].records)
             .filter(
-                (thread) =>
-                    thread.channel_type &&
-                    thread.channel_type !== "chat" &&
-                    cleanTerm(thread.displayName).includes(this.cleanedTerm) &&
-                    (!filtered || !filtered.has(thread))
+                (channel) =>
+                    channel.channel_type &&
+                    channel.channel_type !== "chat" &&
+                    cleanTerm(channel.displayName).includes(this.cleanedTerm) &&
+                    (!filtered || !filtered.has(channel))
             )
             .sort((c1, c2) => {
                 if (c1.self_member_id && !c2.self_member_id) {
@@ -223,30 +203,32 @@ export class DiscussCommandPalette {
         }
     }
 
-    makeDiscussCommand(threadOrPersona, category) {
-        if (threadOrPersona?.Model?.name === "Thread") {
-            /** @type {import("models").Thread} */
-            const thread = threadOrPersona;
+    makeDiscussCommand(channelOrPersona, category) {
+        if (channelOrPersona?.Model?.getName() === "discuss.channel") {
+            /** @type {import("models").DiscussChannel} */
+            const channel = channelOrPersona;
             return {
                 Component: DiscussCommand,
                 action: async () => {
-                    const channel = await this.store.Thread.getOrFetch(thread);
-                    channel.open({ focus: true, bypassCompact: true });
+                    const channelToOpen = await this.store["discuss.channel"].getOrFetch(
+                        channel.id
+                    );
+                    channelToOpen.open({ focus: true, bypassCompact: true });
                 },
-                name: thread.displayName,
+                name: channel.displayName,
                 category,
                 props: {
-                    imgUrl: thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl,
-                    channel: thread.channel_type !== "chat" ? thread : undefined,
+                    imgUrl: channel.parent_channel_id?.avatarUrl ?? channel.avatarUrl,
+                    channel: channel.channel_type !== "chat" ? channel : undefined,
                     persona:
-                        thread.channel_type === "chat" ? thread.correspondent.persona : undefined,
-                    counter: thread.importantCounter,
+                        channel.channel_type === "chat" ? channel.correspondent.persona : undefined,
+                    counter: channel.importantCounter,
                 },
             };
         }
-        if (threadOrPersona?.Model?._name === "res.partner") {
+        if (channelOrPersona?.Model?.getName() === "res.partner") {
             /** @type {import("models").Persona} */
-            const persona = threadOrPersona;
+            const persona = channelOrPersona;
             const chat = persona.searchChat();
             return {
                 Component: DiscussCommand,
@@ -262,35 +244,30 @@ export class DiscussCommandPalette {
                 },
             };
         }
-        if (threadOrPersona === NEW_CHANNEL) {
+        if (channelOrPersona === NEW_CHANNEL) {
             return {
                 Component: DiscussCommand,
-                action: async () => {
-                    const name = this.options.searchValue.trim();
-                    if (name) {
-                        await makeNewChannel(name, this.store);
-                    } else {
-                        this.dialog.add(CreateChannelDialog);
-                    }
+                action: () => {
+                    this.dialog.add(CreateChannelDialog, {
+                        name: this.options.searchValue?.trim(),
+                    });
                 },
                 name: _t("Create Channel"),
                 className: "o-mail-DiscussCommand-createChannel d-flex",
                 props: { action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true } },
             };
         }
-        if (threadOrPersona === NEW_GROUP_CHAT) {
-            const name = this.options.searchValue.trim();
+        if (channelOrPersona === VIEW_HIDDEN) {
             return {
                 Component: DiscussCommand,
+                name: _t("View hidden conversations"),
+                props: { action: {} },
                 action: () => {
-                    this.dialog.add(CreateChatDialog, { name });
+                    this.env.services.action.doAction("mail.discuss_my_conversations_action");
                 },
-                name: _t("Create Chat"),
-                className: "d-flex",
-                props: { action: { icon: "oi fa-fw oi-users" } },
             };
         }
-        throw new Error(`Unsupported use of makeDiscussCommand("${threadOrPersona}")`);
+        throw new Error(`Unsupported use of makeDiscussCommand("${channelOrPersona}")`);
     }
 }
 
@@ -302,8 +279,12 @@ commandProviderRegistry.add("find_or_start_conversation", {
         palette.buildResults();
         palette.commands.slice(0, 8);
         if (!palette.store.inPublicPage) {
-            palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
-            palette.commands.push(palette.makeDiscussCommand(NEW_GROUP_CHAT));
+            if (palette.cleanedTerm) {
+                palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
+            }
+            if (palette.store.has_unpinned_channels) {
+                palette.commands.push(palette.makeDiscussCommand(VIEW_HIDDEN));
+            }
         }
         return palette.commands;
     },

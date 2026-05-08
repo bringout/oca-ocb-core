@@ -29,14 +29,14 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             'company_id': False,
         })
         cls.product_b.property_account_expense_id = cls.alt_exp_account
-        cls.purchase_order = cls.env['purchase.order'].with_context(tracking_disable=True).create({
+        cls.purchase_order = cls.env['purchase.order'].create({
             'partner_id': cls.partner_a.id,
             'order_line': [
                 Command.create({
                     'name': cls.product_a.name,
                     'product_id': cls.product_a.id,
                     'product_qty': 10.0,
-                    'product_uom_id': cls.product_a.uom_id.id,
+                    'uom_id': cls.product_a.uom_id.id,
                     'price_unit': cls.product_a.list_price,
                     'tax_ids': False,
                     'analytic_distribution': {
@@ -48,7 +48,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                     'name': cls.product_b.name,
                     'product_id': cls.product_b.id,
                     'product_qty': 10.0,
-                    'product_uom_id': cls.product_b.uom_id.id,
+                    'uom_id': cls.product_b.uom_id.id,
                     'price_unit': cls.product_b.list_price,
                     'tax_ids': False,
                     'analytic_distribution': {
@@ -182,60 +182,6 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'account_id': self.account_revenue.id, 'debit': 12000.0, 'credit': 0.0},
         ])
 
-    def test_error_when_different_currencies_accrued(self):
-        """
-        Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry, 
-        a UserError is raised.
-        """
-        purchase_orders = self.env['purchase.order'].create([
-            {
-                'partner_id': self.partner_a.id,
-                'currency_id': self.company_data['currency'].id,
-            }, 
-            {
-                'partner_id': self.partner_a.id,
-                'currency_id': self.other_currency.id,
-            }
-        ])
-        purchase_orders.button_confirm()
-        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
-            active_model='purchase.order',
-            active_ids=purchase_orders.ids,
-        ).new()
-        with self.assertRaises(UserError, msg="An error should be raised if two different currencies are used for Accrued Expense Entry."):
-            accrued_wizard._compute_move_vals()
-
-    def test_accrued_entries_with_discount(self):
-        purchase_order = self.env['purchase.order'].create({
-            'partner_id': self.partner_a.id,
-            'order_line': [
-                Command.create({
-                    'name': self.product_a.name,
-                    'product_id': self.product_a.id,
-                    'product_qty': 10.0,
-                    'product_uom_id': self.product_a.uom_id.id,
-                    'price_unit': 10.0,
-                    'tax_ids': False,
-                    'discount': 10,
-                }),
-            ],
-        })
-        purchase_order.button_confirm()
-        purchase_order.order_line.qty_received = 10
-        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
-            active_model='purchase.order',
-            active_ids=purchase_order.ids,
-        ).create({
-            'account_id': self.account_revenue.id,
-        })
-        res = self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
-        self.assertRecordValues(res, [
-            {'debit': 0.0, 'credit': 90.0},
-            {'debit': 90.0, 'credit': 0.0},
-            {'debit': 90.0, 'credit': 0.0},
-            {'debit': 0.0, 'credit': 90.0},
-        ])
-
     def test_accrual_entry_date_as_string_from_context(self):
         """
         Test that passing `accrual_entry_date` as a string in the context
@@ -258,3 +204,26 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'account_id': self.alt_exp_account.id, 'debit': 1000.0, 'credit': 0.0},
             {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 6000.0},
         ])
+
+    def test_error_when_different_currencies_accrued(self):
+        """
+        Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry, 
+        a UserError is raised.
+        """
+        purchase_orders = self.env['purchase.order'].create([
+            {
+                'partner_id': self.partner_a.id,
+                'currency_id': self.company_data['currency'].id,
+            }, 
+            {
+                'partner_id': self.partner_a.id,
+                'currency_id': self.other_currency.id,
+            }
+        ])
+        purchase_orders.button_confirm()
+        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='purchase.order',
+            active_ids=purchase_orders.ids,
+        ).new()
+        with self.assertRaises(UserError, msg="An error should be raised if two different currencies are used for Accrued Expense Entry."):
+            accrued_wizard._compute_move_vals()

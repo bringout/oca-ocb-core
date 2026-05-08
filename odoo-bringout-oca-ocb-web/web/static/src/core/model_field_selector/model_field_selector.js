@@ -1,7 +1,9 @@
-import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
 
 export class ModelFieldSelector extends Component {
@@ -20,7 +22,7 @@ export class ModelFieldSelector extends Component {
         update: { type: Function, optional: true },
         filter: { type: Function, optional: true },
         sort: { type: Function, optional: true },
-        followRelations: { type: Boolean, optional: true },
+        followRelation: { type: [Boolean, Function], optional: true },
         showDebugInput: { type: Boolean, optional: true },
     };
     static defaultProps = {
@@ -29,7 +31,7 @@ export class ModelFieldSelector extends Component {
         isDebugMode: false,
         showSearchInput: true,
         update: () => {},
-        followRelations: true,
+        followRelation: true,
     };
 
     setup() {
@@ -45,19 +47,25 @@ export class ModelFieldSelector extends Component {
                     this.props.update(this.newPath, fieldInfo);
                 }
             },
+            useBottomSheet: this.isBottomSheet,
         });
         this.keepLast = new KeepLast();
         this.state = useState({ isInvalid: false, displayNames: [] });
         onWillStart(() => this.updateState(this.props));
-        onWillUpdateProps((nextProps) => this.updateState(nextProps));
+        onWillUpdateProps((nextProps) => {
+            const modelPathKeys = ["resModel", "path", "allowEmpty"];
+            if (modelPathKeys.some((key) => this.props[key] !== nextProps[key])) {
+                this.updateState(nextProps);
+            }
+        });
     }
 
-    openPopover(currentTarget) {
-        if (this.props.readonly) {
-            return;
-        }
-        this.newPath = null;
-        this.popover.open(currentTarget, {
+    get isBottomSheet() {
+        return this.env.isSmall && hasTouch();
+    }
+
+    getPopoverProps() {
+        return {
             resModel: this.props.resModel,
             path: this.props.path,
             readProperty: this.props.readProperty,
@@ -71,9 +79,17 @@ export class ModelFieldSelector extends Component {
             isDebugMode: this.props.isDebugMode,
             filter: this.props.filter,
             sort: this.props.sort,
-            followRelations: this.props.followRelations,
+            followRelation: this.props.followRelation,
             showDebugInput: this.props.showDebugInput,
-        });
+        };
+    }
+
+    openPopover(currentTarget) {
+        if (this.props.readonly) {
+            return;
+        }
+        this.newPath = null;
+        this.popover.open(currentTarget, this.getPopoverProps());
     }
 
     async updateState(params, isConcurrent) {

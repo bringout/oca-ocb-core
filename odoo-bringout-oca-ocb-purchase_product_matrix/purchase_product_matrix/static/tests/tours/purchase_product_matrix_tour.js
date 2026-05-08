@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('purchase_matrix_tour', {
-    url: "/odoo",
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     run: "click",
@@ -21,7 +20,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: '.ui-menu-item > a:contains("Agrolait")',
     run: "click",
 }, {
-    trigger: "a:contains('Add a product')",
+    trigger: "button:contains('Add a product')",
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
@@ -85,7 +84,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: ".o_form_status_indicator_buttons:not(:visible)",
 },
 {
-    trigger: 'a:contains("Add a product")',
+    trigger: 'button:contains("Add a product")',
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',

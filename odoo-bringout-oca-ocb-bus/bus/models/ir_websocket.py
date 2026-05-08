@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.http import request, SessionExpiredException
+from odoo.http import request
+from odoo.http.session import check
 from odoo.tools.misc import OrderedSet
-from odoo.service import security
 from ..models.bus import dispatch
 from ..websocket import wsrequest
 
@@ -25,6 +25,7 @@ class IrWebsocket(models.AbstractModel):
         channels.extend(self.env.user.all_group_ids)
         if req.session.uid:
             channels.append(self.env.user.partner_id)
+            channels.append(self.env.user)
         return channels
 
     def _serve_ir_websocket(self, event_name, data):
@@ -59,14 +60,14 @@ class IrWebsocket(models.AbstractModel):
         last = 0 if last > self.env["bus.bus"].sudo()._bus_last_id() else last
         return {"channels": OrderedSet(self._build_bus_channel_list(list(channels))), "last": last}
 
-    def _after_subscribe_data(self, data):
-        """Function invoked after subscribe data have been processed.
-        Modules can override this method to add custom behavior."""
-
     def _subscribe(self, og_data):
         data = self._prepare_subscribe_data(og_data["channels"], og_data["last"])
         dispatch.subscribe(data["channels"], data["last"], self.env.registry.db_name, wsrequest.ws)
-        self._after_subscribe_data(data)
+        # sudo - bus.bus: checking if last received notification still exists is acceptable.
+        if og_data["check_outdated"] and not self.env["bus.bus"].sudo().search(
+            [("id", "=", og_data["last"])],
+        ):
+            wsrequest.ws.send_worker_internal_message("bus/subscription_outdated")
 
     def _on_websocket_closed(self, cookies):
         """Function invoked upon WebSocket termination.
@@ -75,9 +76,7 @@ class IrWebsocket(models.AbstractModel):
     @classmethod
     def _authenticate(cls):
         if wsrequest.session.uid is not None:
-            if not security.check_session(wsrequest.session, wsrequest.env, wsrequest):
-                wsrequest.session.logout(keep_db=True)
-                raise SessionExpiredException()
+            check(wsrequest.session, wsrequest)
         else:
             public_user = wsrequest.env.ref('base.public_user')
             wsrequest.update_env(user=public_user.id)

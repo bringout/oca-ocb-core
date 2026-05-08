@@ -2,6 +2,7 @@
 from odoo.tests.common import TransactionCase, tagged
 from odoo._monkeypatches.stdnum import new_get_soap_client
 from odoo.exceptions import ValidationError
+from odoo.tools import mute_logger
 from unittest.mock import patch
 
 import stdnum.eu.vat
@@ -10,6 +11,7 @@ from zeep import Client, Transport
 from zeep.wsdl import Document
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStructure(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -39,6 +41,7 @@ class TestStructure(TransactionCase):
         })
         self.assertEqual(partner.vat, 'RORO790707I47', "Partner VAT should not be altered")
 
+    @mute_logger('odoo.addons.account.models.partner')
     def test_missing_company_country(self):
         company = self.env['res.company'].create({
             'name': 'Test Company',
@@ -57,6 +60,7 @@ class TestStructure(TransactionCase):
         invalid = partner._get_vat_required_valid(company=company)
         self.assertEqual(invalid, False)
 
+    @mute_logger('odoo.addons.account.models.partner')
     def test_parent_validation(self):
         """Test the validation with company and contact"""
 
@@ -66,7 +70,6 @@ class TestStructure(TransactionCase):
             "name": "World Company",
             "country_id": self.env.ref("base.be").id,
             "vat": "ATU12345675",
-            "company_type": "company",
         })
 
         # reactivate it and correct the vat number
@@ -139,7 +142,6 @@ class TestStructure(TransactionCase):
         with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap', TestStructure._check_vies_iap):
             partner = self.env["res.partner"].create({
                 'name': 'Dummy Partner',
-                'company_name': 'My Company',
                 'vat': 'BE0477472701',
                 'country_id': self.env.ref("base.be").id,
             })
@@ -147,7 +149,7 @@ class TestStructure(TransactionCase):
 
         with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap',
                    side_effect=Exception('should not call _check_vies_iap()')):
-            partner.create_company()
+            partner._create_parent_from_name('My Company')
             self.assertEqual(partner.vies_valid, True)
             self.assertEqual(partner.parent_id.name, 'My Company')
             self.assertEqual(partner.parent_id.vies_valid, True)

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:38+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
 "PO-Revision-Date: 2025-11-08 21:52+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/base_vat/"
@@ -68,11 +68,6 @@ msgid "49-098-576 or 49098576"
 msgstr "۴۹-۰۹۸-۵۷۶ یا ۴۹۰۹۸۵۷۶"
 
 #. module: base_vat
-#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
-msgid "Base VAT: Sync updates from IAP VIES"
-msgstr ""
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -82,8 +77,8 @@ msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
-msgid "Companies"
-msgstr "شرکت"
+msgid "Company"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
@@ -120,6 +115,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "نام نمایش داده شده"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Error while checking the VAT number '%s' against the VIES service."
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -192,12 +193,6 @@ msgstr "معتبر درون جامعه‌ای"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "Invalid IAP VIES endpoint"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
 msgstr ""
 
@@ -210,7 +205,6 @@ msgstr "انجام اعتبارسنجی Vies"
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "شناسه مالیاتی"
 
@@ -218,8 +212,8 @@ msgstr "شناسه مالیاتی"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
-"(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
+"%(expected_note)s"
 msgstr ""
 
 #. module: base_vat
@@ -228,12 +222,6 @@ msgstr ""
 msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "The Intra-Community validity has been updated."
 msgstr ""
 
 #. module: base_vat
@@ -250,19 +238,7 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VIES check failed. Please check the Tax ID manually."
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "The VIES check is pending. The status will be updated soon."
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
+msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
 msgstr ""
 
 #. module: base_vat
@@ -286,12 +262,6 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "XXXXXXXXX [9 digits]"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
 
@@ -306,30 +276,3 @@ msgstr "یا 11 رقم برای CPF یا 14 رقم برای CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "شریک [%s]"
-
-#~ msgid ""
-#~ "Connection with the VIES server failed. The VAT number %s could not be "
-#~ "validated."
-#~ msgstr ""
-#~ "اتصال با سرور VIES ناموفق بود. شماره مالیات بر ارزش افزوده %s نمی‌تواند "
-#~ "تأیید شود."
-
-#~ msgid "The VAT number %s could not be interpreted by the VIES server."
-#~ msgstr "شماره مالیات بر ارزش افزوده %s توسط سرور VIES قابل تفسیر نیست."
-
-#~ msgid ""
-#~ "The request for VAT validation was not processed. VIES service has "
-#~ "responded with the following error: %s"
-#~ msgstr ""
-#~ "درخواست برای اعتبارسنجی مالیات بر ارزش افزوده پردازش نشد. سرویس VIES با "
-#~ "خطای زیر پاسخ داده است: %s"
-
-#~ msgid "Fiscal Position"
-#~ msgstr "موقعیت مالی"
-
-#~ msgid ""
-#~ "If this checkbox is ticked, you will not be able to save a contact if its "
-#~ "VAT number cannot be verified by the European VIES service."
-#~ msgstr ""
-#~ "اگر این کادر تأیید شود ، اگر شماره مالیات بر ارزش افزوده آن توسط سرویس "
-#~ "VIES اروپا قابل تأیید نباشد ، نمی توانید مخاطب را ذخیره کنید."

@@ -1,10 +1,11 @@
+import { validate } from "@web/owl2/utils";
 import { isVisible } from "@web/core/utils/ui";
 import { delay } from "@web/core/utils/concurrency";
-import { validate } from "@odoo/owl";
 
 const macroSchema = {
     name: { type: String, optional: true },
     timeout: { type: Number, optional: true },
+    allowDelayToRemove: { type: Boolean, optional: true },
     steps: {
         type: Array,
         element: {
@@ -39,17 +40,19 @@ async function performAction(trigger, action) {
         throw new MacroError(
             "Action",
             error.stack || `ERROR during perform action: ${error.message}`,
-            {cause: error}
+            { cause: error }
         );
     }
 }
 
-async function waitForTrigger(trigger) {
+async function waitForTrigger(trigger, waitDelay = false) {
     if (!trigger) {
         return;
     }
     try {
-        await delay(50);
+        if (waitDelay) {
+            await delay(50);
+        }
         return await waitUntil(() => {
             if (typeof trigger === "function") {
                 return trigger();
@@ -119,7 +122,8 @@ export class Macro {
             const step = this.steps[this.currentIndex];
             const timeoutDelay = step.timeout || this.timeout || 10000;
             const executeStep = async () => {
-                const trigger = await waitForTrigger(step.trigger);
+                // To be remove ASAP because it allows non deterministic behaviors.
+                const trigger = await waitForTrigger(step.trigger, this.allowDelayToRemove);
                 const result = await performAction(trigger, step.action);
                 await this.onStep({ step, trigger, index: this.currentIndex });
                 return result;
@@ -157,82 +161,5 @@ export class Macro {
         } else if (this.currentIndex === this.steps.length) {
             this.onComplete();
         }
-    }
-}
-
-export class MacroMutationObserver {
-    observerOptions = {
-        attributes: true,
-        childList: true,
-        subtree: true,
-        characterData: true,
-    };
-    constructor(callback) {
-        this.callback = callback;
-        this.observer = new MutationObserver((mutationList, observer) => {
-            callback(mutationList);
-            mutationList.forEach((mutationRecord) =>
-                Array.from(mutationRecord.addedNodes).forEach((node) => {
-                    let iframes = [];
-                    if (String(node.tagName).toLowerCase() === "iframe") {
-                        iframes = [node];
-                    } else if (node instanceof HTMLElement) {
-                        iframes = Array.from(node.querySelectorAll("iframe"));
-                    }
-                    iframes.forEach((iframeEl) =>
-                        this.observeIframe(iframeEl, observer, () => callback())
-                    );
-                    this.findAllShadowRoots(node).forEach((shadowRoot) =>
-                        observer.observe(shadowRoot, this.observerOptions)
-                    );
-                })
-            );
-        });
-    }
-    disconnect() {
-        this.observer.disconnect();
-    }
-    findAllShadowRoots(node, shadowRoots = []) {
-        if (node.shadowRoot) {
-            shadowRoots.push(node.shadowRoot);
-            this.findAllShadowRoots(node.shadowRoot, shadowRoots);
-        }
-        node.childNodes.forEach((child) => {
-            this.findAllShadowRoots(child, shadowRoots);
-        });
-        return shadowRoots;
-    }
-    observe(target) {
-        this.observer.observe(target, this.observerOptions);
-        //When iframes already exist at "this.target" initialization
-        target
-            .querySelectorAll("iframe")
-            .forEach((el) => this.observeIframe(el, this.observer, () => this.callback()));
-        //When shadowDom already exist at "this.target" initialization
-        this.findAllShadowRoots(target).forEach((shadowRoot) => {
-            this.observer.observe(shadowRoot, this.observerOptions);
-        });
-    }
-    observeIframe(iframeEl, observer, callback) {
-        const observerOptions = {
-            attributes: true,
-            childList: true,
-            subtree: true,
-            characterData: true,
-        };
-        const observeIframeContent = () => {
-            if (iframeEl.contentDocument) {
-                iframeEl.contentDocument.addEventListener("load", (event) => {
-                    callback();
-                    observer.observe(event.target, observerOptions);
-                });
-                if (!iframeEl.src || iframeEl.contentDocument.readyState === "complete") {
-                    callback();
-                    observer.observe(iframeEl.contentDocument, observerOptions);
-                }
-            }
-        };
-        observeIframeContent();
-        iframeEl.addEventListener("load", observeIframeContent);
     }
 }

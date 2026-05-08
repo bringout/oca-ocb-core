@@ -1,3 +1,11 @@
+import {
+    render,
+    onWillRender,
+    useLayoutEffect,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
@@ -16,35 +24,30 @@ import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_
 import { ViewButton } from "@web/views/view_button/view_button";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
+import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
 import { ListCogMenu } from "./list_cog_menu";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
-import {
-    Component,
-    onWillPatch,
-    onWillRender,
-    onWillStart,
-    useEffect,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@odoo/owl";
+import { Component, onWillPatch, onWillStart } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
 export class ListController extends Component {
     static template = `web.ListView`;
     static components = {
+        OfflineActionHelper,
         ActionMenus,
         Layout,
         ViewButton,
         MultiRecordViewButton,
         SearchBar,
+        OfflineSearchBar,
         CogMenu: ListCogMenu,
         DropdownItem,
         SelectionBox,
@@ -54,7 +57,6 @@ export class ListController extends Component {
         allowSelectors: { type: Boolean, optional: true },
         onSelectionChanged: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
-        showButtons: { type: Boolean, optional: true },
         allowOpenAction: { type: Boolean, optional: true },
         Model: Function,
         Renderer: Function,
@@ -65,7 +67,6 @@ export class ListController extends Component {
         allowSelectors: true,
         createRecord: () => {},
         selectRecord: () => {},
-        showButtons: true,
         allowOpenAction: true,
     };
 
@@ -73,6 +74,7 @@ export class ListController extends Component {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
+        this.offlineService = useService("offline");
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
@@ -134,7 +136,7 @@ export class ListController extends Component {
             getOrderBy: () => this.model.root.orderBy,
         });
 
-        useEffect(
+        useLayoutEffect(
             (isReady) => {
                 if (isReady) {
                     if (this.env.isSmall) {
@@ -169,7 +171,7 @@ export class ListController extends Component {
                     }
                     await this.model.root.load({ limit, offset });
                     if (hasNavigated) {
-                        this.onPageChangeScroll();
+                        this.onPageChange();
                     }
                 },
                 updateTotal:
@@ -177,7 +179,7 @@ export class ListController extends Component {
             };
         });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.onSelectionChanged();
             },
@@ -231,6 +233,7 @@ export class ListController extends Component {
                 onAskMultiSaveConfirmation: this.onAskMultiSaveConfirmation.bind(this),
                 onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
             },
+            useSendBeaconToSaveUrgently: true,
         };
     }
 
@@ -265,6 +268,17 @@ export class ListController extends Component {
 
     get deleteConfirmationDialogProps() {
         return {};
+    }
+
+    get isNewButtonAvailableOffline() {
+        if (this.archInfo.editable && !this.model.root.isGrouped) {
+            return this.offlineService.isAvailableOffline(
+                this.env.config.actionId,
+                "list_quick_create",
+                false
+            );
+        }
+        return this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false);
     }
 
     getExportableFields() {
@@ -324,7 +338,7 @@ export class ListController extends Component {
         if (!this.model.isReady && !this.model.config.groupBy.length && this.editable) {
             // If the view isn't grouped and the list is editable, a new record row will be added,
             // in edition. In this situation, we must wait for the model to be ready.
-            await this.model.whenReady;
+            await this.model.whenReady.promise;
         }
         const list = (group && group.list) || this.model.root;
         if (this.editable && !list.isGrouped) {
@@ -335,7 +349,7 @@ export class ListController extends Component {
             if (!list.editedRecord) {
                 await (group || list).addNewRecord(this.editable === "top");
             }
-            this.render();
+            render(this);
         } else {
             await this.props.createRecord();
         }
@@ -405,7 +419,7 @@ export class ListController extends Component {
         );
     }
 
-    onPageChangeScroll() {
+    onPageChange() {
         if (this.rootRef && this.rootRef.el) {
             if (this.env.isSmall) {
                 this.rootRef.el.scrollTop = 0;
@@ -433,6 +447,7 @@ export class ListController extends Component {
             },
             archive: {
                 isAvailable: () => this.archiveEnabled,
+                availableOffline: true,
                 sequence: 40,
                 icon: "oi oi-archive",
                 description: _t("Archive"),
@@ -441,6 +456,7 @@ export class ListController extends Component {
             },
             unarchive: {
                 isAvailable: () => this.archiveEnabled,
+                availableOffline: true,
                 sequence: 45,
                 icon: "oi oi-unarchive",
                 description: _t("Unarchive"),
@@ -448,6 +464,7 @@ export class ListController extends Component {
             },
             delete: {
                 isAvailable: () => this.activeActions.delete,
+                availableOffline: true,
                 sequence: 50,
                 icon: "fa fa-trash-o",
                 description: _t("Delete"),
@@ -500,7 +517,7 @@ export class ListController extends Component {
             ...this.props.display,
             controlPanel: {
                 ...controlPanel,
-                layoutActions: !this.hasSelectedRecords,
+                actions: !this.hasSelectedRecords,
             },
         };
     }

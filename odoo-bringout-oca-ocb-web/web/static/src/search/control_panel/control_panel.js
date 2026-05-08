@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -15,9 +16,8 @@ import { makeContext } from "@web/core/context";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
-import { SearchBar } from "../search_bar/search_bar";
 
-import { Component, useState, onMounted, useRef, useEffect } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 
 const STICKY_CLASS = "o_mobile_sticky";
 
@@ -91,7 +91,6 @@ export class ControlPanel extends Component {
     static template = "web.ControlPanel";
     static components = {
         Pager,
-        SearchBar,
         Dropdown,
         DropdownItem,
         Breadcrumbs,
@@ -103,9 +102,16 @@ export class ControlPanel extends Component {
         display: { type: Object, optional: true },
         slots: { type: Object, optional: true },
     };
+    static defaultProps = {
+        display: {
+            actions: true,
+            buttons: true,
+        },
+    };
 
     setup() {
         this.actionService = useService("action");
+        this.offlineService = useService("offline");
         this.pagerProps = this.env.config.pagerProps
             ? useState(this.env.config.pagerProps)
             : undefined;
@@ -187,7 +193,7 @@ export class ControlPanel extends Component {
             );
         }
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             if (
                 !this.env.isSmall ||
                 ("adaptToScroll" in this.display && !this.display.adaptToScroll)
@@ -207,7 +213,7 @@ export class ControlPanel extends Component {
 
         // The goal is to automatically open the dropdown menu of embedded actions if there is only one visible embedded action
         // We use a timer to delay the display of that dropdown menu to avoid flicker issues
-        useEffect(
+        useLayoutEffect(
             (el, showEmbedded) => {
                 const timer = setTimeout(() => {
                     if (
@@ -303,7 +309,7 @@ export class ControlPanel extends Component {
      */
     get display() {
         return {
-            layoutActions: true,
+            ...this.constructor.defaultProps.display,
             ...this.props.display,
         };
     }
@@ -400,6 +406,13 @@ export class ControlPanel extends Component {
         }
 
         this.oldScrollTop = scrollTop;
+    }
+
+    isViewAvailable(view) {
+        return (
+            !this.offlineService.offline ||
+            this.offlineService.isAvailableOffline(this.env.config.actionId, view.type)
+        );
     }
 
     /**

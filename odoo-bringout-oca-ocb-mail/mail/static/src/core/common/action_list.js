@@ -12,7 +12,6 @@ const actionListProps = [
     "fw?",
     "hasBtnBg?",
     "odooControlPanelSwitchStyle?",
-    "thread?",
 ];
 
 class Action extends Component {
@@ -63,6 +62,20 @@ class Action extends Component {
         );
     }
 
+    get isInlineCircleButtonValue() {
+        if (!this.props.inline || !this.action.icon) {
+            return false;
+        }
+        if (this.env.inComposer || this.env.inMessage) {
+            return true;
+        }
+        return (
+            this.action.tags.includes("JOIN_LEAVE_CALL") &&
+            this.action.icon &&
+            !this.action.inlineName
+        );
+    }
+
     onSelected(action, ev) {
         action.onSelected?.(ev);
         this.env.inCallDropdown?.close();
@@ -88,7 +101,7 @@ export class ActionList extends Component {
                     return [actualPropName, this.props[actualPropName]];
                 })
             ),
-            style: `z-index: ${group.length - index}`,
+            style: `z-index: ${group.length - index + (action.hotkey ? 1 : 0)}`,
         };
     }
 

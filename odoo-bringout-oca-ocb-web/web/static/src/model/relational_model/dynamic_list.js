@@ -5,7 +5,8 @@ import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
 import { Record as RelationalRecord } from "./record";
-import { getFieldsSpec, resequence } from "./utils";
+import { getFieldsSpec, getScheduleORMExtras, resequence } from "./utils";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * @typedef {import("./record").Record} RelationalRecord
@@ -255,10 +256,13 @@ export class DynamicList extends DataPoint {
 
         if (resIds.length > 1) {
             this.model.dialog.add(ConfirmationDialog, {
-                body: _t("Are you sure that you want to duplicate all the selected records?"),
+                title: _t("Duplicate Records"),
+                body: _t(
+                    "You are about to create a copy of every selected record.\nAre you sure you want to proceed?"
+                ),
                 confirm: () => copy(resIds),
                 cancel: () => {},
-                confirmLabel: _t("Confirm"),
+                confirmLabel: _t("Duplicate"),
             });
         } else {
             await copy(resIds);
@@ -273,9 +277,27 @@ export class DynamicList extends DataPoint {
             resIds = await this.getResIds(true);
             records = this.records.filter((r) => resIds.includes(r.resId));
         }
-        const unlinked = await this.model.orm.unlink(this.resModel, resIds, {
-            context: this.context,
-        });
+        let unlinked = false;
+        try {
+            unlinked = await this.model.orm.unlink(this.resModel, resIds, {
+                context: this.context,
+            });
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                this.model.offline.scheduleORM(
+                    this.resModel,
+                    "unlink",
+                    [resIds],
+                    { context: this.context },
+                    {
+                        extras: getScheduleORMExtras(this.model, records),
+                    }
+                );
+                this._unSelectAll();
+                return true;
+            }
+            throw e;
+        }
         if (!unlinked) {
             return false;
         }
@@ -292,13 +314,6 @@ export class DynamicList extends DataPoint {
         }
         await this.model.load();
         return unlinked;
-    }
-
-    async _leaveSampleMode() {
-        if (this.model.useSampleModel) {
-            await this._load(this.offset, this.limit, this.orderBy, this.domain);
-            this.model.useSampleModel = false;
-        }
     }
 
     async _multiSave(editedRecord, changes) {
@@ -472,7 +487,26 @@ export class DynamicList extends DataPoint {
         const method = state ? "action_archive" : "action_unarchive";
         const context = this.context;
         const resIds = await this.getResIds(isSelected);
-        const action = await this.model.orm.call(this.resModel, method, [resIds], { context });
+        let action;
+        try {
+            action = await this.model.orm.call(this.resModel, method, [resIds], { context });
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                const records = this.records.filter((r) => resIds.includes(r.resId));
+                this.model.offline.scheduleORM(
+                    this.resModel,
+                    method,
+                    [resIds],
+                    { context: this.context },
+                    {
+                        extras: getScheduleORMExtras(this.model, records),
+                    }
+                );
+                this._unSelectAll();
+                return true;
+            }
+            throw e;
+        }
         if (
             this.isDomainSelected &&
             resIds.length === this.model.activeIdsLimit &&
@@ -508,5 +542,12 @@ export class DynamicList extends DataPoint {
                 record._toggleSelection(true);
             });
         }
+    }
+
+    _unSelectAll() {
+        this.selection.forEach((record) => {
+            record.toggleSelection(false);
+        });
+        this._selectDomain(false);
     }
 }

@@ -1,10 +1,15 @@
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { cookie } from "@web/core/browser/cookie";
 import { POSITION_BUS } from "../position/position_hook";
 import { registry } from "../registry";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export const DEFAULT_COLORS = [
@@ -34,7 +39,7 @@ export const DEFAULT_THEME_COLOR_VARS = [
 
 export class ColorPicker extends Component {
     static template = "web.ColorPicker";
-    static components = { CustomColorPicker };
+    static components = { CustomColorPicker, Dropdown, DropdownItem };
     static props = {
         state: {
             type: Object,
@@ -44,8 +49,6 @@ export class ColorPicker extends Component {
                 getTargetedElements: { type: Function, optional: true },
                 defaultTab: String,
                 selectedTab: { type: String, optional: true },
-                // todo: remove the `mode` prop in master
-                mode: { type: String, optional: true },
             },
         },
         getUsedCustomColors: Function,
@@ -92,21 +95,38 @@ export class ColorPicker extends Component {
         this.onApplyCallback = () => {};
         this.onPreviewRevertCallback = () => {};
         this.getPreviewColor = () => {};
+        this.isMobileOS = isMobileOS();
 
         this.state = useState({
             activeTab: this.props.state.selectedTab || this.getDefaultTab(),
             currentCustomColor: this.props.state.selectedColor,
             currentColorPreview: undefined,
-            showGradientPicker: false,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
-        useEffect(
+        useLayoutEffect(
             () => {
                 // Recompute the positioning of the popover if any.
                 this.env[POSITION_BUS]?.trigger("update");
             },
             () => [this.state.activeTab]
         );
+        const documents = [
+            window.top,
+            ...Array.from(window.top.frames).filter((frame) => {
+                try {
+                    const document = frame.document;
+                    return !!document;
+                } catch {
+                    // We cannot access the document (cross origin).
+                    return false;
+                }
+            }),
+        ].map((w) => w.document);
+        for (const doc of documents) {
+            useExternalListener(doc, "keydown", this.onKeyDown.bind(this), {
+                capture: true,
+            });
+        }
     }
 
     getDefaultTab() {
@@ -148,12 +168,6 @@ export class ColorPicker extends Component {
      * @param {Function} cbs.onPreviewRevertCallback
      */
     setOperationCallbacks(cbs) {
-        // The gradient colorpicker has a nested ColorPicker. We need to use the
-        // `setOperationCallbacks` from the parent ColorPicker for it to be
-        // impacted.
-        if (this.props.setOperationCallbacks) {
-            this.props.setOperationCallbacks(cbs);
-        }
         if (cbs.onApplyCallback) {
             this.onApplyCallback = cbs.onApplyCallback;
         }
@@ -194,14 +208,16 @@ export class ColorPicker extends Component {
     }
 
     onColorHover(ev) {
-        if (!this.isColorButton(this.getTarget(ev))) {
+        const target = this.getTarget(ev);
+        if (!this.isColorButton(target) || target.contains(ev.relatedTarget)) {
             return;
         }
         this.onColorPreview(ev);
     }
 
     onColorHoverOut(ev) {
-        if (!this.isColorButton(this.getTarget(ev))) {
+        const target = this.getTarget(ev);
+        if (!this.isColorButton(target) || target.contains(ev.relatedTarget)) {
             return;
         }
         this.applyColorResetPreview();
@@ -308,8 +324,32 @@ export class ColorPicker extends Component {
         }
     }
 
+    onMouseEnter() {
+        if (this.state.currentColorPreview) {
+            // Sometimes the previews can be reverted outside of the color
+            // picker, for example, if a user hovers any of the previewable
+            // options in html builder. So here we reset the preview and apply
+            // it again, in order to have the correct preview
+            this.applyColorResetPreview();
+            this.props.applyColorPreview(this.state.currentColorPreview);
+        }
+    }
+
     isColorButton(targetEl) {
         return targetEl.tagName === "BUTTON" && !targetEl.matches(".o_colorpicker_ignore");
+    }
+
+    /**
+     * Removes the close callback on Escape, so that a preview is cancelled with
+     * escape instead of being applied.
+     *
+     * @param {KeydownEvent} ev
+     */
+    onKeyDown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "escape") {
+            this.props.setOnCloseCallback?.(() => {});
+        }
     }
 }
 
@@ -335,7 +375,7 @@ export function useColorPicker(refName, props, options = {}) {
         colorPicker.isOpen ? colorPicker.close() : colorPicker.open(root.el, props);
     }
 
-    useEffect(
+    useLayoutEffect(
         (el) => {
             if (!el) {
                 return;

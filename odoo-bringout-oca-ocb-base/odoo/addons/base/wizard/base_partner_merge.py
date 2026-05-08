@@ -338,13 +338,11 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         return []
 
     @api.model
-    def _update_values(self, src_partners, dst_partner):
-        """ Update values of dst_partner with the ones from the src_partners.
+    def _merge_values(self, src_partners, dst_partner):
+        """Get values for the dst_partner using values from the src_partners.
             :param src_partners : recordset of source res.partner
             :param dst_partner : record of destination res.partner
         """
-        _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, src_partners.ids)
-
         model_fields = dst_partner.fields_get().keys()
         summable_fields = self._get_summable_fields()
 
@@ -380,6 +378,25 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)
+        return {
+            "values": values,
+            "values_by_company": values_by_company,
+            "parent_id": parent_id,
+        }
+
+    @api.model
+    def _update_values(self, src_partners, dst_partner):
+        """ Update values of dst_partner with the ones from the src_partners.
+            :param src_partners : recordset of source res.partner
+            :param dst_partner : record of destination res.partner
+        """
+        _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, src_partners.ids)
+
+        merge_values = self._merge_values(src_partners, dst_partner)
+        values = merge_values["values"]
+        values_by_company = merge_values["values_by_company"]
+        parent_id = merge_values["parent_id"]
+
         dst_partner.write(values)
         for company, vals in values_by_company.items():
             dst_partner.with_company(company).sudo().write(vals)
@@ -399,7 +416,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         all_src_accounts = src_partners.bank_ids
 
         for src_account in all_src_accounts:
-            duplicate_account = dst_partner.bank_ids.filtered(lambda a: a.sanitized_acc_number == src_account.sanitized_acc_number)
+            duplicate_account = dst_partner.bank_ids.filtered(lambda a: a.sanitized_account_number == src_account.sanitized_account_number)
             if duplicate_account:
                 self._update_foreign_keys_generic('res.partner.bank', src_account, duplicate_account)
                 self._update_reference_fields_generic('res.partner.bank', src_account, duplicate_account)
@@ -609,6 +626,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             'type': 'ir.actions.act_window',
             'res_model': self._name,
             'res_id': self.id,
+            'views': [(False, 'form')],
             'view_mode': 'form',
             'target': 'new',
         }
@@ -728,7 +746,6 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             UPDATE
                 res_partner
             SET
-                is_company = NULL,
                 parent_id = NULL
             WHERE
                 parent_id = id
@@ -750,17 +767,6 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         # since it is like this from the initial commit of this wizard, I don't change it. yet ...
         wizard = self.create({'group_by_vat': True, 'group_by_email': True, 'group_by_name': True})
         wizard.action_start_automatic_process()
-
-        # NOTE JEM : no idea if this query is usefull
-        self.env.cr.execute("""
-            UPDATE
-                res_partner
-            SET
-                is_company = NULL
-            WHERE
-                parent_id IS NOT NULL AND
-                is_company IS NOT NULL
-        """)
 
         return self._action_next_screen()
 

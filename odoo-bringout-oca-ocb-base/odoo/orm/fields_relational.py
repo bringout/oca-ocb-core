@@ -4,11 +4,10 @@ import itertools
 import logging
 import typing
 from collections import defaultdict
-from collections.abc import Reversible
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError, UserError
-from odoo.tools import SQL, OrderedSet, Query, sql, unique
+from odoo.tools import SQL, OrderedSet, sql, unique
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
@@ -18,7 +17,8 @@ from .fields import IR_MODELS, Field, _logger
 from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_pg_name
+from .query import FieldSQL, Query, TableSQL
+from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
@@ -44,14 +44,15 @@ class _Relational(Field[BaseModel]):
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
 
-        records._check_field_access(self, 'read')
+        # check field access
+        env = records.env
+        env.su or self in env._field_access_memo or records.check_field_access(self, 'read')
 
         # multi-record case
         if self.compute and self.store:
             self.recompute(records)
 
         # get the cache
-        env = records.env
         field_cache = self._get_cache(env)
 
         # retrieve values in cache, and fetch missing ones
@@ -92,6 +93,11 @@ class _Relational(Field[BaseModel]):
         super().setup_nonrelated(model)
         assert self.comodel_name in model.pool, \
             f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}"
+
+    def _compute_related(self, records):
+        # Related fields for x2m must be computed in sudo to ensure cache
+        # consistency with the related field which is fetched in sudo.
+        return super()._compute_related(records.sudo())
 
     def setup_inverses(self, registry: Registry, inverses: Collector[Field, Field]):
         """ Populate ``inverses`` with ``self`` and its inverse fields. """
@@ -259,10 +265,10 @@ class Many2one(_Relational):
             self.bypass_search_access = True
         elif self.delegate:
             comodel_name = self.comodel_name or 'comodel_name'
-            raise TypeError((
+            raise TypeError(
                 f"The delegate field {self} must be declared in the model class e.g.\n"
                 f"_inherits = {{{comodel_name!r}: {name!r}}}"
-            ))
+            )
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
@@ -354,12 +360,12 @@ class Many2one(_Relational):
     def convert_to_record(self, value, record):
         # use registry to avoid creating a recordset for the model
         ids = () if value is None else (value,)
-        prefetch_ids = PrefetchMany2one(record, self)
+        prefetch_ids = Prefetch.relational(self, record)
         return record.pool[self.comodel_name](record.env, ids, prefetch_ids)
 
     def convert_to_record_multi(self, values, records):
         # return the ids as a recordset without duplicates
-        prefetch_ids = PrefetchMany2one(records, self)
+        prefetch_ids = Prefetch.relational(self, records)
         ids = tuple(unique(id_ for id_ in values if id_ is not None))
         return records.pool[self.comodel_name](records.env, ids, prefetch_ids)
 
@@ -456,10 +462,10 @@ class Many2one(_Relational):
                 ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
                 invf._update_cache(corecord, ids1)
 
-    def to_sql(self, model: BaseModel, alias: str) -> SQL:
-        sql_field = super().to_sql(model, alias)
+    def to_sql(self, table: TableSQL) -> SQL:
+        sql_field = super().to_sql(table)
         if self.company_dependent:
-            comodel = model.env[self.comodel_name]
+            comodel = table._model.env[self.comodel_name]
             sql_field = SQL(
                 '''(SELECT %(cotable_alias)s.id
                     FROM %(cotable)s AS %(cotable_alias)s
@@ -470,27 +476,34 @@ class Many2one(_Relational):
             )
         return sql_field
 
-    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def property_to_sql(self, field_sql: FieldSQL, property_name: str) -> SQL:
+        # accessing a property on a many2one traverses the model
+        # we can do this because it keeps the cardinality of the query the same
+        cotable = self.join(field_sql._table)
+        return cotable[property_name]
+
+    def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         if operator not in ('any', 'not any', 'any!', 'not any!') or field_expr != self.name:
             # for other operators than 'any', just generate condition based on column type
-            return super().condition_to_sql(field_expr, operator, value, model, alias, query)
+            return super().condition_to_sql(table, field_expr, operator, value)
 
+        model = table._model
         comodel = model.env[self.comodel_name]
-        sql_field = model._field_to_sql(alias, field_expr, query)
+        sql_field = table[field_expr]
         can_be_null = self not in model.env.registry.not_null_fields
         bypass_access = operator in ('any!', 'not any!') or self.bypass_search_access
         positive = operator in ('any', 'any!')
 
-        # Decide whether to use a LEFT JOIN
-        left_join = bypass_access and isinstance(value, Domain)
-        if left_join and not positive:
+        # Decide whether to use a LEFT JOIN or JOIN
+        use_join = bypass_access and isinstance(value, Domain)
+        if use_join and not positive:
             # For 'not any!', we get a better query with a NOT IN when we have a
             # lot of positive conditions which have a better chance to use
             # indexes.
             #   `field NOT IN (SELECT ... WHERE z = y)` better than
             #   `LEFT JOIN ... ON field = id WHERE z <> y`
             # There are some exceptions: we filter on 'id'.
-            left_join = sum(
+            use_join = sum(
                 (-1 if cond.operator in Domain.NEGATIVE_OPERATORS else 1)
                 for cond in value.iter_conditions()
             ) < 0 or any(
@@ -498,13 +511,15 @@ class Many2one(_Relational):
                 for cond in value.iter_conditions()
             )
 
-        if left_join:
-            comodel, coalias = self.join(model, alias, query)
+        if use_join:
+            assert bypass_access
+            cotable = self.join(table._sudo())
+            cotable = cotable._with_model(comodel)  # reset env
             if not positive:
                 value = (~value).optimize_full(comodel)
-            sql = value._to_sql(comodel, coalias, query)
+            sql = value._to_sql(cotable)
             if self.company_dependent:
-                sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
+                sql = self._condition_to_sql_company(table, sql, field_expr, operator, value)
             if can_be_null:
                 if positive:
                     sql = SQL("(%s IS NOT NULL AND %s)", sql_field, sql)
@@ -529,21 +544,43 @@ class Many2one(_Relational):
         if can_be_null and not positive:
             sql = SQL("(%s IS NULL OR %s)", sql_field, sql)
         if self.company_dependent:
-            sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
+            sql = self._condition_to_sql_company(table, sql, field_expr, operator, value)
         return sql
 
-    def join(self, model: BaseModel, alias: str, query: Query) -> tuple[BaseModel, str]:
+    def join(self, table: TableSQL, kind='LEFT JOIN') -> TableSQL:
         """ Add a LEFT JOIN to ``query`` by following field ``self``,
         and return the joined table's corresponding model and alias.
         """
+        model = table._model
         comodel = model.env[self.comodel_name]
-        coalias = query.make_alias(alias, self.name)
-        query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
+        can_be_null = self not in model.env.registry.not_null_fields
+        if self.compute_sudo or self.delegate or model.env.su:
+            coquery = None
+        else:
+            coquery = comodel.with_context(_generating_sql_for_fields=True)._search(Domain.TRUE, active_test=False)
+            if not coquery.where_clause:
+                coquery = None
+        if coquery is None:
+            coalias = table._make_alias(self.name, comodel)
+            cotable = None
+        else:
+            coalias = table._make_alias(f'{self.name}__{model.env.uid}', comodel)
+            cotable = coquery.subselect(SQL('%s.*', coquery.table))
+        if kind == 'LEFT JOIN' and not can_be_null and not cotable:
+            # [PERF]: 'JOIN' has better performance than 'LEFT JOIN'
+            # Convert LEFT JOIN to JOIN when the required left-table reference
+            # (table[self.name]) has a Foreign Key constraint on the right
+            # table's ID, and the left table (table) is either the main query
+            # table or already connected via JOIN. See TestMany2oneJoin.
+            table_kind = table._query._joins[table._alias][0]
+            if not table_kind or table_kind == SQL('JOIN'):
+                kind = 'JOIN'
+        table._query.add_join(kind, coalias, cotable, SQL(
             "%s = %s",
-            model._field_to_sql(alias, self.name, query),
-            SQL.identifier(coalias, 'id'),
+            table[self.name],
+            coalias.id,
         ))
-        return (comodel, coalias)
+        return coalias
 
 
 class _RelationalMulti(_Relational):
@@ -633,30 +670,46 @@ class _RelationalMulti(_Relational):
 
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
-    def convert_to_record(self, value, record):
+    def convert_to_record(self, value, record: BaseModel):
         # use registry to avoid creating a recordset for the model
-        prefetch_ids = PrefetchX2many(record, self)
-        Comodel = record.pool[self.comodel_name]
-        corecords = Comodel(record.env, value, prefetch_ids)
+        prefetch_ids = Prefetch.relational(self, record)
+        env = record.env
+        Comodel = env.registry[self.comodel_name]
+        corecords = Comodel(env, value, prefetch_ids)
+        if not env.su and corecords and not self.bypass_search_access:
+            # For performance, this slightly modified version of
+            # `_filtered_access` does not recheck permissions for records marked
+            # as inaccessible. Without this, we would recheck record access on
+            # each `convert_to_record` call if one of them in inaccessible.
+            read_access = env._access_cache[Comodel._name]
+            if all(map(read_access.get, corecords._ids)):
+                pass  # all records are accessible
+            elif all(map(read_access.__contains__, corecords._origin)):
+                # we have a value for all origins in access
+                # consider inaccessible records as inaccessible
+                if not corecords.browse().has_access('read'):
+                    return corecords.browse()
+                if corecords._origin:
+                    def accessible(rec):
+                        origin = rec._origin
+                        # no origin: new id without origin
+                        return not origin or read_access[origin.id]
+                    corecords = corecords.filtered(accessible)
+            else:
+                # default behaviour
+                corecords = corecords._filtered_access('read')
         if (
             Comodel._active_name
-            and self.context.get('active_test', record.env.context.get('active_test', True))
+            and self.context.get('active_test', env.context.get('active_test', True))
         ):
             corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
         return corecords
 
-    def convert_to_record_multi(self, values, records):
+    def convert_to_record_multi(self, values, records: BaseModel):
         # return the list of ids as a recordset without duplicates
-        prefetch_ids = PrefetchX2many(records, self)
-        Comodel = records.pool[self.comodel_name]
+        # same logic as convert_to_record (but references multiple source records)
         ids = tuple(unique(id_ for ids in values for id_ in ids))
-        corecords = Comodel(records.env, ids, prefetch_ids)
-        if (
-            Comodel._active_name
-            and self.context.get('active_test', records.env.context.get('active_test', True))
-        ):
-            corecords = corecords.filtered(Comodel._active_name).with_prefetch(prefetch_ids)
-        return corecords
+        return self.convert_to_record(ids, records)
 
     def convert_to_read(self, value, record, use_display_name=True):
         return value.ids
@@ -769,55 +822,39 @@ class _RelationalMulti(_Relational):
             return comodel.sudo(False).with_user(comodel.env.transaction.default_env.uid)
         return comodel
 
-    def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
+    def to_sql(self, table):
+        # not allowed, since using it changes the cardinality of the query
+        raise ValueError(f"Cannot generate SQL for multi-relational field {self}")
+
+    def condition_to_sql(self, table: TableSQL, field_expr: str, operator: str, value) -> SQL:
         assert field_expr == self.name, "Supporting condition only to field"
-        comodel = model.env[self.comodel_name]
+        comodel = table._model.env[self.comodel_name]
         if not self.store:
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
 
-        # update the operator to 'any'
-        if operator in ('in', 'not in'):
-            operator = 'any' if operator == 'in' else 'not any'
         assert operator in ('any', 'not any', 'any!', 'not any!'), \
             f"Relational field {self} expects 'any' operator"
         exists = operator in ('any', 'any!')
 
-        # check the value and execute the query
-        if isinstance(value, COLLECTION_TYPES):
-            value = OrderedSet(value)
-            comodel = comodel.sudo().with_context(active_test=False)
-            if False in value:
-                #  [not]in (False, 1) => split conditions
-                #  We want records that have a record such as condition or
-                #  that don't have any records.
-                if len(value) > 1:
-                    in_operator = 'in' if exists else 'not in'
-                    return SQL(
-                        "(%s OR %s)" if exists else "(%s AND %s)",
-                        self.condition_to_sql(field_expr, in_operator, (False,), model, alias, query),
-                        self.condition_to_sql(field_expr, in_operator, value - {False}, model, alias, query),
-                    )
-                #  in (False) => not any (Domain.TRUE)
-                #  not in (False) => any (Domain.TRUE)
-                value = comodel._search(Domain.TRUE)
-                exists = not exists
-            else:
-                value = comodel.browse(value)._as_query(ordered=False)
-        elif isinstance(value, SQL):
+        if isinstance(value, SQL):
             # wrap SQL into a simple query
             comodel = comodel.sudo()
             value = Domain('id', 'any', value)
-        coquery = self._get_query_for_condition_value(model, comodel, operator, value)
-        return self._condition_to_sql_relational(model, alias, exists, coquery, query)
+        coquery = self._get_query_for_condition_value(table._model, comodel, operator, value)
+        return self._condition_to_sql_relational(table, exists, coquery)
 
     def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, operator: str, value: Domain | Query) -> Query:
         """ Return Query run on the comodel with the field.domain injected."""
         field_domain = self.get_comodel_domain(model)
         if isinstance(value, Domain):
             domain = value & field_domain
-            comodel = comodel.with_context(**self.context)
             bypass_access = self.bypass_search_access or operator in ('any!', 'not any!')
-            query = comodel._search(domain, bypass_access=bypass_access)
+            if bypass_access and domain.is_condition('id', value=Query):
+                # ('id', 'any!', Query), so we can just use the query
+                query = domain.value
+            else:
+                comodel = comodel.with_context(**self.context)
+                query = comodel._search(domain, bypass_access=bypass_access)
             assert isinstance(query, Query)
             return query
         if isinstance(value, Query):
@@ -825,11 +862,11 @@ class _RelationalMulti(_Relational):
             domain = field_domain.optimize_full(comodel)
             if not domain.is_true():
                 # TODO should clone/copy Query value
-                value.add_where(domain._to_sql(comodel, value.table, value))
+                value.add_where(domain._to_sql(value.table._with_model(comodel)))
             return value
         raise NotImplementedError(f"Cannot build query for {value}")
 
-    def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
+    def _condition_to_sql_relational(self, table: TableSQL, exists: bool, coquery: Query) -> SQL:
         raise NotImplementedError
 
 
@@ -940,13 +977,15 @@ class One2many(_RelationalMulti):
 
         # optimization: fetch the inverse and active fields with search()
         domain = self.get_comodel_domain(records) & Domain(inverse, 'in', records.ids)
-        field_names = [inverse]
+        field_names = OrderedSet((inverse,))
         if comodel._active_name:
-            field_names.append(comodel._active_name)
-        try:
-            lines = comodel.search_fetch(domain, field_names)
-        except AccessError as e:
-            raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
+            # add the active field
+            field_names.add(comodel._active_name)
+        if not comodel.env.su:
+            # add fields for security rules
+            sec_domain = comodel._access_domain('read')
+            field_names.update(c.field_expr for c in sec_domain.optimize(comodel.sudo()).iter_conditions())
+        lines = comodel.sudo().search_fetch(domain, field_names)
 
         # group lines by inverse field (without prefetching other fields)
         get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
@@ -1144,6 +1183,28 @@ class One2many(_RelationalMulti):
                         lines = browse(command[2] if command[0] == Command.SET else [])
                         self._update_cache(recs[-1], lines._ids)
 
+    def join(self, table: TableSQL, kind='LEFT JOIN') -> TableSQL:
+        """ Add a LEFT JOIN to ``query`` by following field ``self``,
+        and return the joined table's corresponding model and alias.
+        """
+        model = table._model
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        codomain = self.get_comodel_domain(model)
+        coquery = comodel._search(codomain, bypass_access=self.bypass_search_access)
+
+        coalias = table._make_alias(self.name, comodel)
+        condition = SQL(
+            "%s = %s",
+            table.id,
+            coalias[self.inverse_name],
+        )
+        if coquery.where_clause:
+            cotable_sql = coquery.subselect(SQL('%s.*', coquery.table))
+        else:
+            cotable_sql = None
+        table._query.add_join(kind, coalias, cotable_sql, condition)
+        return coalias
+
     def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, operator, value) -> Query:
         inverse_field = comodel._fields[self.inverse_name]
         if inverse_field not in comodel.env.registry.not_null_fields:
@@ -1155,20 +1216,18 @@ class One2many(_RelationalMulti):
                 value &= Domain(inverse_field.name, 'not in', {False})
             else:
                 coquery = super()._get_query_for_condition_value(model, comodel, operator, value)
-                coquery.add_where(SQL(
-                    "%s IS NOT NULL",
-                    comodel._field_to_sql(coquery.table, inverse_field.name, coquery),
-                ))
+                coquery.add_where(SQL("%s IS NOT NULL", coquery.table[inverse_field.name]))
                 return coquery
         return super()._get_query_for_condition_value(model, comodel, operator, value)
 
-    def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
+    def _condition_to_sql_relational(self, table: TableSQL, exists: bool, coquery: Query) -> SQL:
         if coquery.is_empty():
-            return Domain(not exists)._to_sql(model, alias, query)
+            return SQL("FALSE") if exists else SQL("TRUE")
 
+        model = table._model
         comodel = model.env[self.comodel_name].sudo()
         inverse_field = comodel._fields[self.inverse_name]
-        if not inverse_field.store:
+        if not (inverse_field.store or inverse_field.compute_sql):
             # determine ids1 in model related to ids2
             # TODO should we support this in the future?
             recs = comodel.browse(coquery).with_context(prefetch_fields=False)
@@ -1180,19 +1239,19 @@ class One2many(_RelationalMulti):
             subselect = inverses._as_query(ordered=False).subselect()
             return SQL(
                 "%s%s%s",
-                SQL.identifier(alias, 'id'),
+                table.id,
                 SQL_OPERATORS['in' if exists else 'not in'],
                 subselect,
             )
 
         subselect = coquery.subselect(
-            SQL("%s AS __inverse", comodel._field_to_sql(coquery.table, inverse_field.name, coquery))
+            SQL("%s AS __inverse", coquery.table[inverse_field.name]),
         )
         return SQL(
             "%sEXISTS(SELECT FROM %s AS __sub WHERE __inverse = %s)",
             SQL() if exists else SQL("NOT "),
             subselect,
-            SQL.identifier(alias, 'id'),
+            table.id,
         )
 
 
@@ -1365,16 +1424,10 @@ class Many2many(_RelationalMulti):
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
 
-        # bypass the access during search if method is overwriten to avoid
-        # possibly filtering all records of the comodel before joining
-        filter_access = self.bypass_search_access and type(comodel)._search is not BaseModel._search
-
         # make the query for the lines
         domain = self.get_comodel_domain(records)
-        try:
-            query = comodel._search(domain, order=comodel._order, bypass_access=filter_access)
-        except AccessError as e:
-            raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
+        # bypass_access set because of context management in ir.attachment
+        query = comodel.sudo()._search(domain, order=comodel._order, bypass_access=True)
 
         # join with many2many relation table
         sql_id1 = SQL.identifier(self.relation, self.column1)
@@ -1386,18 +1439,10 @@ class Many2many(_RelationalMulti):
 
         # retrieve pairs (record, line) and group by record
         group = defaultdict(list)
+        corecord_ids = OrderedSet()
         for id1, id2 in records.env.execute_query(query.select(sql_id1, sql_id2)):
             group[id1].append(id2)
-
-        # filter using record rules
-        if filter_access and group:
-            corecord_ids = OrderedSet(id_ for ids in group.values() for id_ in ids)
-            accessible_corecords = comodel.browse(corecord_ids)._filtered_access('read')
-            if len(accessible_corecords) < len(corecord_ids):
-                # some records are inaccessible, remove them from groups
-                corecord_ids = set(accessible_corecords._ids)
-                for id1, ids in group.items():
-                    group[id1] = [id_ for id_ in ids if id_ in corecord_ids]
+            corecord_ids.add(id2)
 
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
@@ -1428,28 +1473,39 @@ class Many2many(_RelationalMulti):
                 self.read(records.browse(missing_ids))
 
         # determine new relation {x: ys}
-        old_relation = {record.id: set(record[self.name]._ids) for record in records}
+        old_relation = {record.id: set(record[self.name]._ids) for record in records.sudo()}
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
+        inaccessible_coids = set() if model.env.su else set(records.sudo()[self.name]._ids) - set(records[self.name]._ids)
+        added_ids = set()
 
         # operations on new relation
         def relation_add(xs, y):
+            added_ids.add(y)
             for x in xs:
                 new_relation[x].add(y)
 
         def relation_remove(xs, y):
+            if y in inaccessible_coids:
+                return
             for x in xs:
                 new_relation[x].discard(y)
 
         def relation_set(xs, ys):
-            for x in xs:
-                new_relation[x] = set(ys)
+            added_ids.update(ys)
+            if inaccessible_coids:
+                for x in xs:
+                    new_relation[x] = set(ys) | (new_relation[x] & inaccessible_coids)
+            else:
+                for x in xs:
+                    new_relation[x] = set(ys)
 
         def relation_delete(ys):
+            ys = set(ys) - inaccessible_coids
             # the pairs (x, y) have been cascade-deleted from relation
             for ys1 in old_relation.values():
-                ys1 -= ys
+                ys1.difference_update(ys)
             for ys1 in new_relation.values():
-                ys1 -= ys
+                ys1.difference_update(ys)
 
         for recs, commands in records_commands_list:
             to_create = []  # line vals to create
@@ -1489,11 +1545,7 @@ class Many2many(_RelationalMulti):
         # disabled on the comodel
         if not model.env.su:
             try:
-                comodel.browse(
-                    co_id
-                    for rec_id, new_co_ids in new_relation.items()
-                    for co_id in new_co_ids - old_relation[rec_id]
-                ).check_access('read')
+                comodel.browse(added_ids).check_access('read')
             except AccessError as e:
                 raise AccessError(model.env._("Failed to write field %s", self) + "\n" + str(e))
 
@@ -1695,11 +1747,71 @@ class Many2many(_RelationalMulti):
                 if invf.model_name == self.comodel_name
             ])
 
-    def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
+    def join(self, table: TableSQL, kind='LEFT JOIN', *, only_ids: bool = False) -> TableSQL:
+        """ Add a LEFT JOIN to ``query`` by following field ``self``,
+        and return the joined table's corresponding model and alias.
+        """
+        if not self.store:
+            # traverse_related, skip last one if not stored
+            if self.related:
+                traverse = table
+                if self.compute_sudo:
+                    env = table._model.env
+                    traverse = traverse._sudo()
+                for fname in self.related.split('.')[:-1]:
+                    traverse = traverse[fname]
+                table = traverse.id._table
+                if self.compute_sudo:
+                    table = table._with_model(table._model.with_env(env))
+                return self.related_field.join(table, kind=kind, only_ids=only_ids)
+            raise ValueError(f"Cannot join a non-stored many2many field: {self!r}")
+
+        model = table._model
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        rel_table, rel_id1, rel_id2 = self.relation, self.column1, self.column2
+        codomain = self.get_comodel_domain(model)
+        coquery = comodel._search(codomain, bypass_access=self.bypass_search_access)
+
+        rel_alias = table._make_alias(f'{self.name}__rel')
+        condition = SQL(
+            "%s = %s",
+            table.id,
+            rel_alias[rel_id1],
+        )
+        if only_ids:
+            result_id = TableSQLId(rel_alias._alias, rel_id2, table._query)
+            if coquery.where_clause:
+                condition = SQL(
+                    "%s AND %s IN %s",
+                    condition,
+                    result_id.id,
+                    coquery.subselect(),
+                )
+            table._query.add_join(kind, rel_alias, rel_table, condition)
+            return result_id
+
+        table._query.add_join(kind, rel_alias, rel_table, condition)
+        coalias = table._make_alias(self.name, comodel)
+        condition = SQL(
+            "%s = %s",
+            rel_alias[rel_id2],
+            coalias.id,
+        )
+        if coquery.where_clause:
+            # note that the number of rows in the result depends on the
+            # rel_table, but usually the resulting query will group by or
+            # exclude null values from the comodel
+            cotable_sql = coquery.subselect(SQL('%s.*', coquery.table))
+        else:
+            cotable_sql = None
+        table._query.add_join(kind, coalias, cotable_sql, condition)
+        return coalias
+
+    def _condition_to_sql_relational(self, table: TableSQL, exists: bool, coquery: Query) -> SQL:
         if coquery.is_empty():
             return SQL("FALSE") if exists else SQL("TRUE")
         rel_table, rel_id1, rel_id2 = self.relation, self.column1, self.column2
-        rel_alias = query.make_alias(alias, self.name)
+        rel_alias = table._make_alias(self.name)
         if not coquery.where_clause:
             # case: no constraints on table and we have foreign keys
             # so we can inverse the operator and check existence
@@ -1708,65 +1820,30 @@ class Many2many(_RelationalMulti):
                 "%sEXISTS (SELECT 1 FROM %s AS %s WHERE %s = %s)",
                 SQL("NOT ") if exists else SQL(),
                 SQL.identifier(rel_table),
-                SQL.identifier(rel_alias),
-                SQL.identifier(rel_alias, rel_id1),
-                SQL.identifier(alias, 'id'),
+                rel_alias,
+                rel_alias[rel_id1],
+                table.id,
             )
         return SQL(
             "%sEXISTS (SELECT 1 FROM %s AS %s WHERE %s = %s AND %s IN %s)",
             SQL("NOT ") if not exists else SQL(),
             SQL.identifier(rel_table),
-            SQL.identifier(rel_alias),
-            SQL.identifier(rel_alias, rel_id1),
-            SQL.identifier(alias, 'id'),
-            SQL.identifier(rel_alias, rel_id2),
+            rel_alias,
+            rel_alias[rel_id1],
+            table.id,
+            rel_alias[rel_id2],
             coquery.subselect(),
         )
 
 
-class PrefetchMany2one(Reversible):
-    """ Iterable for the values of a many2one field on the prefetch set of a given record. """
-    __slots__ = ('field', 'record')
+class TableSQLId(TableSQL):
+    def __init__(self, alias, field_name, query):
+        super().__init__(alias, None, query)
+        self._sql_field = SQL.identifier(alias, field_name)
 
-    def __init__(self, record: BaseModel, field: Many2one):
-        self.record = record
-        self.field = field
+    def __getitem__(self, name):
+        if name == 'id':
+            return self._sql_field
+        raise KeyError(f"Only 'id' is supported in {self!r}")
 
-    def __iter__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid for id_ in self.record._prefetch_ids
-            if (coid := field_cache.get(id_)) is not None
-        )
-
-    def __reversed__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid for id_ in reversed(self.record._prefetch_ids)
-            if (coid := field_cache.get(id_)) is not None
-        )
-
-
-class PrefetchX2many(Reversible):
-    """ Iterable for the values of an x2many field on the prefetch set of a given record. """
-    __slots__ = ('field', 'record')
-
-    def __init__(self, record: BaseModel, field: _RelationalMulti):
-        self.record = record
-        self.field = field
-
-    def __iter__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid
-            for id_ in self.record._prefetch_ids
-            for coid in field_cache.get(id_, ())
-        )
-
-    def __reversed__(self):
-        field_cache = self.field._get_cache(self.record.env)
-        return unique(
-            coid
-            for id_ in reversed(self.record._prefetch_ids)
-            for coid in field_cache.get(id_, ())
-        )
+    __getattr__ = __getitem__

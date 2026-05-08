@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
 "PO-Revision-Date: 2025-11-09 15:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -153,6 +153,11 @@ msgstr "活动"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "活动异常标示"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_state
@@ -510,8 +515,8 @@ msgstr "模型名称"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule %"
-"(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule "
+"%(rule_name)s."
 msgstr "动作 %(action_name)s 的模型应与自动规则 %(rule_name)s 的模型相匹配。"
 
 #. module: base_automation
@@ -668,13 +673,9 @@ msgstr "短信发送错误"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
+#: model:ir.model,name:base_automation.model_ir_cron
 msgid "Scheduled Action"
 msgstr "计划操作"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_cron
-msgid "Scheduled Actions"
-msgstr "计划行动"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -796,8 +797,8 @@ msgstr "动作的目标模式 %(action_names)s 与规则模式不同。"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
-"(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
 msgstr ""
 "这个 \"%(trigger_value)s\" %(trigger_label)s 只能与 \"%(state_value)s\" 动作"
 "类型一起使用"
@@ -1013,20 +1014,3 @@ msgstr "未定义动作..."
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "path"
 msgstr "路径"
-
-#~ msgid "Action Name"
-#~ msgstr "动作名称"
-
-#~ msgid "Delay after trigger date"
-#~ msgstr "触发日期后的延迟"
-
-#~ msgid "Delay type"
-#~ msgstr "延迟类型"
-
-#~ msgid ""
-#~ "If present, this condition must be satisfied before the update of the "
-#~ "record."
-#~ msgstr "如果存在，记录更新前必须满足此条件。"
-
-#~ msgid "Least Delay Msg"
-#~ msgstr "最小延迟消息"

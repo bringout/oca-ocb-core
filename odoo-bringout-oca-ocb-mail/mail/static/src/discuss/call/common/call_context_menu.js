@@ -1,4 +1,5 @@
-import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -14,6 +15,8 @@ export class CallContextMenu extends Component {
 
     updateStatsTimeout;
     rtcConnectionTypes = CONNECTION_TYPES;
+    /** @type {import("models").Rtc} */
+    rtc;
 
     setup() {
         super.setup();
@@ -42,7 +45,7 @@ export class CallContextMenu extends Component {
 
     get inboundConnectionTypeText() {
         const candidateType =
-            this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
+            this.rtc.connectionType === CONNECTION_TYPES.SERVER
                 ? this.state.downloadStats.remoteCandidateType
                 : this.state.peerStats.remoteCandidateType;
         return this.formatProtocol(candidateType);
@@ -50,7 +53,7 @@ export class CallContextMenu extends Component {
 
     get outboundConnectionTypeText() {
         const candidateType =
-            this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
+            this.rtc.connectionType === CONNECTION_TYPES.SERVER
                 ? this.state.uploadStats.localCandidateType
                 : this.state.peerStats.localCandidateType;
         return this.formatProtocol(candidateType);

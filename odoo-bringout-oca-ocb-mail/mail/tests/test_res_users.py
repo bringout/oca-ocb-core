@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -8,13 +7,14 @@ from unittest import skip
 from unittest.mock import patch
 
 from odoo.addons.base.models.res_users import ResUsersPatchedInTest
-from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.tests import RecordCapturer, tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
+@tagged('mail_tools', 'res_users')
 class TestNotifySecurityUpdate(MailCommon):
 
     @users('employee')
@@ -51,7 +51,8 @@ class TestNotifySecurityUpdate(MailCommon):
             subject='Security Update: Password Changed',
         )
 
-@tagged('-at_install', 'post_install', 'mail_tools', 'res_users')
+
+@tagged('mail_tools', 'res_users')
 class TestUser(MailCommon):
 
     @classmethod
@@ -180,7 +181,7 @@ class TestUser(MailCommon):
         )
 
 
-@tagged('-at_install', 'post_install', 'res_users')
+@tagged('res_users')
 class TestUserTours(HttpCaseWithUserDemo):
 
     def test_user_modify_own_profile(self):
@@ -205,7 +206,6 @@ class TestUserTours(HttpCaseWithUserDemo):
         self.assertEqual(self.user_demo.notification_type, "inbox")
 
 
-@tagged("post_install", "-at_install")
 class TestUserSettings(MailCommon):
 
     @skip('Crashes in post_install, probably because other modules force creation through inverse (e.g. voip)')
@@ -247,26 +247,26 @@ class TestUserSettings(MailCommon):
     @users('employee')
     def test_set_res_users_settings_should_send_notification_on_bus(self):
         settings = self.user_employee.res_users_settings_id
-        settings.is_discuss_sidebar_category_chat_open = False
-        settings.is_discuss_sidebar_category_channel_open = False
+        settings.channel_notifications = False
 
         with self.assertBus(
-                [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
-                [{
-                    'type': 'res.users.settings',
-                    'payload': {
-                        'id': settings.id,
-                        'is_discuss_sidebar_category_chat_open': True,
-                    },
-                }]):
-            settings.set_res_users_settings({'is_discuss_sidebar_category_chat_open': True})
+            BusResult(
+                self.user_employee,
+                "res.users.settings",
+                {
+                    "id": settings.id,
+                    "channel_notifications": "no_notif",
+                },
+            ),
+        ):
+            settings.set_res_users_settings({"channel_notifications": "no_notif"})
 
     @users('employee')
     def test_set_res_users_settings_should_set_settings_properly(self):
         settings = self.user_employee.res_users_settings_id
-        settings.set_res_users_settings({'is_discuss_sidebar_category_chat_open': True})
+        settings.set_res_users_settings({'channel_notifications': "no_notif"})
         self.assertEqual(
-            settings.is_discuss_sidebar_category_chat_open,
-            True,
-            "category state should be updated correctly"
+            settings.channel_notifications,
+            "no_notif",
+            "channel_notifications state should be updated correctly"
         )

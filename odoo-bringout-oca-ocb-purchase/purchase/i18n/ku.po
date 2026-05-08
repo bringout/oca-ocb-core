@@ -3,21 +3,22 @@
 # * purchase
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 19:13+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Kurdish (Central) <https://translate.odoo.com/projects/"
-"odoo-19/purchase/ckb/>\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 20:38+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: Kurdish (Central) <https://translate.odoo.com/projects/odoo-"
+"s19-1/purchase/ckb/>\n"
 "Language: ku\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -103,8 +104,8 @@ msgid ""
 "        </t>\n"
 "        is expected for \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object."
+"date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">undefined</span>.\n"
@@ -116,12 +117,10 @@ msgid ""
 "color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Acknowledge</a>\n"
 "        <br/><br/>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "    </p>\n"
@@ -139,8 +138,8 @@ msgid ""
 "Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Here is in attachment a purchase order <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is in attachment a purchase order <span style=\"font-weight:"
+"bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
 "t>\n"
@@ -161,12 +160,10 @@ msgid ""
 "color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "                Acknowledge</a>\n"
 "        </t>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "    </p>\n"
@@ -195,12 +192,10 @@ msgid ""
 "        If you have any questions, please do not hesitate to contact us.\n"
 "        <br/><br/>\n"
 "        Best regards,\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -284,15 +279,11 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Request for Quotation </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', "
+"'sent')\">Request for Quotation</span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
-"('draft', 'sent')\">Purchase Order </span>"
+"('draft', 'sent')\">Purchase Order</span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">داواکاری بۆ وەرگرتنی نرخ #</span>\n"
-"<span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')"
-"\">داواکاری کڕین</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -316,9 +307,13 @@ msgid "<span class=\"o_stat_text\">Purchased</span>"
 msgstr "<span class=\"o_stat_text\">کڕدراوە</span>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
-msgid "<span> day(s) before</span>"
-msgstr "<span>ڕۆژ(ەکان) پێشتر</span>"
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
+msgid ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                    Incoming\n"
+"                                </span>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
@@ -329,11 +324,6 @@ msgstr "<span><b>ئافەرین!</b>بە هەموو هەنگاوەکاندا ت�
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<span>Amount</span>"
 msgstr "<span>بڕ</span>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "<span>Ask confirmation</span>"
-msgstr "<span>داوای پشتڕاستکردنەوە بکە</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -354,6 +344,11 @@ msgstr "<strong class=\"d-block mb-1\">لە:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
 msgstr "<strong class=\"d-block mb-1\">فاکتورە</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<strong class=\"d-block mb-1\">Shipping address:</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -543,6 +538,11 @@ msgid "Activity Exception Decoration"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
 msgid "Activity State"
 msgstr "دۆخی چالاکییەکان"
@@ -682,7 +682,6 @@ msgid "Aml"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__amount_to_invoice_at_date
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Amount"
@@ -743,6 +742,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Ask confirmation"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
 msgid "Attachment Count"
 msgstr "ژمارەی هاوپێچەکان"
@@ -764,22 +768,10 @@ msgid "Auto-Complete"
 msgstr "ئۆتۆماتیکی تەواو"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
-#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
-msgid "Auto-complete"
-msgstr "ئۆتۆماتیکی تەواو"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_id
 msgid "Auto-complete from a past purchase order."
 msgstr "لە فەرمانی کڕینی ڕابردووەوە بە شێوەیەکی ئۆتۆماتیکی تەواو بکە."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
-#: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
-msgid "Auto-complete from a previous bill, refund, or purchase order."
-msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -940,12 +932,7 @@ msgstr "مێژووی پەیوەندیکردن"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
-msgid "Companies"
-msgstr "کۆمپانیاکان"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__company_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__company_id
@@ -997,17 +984,11 @@ msgid "Confirm your purchase."
 msgstr "کڕینەکەت پشتڕاست بکەرەوە."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_approve
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__date_approve
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Confirmation Date"
 msgstr "بەرواری پشتڕاستکردنەوە"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Confirmation Date Last Year"
-msgstr "بەرواری پشتڕاستکردنەوە ساڵی ڕابردوو"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__lock
@@ -1083,7 +1064,6 @@ msgstr "دروستکراوە لە"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__currency_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__currency_id
@@ -1099,11 +1079,6 @@ msgstr "نرخی دراو"
 #: model:ir.model.fields,help:purchase.field_purchase_order__access_url
 msgid "Customer Portal URL"
 msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
-msgid "Date"
-msgstr "ڕێکەوت"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
@@ -1127,6 +1102,11 @@ msgstr "ڕێکەوت:"
 #: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
 msgid "Days Before Receipt"
 msgstr "چەند ڕۆژێک پێش وەرگرتن"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Days before confirmation"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
@@ -1178,15 +1158,6 @@ msgstr ""
 "پێشوەختە بۆ کاتی پێشەنگی لیستی نرخی فرۆشیار پاشان بەرواری ئەمڕۆ."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
-msgid ""
-"Delivery date promised by vendor. This date is used to determine expected "
-"arrival of products."
-msgstr ""
-"بەرواری گەیاندن لەلایەن فرۆشیارەوە بەڵێنی پێدراوە. ئەم بەروارە بەکاردێت بۆ "
-"دیاریکردنی هاتنی چاوەڕوانکراوی بەرهەمەکان."
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__date_order
 msgid ""
@@ -1216,6 +1187,12 @@ msgid "Discount:"
 msgstr "داشکاندن:"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__display_auto_complete_field
+#: model:ir.model.fields,field_description:purchase.field_account_move__display_auto_complete_field
+msgid "Display Auto Complete Field"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_move__display_name
@@ -1227,7 +1204,6 @@ msgstr "داشکاندن:"
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_template__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_name
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__display_name
@@ -1303,6 +1279,12 @@ msgid "Expected Arrival"
 msgstr "هاتنی چاوەڕوانکراو"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
+msgid ""
+"Expected delivery date of goods by the vendor based on the latest information"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Extra line with %s "
@@ -1315,12 +1297,12 @@ msgid "Fiscal Position"
 msgstr "پێگەی دارایی"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model:portal.entry,description:purchase.portal_purchase_orders
 msgid "Follow orders you have to fulfill"
 msgstr "ئەو فەرمانانە جێبەجێ بکە کە دەبێت جێبەجێی بکەیت"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model:portal.entry,description:purchase.portal_rfq
 msgid "Follow your Requests for Quotation"
 msgstr "داواکارییەکانتان بۆ وەرگرتنی نرخ پەیڕەو بکە"
 
@@ -1360,6 +1342,11 @@ msgstr "لە بەڵگەنامەی ئەلیکترۆنیەوە"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
 msgid "Fully Billed"
 msgstr "بە تەواوی پسووڵە کراوە"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__full
+msgid "Fully Received"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1419,7 +1406,6 @@ msgstr "هێڵە هەڵوەشاوەکان بشارەوە"
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase.field_product_template__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__id
@@ -1467,18 +1453,6 @@ msgid ""
 msgstr ""
 "ئەگەر دامەزرا، جۆرەکانی بەرهەمەکە زیاد دەکرێن بۆ داواکاری کڕین لە ڕێگەی "
 "هاتنە ژوورەوەی تۆڕەوە."
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/product.py:0
-msgid "Import Template for Products"
-msgstr ""
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
-msgid "Import Template for Requests for Quotation"
-msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -1667,6 +1641,11 @@ msgid "Line Uom"
 msgstr ""
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Link RFQs together and compare them."
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Lock"
 msgstr "قوفڵ"
@@ -1843,8 +1822,6 @@ msgstr ""
 
 #. module: purchase
 #. odoo-javascript
-#. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "New"
@@ -1929,6 +1906,11 @@ msgstr "ئاسایی"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Not Acknowledged"
 msgstr "دانپێدانان نەکراوە"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
+msgid "Not Received"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -2030,25 +2012,27 @@ msgid "Order"
 msgstr "داواکای"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
 msgid "Order Date"
 msgstr "بەرواری داواکردن"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
-msgid "Order Date: Last 365 Days"
-msgstr "بەرواری داواکردن: کۆتا 365 ڕۆژ"
+msgid "Order DeadLine: Last 365 Days"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Order Deadline"
 msgstr "دوا وادەی داواکردن"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Order Deadline: Last 365 Days"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2081,17 +2065,22 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Other Information"
-msgstr "زانیاری تر"
+msgid "Other Info"
+msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model:portal.entry,name:purchase.portal_purchase_orders
 msgid "Our Orders"
 msgstr "داواکارییەکانمان"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
 msgid "Parent Section Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__partial
+msgid "Partially Received"
 msgstr ""
 
 #. module: purchase
@@ -2245,7 +2234,6 @@ msgstr "میکانیزمی دوو جار چەسپاندن بۆ کڕینەکان 
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.menu,name:purchase.purchase_report
 #: model:res.groups.privilege,name:purchase.res_groups_privilege_purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase"
 msgstr "کڕین"
@@ -2254,6 +2242,11 @@ msgstr "کڕین"
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
 msgid "Purchase Agreements"
 msgstr "ڕێکەوتننامەکانی کڕین"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_alternative
+msgid "Purchase Alternative"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
@@ -2323,7 +2316,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_order_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__purchase_order_id
 #: model:ir.model.fields.selection,name:purchase.selection__account_analytic_applicability__business_domain__purchase_order
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__purchase
@@ -2408,7 +2400,6 @@ msgstr "ناوی داواکاری کڕین"
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Orders"
@@ -2470,15 +2461,25 @@ msgstr "کڕین: بیرخستنەوەی فرۆشیار"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchased_product_qty
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "Purchased"
 msgstr "کڕدراوە"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
-msgid "Purchased in the last 365 days"
-msgstr "لە 365 ڕۆژی ڕابردوودا کڕدراوە"
+msgid ""
+"Purchased in the last 365 days. Incoming represents confirmed purchase "
+"orders not received or partially received"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
+msgid ""
+"Purchased in the last 365 days. Incoming represents confirmed sales order "
+"not received, or partially received"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -2487,11 +2488,6 @@ msgstr "لە 365 ڕۆژی ڕابردوودا کڕدراوە"
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Purchases"
 msgstr "کڕینەکان"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_bill_union
-msgid "Purchases & Bills Union"
-msgstr "یەکێتی کڕین و پسووڵەکان"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -2597,6 +2593,7 @@ msgid "Read the documentation"
 msgstr "بەڵگەنامەکان بخوێنەرەوە"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
 #: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
@@ -2604,9 +2601,15 @@ msgid "Receipt Reminder"
 msgstr "بیرخستنەوەی پسوڵە"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
-msgid "Receipt Reminder Email"
-msgstr "ئیمەیڵی بیرخستنەوەی پسوڵە"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_status
+msgid "Receipt Status"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+msgid "Receive"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
@@ -2642,21 +2645,14 @@ msgstr "تۆمارکردنی پسووڵەی نوێی فرۆشیار"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__reference
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Reference"
 msgstr "سەرچاوە"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
-msgid "Reference Document"
-msgstr "ئاماژەی بەڵگەنامە"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__uom_id
 msgid "Reference Unit of Measure"
 msgstr "یەکەی پێوانەکردنی ئاماژە"
 
@@ -2721,8 +2717,8 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+#: model:portal.entry,name:purchase.portal_rfq
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Requests for Quotation"
 msgstr ""
@@ -2757,11 +2753,6 @@ msgstr "بەرواری بەرنامە بۆ داڕێژراو"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Search Purchase Order"
 msgstr "گەڕان بەدوای داواکاری کڕین"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
-msgid "Search Reference Document"
-msgstr "گەڕان  بۆ ئاماژەی بەڵگەنامە"
 
 #. module: purchase
 #. odoo-javascript
@@ -2832,6 +2823,11 @@ msgid "Send an automatic reminder email to confirm delivery"
 msgstr "ئیمەیڵێکی بیرخستنەوەی ئۆتۆماتیکی بنێرە بۆ پشتڕاستکردنەوەی گەیاندن"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_mass_mail
+msgid "Send by mail"
+msgstr ""
+
+#. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Send the request for quotation to your vendor."
@@ -2885,6 +2881,11 @@ msgid "Show Comparison"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__show_receive_button
+msgid "Show Receive Button"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records whose next activity date is past"
@@ -2899,7 +2900,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__origin
 msgid "Source"
 msgstr "سەرچاوە"
@@ -3061,6 +3061,18 @@ msgid "Technical field to get the vendor pricelist used to generate this line"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/product.py:0
+msgid "Template for Products"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Template for Requests for Quotation"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Terms &amp; Conditions"
 msgstr ""
@@ -3080,6 +3092,14 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "The Price of one unit of the product's Unit of Measure"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid ""
+"The following purchase orders %(invalid_orders) can't be received. Cancelled "
+"all receptions."
 msgstr ""
 
 #. module: purchase
@@ -3243,11 +3263,6 @@ msgid "Total purchased amount"
 msgstr "کۆی گشتی بڕی کڕدراو"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
-msgid "Translated Product Name"
-msgstr ""
-
-#. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
@@ -3276,7 +3291,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__uom_id
 msgid "Unit"
 msgstr "یەکە"
 
@@ -3371,7 +3386,6 @@ msgid "Variant Grid Entry"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
@@ -3387,11 +3401,6 @@ msgid "Vendor"
 msgstr "فرۆشیار"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
-msgid "Vendor Bill"
-msgstr "پسووڵەی فرۆشیار"
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Vendor Bill lines can only be added to one Purchase Order."
@@ -3401,7 +3410,6 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "پسووڵەکانی فرۆشیار"
 
@@ -3589,16 +3597,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas "
-"your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from "
-"other companies (%(bad_products)s)."
+"Your RFQ contains products from company %(product_company)s whereas your RFQ "
+"belongs to company %(quote_company)s. \n"
+" Please change the company of your RFQ or remove the products from other "
+"companies (%(bad_products)s)."
 msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "day(s) before"
-msgstr "ڕۆژ(ەکان)ی پێشتر"
+msgid "billing"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3620,6 +3628,11 @@ msgstr "یان نوێ دروست بکە"
 #: code:addons/purchase/models/account_invoice.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "partner_id"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "purchase"
 msgstr ""
 
 #. module: purchase
@@ -3649,6 +3662,11 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "to learn all the ways to connect your software with"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "tracking"
 msgstr ""
 
 #. module: purchase

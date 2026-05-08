@@ -4,8 +4,7 @@ from threading import Event
 import time
 
 from odoo.http import request
-from odoo.addons.iot_drivers.tools import helpers
-from odoo.addons.iot_drivers.webrtc_client import webrtc_client
+from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
 from odoo.addons.iot_drivers.websocket_client import send_to_controller
 
 
@@ -63,11 +62,8 @@ class EventManager:
         }
         send_to_controller({
             **event,
-            'session_id': data.get('action_args', {}).get('session_id', ''),
-            'iot_box_identifier': helpers.get_identifier(),
-            **data,
+            'iot_box_identifier': IOT_IDENTIFIER,
         })
-        webrtc_client.send(event)
         self.events.append(event)
         for session in self.sessions:
             session_devices = self.sessions[session]['devices']

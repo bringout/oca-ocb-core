@@ -45,7 +45,7 @@ test("unmounts erroring main component", async () => {
     });
     let compA;
     class MainComponentA extends Component {
-        static template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentA</span>`;
+        static template = xml`<span><t t-if="this.state.shouldThrow" t-out="this.error"/>MainComponentA</span>`;
         static props = ["*"];
         setup() {
             compA = this;
@@ -74,13 +74,13 @@ test("unmounts erroring main component", async () => {
     compA.state.shouldThrow = true;
     await animationFrame();
     expect.verifySteps([
-        'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
+        'An error occurred in the owl lifecycle (see this Error\'s "cause" property)',
         "BOOM",
     ]);
     expect.verifyErrors(["BOOM"]);
 
-    expect(".o-main-components-container span").toHaveCount(1);
-    expect(".o-main-components-container span").toHaveInnerHTML("MainComponentB");
+    expect(".o-main-components-container > span").toHaveCount(1);
+    expect(".o-main-components-container > span").toHaveInnerHTML("MainComponentB");
 });
 
 test("unmounts erroring main component: variation", async () => {
@@ -97,7 +97,7 @@ test("unmounts erroring main component: variation", async () => {
 
     let compB;
     class MainComponentB extends Component {
-        static template = xml`<span><t t-if="state.shouldThrow" t-esc="error"/>MainComponentB</span>`;
+        static template = xml`<span><t t-if="this.state.shouldThrow" t-out="this.error"/>MainComponentB</span>`;
         static props = ["*"];
         setup() {
             compB = this;
@@ -121,12 +121,12 @@ test("unmounts erroring main component: variation", async () => {
     compB.state.shouldThrow = true;
     await animationFrame();
     expect.verifySteps([
-        'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
+        'An error occurred in the owl lifecycle (see this Error\'s "cause" property)',
         "BOOM",
     ]);
     expect.verifyErrors(["BOOM"]);
-    expect(".o-main-components-container span").toHaveCount(1);
-    expect(".o-main-components-container span").toHaveInnerHTML("MainComponentA");
+    expect(".o-main-components-container > span").toHaveCount(1);
+    expect(".o-main-components-container > span").toHaveInnerHTML("MainComponentA");
 });
 
 test("MainComponentsContainer re-renders when the registry changes", async () => {

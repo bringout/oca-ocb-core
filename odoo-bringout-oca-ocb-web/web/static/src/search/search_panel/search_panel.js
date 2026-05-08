@@ -1,3 +1,4 @@
+import { reactive, render, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -6,10 +7,6 @@ import {
     onMounted,
     onWillStart,
     onWillUpdateProps,
-    reactive,
-    useEffect,
-    useRef,
-    useState,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -79,10 +76,10 @@ export class SearchPanel extends Component {
         useBus(this.env.searchModel, "update", async () => {
             await this.env.searchModel.sectionsPromise;
             this.updateActiveValues();
-            this.render();
+            render(this);
         });
 
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (el && this.hasImportedState) {
                     el.style["min-width"] = this.width;
@@ -316,6 +313,13 @@ export class SearchPanel extends Component {
         }
     }
 
+    onCategoryKeydown(ev, category, value) {
+        if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            this.toggleCategory(category, value);
+        }
+    }
+
     toggleSidebar() {
         this.state.sidebarExpanded = !this.state.sidebarExpanded;
         browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidebarExpanded);
@@ -347,6 +351,15 @@ export class SearchPanel extends Component {
         this.state.active[filterId][valueId] = currentTarget.checked;
         this.updateGroupHeadersChecked();
         this.env.searchModel.toggleFilterValues(filterId, [valueId]);
+    }
+
+    onFilterValueKeydown(ev, filterId, valueId) {
+        if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            this.state.active[filterId][valueId] = !this.state.active[filterId][valueId];
+            this.updateGroupHeadersChecked();
+            this.env.searchModel.toggleFilterValues(filterId, [valueId]);
+        }
     }
 
     updateActiveValues() {

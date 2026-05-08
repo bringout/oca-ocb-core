@@ -1,4 +1,4 @@
-import { describe, expect, getFixture, test } from "@odoo/hoot";
+import { describe, destroy, expect, getFixture, mockUserAgent, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
 import {
@@ -15,6 +15,7 @@ import { CommandPalette } from "@web/core/commands/command_palette";
 import { registry } from "@web/core/registry";
 import {
     useAutofocus,
+    useBackButton,
     useBus,
     useChildRef,
     useForwardRefToParent,
@@ -32,7 +33,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" t-ref="autofocus" t-att-value="state.text" />
+                    <input type="text" t-ref="autofocus" t-att-value="this.state.text" />
                 </span>
             `;
             setup() {
@@ -60,7 +61,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="number" t-ref="autofocus" t-att-value="state.counter" />
+                    <input type="number" t-ref="autofocus" t-att-value="this.state.counter" />
                 </span>
             `;
             setup() {
@@ -88,7 +89,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input t-if="state.showInput" type="text" t-ref="autofocus" />
+                    <input t-if="this.state.showInput" type="text" t-ref="autofocus" />
                 </span>
             `;
             setup() {
@@ -173,7 +174,7 @@ describe("useAutofocus", () => {
             static template = xml`
                 <span>
                     <input type="text" t-ref="first" />
-                    <input t-if="state.showSecond" type="text" t-ref="second" />
+                    <input t-if="this.state.showSecond" type="text" t-ref="second" />
                 </span>
             `;
             setup() {
@@ -233,7 +234,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                     <div>
-                        <input type="text" t-ref="autofocus" t-att-value="state.text" />
+                        <input type="text" t-ref="autofocus" t-att-value="this.state.text" />
                     </div>
                 `;
             setup() {
@@ -280,7 +281,7 @@ describe("useBus", () => {
         class Parent extends Component {
             static components = { MyComponent };
             static props = ["*"];
-            static template = xml`<MyComponent t-if="state.child" />`;
+            static template = xml`<MyComponent t-if="this.state.child" />`;
 
             setup() {
                 this.state = useState(state);
@@ -357,7 +358,7 @@ describe("useService", () => {
         class Parent extends Component {
             static components = { MyComponent };
             static props = ["*"];
-            static template = xml`<MyComponent t-if="state.child" />`;
+            static template = xml`<MyComponent t-if="this.state.child" />`;
 
             setup() {
                 this.state = useState(state);
@@ -625,7 +626,7 @@ describe("useChildRef and useForwardRefToParent", () => {
 
         class Parent extends Component {
             static props = ["*"];
-            static template = xml`<div><Child someRef="someRef"/></div>`;
+            static template = xml`<div><Child someRef="this.someRef"/></div>`;
             static components = { Child };
             setup() {
                 this.someRef = useChildRef();
@@ -649,7 +650,7 @@ describe("useChildRef and useForwardRefToParent", () => {
 
         class Parent extends Component {
             static props = ["*"];
-            static template = xml`<div><Child t-if="state.hasChild" someRef="someRef"/></div>`;
+            static template = xml`<div><Child t-if="this.state.hasChild" someRef="this.someRef"/></div>`;
             static components = { Child };
             setup() {
                 this.someRef = useChildRef();
@@ -673,5 +674,87 @@ describe("useChildRef and useForwardRefToParent", () => {
 
         expect(".my_span").toHaveCount(1);
         expect(parentComponent.someRef.el).toBe(queryOne(".my_span"));
+    });
+});
+
+describe("useBackButton", () => {
+    test.tags("mobile");
+    test("simple usecase ", async () => {
+        mockUserAgent("android");
+        class DummyComponent extends Component {
+            static props = ["*"];
+            static template = xml`<div/>`;
+            setup() {
+                useBackButton(() => expect.step("callback"));
+            }
+        }
+
+        history.pushState({ sentinel: 1 }, "", "/");
+        history.pushState({ sentinel: 2 }, "", "/other");
+        const dummy = await mountWithCleanup(DummyComponent);
+        expect(history.state.trapState).toBe(true);
+        history.back();
+        expect.verifySteps(["callback"]);
+        destroy(dummy);
+        await animationFrame();
+        expect(history.state.sentinel).toBe(2);
+    });
+
+    test.tags("mobile");
+    test("`shouldEnable` callback function pushes/clears trap history entry", async () => {
+        mockUserAgent("android");
+        class DummyComponent extends Component {
+            static props = ["*"];
+            static template = xml`<div/>`;
+            setup() {
+                this.state = useState({ available: false });
+                useBackButton(
+                    () => null,
+                    () => this.state.available
+                );
+            }
+        }
+
+        history.pushState({ sentinel: 1 }, "", "/");
+        history.pushState({ sentinel: 2 }, "", "/other");
+        const dummy = await mountWithCleanup(DummyComponent);
+        expect(history.state.sentinel).toBe(2);
+        dummy.state.available = true;
+        await animationFrame();
+        expect(history.state.trapState).toBe(true);
+        dummy.state.available = false;
+        await animationFrame();
+        expect(history.state.sentinel).toBe(2);
+    });
+
+    test.tags("mobile");
+    test("multiple components' callbacks should be executed in a LIFO manner", async () => {
+        mockUserAgent("android");
+        class DummyComponent extends Component {
+            static props = ["*"];
+            static template = xml`<div/>`;
+            setup() {
+                useBackButton(() => this._onBack());
+            }
+            _onBack() {
+                expect.step(`${this.props.name} callback`);
+                destroy(this);
+            }
+        }
+
+        history.pushState({ sentinel: 1 }, "", "/");
+        history.pushState({ sentinel: 2 }, "", "/other");
+        await mountWithCleanup(DummyComponent, { props: { name: "dummy1" } });
+        await mountWithCleanup(DummyComponent, { props: { name: "dummy2" } });
+        await mountWithCleanup(DummyComponent, { props: { name: "dummy3" } });
+        expect(history.state.trapState).toBe(true);
+        history.back();
+        await animationFrame();
+        history.back();
+        await animationFrame();
+        history.back();
+        await animationFrame();
+        expect.verifySteps(["dummy3 callback", "dummy2 callback", "dummy1 callback"]);
+        expect(history.state.sentinel).toBe(2);
     });
 });

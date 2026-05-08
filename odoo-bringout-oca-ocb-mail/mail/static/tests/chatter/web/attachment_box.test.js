@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    inputFiles,
     openFormView,
     patchUiSize,
     scroll,
@@ -10,6 +11,8 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { Deferred } from "@odoo/hoot-mock";
+import { onRpc, pagerNext, pagerPrevious } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -40,7 +43,7 @@ test("base non-empty rendering", async () => {
             </form>`,
     });
     await contains(".o-mail-AttachmentBox");
-    await contains("button", { text: "Attach files" });
+    await contains("button:text('Attach files')");
     await contains(".o-mail-Chatter input[type='file']");
     await contains(".o-mail-AttachmentList");
 });
@@ -65,7 +68,9 @@ test("remove attachment should ask for confirmation", async () => {
     await contains(".o-mail-AttachmentCard");
     await contains("button[title='Remove']");
     await click("button[title='Remove']");
-    await contains(".modal-body", { text: 'Do you really want to delete "Blah.txt"?' });
+    await contains(
+        ".modal-body:text('Are you sure you want to delete \"Blah.txt\"? This action cannot be undone.')"
+    );
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentImage", { count: 0 });
@@ -98,13 +103,13 @@ test("view attachments", async () => {
     });
     await click('.o-mail-AttachmentContainer[aria-label="Blah.txt"] .o-mail-AttachmentCard-image');
     await contains(".o-FileViewer");
-    await contains(".o-FileViewer-header", { text: "Blah.txt" });
+    await contains(".o-FileViewer-header:has(:text('Blah.txt'))");
     await contains(".o-FileViewer div[aria-label='Next']");
     await click(".o-FileViewer div[aria-label='Next']");
-    await contains(".o-FileViewer-header", { text: "Blu.txt" });
+    await contains(".o-FileViewer-header:has(:text('Blu.txt'))");
     await contains(".o-FileViewer div[aria-label='Next']");
     await click(".o-FileViewer div[aria-label='Next']");
-    await contains(".o-FileViewer-header", { text: "Blah.txt" });
+    await contains(".o-FileViewer-header:has(:text('Blah.txt'))");
 });
 
 test("scroll to attachment box when toggling on", async () => {
@@ -173,11 +178,11 @@ test("attachment box should order attachments from newest to oldest", async () =
     ]);
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
+    await contains(".o-mail-Chatter [aria-label='Attach files']:text('3')");
     await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
-    await contains(":nth-child(1 of .o-mail-AttachmentContainer)", { text: "C.txt" });
-    await contains(":nth-child(2 of .o-mail-AttachmentContainer)", { text: "B.txt" });
-    await contains(":nth-child(3 of .o-mail-AttachmentContainer)", { text: "A.txt" });
+    await contains(".o-mail-AttachmentContainer:eq(0):has(:text('C.txt'))");
+    await contains(".o-mail-AttachmentContainer:eq(1):has(:text('B.txt'))");
+    await contains(".o-mail-AttachmentContainer:eq(2):has(:text('A.txt'))");
 });
 
 test("attachment box auto-closed on switch to record wih no attachments", async () => {
@@ -206,4 +211,73 @@ test("attachment box auto-closed on switch to record wih no attachments", async 
     await contains(".o-mail-AttachmentBox");
     await click(".o_pager_next");
     await contains(".o-mail-AttachmentBox", { count: 0 });
+});
+
+test("removing the last attachment should close the attachment box", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "text/plain",
+        name: "Blah.txt",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `
+            <form>
+                <sheet></sheet>
+                <chatter open_attachments="True"/>
+            </form>`,
+    });
+    await contains(".o-mail-AttachmentBox");
+    await click("button[title='Remove']");
+    await contains(
+        ".modal-body:text('Are you sure you want to delete \"Blah.txt\"? This action cannot be undone.')"
+    );
+    // Confirm the deletion
+    await click(".modal-footer .btn-primary");
+    await contains(".o-mail-AttachmentBox", { count: 0 });
+});
+
+test("attachment should be uploaded on the correct record when using the pager navigation", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { display_name: "first partner" },
+        { display_name: "second partner" },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId_1, {
+        arch: `
+            <form>
+                <sheet><field name="display_name"/></sheet>
+                <div class="oe_chatter"><chatter/></div>
+            </form>`,
+        resIds: [partnerId_1, partnerId_2],
+    });
+    // First upload
+    let uploadDeferred = new Deferred();
+    onRpc("/mail/attachment/upload", () => uploadDeferred);
+    await click(".o-mail-Chatter-attachFiles");
+    let uploadPromise = inputFiles(".o_input_file", [new File(["image"], "A.jpeg")]);
+    await pagerNext();
+    uploadDeferred.resolve();
+    await uploadPromise;
+    await contains("button[aria-label='Attach files']:not(:has(sup))");
+    await pagerPrevious();
+    await click("button[aria-label='Attach files']", { text: "1" });
+    await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
+    // Second upload
+    uploadDeferred = new Deferred();
+    await click("button[aria-label='Attach files']");
+    await click("button", { text: "Attach files" });
+    uploadPromise = inputFiles(".o_input_file", [new File(["image"], "B.jpeg")]);
+    await pagerNext();
+    uploadDeferred.resolve();
+    await uploadPromise;
+    await contains("button[aria-label='Attach files']:not(:has(sup))");
+    await pagerPrevious();
+    await click("button[aria-label='Attach files']", { text: "2" });
+    await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
+    await contains(".o-mail-AttachmentCard", { text: "B.jpeg" });
 });

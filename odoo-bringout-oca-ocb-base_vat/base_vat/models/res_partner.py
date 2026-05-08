@@ -100,21 +100,19 @@ class ResPartner(models.Model):
     # Field representing whether vies_valid is relevant for selecting a fiscal position on this partner
     perform_vies_validation = fields.Boolean(compute='_compute_perform_vies_validation')
     # We put on inverse because a compute with a dependency to itself is not well managed in the ORM (it should be triggered first)
-    country_id = fields.Many2one(inverse="_inverse_vat", store=True)
-    vat = fields.Char(inverse="_inverse_vat", store=True)
 
     @api.model
     def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
         """ OVERRIDE """
         if not country or not vat:
             return vat, False
-        if len(vat) == 1:
-            if vat == '/' or not validation:
+        if 1 <= len(vat) <= 2:
+            if self._is_vat_void(vat) or not validation:
                 return vat, False
             if validation == 'setnull':
                 return '', False
             if validation == 'error':
-                raise ValidationError(_("To explicitly indicate no (valid) VAT, use '/' instead. "))
+                raise ValidationError(_("To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "))
         vat_prefix, vat_number = self._split_vat(vat)
 
         if vat_prefix == 'EU' and country not in self.env.ref('base.europe').country_ids:
@@ -162,13 +160,6 @@ class ResPartner(models.Model):
             else:
                 return '', code_to_check
         return vat_to_return, code_to_check
-
-    def _inverse_vat(self):
-        self._check_vat()
-
-    @api.onchange('vat', 'country_id')
-    def _onchange_vat(self):
-        self._check_vat(validation=False)
 
     @api.depends_context('company')
     @api.depends('vat')
@@ -219,8 +210,8 @@ class ResPartner(models.Model):
             return "dummy_identifier", "dummy_token"  # ignored by IAP, same as neutralized
 
         IrConfigParam = self.env['ir.config_parameter'].sudo()
-        identifier = IrConfigParam.get_param('iap_vies.client_identifier')
-        token = IrConfigParam.get_param('iap_vies.client_token')
+        identifier = IrConfigParam.get_str('iap_vies.client_identifier')
+        token = IrConfigParam.get_str('iap_vies.client_token')
         if identifier and token:
             return identifier, token
 
@@ -228,8 +219,8 @@ class ResPartner(models.Model):
         token = secrets.token_urlsafe()
         with self.env.registry.cursor() as new_cursor:
             IrConfigParamNewCursor = self.env(cr=new_cursor)['ir.config_parameter'].sudo()
-            IrConfigParamNewCursor.set_param('iap_vies.client_identifier', identifier)
-            IrConfigParamNewCursor.set_param('iap_vies.client_token', token)
+            IrConfigParamNewCursor.set_str('iap_vies.client_identifier', identifier)
+            IrConfigParamNewCursor.set_str('iap_vies.client_token', token)
 
         return identifier, token
 
@@ -237,7 +228,7 @@ class ResPartner(models.Model):
     def _get_iap_vies_endpoint(self):
         prod, test = 'https://vies.api.odoo.com', 'https://vies.test.odoo.com'
         default_endpoint = test if self.env.ref('base.module_base_vat').demo else prod
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('iap_vies.endpoint', default_endpoint)
+        endpoint = self.env['ir.config_parameter'].sudo().get_str('iap_vies.endpoint', default_endpoint)
         if endpoint not in (prod, test):
             raise UserError(_('Invalid IAP VIES endpoint'))
         return endpoint
@@ -252,7 +243,7 @@ class ResPartner(models.Model):
                 endpoint + '/api/vies/1/check_validity',
                 data={
                     "vat": self.vat,
-                    "db_uuid": self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                    "db_uuid": self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
                     "client_identifier": client_identifier,
                     "client_token": client_token,
                     "webhook_url": self.get_base_url() + '/base_vat/1/webhook_update_vies',
@@ -279,7 +270,7 @@ class ResPartner(models.Model):
             req = requests.post(
                 endpoint + '/api/vies/1/check_update',
                 data={
-                    "db_uuid": self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                    "db_uuid": self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
                     "client_identifier": client_identifier,
                     "client_token": client_token,
                 },
@@ -714,12 +705,12 @@ class ResPartner(models.Model):
         #reference from https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
         if vat and len(vat) == 15:
             all_gstin_re = [
-                r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Zz1-9A-Ja-j]{1}[0-9a-zA-Z]{1}', # Normal, Composite, Casual GSTIN
-                r'[0-9]{4}[A-Z]{3}[0-9]{5}[UO]{1}[N][A-Z0-9]{1}', #UN/ON Body GSTIN
+                r'[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z1-9A-J]{1}[0-9A-Z]{1}',  # Normal, Composite, Casual GSTIN
+                r'[0-9]{4}[A-Z]{3}[0-9]{5}[UO]{1}[N][A-Z0-9]{1}',  # UN/ON Body GSTIN
                 r'[0-9]{4}[A-Z]{3}[0-9]{5}[A-Z]{3}',  # Revised NRI GSTIN
-                r'[0-9]{4}[a-zA-Z]{3}[0-9]{5}[N][R][0-9a-zA-Z]{1}', #NRI GSTIN
-                r'[0-9]{2}[a-zA-Z]{4}[a-zA-Z0-9]{1}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[DK]{1}[0-9a-zA-Z]{1}', #TDS GSTIN
-                r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[C]{1}[0-9a-zA-Z]{1}' #TCS GSTIN
+                r'[0-9]{4}[A-Z]{3}[0-9]{5}[N][R][0-9A-Z]{1}',  # NRI GSTIN
+                r'[0-9]{2}[A-Z]{4}[A-Z0-9]{1}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[DK]{1}[0-9A-Z]{1}',  # TDS GSTIN
+                r'[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[C]{1}[0-9A-Z]{1}'  # TCS GSTIN
             ]
             return any(re.compile(rx).match(vat) for rx in all_gstin_re)
         return False
@@ -760,6 +751,12 @@ class ResPartner(models.Model):
         vat = vat.strip()
         return bool(self.__check_vat_vn_re.match(vat))
 
+    def format_vat_al(self, vat):
+        vat_prefix, vat_number = self._split_vat(vat)
+        stdnum_vat_format = stdnum.util.get_cc_module('al', 'nipt').compact
+        vat_number = stdnum_vat_format(vat_number)
+        return f'{vat_prefix}{vat_number}'
+
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
         # may have a VATIN starting with "EU" instead of a country code.
@@ -799,6 +796,12 @@ class ResPartner(models.Model):
         if self._check_tin_hu_companies_re.match(vat):
             vat = vat[:8] + '-' + vat[8] + '-' + vat[9] + vat[10]
         return vat
+
+    def format_vat_is(self, vat):
+        vat_prefix, vat_number = self._split_vat(vat)
+        stdnum_vat_format = stdnum.util.get_cc_module('is_', 'vsk').compact
+        vat_number = stdnum_vat_format(vat_number)
+        return f'{vat_prefix}{vat_number}'
 
     def check_vat_id(self, vat):
         """ Temporary Indonesian VAT validation to support the new format
@@ -915,8 +918,8 @@ class ResPartner(models.Model):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res
 
-    def _create_contact_parent_company(self):
-        new_company = super()._create_contact_parent_company()
+    def _create_contact_parent_company(self, values):
+        new_company = super()._create_contact_parent_company(values)
         if new_company and self.vies_valid:
             new_company.env.remove_to_compute(self._fields['vies_valid'], new_company)
             new_company.vies_valid = self.vies_valid

@@ -55,7 +55,11 @@ export class DynamicRecordList extends DynamicList {
      */
     addNewRecord(atFirstPosition = false) {
         return this.model.mutex.exec(async () => {
-            await this._leaveSampleMode();
+            if (this.model.useSampleModel) {
+                // leave sample mode
+                this._setData({ records: [], length: 0 });
+                this.model.useSampleModel = false;
+            }
             return this._addNewRecord(atFirstPosition);
         });
     }
@@ -100,14 +104,22 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
 
     async _addNewRecord(atFirstPosition) {
-        const values = await this.model._loadNewRecord({
-            resModel: this.resModel,
-            activeFields: this.activeFields,
-            fields: this.fields,
-            context: this.context,
-        });
+        const { promise, resolve } = Promise.withResolvers();
+        const values = await this.model._loadNewRecord(
+            {
+                resModel: this.resModel,
+                activeFields: this.activeFields,
+                fields: this.fields,
+                context: this.context,
+                isMonoRecord: true,
+            },
+            {
+                cache: this.model._getCacheParams({ ...this.config, isMonoRecord: true }, promise),
+            }
+        );
         const record = this._createRecordDatapoint(values, "edit");
         this._addRecord(record, atFirstPosition ? 0 : this.records.length);
+        resolve({ root: record, loadId: this.config.loadId });
         return record;
     }
 

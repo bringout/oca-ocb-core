@@ -3,16 +3,17 @@
 import json
 
 import odoo
+from odoo import Command, fields
+from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger
+
 from odoo.addons.base.tests.common import HttpCase, HttpCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
-from odoo.http import STATIC_CACHE_LONG
-from odoo import Command, fields
 
 
-@odoo.tests.tagged("-at_install", "post_install", "mail_controller")
-class TestMessageController(HttpCaseWithUserDemo):
+@odoo.tests.tagged("mail_controller")
+class TestMessageController(HttpCaseWithUserDemo, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -94,10 +95,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         )
         self.assertEqual(res2.status_code, 200)
         data1 = res2.json()["result"]
-        self.assertEqual(
-            data1["store_data"]["ir.attachment"],
-            [
-                {
+        attachments_fields = {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "file_size": 0,
@@ -114,8 +112,20 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "voice_ids": [],
                     'type': 'binary',
                     'url': False,
-                },
-            ],
+                    "access_token": False,
+                    "description": False,
+                    "image_src": False,
+                    "image_height": 0,
+                    "image_width": 0,
+                    "original_id": False,
+                    "public": False,
+                    "res_id": self.attachments[0].res_id,
+                }
+        if "documents.document" in self.env:
+            attachments_fields["linked_document_id"] = self.attachments[0].linked_document_id.id
+        self.assertEqual(
+            data1["store_data"]["ir.attachment"],
+            self._filter_attachments_fields(attachments_fields),
             "guest should be allowed to add attachment with token when posting message",
         )
         # test message update: token error
@@ -162,7 +172,7 @@ class TestMessageController(HttpCaseWithUserDemo):
         data2 = res4.json()["result"]
         self.assertEqual(
             data2["ir.attachment"],
-            [
+            self._filter_attachments_fields(
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
@@ -180,6 +190,14 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "voice_ids": [],
                     'type': 'binary',
                     'url': False,
+                    "access_token": False,
+                    "description": False,
+                    "image_src": False,
+                    "image_height": 0,
+                    "image_width": 0,
+                    "original_id": False,
+                    "public": False,
+                    "res_id": self.attachments[0].res_id,
                 },
                 {
                     "checksum": False,
@@ -198,8 +216,16 @@ class TestMessageController(HttpCaseWithUserDemo):
                     "voice_ids": [],
                     'type': 'binary',
                     'url': False,
+                    "access_token": False,
+                    "description": False,
+                    "image_src": False,
+                    "image_height": 0,
+                    "image_width": 0,
+                    "original_id": False,
+                    "public": False,
+                    "res_id": self.attachments[1].res_id,
                 },
-            ],
+            ),
             "guest should be allowed to add attachment with token when updating message",
         )
 
@@ -314,6 +340,7 @@ class TestMessageController(HttpCaseWithUserDemo):
 
 
 @tagged("mail_message")
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMessageLinks(MailCommon, HttpCase):
 
     @classmethod

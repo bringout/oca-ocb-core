@@ -324,6 +324,7 @@ export class FormCompiler extends ViewCompiler {
                 "t-slot-scope": "scope",
             });
             let itemSpan = parseInt(child.getAttribute("colspan") || "1", 10);
+            let noBox = false;
 
             if (forceNewline) {
                 mainSlot.setAttribute("newline", true);
@@ -332,6 +333,7 @@ export class FormCompiler extends ViewCompiler {
 
             if (getTag(child, true) === "separator") {
                 itemSpan = parseInt(formGroup.getAttribute("maxCols") || 2, 10);
+                noBox = true;
             }
 
             if (child.matches("div[class='clearfix']:empty")) {
@@ -341,7 +343,7 @@ export class FormCompiler extends ViewCompiler {
             let slotContent;
             if (getTag(child, true) === "field") {
                 const addLabel = child.hasAttribute("nolabel")
-                    ? child.getAttribute("nolabel") !== "1"
+                    ? !exprToBoolean(child.getAttribute("nolabel"))
                     : true;
                 slotContent = this.compileNode(child, { ...params, currentSlot: mainSlot }, false);
                 if (slotContent && addLabel && !isOuterGroup && !isTextNode(slotContent)) {
@@ -388,6 +390,9 @@ export class FormCompiler extends ViewCompiler {
                 mainSlot.setAttribute("isVisible", isVisibleExpr);
                 if (itemSpan > 0) {
                     mainSlot.setAttribute("itemSpan", `${itemSpan}`);
+                }
+                if (noBox) {
+                    mainSlot.setAttribute("noBox", "true");
                 }
 
                 const groupClassExpr = `scope && scope.className`;
@@ -613,9 +618,8 @@ export class FormCompiler extends ViewCompiler {
                 if (field) {
                     append(fieldSlot, field);
                     setting.setAttribute("fieldInfo", field.getAttribute("fieldInfo"));
-
                     addLabel = child.hasAttribute("nolabel")
-                        ? child.getAttribute("nolabel") !== "1"
+                        ? !exprToBoolean(child.getAttribute("nolabel"))
                         : true;
                     const fieldName = child.getAttribute("name");
                     string = child.hasAttribute("string")

@@ -1,6 +1,7 @@
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
-import { EventBus, toRaw, useEffect, useRef, useSubEnv } from "@odoo/owl";
+import { EventBus, toRaw } from "@odoo/owl";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
@@ -27,12 +28,12 @@ export class MailComposerFormRenderer extends formView.Renderer {
         this.orm = useService("orm");
         // Autofocus the visible editor in edition mode.
         this.root = useRef("compiled_view_root");
-        useEffect(
+        useLayoutEffect(
             (isInEdition, el) => {
                 if (
                     el &&
                     isInEdition &&
-                    this.props.record.data.composition_comment_option === "reply_all"
+                    this.props.record.data.composition_comment_option !== "forward"
                 ) {
                     const element = el.querySelector(".note-editable[contenteditable]");
                     if (element) {
@@ -44,19 +45,14 @@ export class MailComposerFormRenderer extends formView.Renderer {
             () => [this.props.record.isInEdition, this.root.el, this.props.record.resId]
         );
 
-        const getActiveMailThreads = () => {
-            // composer does not store res_ids past a certain limit, assume active_ids is used
-            const resIds = this.props.record.data.res_ids
-                ? JSON.parse(this.props.record.data.res_ids)
-                : this.props.record.context.active_ids;
-            return resIds.map((resId) => {
-                const thread = this.mailStore.Thread.insert({
+        const getActiveMailThreads = () =>
+            JSON.parse(this.props.record.data.res_ids).map((resId) => {
+                const thread = this.mailStore["mail.thread"].insert({
                     model: this.props.record.data.model,
                     id: resId,
                 });
                 return thread;
             });
-        };
 
         // Add file dropzone on full mail composer:
         this.attachmentUploadService = useService("mail.attachment_upload");
@@ -88,7 +84,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
             const selectedPartners = await this.orm.searchRead(
                 "res.partner",
                 [["id", "in", selectedPartnerIds]],
-                ["email", "id", "lang", "name"]
+                ["email", "id", "lang", "name", "display_name"]
             );
 
             /**

@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { contains, scroll } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("mail_message_load_order_tour", {
     steps: () => [
@@ -8,11 +7,11 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-Thread .o-mail-Message",
-            async run() {
-                await contains(".o-mail-Thread .o-mail-Message", { count: 30 });
-                await contains(".o-mail-Thread", { scroll: "bottom" });
-            },
+            trigger: ".o-mail-Thread .o-mail-Message:count(30)",
+        },
+        {
+            trigger: ".o-mail-Thread",
+            run: "scroll bottom",
         },
         {
             trigger: "*[title='Pinned Messages']",
@@ -29,10 +28,9 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
             // will be (31 - 60). This trigger ensures the next messages
             // are fetched after jumping to the message.
             trigger:
-                ".o-mail-Thread .o-mail-Message:first .o-mail-Message-textContent:not(:contains(31))",
-            async run() {
-                await contains(".o-mail-Thread .o-mail-Message", { count: 31 });
-                await contains(".o-mail-Thread", { scroll: 0 });
+                ".o-mail-Thread .o-mail-Message:count(31):first .o-mail-Message-textContent:not(:contains(31))",
+            run({ scroll }) {
+                scroll("top", ".o-mail-Thread");
                 // ensure 1 - 31 are loaded in order: 30 below and the
                 // one we're loading messages around.
                 const messages = Array.from(
@@ -43,17 +41,20 @@ registry.category("web_tour.tours").add("mail_message_load_order_tour", {
                         throw new Error("Wrong message order after loading around");
                     }
                 }
-                await scroll(".o-mail-Thread", "bottom");
             },
+        },
+        {
+            trigger: ".o-mail-Thread",
+            run: "scroll bottom",
         },
         {
             // After jumping to the pinned message, the message range
             // was (1 -31): 30 before (but none were found), 30 after
             // and the pinned message itself. This trigger ensures the
             // next messages are fetched after scrolling to the bottom.
-            trigger: ".o-mail-Thread .o-mail-Message .o-mail-Message-textContent:contains(17)",
+            trigger:
+                ".o-mail-Thread .o-mail-Message:count(60) .o-mail-Message-textContent:contains(17)",
             async run() {
-                await contains(".o-mail-Thread .o-mail-Message", { count: 60 });
                 // ensure 1 - 60  are loaded in order.
                 const messages = Array.from(
                     document.querySelectorAll(".o-mail-Thread .o-mail-Message-content")

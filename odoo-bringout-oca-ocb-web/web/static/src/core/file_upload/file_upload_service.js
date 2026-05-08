@@ -1,7 +1,8 @@
+import { reactive } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
 
-import { EventBus, reactive } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 
 export const fileUploadService = {
     dependencies: ["notification"],
@@ -122,7 +123,7 @@ export const fileUploadService = {
             }
 
             function onError(error) {
-                const defaultErrorMessage = _t("An error occured while uploading.");
+                const defaultErrorMessage = _t("An error occurred while uploading.");
                 delete uploads[upload.id];
                 upload.state = "error";
                 const displayError = params.displayErrorNotification ?? true;

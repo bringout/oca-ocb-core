@@ -1,4 +1,4 @@
-import { test, expect, beforeEach } from "@odoo/hoot";
+import { test, expect, beforeEach, waitFor } from "@odoo/hoot";
 import { click, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -53,7 +53,7 @@ test("Simple rendering and close a single dialog", async () => {
 test("rendering with two dialogs", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
-        static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static template = xml`<Dialog title="this.props.title">content</Dialog>`;
         static props = ["*"];
     }
     expect(".o_dialog").toHaveCount(0);
@@ -75,7 +75,7 @@ test("rendering with two dialogs", async () => {
 test("multiple dialogs can become the UI active element", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
-        static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static template = xml`<Dialog title="this.props.title">content</Dialog>`;
         static props = ["*"];
     }
     getService("dialog").add(CustomDialog, { title: "Hello" });
@@ -108,8 +108,8 @@ test("a popover with an autofocus child can become the UI active element", async
     }
     class CustomDialog extends Component {
         static components = { Dialog };
-        static template = xml`<Dialog title="props.title">
-            <button class="btn test" t-on-click="showPopover">show</button>
+        static template = xml`<Dialog title="this.props.title">
+            <button class="btn test" t-on-click="this.showPopover">show</button>
         </Dialog>`;
         static props = ["*"];
         setup() {
@@ -149,7 +149,7 @@ test("Interactions between multiple dialogs", async () => {
 
     class CustomDialog extends Component {
         static components = { Dialog };
-        static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static template = xml`<Dialog title="this.props.title">content</Dialog>`;
         static props = ["*"];
     }
 
@@ -199,8 +199,7 @@ test("dialog component crashes", async () => {
     }
 
     getService("dialog").add(FailingDialog);
-    await animationFrame();
-
+    await waitFor(".o_error_dialog");
     expect(".modal .o_error_dialog").toHaveCount(1);
     expect.verifyErrors(["Error: Some Error"]);
 });
@@ -208,7 +207,7 @@ test("dialog component crashes", async () => {
 test("two dialogs, close the first one, closeAll", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
-        static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static template = xml`<Dialog title="this.props.title">content</Dialog>`;
         static props = ["*"];
     }
     expect(".o_dialog").toHaveCount(0);
@@ -235,7 +234,7 @@ test("two dialogs, close the first one, closeAll", async () => {
 test("two dialogs, close the first one twice, then closeAll", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
-        static template = xml`<Dialog title="props.title">content</Dialog>`;
+        static template = xml`<Dialog title="this.props.title">content</Dialog>`;
         static props = ["*"];
     }
     expect(".o_dialog").toHaveCount(0);

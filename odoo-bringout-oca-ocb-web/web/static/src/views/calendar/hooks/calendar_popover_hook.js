@@ -1,12 +1,12 @@
+import { useComponent, useExternalListener } from "@web/owl2/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-import { useComponent, useExternalListener } from "@odoo/owl";
 
 export function useCalendarPopover(component) {
     const owner = useComponent();
     let popoverClass = "";
-    const popoverOptions = { extendedFlipping: true, position: "right", onClose: cleanup };
+    const popoverOptions = { position: "right", onClose: cleanup };
     Object.defineProperty(popoverOptions, "popoverClass", { get: () => popoverClass });
     const popover = usePopover(component, popoverOptions);
     const dialog = useService("dialog");

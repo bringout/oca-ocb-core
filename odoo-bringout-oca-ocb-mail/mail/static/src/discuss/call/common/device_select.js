@@ -1,6 +1,9 @@
-import { Component, onWillDestroy, onWillStart, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillDestroy, onWillStart } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { isBrowserChrome } from "@web/core/browser/feature_detection";
@@ -9,12 +12,27 @@ const deviceKind = new Set(["audioinput", "videoinput", "audiooutput"]);
 
 export class DeviceSelect extends Component {
     static props = {
+        menuClass: {
+            type: String,
+            optional: true,
+        },
         kind: {
             type: String,
             validate: (string) => deviceKind.has(string),
         },
+        icon: {
+            type: String,
+            optional: true,
+        },
+        permissionDialogConfiguration: {
+            type: Object,
+            optional: true,
+        },
     };
+    static components = { Dropdown, DropdownItem };
     static template = "discuss.CallDeviceSelect";
+    CLICK_TO_ACTIVATE = _t("Click to Activate");
+    BROWSER_DEFAULT = isBrowserChrome() ? _t("Default") : _t("Browser Default");
 
     setup() {
         super.setup();
@@ -22,6 +40,7 @@ export class DeviceSelect extends Component {
         this.notification = useService("notification");
         this.state = useState({
             userDevices: [],
+            selectedDevice: undefined,
         });
         this.abortController = new AbortController();
         this.isBrowserChrome = isBrowserChrome();
@@ -36,11 +55,18 @@ export class DeviceSelect extends Component {
                 return;
             }
             await this.updateDevicesList();
+            this.state.selectedDevice = this.state.userDevices.find((device) =>
+                this.isSelected(device.deviceId)
+            );
             this.setupEventListeners();
         });
         onWillDestroy(() => {
             this.abortController.abort();
         });
+    }
+
+    get selectLabel() {
+        return this.state.selectedDevice?.label;
     }
 
     async updateDevicesList() {
@@ -63,45 +89,49 @@ export class DeviceSelect extends Component {
         }
     }
 
-    async showPermissionDialog(kind) {
-        if (kind === "videoinput") {
-            if (this.store.rtc.cameraPermission === "denied") {
-                this.store.rtc.showMediaUnavailableWarning({ camera: true });
-            } else {
-                this.store.rtc.showMediaPermissionDialog("camera");
-                return;
-            }
-        } else {
-            if (this.store.rtc.microphonePermission === "denied") {
-                this.store.rtc.showMediaUnavailableWarning({ microphone: true });
-            } else {
-                this.store.rtc.showMediaPermissionDialog("microphone");
-                return;
-            }
-        }
+    showPermissionDialog(kind) {
+        this.store.rtc.showMediaPermissionDialog(
+            kind === "videoinput" ? "camera" : "microphone",
+            this.props.permissionDialogConfiguration
+        );
     }
 
     isSelected(id) {
+        if (id === undefined) {
+            id = "";
+        }
         switch (this.props.kind) {
             case "audioinput":
-                return this.store.settings.audioInputDeviceId === id;
+                return (
+                    this.store.settings.audioInputDeviceId === id ||
+                    (this.isBrowserChrome &&
+                        this.store.settings.audioInputDeviceId === "" &&
+                        id === "default")
+                );
             case "videoinput":
                 return this.store.settings.cameraInputDeviceId === id;
             case "audiooutput":
-                return this.store.settings.audioOutputDeviceId === id;
+                return (
+                    this.store.settings.audioOutputDeviceId === id ||
+                    (this.isBrowserChrome &&
+                        this.store.settings.audioOutputDeviceId === "" &&
+                        id === "default")
+                );
         }
     }
 
-    onChangeSelectAudioInput(ev) {
+    onSelectAudioDevice(device) {
+        this.state.selectedDevice = device;
+        const deviceId = device?.deviceId ?? "";
         switch (this.props.kind) {
             case "audioinput":
-                this.store.settings.setAudioInputDevice(ev.target.value);
+                this.store.settings.audioInputDeviceId = deviceId;
                 return;
             case "videoinput":
-                this.store.settings.setCameraInputDevice(ev.target.value);
+                this.store.settings.cameraInputDeviceId = deviceId;
                 return;
             case "audiooutput":
-                this.store.settings.setAudioOutputDevice(ev.target.value);
+                this.store.settings.audioOutputDeviceId = deviceId;
                 return;
         }
     }

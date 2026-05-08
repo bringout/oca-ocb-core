@@ -10,10 +10,13 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { Settings } from "@mail/core/common/settings_model";
 import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_extension_service";
 import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
+import { makeRecordFieldLocalId } from "@mail/model/misc";
+import { toRawValue } from "@mail/utils/common/local_storage";
 import { advanceTime, freezeTime, keyDown, mockTouch, mockUserAgent, test } from "@odoo/hoot";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
 defineMailModels();
@@ -26,11 +29,14 @@ test("no auto-call on joining chat", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await contains(".o_command_name", { count: 5 });
-    await insertText("input[placeholder='Search a conversation']", "mario");
     await contains(".o_command_name", { count: 3 });
-    await click(".o_command_name", { text: "Mario" });
-    await contains(".o-mail-DiscussSidebar-item", { text: "Mario" });
+    await insertText(
+        ".o_command_palette_search input[placeholder='Search conversations']",
+        "mario"
+    );
+    await contains(".o_command_name", { count: 2 });
+    await click(".o_command_name:text('Mario')");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario')");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-discuss-Call", { count: 0 });
 });
@@ -46,10 +52,11 @@ test("no auto-call on joining group chat", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await click("a", { text: "Create Chat" });
-    await click("li", { text: "Mario" });
-    await click("li", { text: "Luigi" });
-    await click("button", { text: "Create Group Chat" });
+    await click(".o_command_name:text(Mario)");
+    await contains(".o-mail-DiscussContent-threadName[title='Mario']");
+    await click("[title='Invite People']");
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text(Luigi))");
+    await click("button:text('Create Group Chat')");
     await contains(".o-mail-DiscussSidebar-item:contains('Mario, and Luigi')");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-discuss-Call", { count: 0 });
@@ -70,18 +77,18 @@ test("show Push-to-Talk button on mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-ChatWindow-moreActions", { text: "General" });
+    await click(".o-mail-ChatWindow-moreActions:text('General')");
     await click(".o-dropdown-item:text('Start Call')");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
-    await click("button", { text: "Push to Talk" });
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await click("label[aria-label='Enable Push-to-talk']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
-    await contains("button", { text: "Push to talk" });
+    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains("button:text('Push-to-talk')");
 });
 
 test.tags("desktop");
@@ -89,11 +96,14 @@ test("Can push-to-talk", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["res.users.settings"].create({
-        use_push_to_talk: true,
-        user_id: serverState.userId,
-        push_to_talk_key: "...f",
-    });
+    localStorage.setItem(
+        makeRecordFieldLocalId(Settings.localId(), "usePushToTalk"),
+        toRawValue(true)
+    );
+    localStorage.setItem(
+        makeRecordFieldLocalId(Settings.localId(), "pushToTalkKey"),
+        toRawValue("...f")
+    );
     patchWithCleanup(pttExtensionServiceInternal, {
         onAnswerIsEnabled(pttService) {
             pttService.isEnabled = false;

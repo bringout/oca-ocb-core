@@ -1,3 +1,4 @@
+import { useRef, useState } from "@web/owl2/utils";
 import { browser } from "../browser/browser";
 import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -7,7 +8,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { capitalize } from "../utils/strings";
 
-import { Component, useRef, useState, markup } from "@odoo/owl";
+import { Component, markup } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
@@ -58,16 +59,20 @@ export class ErrorDialog extends Component {
         });
         this.copyButtonRef = useRef("copyButton");
         this.popover = usePopover(Tooltip);
-        this.contextDetails = "Occured ";
+        let date = DateTime.now().setZone("UTC");
+        if (this.props.data?.timestamp) {
+            date = DateTime.fromSeconds(this.props.data.timestamp, { zone: "utc" });
+        }
+        this.logDate = date.toFormat("dd/MMM/yyyy HH:mm:ss", { locale: "en" });
+
+        this.contextDetails = "Occurred ";
         if (this.props.serverHost) {
             this.contextDetails += `on ${this.props.serverHost} `;
         }
         if (this.props.model) {
             this.contextDetails += `on model ${this.props.model} `;
         }
-        this.contextDetails += `on ${DateTime.now()
-            .setZone("UTC")
-            .toFormat("yyyy-MM-dd HH:mm:ss")} GMT`;
+        this.contextDetails += `on ${this.logDate}`;
     }
 
     showTooltip() {
@@ -235,6 +240,6 @@ registry
     .add("odoo.exceptions.UserError", WarningDialog)
     .add("odoo.exceptions.ValidationError", WarningDialog)
     .add("odoo.exceptions.RedirectWarning", RedirectWarningDialog)
-    .add("odoo.http.SessionExpiredException", SessionExpiredDialog)
+    .add("odoo.http.session.SessionExpiredException", SessionExpiredDialog)
     .add("werkzeug.exceptions.Forbidden", SessionExpiredDialog)
     .add("504", Error504Dialog);

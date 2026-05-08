@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-import base64
 import io
 
 from reportlab.platypus import Frame, Paragraph, KeepInFrame
@@ -13,6 +11,7 @@ from reportlab.pdfgen.canvas import Canvas
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError
+from odoo.tools import BinaryBytes
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 from odoo.tools.safe_eval import safe_eval
 
@@ -44,7 +43,7 @@ class SnailmailLetter(models.Model):
     report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
 
     attachment_id = fields.Many2one('ir.attachment', string='Attachment', ondelete='cascade', index='btree_not_null')
-    attachment_datas = fields.Binary('Document', related='attachment_id.datas')
+    attachment_raw = fields.Binary('Document', related='attachment_id.raw')
     attachment_fname = fields.Char('Attachment Filename', related='attachment_id.name')
     color = fields.Boolean(string='Color', default=lambda self: self.env.company.snailmail_color)
     cover = fields.Boolean(string='Cover Page', default=lambda self: self.env.company.snailmail_cover)
@@ -163,7 +162,7 @@ class SnailmailLetter(models.Model):
             prev = self.company_id.external_report_layout_id
             if prev in {
                 self.env.ref(f'web.external_layout_{layout}')
-                for layout in ('bubble', 'wave', 'folder')
+                for layout in ('bubble', 'wave', 'folder', 'center', 'dual', 'lines')
             }:
                 self.company_id.sudo().external_report_layout_id = self.env.ref('web.external_layout_standard')
             filename, pdf_bin = self._generate_report_pdf(report)
@@ -174,7 +173,7 @@ class SnailmailLetter(models.Model):
                 pdf_bin = self._append_cover_page(pdf_bin)
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
-                'datas': base64.b64encode(pdf_bin),
+                'raw': BinaryBytes(pdf_bin),
                 'res_model': 'snailmail.letter',
                 'res_id': self.id,
                 'type': 'binary',  # override default_type from context, possibly meant for another model!
@@ -231,7 +230,7 @@ class SnailmailLetter(models.Model):
         }
         """
         account_token = self.env['iap.account'].sudo().get('snailmail').account_token
-        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         documents = []
 
         for letter in self:
@@ -276,13 +275,13 @@ class SnailmailLetter(models.Model):
             else:
                 # adding the web logo from the company for future possible customization
                 document.update({
-                    'company_logo': letter.company_id.logo_web and letter.company_id.logo_web.decode('utf-8') or False,
+                    'company_logo': letter.company_id.logo_web.to_base64() or False,
                 })
                 attachment = letter._fetch_attachment()
                 if attachment:
                     document.update({
-                        'pdf_bin': route == 'print' and attachment.datas.decode('utf-8'),
-                        'pages': route == 'estimate' and self._count_pages_pdf(base64.b64decode(attachment.datas)),
+                        'pdf_bin': route == 'print' and attachment.raw.to_base64(),
+                        'pages': route == 'estimate' and self._count_pages_pdf(attachment.raw),
                     })
                 else:
                     letter.write({
@@ -382,8 +381,8 @@ class SnailmailLetter(models.Model):
             }
         }
         """
-        endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
-        timeout = int(self.env['ir.config_parameter'].sudo().get_param('snailmail.timeout', DEFAULT_TIMEOUT))
+        endpoint = self.env['ir.config_parameter'].sudo().get_str('snailmail.endpoint') or DEFAULT_ENDPOINT
+        timeout = self.env['ir.config_parameter'].sudo().get_int('snailmail.timeout') or DEFAULT_TIMEOUT
         params = self._snailmail_create('print')
         try:
             response = iap_tools.iap_jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
@@ -502,13 +501,13 @@ class SnailmailLetter(models.Model):
         invoice = PdfFileReader(io.BytesIO(invoice_bin))
         cover_bin = io.BytesIO(cover_buf.getvalue())
         cover_file = PdfFileReader(cover_bin)
-        out_writer.appendPagesFromReader(cover_file)
+        out_writer.append_pages_from_reader(cover_file)
 
         # Add a blank buffer page to avoid printing behind the cover page
         if self.duplex:
-            out_writer.addBlankPage()
+            out_writer.add_blank_page()
 
-        out_writer.appendPagesFromReader(invoice)
+        out_writer.append_pages_from_reader(invoice)
 
         out_buff = io.BytesIO()
         out_writer.write(out_buff)
@@ -552,8 +551,8 @@ class SnailmailLetter(models.Model):
         curr_pdf = PdfFileReader(io.BytesIO(invoice_bin))
         out = PdfFileWriter()
         for page in curr_pdf.pages:
-            page.mergePage(new_pdf.getPage(0))
-            out.addPage(page)
+            page.merge_page(new_pdf.pages[0])
+            out.add_page(page)
         out_stream = io.BytesIO()
         out.write(out_stream)
         out_bin = out_stream.getvalue()

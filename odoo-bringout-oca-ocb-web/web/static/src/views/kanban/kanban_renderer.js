@@ -1,4 +1,5 @@
-import { Component, onPatched, onWillDestroy, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component, onPatched, onWillDestroy } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -68,7 +69,6 @@ export class KanbanRenderer extends Component {
 
     static defaultProps = {
         scrollTop: () => {},
-        quickCreateState: { groupId: false },
         tooltipInfo: {},
     };
 
@@ -181,14 +181,6 @@ export class KanbanRenderer extends Component {
         useHotkey(
             "Enter",
             ({ target }) => {
-                if (target.closest(".o_kanban_selection_active") !== null) {
-                    return;
-                }
-
-                if (!target.classList.contains("o_kanban_record")) {
-                    return;
-                }
-
                 if (this.props.archInfo.canOpenRecords) {
                     target.click();
                     return;
@@ -200,7 +192,21 @@ export class KanbanRenderer extends Component {
                     firstLink.click();
                 }
             },
-            { area: () => this.rootRef.el }
+            {
+                area: () => this.rootRef.el,
+                isAvailable: (target) => {
+                    if (this.props.quickCreateState?.isOpen) {
+                        return false;
+                    }
+                    if (target.closest(".o_kanban_selection_active") !== null) {
+                        return false;
+                    }
+                    if (!target.classList.contains("o_kanban_record")) {
+                        return false;
+                    }
+                    return true;
+                },
+            }
         );
 
         useHotkey("space", ({ target }) => this.onSpaceKeyPress(target), {
@@ -236,7 +242,7 @@ export class KanbanRenderer extends Component {
         const handleAltKeyUp = () => {
             this.state.selectionAvailable = false;
         };
-        useEffect(
+        useLayoutEffect(
             () => {
                 window.addEventListener("keydown", handleAltKeyDown);
                 window.addEventListener("keyup", handleAltKeyUp);
@@ -344,7 +350,7 @@ export class KanbanRenderer extends Component {
             return true;
         }
         if (isGrouped) {
-            if (this.props.quickCreateState.groupId) {
+            if (this.props.quickCreateState?.isOpen) {
                 return false;
             }
             if (this.canCreateGroup() && !this.state.columnQuickCreateIsFolded) {
@@ -467,11 +473,6 @@ export class KanbanRenderer extends Component {
         } else {
             this.props.progressBarState?.updateCounts(group);
         }
-        this.props.quickCreateState.groupId = mode === "add" ? group.id : false;
-    }
-
-    cancelQuickCreate() {
-        this.props.quickCreateState.groupId = false;
     }
 
     async deleteGroup(group) {

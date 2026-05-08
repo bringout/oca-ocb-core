@@ -182,8 +182,10 @@ export function isTextNode(node) {
  * @returns {Element}
  */
 export function makeSeparator(title) {
-    const separator = createElement("div");
-    separator.className = "o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small";
+    const separator = createElement("div", {
+        class: "o_horizontal_separator mb-3 text-uppercase fw-bolder small",
+        "t-att-class": "{ 'mt-4' : !__comp__.env.isSmall }",
+    });
     separator.textContent = title;
     return separator;
 }
@@ -206,6 +208,7 @@ export class ViewCompiler {
             { selector: "field", fn: this.compileField },
             { selector: "widget", fn: this.compileWidget },
         ];
+        this.allowedFieldAttributes = ["data-tooltip"];
         this.templates = templates;
         this.ctx = { readonly: "__comp__.props.readonly" };
 
@@ -364,6 +367,24 @@ export class ViewCompiler {
     }
 
     /**
+     * Copies allowed attributes from a source element to a target element.
+     *
+     * For each attribute listed in `this.allowedFieldAttributes`, if the source
+     * element `el` has that attribute, its value is copied to `field`.
+     *
+     * @param {Element} field - The target DOM element to set attributes on.
+     * @param {Element} el - The source DOM element to read attributes from.
+     */
+    copyFieldAttributes(field, el) {
+        for (const attr of this.allowedFieldAttributes) {
+            const value = el.getAttribute(attr);
+            if (value !== null) {
+                field.setAttribute(attr, value);
+            }
+        }
+    }
+
+    /**
      * @param {Element} el
      * @returns {Element}
      */
@@ -382,7 +403,7 @@ export class ViewCompiler {
         if (el.hasAttribute("widget")) {
             field.setAttribute("type", `'${el.getAttribute("widget")}'`);
         }
-
+        this.copyFieldAttributes(field, el);
         return field;
     }
 

@@ -1,9 +1,8 @@
-import { CHAT_HUB_COMPACT_LS } from "@mail/core/common/chat_hub_model";
+import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { ChatWindow } from "@mail/core/common/chat_window";
 import { ActionList } from "@mail/core/common/action_list";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
-
-import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -37,6 +36,7 @@ export class ChatHub extends Component {
         this.options = useDropdownState();
         this.more = useDropdownState();
         this.ref = useRef("bubbles");
+        this.root = useRef("root");
         this.position = useState({
             dragged: false,
             isDragging: false,
@@ -47,7 +47,7 @@ export class ChatHub extends Component {
         });
         this.onResize();
         useExternalListener(browser, "resize", this.onResize);
-        useEffect(() => {
+        useLayoutEffect(() => {
             if (this.chatHub.folded.length && this.store.channels?.status === "not_fetched") {
                 this.store.channels.fetch();
             }
@@ -74,28 +74,30 @@ export class ChatHub extends Component {
     get optionActions() {
         const actions = [];
         if (this.chatHub.showConversations && !this.chatHub.compact) {
-            actions.push(
-                new Action({
-                    owner: this,
-                    id: "hide-all",
-                    definition: {
-                        name: _t("Hide all conversations"),
-                        icon: "fa fa-eye-slash",
-                        onSelected: () => this.chatHub.hideAll(),
-                    },
-                    store: this.store,
-                }),
-                new Action({
-                    owner: this,
-                    id: "close-all",
-                    definition: {
-                        name: _t("Close all conversations"),
-                        icon: "oi oi-close",
-                        onSelected: () => this.chatHub.closeAll(),
-                    },
-                    store: this.store,
-                })
-            );
+            if (this.store.self_user?.share === false) {
+                actions.push(
+                    new Action({
+                        owner: this,
+                        id: "hide-all",
+                        definition: {
+                            name: _t("Hide all conversations"),
+                            icon: "fa fa-eye-slash",
+                            onSelected: () => this.chatHub.hideAll(),
+                        },
+                        store: this.store,
+                    }),
+                    new Action({
+                        owner: this,
+                        id: "close-all",
+                        definition: {
+                            name: _t("Close all conversations"),
+                            icon: "oi oi-close",
+                            onSelected: () => this.chatHub.closeAll(),
+                        },
+                        store: this.store,
+                    })
+                );
+            }
         }
         if (this.position.dragged) {
             actions.push(
@@ -142,7 +144,7 @@ export class ChatHub extends Component {
         let counter = 0;
         const cws = this.chatHub.opened.concat(this.chatHub.folded);
         for (const chatWindow of cws) {
-            counter += chatWindow.thread.importantCounter > 0 ? 1 : 0;
+            counter += chatWindow.channel.importantCounter > 0 ? 1 : 0;
         }
         return counter;
     }
@@ -150,29 +152,13 @@ export class ChatHub extends Component {
     get hiddenCounter() {
         let counter = 0;
         for (const chatWindow of this.chatHub.folded.slice(this.chatHub.maxFolded)) {
-            counter += chatWindow.thread.importantCounter > 0 ? 1 : 0;
+            counter += chatWindow.channel.importantCounter > 0 ? 1 : 0;
         }
         return counter;
     }
 
-    /** @deprecated */
-    get displayConversations() {
-        return this.chatHub.showConversations && !this.chatHub.compact;
-    }
-
-    /** @deprecated */
-    get isShown() {
-        return true;
-    }
-
-    /** @deprecated */
-    shouldDisplayChatWindow(cw) {
-        return cw.canShow;
-    }
-
     expand() {
-        browser.localStorage.removeItem(CHAT_HUB_COMPACT_LS);
-        this.chatHub._recomputeCompact++;
+        this.chatHub.compact = false;
         this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;
         if (this.chatHub.opened.length > 0) {
             this.resetPosition();

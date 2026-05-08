@@ -8,7 +8,7 @@
         <field name="code">7eleven</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/7eleven.png"/>
+        <field name="image" type="bytes" file="payment/static/img/7eleven.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -30,8 +30,8 @@
         <field name="code">ach_direct_debit</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/ach_direct_debit.png"/>
-        <field name="support_tokenization">False</field>
+        <field name="image" type="bytes" file="payment/static/img/ach_direct_debit.png"/>
+        <field name="support_tokenization">True</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
         <field name="support_refund">partial</field>
@@ -53,7 +53,7 @@
         <field name="code">affirm</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/affirm.png"/>
+        <field name="image" type="bytes" file="payment/static/img/affirm.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">full_only</field>
@@ -77,7 +77,7 @@
         <field name="code">afterpay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/afterpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/afterpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -105,7 +105,7 @@
         <field name="code">afterpay_riverty</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/afterpay_riverty.png"/>
+        <field name="image" type="bytes" file="payment/static/img/afterpay_riverty.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -131,7 +131,7 @@
         <field name="code">akulaku</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/akulaku.png"/>
+        <field name="image" type="bytes" file="payment/static/img/akulaku.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -153,7 +153,7 @@
         <field name="code">alipay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/alipay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/alipay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -165,7 +165,7 @@
         <field name="code">alipay_hk</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/alipay_hk.png"/>
+        <field name="image" type="bytes" file="payment/static/img/alipay_hk.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -187,7 +187,7 @@
         <field name="code">alipay_plus</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/alipay_plus.png"/>
+        <field name="image" type="bytes" file="payment/static/img/alipay_plus.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -257,7 +257,7 @@
         <field name="code">alma</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/alma.png"/>
+        <field name="image" type="bytes" file="payment/static/img/alma.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -265,6 +265,11 @@
         <field name="supported_country_ids"
                eval="[Command.set([
                          ref('base.fr'),
+                         ref('base.it'),
+                         ref('base.es'),
+                         ref('base.nl'),
+                         ref('base.be'),
+                         ref('base.lu'),
                      ])]"
         />
         <field name="supported_currency_ids"
@@ -279,7 +284,7 @@
         <field name="code">aman</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/aman.png"/>
+        <field name="image" type="bytes" file="payment/static/img/aman.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -293,7 +298,7 @@
         <field name="code">amazon_pay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/amazon_pay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/amazon_pay.png"/>
         <field name="support_tokenization">True</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -322,7 +327,7 @@
         <field name="code">astropay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -343,7 +348,7 @@
         <field name="code">appota</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/appota.png"/>
+        <field name="image" type="bytes" file="payment/static/img/appota.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -364,7 +369,7 @@
         <field name="code">atome</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/atome.png"/>
+        <field name="image" type="bytes" file="payment/static/img/atome.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -388,7 +393,7 @@
         <field name="code">bacs_direct_debit</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bacs_direct_debit.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bacs_direct_debit.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -410,7 +415,7 @@
         <field name="code">bancnet</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bancnet.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bancnet.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -432,7 +437,7 @@
         <field name="code">bancontact</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bancontact.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bancontact.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -454,7 +459,7 @@
         <field name="code">bangkok_bank</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -476,7 +481,7 @@
         <field name="code">bank_account</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -488,7 +493,7 @@
         <field name="code">bank_bca</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank_bca.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank_bca.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -510,7 +515,7 @@
         <field name="code">bank_of_ayudhya</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -532,7 +537,7 @@
         <field name="code">bank_permata</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank_permata.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank_permata.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -554,7 +559,7 @@
         <field name="code">bank_reference</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -567,7 +572,7 @@
         <field name="code">bank_transfer</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -579,7 +584,7 @@
         <field name="code">becs_direct_debit</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/becs_direct_debit.png"/>
+        <field name="image" type="bytes" file="payment/static/img/becs_direct_debit.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -601,7 +606,7 @@
         <field name="code">belfius</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/belfius.png"/>
+        <field name="image" type="bytes" file="payment/static/img/belfius.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -623,7 +628,7 @@
         <field name="code">benefit</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/benefit.png"/>
+        <field name="image" type="bytes" file="payment/static/img/benefit.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -645,7 +650,7 @@
         <field name="code">bharatqr</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bharatqr.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bharatqr.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -667,7 +672,7 @@
         <field name="code">billease</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/billease.png"/>
+        <field name="image" type="bytes" file="payment/static/img/billease.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -689,7 +694,7 @@
         <field name="code">billink</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/billink.png"/>
+        <field name="image" type="bytes" file="payment/static/img/billink.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -712,7 +717,7 @@
         <field name="code">bizum</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bizum.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bizum.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -734,7 +739,7 @@
         <field name="code">blik</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/blik.png"/>
+        <field name="image" type="bytes" file="payment/static/img/blik.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -756,7 +761,7 @@
         <field name="code">bni</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bni.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bni.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -778,7 +783,7 @@
         <field name="code">boleto</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/boleto.png"/>
+        <field name="image" type="bytes" file="payment/static/img/boleto.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -800,7 +805,7 @@
         <field name="code">boost</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/boost.png"/>
+        <field name="image" type="bytes" file="payment/static/img/boost.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -822,7 +827,7 @@
         <field name="code">bri</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bri.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bri.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -844,7 +849,7 @@
         <field name="code">bsi</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bsi.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bsi.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -866,7 +871,7 @@
         <field name="code">card</field>
         <field name="sequence">10</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
         <field name="support_tokenization">True</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -878,7 +883,7 @@
         <field name="code">cash_app_pay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cash_app_pay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cash_app_pay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -900,7 +905,7 @@
         <field name="code">cashalo</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cashalo.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cashalo.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -922,7 +927,7 @@
         <field name="code">cebuana</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cebuana.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cebuana.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -944,7 +949,7 @@
         <field name="code">cimb_niaga</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cimb_niaga.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cimb_niaga.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -966,7 +971,7 @@
         <field name="code">clearpay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/clearpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/clearpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -988,7 +993,7 @@
         <field name="code">cofidis</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cofidis.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cofidis.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1011,7 +1016,7 @@
         <field name="code">contact</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/contact.png"/>
+        <field name="image" type="bytes" file="payment/static/img/contact.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1025,7 +1030,7 @@
         <field name="code">dana</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/dana.png"/>
+        <field name="image" type="bytes" file="payment/static/img/dana.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1047,7 +1052,7 @@
         <field name="code">dpo</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1059,7 +1064,7 @@
         <field name="code">duitnow</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/duitnow.png"/>
+        <field name="image" type="bytes" file="payment/static/img/duitnow.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1081,7 +1086,7 @@
         <field name="code">easypaisa</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/easypaisa.png"/>
+        <field name="image" type="bytes" file="payment/static/img/easypaisa.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1095,7 +1100,7 @@
         <field name="code">emi_india</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -1117,7 +1122,7 @@
         <field name="code">enets</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/enets.png"/>
+        <field name="image" type="bytes" file="payment/static/img/enets.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1139,7 +1144,7 @@
         <field name="code">eps</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/eps.png"/>
+        <field name="image" type="bytes" file="payment/static/img/eps.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1161,7 +1166,7 @@
         <field name="code">floa_bank</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/floa_bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/floa_bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1187,7 +1192,7 @@
         <field name="code">forsa</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/forsa.png"/>
+        <field name="image" type="bytes" file="payment/static/img/forsa.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1201,7 +1206,7 @@
         <field name="code">fps</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1223,7 +1228,7 @@
         <field name="code">fpx</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/fpx.png"/>
+        <field name="image" type="bytes" file="payment/static/img/fpx.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1245,7 +1250,7 @@
         <field name="code">gcash</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/gcash.png"/>
+        <field name="image" type="bytes" file="payment/static/img/gcash.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1267,7 +1272,7 @@
         <field name="code">gopay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/gopay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/gopay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1289,7 +1294,7 @@
         <field name="code">grabpay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/grabpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/grabpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1315,7 +1320,7 @@
         <field name="code">halan</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/halan.png"/>
+        <field name="image" type="bytes" file="payment/static/img/halan.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1329,7 +1334,7 @@
         <field name="code">hd</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1351,7 +1356,7 @@
         <field name="code">hoolah</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/hoolah.png"/>
+        <field name="image" type="bytes" file="payment/static/img/hoolah.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1379,7 +1384,7 @@
         <field name="code">humm</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/humm.png"/>
+        <field name="image" type="bytes" file="payment/static/img/humm.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1407,7 +1412,7 @@
         <field name="code">ideal</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/ideal_wero.png"/>
+        <field name="image" type="bytes" file="payment/static/img/ideal_wero.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1429,7 +1434,7 @@
         <field name="code">installments_eg</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1443,7 +1448,7 @@
         <field name="code">in3</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/in3.png"/>
+        <field name="image" type="bytes" file="payment/static/img/in3.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1465,7 +1470,7 @@
         <field name="code">jazzcash</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/jazzcash.png"/>
+        <field name="image" type="bytes" file="payment/static/img/jazzcash.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1479,7 +1484,7 @@
         <field name="code">jeniuspay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/jeniuspay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/jeniuspay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1501,7 +1506,7 @@
         <field name="code">jkopay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/jkopay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/jkopay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1523,7 +1528,7 @@
         <field name="code">kakaopay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/kakaopay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/kakaopay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1545,7 +1550,7 @@
         <field name="code">kasikorn_bank</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1567,7 +1572,7 @@
         <field name="code">kbc_cbc</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/kbc.png"/>
+        <field name="image" type="bytes" file="payment/static/img/kbc.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1590,7 +1595,7 @@
         <field name="code">kiosk</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/kiosk.png"/>
+        <field name="image" type="bytes" file="payment/static/img/kiosk.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1604,7 +1609,7 @@
         <field name="code">klarna</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/klarna.png"/>
+        <field name="image" type="bytes" file="payment/static/img/klarna.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -1658,7 +1663,7 @@
         <field name="code">klarna_paynow</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/klarna.png"/>
+        <field name="image" type="bytes" file="payment/static/img/klarna.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -1685,7 +1690,7 @@
         <field name="code">klarna_pay_over_time</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/klarna.png"/>
+        <field name="image" type="bytes" file="payment/static/img/klarna.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -1732,7 +1737,7 @@
         <field name="code">knet</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/knet.png"/>
+        <field name="image" type="bytes" file="payment/static/img/knet.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1754,7 +1759,7 @@
         <field name="code">kredivo</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/kredivo.png"/>
+        <field name="image" type="bytes" file="payment/static/img/kredivo.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1776,7 +1781,7 @@
         <field name="code">krungthai_bank</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1798,7 +1803,7 @@
         <field name="code">KFH</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/kfh.png"/>
+        <field name="image" type="bytes" file="payment/static/img/kfh.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -1815,7 +1820,7 @@
         <field name="code">linepay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/linepay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/linepay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1841,7 +1846,7 @@
         <field name="code">linkaja</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/linkaja.png"/>
+        <field name="image" type="bytes" file="payment/static/img/linkaja.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1863,7 +1868,7 @@
         <field name="code">mada</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mada.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mada.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1886,7 +1891,7 @@
         <field name="code">mandiri</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mandiri.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mandiri.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1908,7 +1913,7 @@
         <field name="code">maya</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/maya.png"/>
+        <field name="image" type="bytes" file="payment/static/img/maya.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1930,7 +1935,7 @@
         <field name="code">maybank</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/maybank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/maybank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1952,7 +1957,7 @@
         <field name="code">mbway</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mbway.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mbway.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1974,7 +1979,7 @@
         <field name="code">mercado_pago_wallet</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mercado_livre.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mercado_livre.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1987,7 +1992,7 @@
         <field name="code">mobile</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mobile.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mobile.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -1999,7 +2004,7 @@
         <field name="code">mobile_money</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mtn-mobile-money.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mtn-mobile-money.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2033,7 +2038,7 @@
         <field name="code">mobile_pay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mobile_pay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mobile_pay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -2059,7 +2064,7 @@
         <field name="code">mobile_wallet_eg</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/wallet.png"/>
+        <field name="image" type="bytes" file="payment/static/img/wallet.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2073,7 +2078,7 @@
         <field name="code">momo</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/momo.png"/>
+        <field name="image" type="bytes" file="payment/static/img/momo.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2095,7 +2100,7 @@
         <field name="code">mpesa</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mpesa.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mpesa.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2117,7 +2122,7 @@
         <field name="code">multibanco</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/multibanco.png"/>
+        <field name="image" type="bytes" file="payment/static/img/multibanco.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2139,7 +2144,7 @@
         <field name="code">mybank</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mybank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mybank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2161,7 +2166,7 @@
         <field name="code">nuvei_local</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -2182,7 +2187,7 @@
         <field name="code">napas_card</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/napas_card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/napas_card.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -2205,7 +2210,7 @@
         <field name="code">netbanking</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -2227,7 +2232,7 @@
         <field name="code">octopus</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/octopus.png"/>
+        <field name="image" type="bytes" file="payment/static/img/octopus.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2249,7 +2254,7 @@
         <field name="code">omannet</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/omannet.png"/>
+        <field name="image" type="bytes" file="payment/static/img/omannet.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2263,7 +2268,7 @@
         <field name="code">online_banking_czech_republic</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2285,7 +2290,7 @@
         <field name="code">online_banking_india</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2308,7 +2313,7 @@
         <field name="code">online_banking_slovakia</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2330,7 +2335,7 @@
         <field name="code">online_banking_thailand</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2352,18 +2357,22 @@
         <field name="code">open_banking</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
         <field name="support_refund">partial</field>
         <field name="supported_country_ids"
                eval="[Command.set([
+                         ref('base.de'),
+                         ref('base.fi'),
+                         ref('base.fr'),
                          ref('base.uk'),
                      ])]"
         />
         <field name="supported_currency_ids"
                eval="[Command.set([
+                         ref('base.EUR'),
                          ref('base.GBP'),
                      ])]"
         />
@@ -2374,7 +2383,7 @@
         <field name="code">ovo</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/ovo.png"/>
+        <field name="image" type="bytes" file="payment/static/img/ovo.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2396,7 +2405,7 @@
         <field name="code">oxxopay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/oxxopay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/oxxopay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -2417,7 +2426,7 @@
         <field name="code">paybright</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/paybright.png"/>
+        <field name="image" type="bytes" file="payment/static/img/paybright.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -2439,7 +2448,7 @@
         <field name="code">pace</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/pace.png"/>
+        <field name="image" type="bytes" file="payment/static/img/pace.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2471,7 +2480,7 @@
         <field name="code">paylater_india</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/pay_later.png"/>
+        <field name="image" type="bytes" file="payment/static/img/pay_later.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -2494,7 +2503,7 @@
         <field name="code">pay_id</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/pay_id.png"/>
+        <field name="image" type="bytes" file="payment/static/img/pay_id.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2518,7 +2527,7 @@
         <field name="code">payme</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/payme.png"/>
+        <field name="image" type="bytes" file="payment/static/img/payme.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2540,7 +2549,7 @@
         <field name="code">paynow</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/paynow.png"/>
+        <field name="image" type="bytes" file="payment/static/img/paynow.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2562,7 +2571,7 @@
         <field name="code">paypal</field>
         <field name="sequence">20</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/paypal.png"/>
+        <field name="image" type="bytes" file="payment/static/img/paypal.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -2574,7 +2583,7 @@
         <field name="code">paysafecard</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/paysafecard.png"/>
+        <field name="image" type="bytes" file="payment/static/img/paysafecard.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2672,7 +2681,7 @@
         <field name="code">paytm</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/paytm.png"/>
+        <field name="image" type="bytes" file="payment/static/img/paytm.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2694,7 +2703,7 @@
         <field name="code">paytrail</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/paytrail.png"/>
+        <field name="image" type="bytes" file="payment/static/img/paytrail.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2716,7 +2725,7 @@
         <field name="code">pix</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/pix.png"/>
+        <field name="image" type="bytes" file="payment/static/img/pix.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2738,7 +2747,7 @@
         <field name="code">poli</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/poli.png"/>
+        <field name="image" type="bytes" file="payment/static/img/poli.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2762,7 +2771,7 @@
         <field name="code">post_finance_pay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/pf_pay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/pf_pay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2813,7 +2822,7 @@
         <field name="code">poste_pay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/poste_pay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/poste_pay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2835,7 +2844,7 @@
         <field name="code">pps</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2857,7 +2866,7 @@
         <field name="code">premium_card</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/premiumcard.png"/>
+        <field name="image" type="bytes" file="payment/static/img/premiumcard.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2871,7 +2880,7 @@
         <field name="code">promptpay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/promptpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/promptpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2893,7 +2902,7 @@
         <field name="code">pse</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2915,7 +2924,7 @@
         <field name="code">p24</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/p24.png"/>
+        <field name="image" type="bytes" file="payment/static/img/p24.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2938,7 +2947,7 @@
         <field name="code">qris</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/qris.png"/>
+        <field name="image" type="bytes" file="payment/static/img/qris.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2960,7 +2969,7 @@
         <field name="code">rabbit_line_pay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/rabbit_line_pay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/rabbit_line_pay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -2982,7 +2991,7 @@
         <field name="code">ratepay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/ratepay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/ratepay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -3008,7 +3017,7 @@
         <field name="code">revolut_pay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/revolut_pay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/revolut_pay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">full_only</field>
@@ -3030,20 +3039,33 @@
         <field name="code">samsung_pay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/samsung_pay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/samsung_pay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
         <field name="support_refund">partial</field>
     </record>
 
+    <record id="payment_method_satispay" model="payment.method">
+        <field name="name">Satispay</field>
+        <field name="code">satispay</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/satispay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.it')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
 
     <record id="payment_method_scb" model="payment.method">
         <field name="name">Siam Commerical Bank</field>
         <field name="code">scb</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3065,7 +3087,7 @@
         <field name="code">sepa_direct_debit</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/sepa.png"/>
+        <field name="image" type="bytes" file="payment/static/img/sepa.png"/>
         <field name="support_tokenization">True</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3115,7 +3137,7 @@
         <field name="code">shopback</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/shopback.png"/>
+        <field name="image" type="bytes" file="payment/static/img/shopback.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3137,7 +3159,7 @@
         <field name="code">shopeepay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/shopeepay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/shopeepay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3161,43 +3183,12 @@
         />
     </record>
 
-    <record id="payment_method_sofort" model="payment.method">
-        <field name="name">Sofort</field>
-        <field name="code">sofort</field>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/sofort.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="support_express_checkout">False</field>
-        <field name="support_manual_capture">none</field>
-        <field name="support_refund">partial</field>
-        <field name="supported_country_ids"
-               eval="[Command.set([
-                         ref('base.de'),
-                         ref('base.at'),
-                         ref('base.be'),
-                         ref('base.nl'),
-                         ref('base.es'),
-                         ref('base.ch'),
-                         ref('base.pl'),
-                         ref('base.it'),
-                         ref('base.uk'),
-                     ])]"
-        />
-        <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.EUR'),
-                         ref('base.CHF'),
-                     ])]"
-        />
-    </record>
-
     <record id="payment_method_souhoola" model="payment.method">
         <field name="name">Souhoola</field>
         <field name="code">souhoola</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/souhoola.png"/>
+        <field name="image" type="bytes" file="payment/static/img/souhoola.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3211,7 +3202,7 @@
         <field name="code">spei</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/spei.png"/>
+        <field name="image" type="bytes" file="payment/static/img/spei.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -3233,7 +3224,7 @@
         <field name="code">stcpay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/stcpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/stcpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3247,7 +3238,7 @@
         <field name="code">swish</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/swish.png"/>
+        <field name="image" type="bytes" file="payment/static/img/swish.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3269,7 +3260,7 @@
         <field name="code">sympl</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/sympl.png"/>
+        <field name="image" type="bytes" file="payment/static/img/sympl.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3283,7 +3274,7 @@
         <field name="code">tabby</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/tabby.png"/>
+        <field name="image" type="bytes" file="payment/static/img/tabby.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3311,7 +3302,7 @@
         <field name="code">tamara</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/tamara.png"/>
+        <field name="image" type="bytes" file="payment/static/img/tamara.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3339,7 +3330,7 @@
         <field name="code">techcom</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/techcom.png"/>
+        <field name="image" type="bytes" file="payment/static/img/techcom.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3361,7 +3352,7 @@
         <field name="code">tendopay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/tendopay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/tendopay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3383,7 +3374,7 @@
         <field name="code">tenpay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/tenpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/tenpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3405,7 +3396,7 @@
         <field name="code">tienphong</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3427,7 +3418,7 @@
         <field name="code">tinka</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/tinka.png"/>
+        <field name="image" type="bytes" file="payment/static/img/tinka.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3449,7 +3440,7 @@
         <field name="code">tmb</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/tmb.png"/>
+        <field name="image" type="bytes" file="payment/static/img/tmb.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3471,7 +3462,7 @@
         <field name="code">touch_n_go</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/touch_n_go.png"/>
+        <field name="image" type="bytes" file="payment/static/img/touch_n_go.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3493,7 +3484,7 @@
         <field name="code">truemoney</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/truemoney.png"/>
+        <field name="image" type="bytes" file="payment/static/img/truemoney.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3515,7 +3506,7 @@
         <field name="code">trustly</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/trustly.png"/>
+        <field name="image" type="bytes" file="payment/static/img/trustly.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3553,7 +3544,7 @@
         <field name="code">ttb</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3575,7 +3566,7 @@
         <field name="code">twint</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/twint.png"/>
+        <field name="image" type="bytes" file="payment/static/img/twint.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3597,7 +3588,7 @@
         <field name="code">uatp</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/uatp.png"/>
+        <field name="image" type="bytes" file="payment/static/img/uatp.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3610,7 +3601,7 @@
         <field name="code">unknown</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/unknown.png"/>
+        <field name="image" type="bytes" file="payment/static/img/unknown.png"/>
         <field name="support_tokenization">True</field>
         <field name="support_express_checkout">True</field>
         <field name="support_manual_capture">partial</field>
@@ -3622,7 +3613,7 @@
         <field name="code">uob</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3644,7 +3635,7 @@
         <field name="code">upi</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/upi.png"/>
+        <field name="image" type="bytes" file="payment/static/img/upi.png"/>
         <field name="support_tokenization">True</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3666,7 +3657,7 @@
         <field name="code">ussd</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/flutterwave.png"/>
+        <field name="image" type="bytes" file="payment/static/img/flutterwave.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3678,7 +3669,7 @@
         <field name="code">valu</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/valu.png"/>
+        <field name="image" type="bytes" file="payment/static/img/valu.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3692,7 +3683,7 @@
         <field name="code">venmo</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/venmo.png"/>
+        <field name="image" type="bytes" file="payment/static/img/venmo.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3714,7 +3705,7 @@
         <field name="code">vietcom</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/vietcom.png"/>
+        <field name="image" type="bytes" file="payment/static/img/vietcom.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3736,7 +3727,7 @@
         <field name="code">vietcapital</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/vietcapital.png"/>
+        <field name="image" type="bytes" file="payment/static/img/vietcapital.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -3753,7 +3744,7 @@
         <field name="code">vipps</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/vipps.png"/>
+        <field name="image" type="bytes" file="payment/static/img/vipps.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">partial</field>
@@ -3775,7 +3766,7 @@
         <field name="code">vpay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/vpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/vpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3799,7 +3790,7 @@
         <field name="code">vpb</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/vpb.png"/>
+        <field name="image" type="bytes" file="payment/static/img/vpb.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -3816,7 +3807,7 @@
         <field name="code">wallets_india</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/wallet.png"/>
+        <field name="image" type="bytes" file="payment/static/img/wallet.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3839,7 +3830,7 @@
         <field name="code">walley</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/walley.png"/>
+        <field name="image" type="bytes" file="payment/static/img/walley.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">full_only</field>
@@ -3867,7 +3858,7 @@
         <field name="code">webpay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/webpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/webpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -3889,7 +3880,7 @@
         <field name="code">wechat_pay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/wechat_pay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/wechat_pay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3917,7 +3908,7 @@
         <field name="code">welend</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/welend.png"/>
+        <field name="image" type="bytes" file="payment/static/img/welend.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3934,12 +3925,33 @@
         />
     </record>
 
+    <record id="payment_method_wero" model="payment.method">
+        <field name="name">Wero</field>
+        <field name="code">wero</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/wero.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                ref('base.be'),
+                ref('base.de'),
+                ref('base.fr'),
+            ])]"
+        />
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
     <record id="payment_method_zalopay" model="payment.method">
         <field name="name">Zalopay</field>
         <field name="code">zalopay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/zalopay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/zalopay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -3960,7 +3972,7 @@
         <field name="code">zip</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/zip.png"/>
+        <field name="image" type="bytes" file="payment/static/img/zip.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_manual_capture">none</field>
@@ -3991,7 +4003,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_nuvei_local')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/abitab.png"/>
+        <field name="image" type="bytes" file="payment/static/img/abitab.png"/>
     </record>
 
     <record id="payment_method_amex" model="payment.method">
@@ -4000,7 +4012,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/amex.png"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
     </record>
 
     <record id="payment_method_argencard" model="payment.method">
@@ -4009,7 +4021,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/argencard.png"/>
+        <field name="image" type="bytes" file="payment/static/img/argencard.png"/>
     </record>
 
     <record id="payment_method_banco_de_bogota" model="payment.method">
@@ -4018,7 +4030,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_bank_reference')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bank.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
     </record>
 
     <record id="payment_method_banco_guayaquil" model="payment.method">
@@ -4027,7 +4039,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_astropay')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/banco_guayaquil.png"/>
+        <field name="image" type="bytes" file="payment/static/img/banco_guayaquil.png"/>
     </record>
 
     <record id="payment_method_bancolombia" model="payment.method">
@@ -4036,7 +4048,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_bank_reference')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/bancolombia.png"/>
+        <field name="image" type="bytes" file="payment/static/img/bancolombia.png"/>
     </record>
 
     <record id="payment_method_banco_pichincha" model="payment.method">
@@ -4045,7 +4057,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_astropay')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/banco_pichincha.png"/>
+        <field name="image" type="bytes" file="payment/static/img/banco_pichincha.png"/>
     </record>
 
     <record id="payment_method_cabal" model="payment.method">
@@ -4054,7 +4066,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cabal.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cabal.png"/>
     </record>
 
     <record id="payment_method_caixa" model="payment.method">
@@ -4063,7 +4075,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/caixa.png"/>
+        <field name="image" type="bytes" file="payment/static/img/caixa.png"/>
     </record>
 
     <record id="payment_method_carnet" model="payment.method">
@@ -4072,7 +4084,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/wallet.png"/>
+        <field name="image" type="bytes" file="payment/static/img/wallet.png"/>
     </record>
 
     <record id="payment_method_cartes_bancaires" model="payment.method">
@@ -4081,7 +4093,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
     </record>
 
     <record id="payment_method_cencosud" model="payment.method">
@@ -4090,7 +4102,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cencosud.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cencosud.png"/>
     </record>
 
     <record id="payment_method_cirrus" model="payment.method">
@@ -4099,7 +4111,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cirrus.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cirrus.png"/>
     </record>
 
     <record id="payment_method_cmr" model="payment.method">
@@ -4108,7 +4120,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
     </record>
 
     <record id="payment_method_codensa" model="payment.method">
@@ -4117,7 +4129,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/codensa.png"/>
+        <field name="image" type="bytes" file="payment/static/img/codensa.png"/>
     </record>
 
     <record id="payment_method_cordial" model="payment.method">
@@ -4126,7 +4138,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cordial.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cordial.png"/>
     </record>
 
     <record id="payment_method_cordobesa" model="payment.method">
@@ -4135,7 +4147,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/cordobesa.png"/>
+        <field name="image" type="bytes" file="payment/static/img/cordobesa.png"/>
     </record>
 
     <record id="payment_method_credit" model="payment.method">
@@ -4144,7 +4156,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
     </record>
 
     <record id="payment_method_dankort" model="payment.method">
@@ -4153,7 +4165,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/dankort.png"/>
+        <field name="image" type="bytes" file="payment/static/img/dankort.png"/>
     </record>
 
     <record id="payment_method_davivienda" model="payment.method">
@@ -4162,7 +4174,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_bank_reference')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/davivienda.png"/>
+        <field name="image" type="bytes" file="payment/static/img/davivienda.png"/>
     </record>
 
     <record id="payment_method_diners" model="payment.method">
@@ -4171,7 +4183,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/diners.png"/>
+        <field name="image" type="bytes" file="payment/static/img/diners.png"/>
     </record>
 
     <record id="payment_method_discover" model="payment.method">
@@ -4180,7 +4192,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/discover.png"/>
+        <field name="image" type="bytes" file="payment/static/img/discover.png"/>
     </record>
 
     <record id="payment_method_elo" model="payment.method">
@@ -4189,7 +4201,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/elo.png"/>
+        <field name="image" type="bytes" file="payment/static/img/elo.png"/>
     </record>
 
     <record id="payment_method_facilito" model="payment.method">
@@ -4198,7 +4210,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_astropay')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/facilito.png"/>
+        <field name="image" type="bytes" file="payment/static/img/facilito.png"/>
     </record>
 
     <record id="payment_method_hipercard" model="payment.method">
@@ -4207,7 +4219,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/hipercard.png"/>
+        <field name="image" type="bytes" file="payment/static/img/hipercard.png"/>
     </record>
 
     <record id="payment_method_ideal_brand" model="payment.method">
@@ -4216,7 +4228,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_ideal')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/ideal.png"/>
+        <field name="image" type="bytes" file="payment/static/img/ideal.png"/>
     </record>
 
     <record id="payment_method_jcb" model="payment.method">
@@ -4225,7 +4237,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/jcb.png"/>
+        <field name="image" type="bytes" file="payment/static/img/jcb.png"/>
     </record>
 
     <record id="payment_method_lider" model="payment.method">
@@ -4234,7 +4246,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/lider.png"/>
+        <field name="image" type="bytes" file="payment/static/img/lider.png"/>
     </record>
 
     <record id="payment_method_mercado_livre" model="payment.method">
@@ -4243,7 +4255,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mercado_livre.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mercado_livre.png"/>
     </record>
 
 
@@ -4253,7 +4265,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/meeza.png"/>
+        <field name="image" type="bytes" file="payment/static/img/meeza.png"/>
     </record>
 
     <record id="payment_method_maestro" model="payment.method">
@@ -4262,7 +4274,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/maestro.png"/>
+        <field name="image" type="bytes" file="payment/static/img/maestro.png"/>
     </record>
 
     <record id="payment_method_magna" model="payment.method">
@@ -4271,7 +4283,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/magna.png"/>
+        <field name="image" type="bytes" file="payment/static/img/magna.png"/>
     </record>
 
     <record id="payment_method_mastercard" model="payment.method">
@@ -4280,7 +4292,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/mastercard.png"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
     </record>
 
     <record id="payment_method_naps" model="payment.method">
@@ -4289,7 +4301,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/naps.png"/>
+        <field name="image" type="bytes" file="payment/static/img/naps.png"/>
     </record>
 
     <record id="payment_method_naranja" model="payment.method">
@@ -4298,7 +4310,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/naranja.png"/>
+        <field name="image" type="bytes" file="payment/static/img/naranja.png"/>
     </record>
 
     <record id="payment_method_nativa" model="payment.method">
@@ -4307,7 +4319,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/nativa.png"/>
+        <field name="image" type="bytes" file="payment/static/img/nativa.png"/>
     </record>
 
     <record id="payment_method_oca" model="payment.method">
@@ -4316,7 +4328,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
     </record>
 
     <record id="payment_method_omannet" model="payment.method">
@@ -4325,7 +4337,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/omannet.png"/>
+        <field name="image" type="bytes" file="payment/static/img/omannet.png"/>
     </record>
 
     <record id="payment_method_presto" model="payment.method">
@@ -4334,7 +4346,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/presto.png"/>
+        <field name="image" type="bytes" file="payment/static/img/presto.png"/>
     </record>
 
     <record id="payment_method_redpagos" model="payment.method">
@@ -4343,7 +4355,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_nuvei_local')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/redpagos.png"/>
+        <field name="image" type="bytes" file="payment/static/img/redpagos.png"/>
     </record>
 
     <record id="payment_method_rupay" model="payment.method">
@@ -4352,7 +4364,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/rupay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/rupay.png"/>
     </record>
 
     <record id="payment_method_shopping" model="payment.method">
@@ -4361,7 +4373,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/shopping.png"/>
+        <field name="image" type="bytes" file="payment/static/img/shopping.png"/>
     </record>
 
     <record id="payment_method_tarjeta_mercadopago" model="payment.method">
@@ -4370,7 +4382,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/tarjeta_mercadopago.png"/>
+        <field name="image" type="bytes" file="payment/static/img/tarjeta_mercadopago.png"/>
     </record>
 
     <record id="payment_method_troy" model="payment.method">
@@ -4379,7 +4391,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/troy.png"/>
+        <field name="image" type="bytes" file="payment/static/img/troy.png"/>
     </record>
 
     <record id="payment_method_unionpay" model="payment.method">
@@ -4388,7 +4400,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/unionpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/unionpay.png"/>
     </record>
 
     <record id="payment_method_viettelpay" model="payment.method">
@@ -4396,7 +4408,7 @@
         <field name="code">viettelpay</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/viettelpay.png"/>
+        <field name="image" type="bytes" file="payment/static/img/viettelpay.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -4414,7 +4426,7 @@
         <field name="primary_payment_method_id" eval="ref('payment.payment_method_card')"/>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/visa.png"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
     </record>
 
     <record id="payment_method_vnptwallet" model="payment.method">
@@ -4422,7 +4434,7 @@
         <field name="code">vnptwallet</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/vnpt.png"/>
+        <field name="image" type="bytes" file="payment/static/img/vnpt.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -4432,6 +4444,15 @@
         <field name="supported_currency_ids"
                eval="[Command.set([ref('base.VND')])]"
         />
+    </record>
+
+    <record id="payment_method_wero_brand" model="payment.method">
+        <field name="name">WERO</field>
+        <field name="code">wero</field>
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_ideal')"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/wero.png"/>
     </record>
 
     <record id="payment_method_woori" model="payment.method">
@@ -4439,7 +4460,7 @@
         <field name="code">woori</field>
         <field name="sequence">1000</field>
         <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/woori.png"/>
+        <field name="image" type="bytes" file="payment/static/img/woori.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">none</field>
@@ -4449,15 +4470,6 @@
         <field name="supported_currency_ids"
                eval="[Command.set([ref('base.VND')])]"
         />
-    </record>
-
-    <record id="payment_method_wero" model="payment.method">
-        <field name="name">WERO</field>
-        <field name="code">wero</field>
-        <field name="primary_payment_method_id" eval="ref('payment.payment_method_ideal')"/>
-        <field name="sequence">1000</field>
-        <field name="active">False</field>
-        <field name="image" type="base64" file="payment/static/img/wero.png"/>
     </record>
 
 </odoo>

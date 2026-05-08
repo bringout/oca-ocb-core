@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { session } from "@web/session";
@@ -6,7 +7,8 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 export const STATIC_ACTIONS_GROUP_NUMBER = 1;
 export const ACTIONS_GROUP_NUMBER = 100;
@@ -55,7 +57,8 @@ export class ActionMenus extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.state = useState({ printItems: []})
+        this.offline = useService("offline");
+        this.state = useState({ printItems: [] });
         onWillStart(async () => {
             this.actionItems = await this.getActionItems(this.props);
         });
@@ -148,11 +151,18 @@ export class ActionMenus extends Component {
                 : validActionIds.push(action.id);
         }
         if (actionWithDomainIds.length) {
-            const validActionsWithDomainIds = await this.orm.call(
-                "ir.actions.report",
-                "get_valid_action_reports",
-                [actionWithDomainIds, this.props.resModel, this.props.getActiveIds()]
-            );
+            let validActionsWithDomainIds = [];
+            try {
+                validActionsWithDomainIds = await this.orm.call(
+                    "ir.actions.report",
+                    "get_valid_action_reports",
+                    [actionWithDomainIds, this.props.resModel, this.props.getActiveIds()]
+                );
+            } catch (e) {
+                if (!(e instanceof ConnectionLostError)) {
+                    throw e;
+                }
+            }
             validActionIds.push(...validActionsWithDomainIds);
         }
         return printActions

@@ -1,7 +1,8 @@
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { Gif } from "@mail/core/common/gif";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
@@ -109,12 +110,12 @@ export class GifPicker extends Component {
         onWillStart(() => {
             this.loadCategories();
         });
-        if (this.store.self_partner) {
+        if (this.store.self_user) {
             onWillStart(() => {
                 this.loadFavorites();
             });
         }
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.props.state?.picker !== this.props.PICKERS?.GIF) {
                     return;
@@ -307,5 +308,9 @@ export class GifPicker extends Component {
             this.pushGif(gif);
         }
         this.closeCategories();
+    }
+
+    onClickOpenDiscussSetting() {
+        this.env.services.action.doAction("mail.action_open_discuss_settings");
     }
 }

@@ -1,7 +1,8 @@
+import { useChildSubEnv, useExternalListener, useState } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, useChildSubEnv, useExternalListener, useState } from "@odoo/owl";
+import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
+import { Component, onWillDestroy } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -85,6 +86,8 @@ export class Dialog extends Component {
                     return styles.display !== "none";
                 });
                 if (firstVisibleBtn) {
+                    // Allows the active element to be blurred before triggering the click on the button
+                    firstVisibleBtn.focus();
                     firstVisibleBtn.click();
                 }
             },
@@ -116,10 +119,19 @@ export class Dialog extends Component {
             }
         });
         this.bodyTabIndex = hasTouch() ? "0" : undefined;
+        useBackButton(() => this.dismiss());
+    }
+
+    get size() {
+        return this.props.size;
     }
 
     get isFullscreen() {
-        return this.props.fullscreen || this.env.isSmall;
+        return this.props.fullscreen || (this.env.isSmall && this.design !== "minimal");
+    }
+
+    get design() {
+        return ["sm", "md"].includes(this.size) ? "minimal" : "default";
     }
 
     get contentStyle() {

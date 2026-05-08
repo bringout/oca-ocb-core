@@ -397,7 +397,7 @@ describe("new", () => {
 
         class ClientAction extends Component {
             static template = xml`
-                <div class="my_action" t-on-click="onClick">
+                <div class="my_action" t-on-click="this.onClick">
                     My Action
                 </div>`;
             static props = ["*"];
@@ -433,6 +433,7 @@ describe("new", () => {
         expect(".modal").toHaveCount(1);
 
         await contains(".modal-body button.btn-link").click();
+        await contains(".modal-body summary.link-info").click();
         expect(queryText(".modal-body .o_error_detail")).toInclude("my error");
         expect.verifyErrors(["my error"]);
 
@@ -678,7 +679,7 @@ describe("fullscreen", () => {
         await animationFrame(); // wait for the webclient template to be re-rendered
         expect("nav.o_main_navbar").toHaveCount(0);
 
-        await contains(queryAll(".breadcrumb li a")[1]).click();
+        await contains(queryAll(".breadcrumb li a")[0]).click();
         await animationFrame(); // wait for the webclient template to be re-rendered
         expect("nav .o_menu_brand").toHaveCount(1);
         expect("nav .o_menu_brand").toHaveText("MAIN APP");

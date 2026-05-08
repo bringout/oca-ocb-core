@@ -2,12 +2,13 @@ import { markup, toRaw } from "@odoo/owl";
 import {
     IS_DELETED_SYM,
     OR_SYM,
-    isCommand,
+    isCommandList,
     isMany,
     isOne,
     isRecord,
     isRelation,
     modelRegistry,
+    technicalKeysOnRecords,
 } from "./misc";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
@@ -28,7 +29,7 @@ export class Record {
     static _;
     /** @type {import("./record_internal").RecordInternal} */
     _;
-    static id;
+    static id = "id";
     /** @type {import("@web/env").OdooEnv} */
     static env;
     /** @type {import("@web/env").OdooEnv} */
@@ -48,6 +49,25 @@ export class Record {
         const Model = toRaw(this);
         return this.records[Model.localId(data)];
     }
+    /**
+     * Gets a record by id, fetching it from the server if it doesn't exist in the store or if some
+     * of the specified fields are missing.
+     * Only works for models that are explicitly supported in /mail/store controller.
+     *
+     * @param {number} id
+     * @param {string[]} field_names
+     */
+    static async getOrFetch(id, field_names = []) {
+        let record = this.get(id);
+        if (!record || field_names.some((fieldName) => record[fieldName] === undefined)) {
+            await this.store.fetchStoreData(this.getName(), { id, field_names });
+            record = this.get(id);
+            if (!record?.exists()) {
+                return;
+            }
+        }
+        return record;
+    }
     static getName() {
         return this._name || this.name;
     }
@@ -62,6 +82,9 @@ export class Record {
     static localId(data) {
         const Model = toRaw(this);
         let idStr;
+        if (Model.singleton) {
+            return Model.getName();
+        }
         if (typeof data === "object" && data !== null) {
             idStr = Model._localId(Model.id, data);
         } else {
@@ -69,11 +92,11 @@ export class Record {
         }
         return `${Model.getName()},${idStr}`;
     }
-    get localId() {
-        return toRaw(this)._.localId;
-    }
     static _localId(expr, data, { brackets = false } = {}) {
         const Model = toRaw(this);
+        if (Model.singleton) {
+            return Model.name;
+        }
         if (!Array.isArray(expr)) {
             if (Model._.fields.get(expr)) {
                 if (Model._.fieldsMany.get(expr)) {
@@ -82,7 +105,7 @@ export class Record {
                 if (!isRelation(Model, expr)) {
                     return data[expr];
                 }
-                if (isCommand(data[expr])) {
+                if (isCommandList(data[expr])) {
                     // Note: only fields.One is supported
                     const [cmd, data2] = data[expr].at(-1);
                     if (cmd === "DELETE") {
@@ -113,9 +136,12 @@ export class Record {
     static _retrieveIdFromData(data) {
         const Model = toRaw(this);
         const res = {};
+        if (Model.singleton) {
+            return {};
+        }
         function _deepRetrieve(expr2) {
             if (typeof expr2 === "string") {
-                if (isCommand(data[expr2])) {
+                if (isCommandList(data[expr2])) {
                     // Note: only fields.One() is supported
                     const [cmd, data2] = data[expr2].at(-1);
                     return Object.assign(res, {
@@ -147,7 +173,7 @@ export class Record {
             if (typeof data !== "object" || data === null) {
                 return { [Model.id]: data }; // non-object data => single id
             }
-            if (isCommand(data[Model.id])) {
+            if (isCommandList(data[Model.id])) {
                 // Note: only fields.One is supported
                 const [cmd, data2] = data[Model.id].at(-1);
                 return Object.assign(res, {
@@ -194,6 +220,9 @@ export class Record {
             const recordProxy = new Model.Class();
             const record = toRaw(recordProxy)._raw;
             Object.assign(record._, { localId: Model.localId(ids) });
+            for (const name of Model._.fields.keys()) {
+                record._.prepareField(record, name, recordProxy);
+            }
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
             if (record.Model.getName() === "Store") {
@@ -201,6 +230,10 @@ export class Record {
                     env: Model._rawStore.env,
                     recordByLocalId: Model._rawStore.recordByLocalId,
                 });
+            }
+            // compute inherits fields in priority, as other fields might depend on them
+            for (const fieldName of Model._.inheritsFields) {
+                record._.compute?.(record, fieldName);
             }
             Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
             for (const fieldName of record.Model._.fields.keys()) {
@@ -243,18 +276,20 @@ export class Record {
         const ModelFullProxy = this;
         const Model = toRaw(ModelFullProxy);
         const ids = Model._retrieveIdFromData(data);
-        for (const name in ids) {
-            if (
-                ids[name] &&
-                !isRecord(ids[name]) &&
-                !isCommand(ids[name]) &&
-                isRelation(Model, name)
-            ) {
-                // preinsert that record in relational field,
-                // as it is required to make current local id
-                ids[name] = Model._rawStore[Model._.fieldsTargetModel.get(name)].preinsert(
-                    ids[name]
-                );
+        if (!Model.singleton) {
+            for (const name in ids) {
+                if (
+                    ids[name] &&
+                    !isRecord(ids[name]) &&
+                    !isCommandList(ids[name]) &&
+                    isRelation(Model, name)
+                ) {
+                    // preinsert that record in relational field,
+                    // as it is required to make current local id
+                    ids[name] = Model._rawStore[Model._.fieldsTargetModel.get(name)].preinsert(
+                        ids[name]
+                    );
+                }
             }
         }
         return Model.get.call(ModelFullProxy, data) ?? Model.new(data, ids);
@@ -284,6 +319,9 @@ export class Record {
      */
     Model;
     /** @type {string} */
+    get localId() {
+        return toRaw(this)._.localId;
+    }
     /** @type {this} */
     _raw;
     /** @type {this} */
@@ -313,8 +351,25 @@ export class Record {
 
     delete() {
         const record = toRaw(this)._raw;
+        if (!record.exists()) {
+            return;
+        }
         const store = record._rawStore;
         return store.MAKE_UPDATE(function recordDelete() {
+            // delete records inheriting the current record before deleting the current record
+            for (const fieldName of record.Model._.inheritsInverseFields) {
+                if (record.Model._.fieldsMany.get(fieldName)) {
+                    const dependentRecordListProxy = record._proxyInternal[fieldName];
+                    for (const dependentRecordProxy of dependentRecordListProxy) {
+                        store._.ADD_QUEUE("delete", toRaw(dependentRecordProxy)._raw);
+                    }
+                } else {
+                    const dependentRecordProxy = record._proxyInternal[fieldName];
+                    if (dependentRecordProxy) {
+                        store._.ADD_QUEUE("delete", toRaw(dependentRecordProxy)._raw);
+                    }
+                }
+            }
             store._.ADD_QUEUE("delete", record);
         });
     }
@@ -352,7 +407,7 @@ export class Record {
      * @returns {Object} A data object grouped by model names.
      */
     toData(options = { depth: false }) {
-        const prefix = this._getActualModelName();
+        const prefix = this.Model.getName();
         const ongoing = {
             seenRecords: new Set(),
             storeData: {},
@@ -367,20 +422,7 @@ export class Record {
     }
 
     _cleanupData(data) {
-        const fieldsToDelete = [
-            "_",
-            "_fieldsValue",
-            "_proxy",
-            "_proxyInternal",
-            "_raw",
-            "env",
-            "Model",
-        ];
-        fieldsToDelete.forEach((field) => delete data[field]);
-    }
-
-    _getActualModelName() {
-        return this.Model.getName();
+        technicalKeysOnRecords.forEach((field) => delete data[field]);
     }
 
     /**
@@ -431,9 +473,9 @@ export class Record {
         }
 
         this._cleanupData(data);
-        const pyModelName = record._getActualModelName();
-        ongoing.storeData[pyModelName] ||= [];
-        ongoing.storeData[pyModelName].push(data);
+        const modelName = record.Model.getName();
+        ongoing.storeData[modelName] ||= [];
+        ongoing.storeData[modelName].push(data);
     }
 
     /**

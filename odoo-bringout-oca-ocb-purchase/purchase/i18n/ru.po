@@ -10,11 +10,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-02-12 13:35+0000\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 20:35+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/purchase/"
-"ru/>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/"
+"purchase/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,8 +114,8 @@ msgid ""
 "        </t>\n"
 "        is expected for \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object."
+"date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">undefined</span>.\n"
@@ -127,58 +127,15 @@ msgid ""
 "color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Acknowledge</a>\n"
 "        <br/><br/>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Здравствуйте, <t t-out=\"object.partner_id.name or ''\">Брэндон "
-"Фримен</t>\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
-"Interior</t>)\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Напоминаем, что доставка заказа на закупку <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
-"or ''\">REF_XXX</t>)</span>\n"
-"        </t>\n"
-"        ожидается \n"
-"        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
-"        </t>\n"
-"         <t t-else=\"\">\n"
-"            <span style=\"font-weight:bold;\">не определено</span>.\n"
-"        </t>\n"
-"        Не могли бы вы, пожалуйста, подтвердить, что заказ будет доставлен "
-"вовремя?\n"
-"        <br/><br/>\n"
-"        <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
-"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
-"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
-"            Подтвердить</a>\n"
-"        <br/><br/>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
-"            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Митчелл "
-"Админ</t></div>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"    </p>\n"
-"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -191,8 +148,8 @@ msgid ""
 "Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Here is in attachment a purchase order <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is in attachment a purchase order <span style=\"font-weight:"
+"bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
 "t>\n"
@@ -213,59 +170,15 @@ msgid ""
 "color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "                Acknowledge</a>\n"
 "        </t>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Здравствуйте, <t t-out=\"object.partner_id.name or ''\">Брэндон "
-"Фримен</t>!\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
-"Interior</t>)\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Во вложении находится заказ на закупку <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            (Номер заказа: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
-"t>)\n"
-"        </t>\n"
-"        на общую сумму <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 "
-"$</span>\n"
-"        от компании <t t-out=\"object.company_id.name or ''\">YourCompany</"
-"t>. \n"
-"        <br/><br/>\n"
-"        <t t-if=\"object.date_planned\">\n"
-"            Получение ожидается <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
-"            <br/><br/>\n"
-"            Не могли бы вы подтвердить получение данного заказа?\n"
-"            <br/><br/>\n"
-"            <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
-"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
-"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
-"                Подтвердить</a>\n"
-"        </t>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
-"            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Митчелл "
-"Админ</t></div>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"    </p>\n"
-"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -289,44 +202,14 @@ msgid ""
 "        If you have any questions, please do not hesitate to contact us.\n"
 "        <br/><br/>\n"
 "        Best regards,\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Здравствуйте, <t t-out=\"object.partner_id.name or ''\">Брэндон "
-"Фримен</t>\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
-"Interior</t>)\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Во вложении запрос котировки <span style=\"font-weight:bold;\" t-"
-"out=\"object.name or ''\">P00015</span>\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            с номером: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
-"        </t>\n"
-"        от <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
-"        Если у вас возникнут вопросы, мы всегда готовы на них ответить.\n"
-"        <br/><br/>\n"
-"        С наилучшими пожеланиями,\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
-"            <br/><br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Митчелл "
-"Админ</t></div>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -408,15 +291,11 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Request for Quotation </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', "
+"'sent')\">Request for Quotation</span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
-"('draft', 'sent')\">Purchase Order </span>"
+"('draft', 'sent')\">Purchase Order</span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Запрос на коммерческое предложение </span>\n"
-"                        <span class=\"o_form_label\" invisible=\"state in "
-"('draft', 'sent')\">Заказ на поставку </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -440,9 +319,13 @@ msgid "<span class=\"o_stat_text\">Purchased</span>"
 msgstr "<span class=\"o_stat_text\">Закуплено</span>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
-msgid "<span> day(s) before</span>"
-msgstr "<span> дней до</span>"
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
+msgid ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                    Incoming\n"
+"                                </span>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
@@ -453,11 +336,6 @@ msgstr "<b>Отличная работа!</b> Вы прошли все этап�
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<span>Amount</span>"
 msgstr "<span>Сумма</span>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "<span>Ask confirmation</span>"
-msgstr "<span>Попросите подтверждения</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -478,6 +356,11 @@ msgstr "<strong class=\"d-block mb-1\">От:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
 msgstr "<strong class=\"d-block mb-1\">Счета</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<strong class=\"d-block mb-1\">Shipping address:</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -671,6 +554,11 @@ msgid "Activity Exception Decoration"
 msgstr "Оформление задачи-исключения"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
 msgid "Activity State"
 msgstr "Состояние активности"
@@ -810,7 +698,6 @@ msgid "Aml"
 msgstr "БОД"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__amount_to_invoice_at_date
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Amount"
@@ -875,6 +762,11 @@ msgstr ""
 "текущий товар и создайте новый."
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Ask confirmation"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
 msgid "Attachment Count"
 msgstr "Количество вложений"
@@ -896,22 +788,10 @@ msgid "Auto-Complete"
 msgstr "Автозаполнение"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
-#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
-msgid "Auto-complete"
-msgstr "Автозаполнение"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_id
 msgid "Auto-complete from a past purchase order."
 msgstr "Автозаполнение из прошлого заказа на поставку."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
-#: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
-msgid "Auto-complete from a previous bill, refund, or purchase order."
-msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1075,12 +955,7 @@ msgstr "История общения"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
-msgid "Companies"
-msgstr "Компании"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__company_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__company_id
@@ -1132,17 +1007,11 @@ msgid "Confirm your purchase."
 msgstr "Подтвердите покупку."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_approve
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__date_approve
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Confirmation Date"
 msgstr "Дата подтверждения"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Confirmation Date Last Year"
-msgstr "Дата подтверждения Последний год"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__lock
@@ -1218,7 +1087,6 @@ msgstr "Дата создания:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__currency_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__currency_id
@@ -1234,11 +1102,6 @@ msgstr "Курс валют"
 #: model:ir.model.fields,help:purchase.field_purchase_order__access_url
 msgid "Customer Portal URL"
 msgstr "URL портала клиента"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
-msgid "Date"
-msgstr "Дата"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
@@ -1262,6 +1125,11 @@ msgstr "Дата:"
 #: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
 msgid "Days Before Receipt"
 msgstr "Дни до получения"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Days before confirmation"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
@@ -1315,15 +1183,6 @@ msgstr ""
 "поставщика, а затем сегодняшней дате."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
-msgid ""
-"Delivery date promised by vendor. This date is used to determine expected "
-"arrival of products."
-msgstr ""
-"Дата поставки, обещанная продавцом. Эта дата используется для определения "
-"ожидаемого прибытия товаров."
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__date_order
 msgid ""
@@ -1355,6 +1214,12 @@ msgid "Discount:"
 msgstr "Скидка:"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__display_auto_complete_field
+#: model:ir.model.fields,field_description:purchase.field_account_move__display_auto_complete_field
+msgid "Display Auto Complete Field"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__display_name
 #: model:ir.model.fields,field_description:purchase.field_account_move__display_name
@@ -1366,7 +1231,6 @@ msgstr "Скидка:"
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_template__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_name
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__display_name
@@ -1444,6 +1308,12 @@ msgid "Expected Arrival"
 msgstr "Ожидаемое прибытие"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
+msgid ""
+"Expected delivery date of goods by the vendor based on the latest information"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Extra line with %s "
@@ -1456,12 +1326,12 @@ msgid "Fiscal Position"
 msgstr "Финансовое положение"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model:portal.entry,description:purchase.portal_purchase_orders
 msgid "Follow orders you have to fulfill"
 msgstr "Выполняйте приказы, которые вы должны выполнить"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model:portal.entry,description:purchase.portal_rfq
 msgid "Follow your Requests for Quotation"
 msgstr "Выполняйте запросы на коммерческое предложение"
 
@@ -1501,6 +1371,11 @@ msgstr "Из электронного документа"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
 msgid "Fully Billed"
 msgstr "Полный счет"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__full
+msgid "Fully Received"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1560,7 +1435,6 @@ msgstr "Скрыть отмененные строки"
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase.field_product_template__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__id
@@ -1609,18 +1483,6 @@ msgid ""
 msgstr ""
 "Если эта функция установлена, то варианты товаров будут добавляться в заказы "
 "на поставку через сетку."
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/product.py:0
-msgid "Import Template for Products"
-msgstr "Шаблон импорта для продуктов"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
-msgid "Import Template for Requests for Quotation"
-msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -1808,6 +1670,11 @@ msgid "Line Uom"
 msgstr "Ед. изм. по строке"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Link RFQs together and compare them."
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Lock"
 msgstr "Заблокировать"
@@ -1985,8 +1852,6 @@ msgstr "Имя, налоговый номер, эл. почта или ссыл�
 
 #. module: purchase
 #. odoo-javascript
-#. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "New"
@@ -2073,6 +1938,11 @@ msgstr "Нормальный"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Not Acknowledged"
 msgstr "Не принято"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
+msgid "Not Received"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -2178,25 +2048,27 @@ msgid "Order"
 msgstr "Заказ"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
 msgid "Order Date"
 msgstr "Дата заказа"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
-msgid "Order Date: Last 365 Days"
-msgstr "Дата заказа: Последние 365 дней"
+msgid "Order DeadLine: Last 365 Days"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Order Deadline"
 msgstr "Крайний срок"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Order Deadline: Last 365 Days"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2229,17 +2101,22 @@ msgstr "Срок исполнения заказа – %(date)s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Other Information"
-msgstr "Другая информация"
+msgid "Other Info"
+msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model:portal.entry,name:purchase.portal_purchase_orders
 msgid "Our Orders"
 msgstr "Наши заказы"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
 msgid "Parent Section Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__partial
+msgid "Partially Received"
 msgstr ""
 
 #. module: purchase
@@ -2396,7 +2273,6 @@ msgstr "Обеспечьте механизм двойной проверки п
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.menu,name:purchase.purchase_report
 #: model:res.groups.privilege,name:purchase.res_groups_privilege_purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase"
 msgstr "Покупка"
@@ -2405,6 +2281,11 @@ msgstr "Покупка"
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
 msgid "Purchase Agreements"
 msgstr "Соглашения о покупке"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_alternative
+msgid "Purchase Alternative"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
@@ -2475,7 +2356,6 @@ msgstr "Сопоставление закупок"
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_order_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__purchase_order_id
 #: model:ir.model.fields.selection,name:purchase.selection__account_analytic_applicability__business_domain__purchase_order
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__purchase
@@ -2560,7 +2440,6 @@ msgstr "Номер заказа на закупку"
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Orders"
@@ -2623,15 +2502,25 @@ msgstr "Закупки: Напоминание о поставщике"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchased_product_qty
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "Purchased"
 msgstr "Куплено"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
-msgid "Purchased in the last 365 days"
-msgstr "Поставка последних 365 дней"
+msgid ""
+"Purchased in the last 365 days. Incoming represents confirmed purchase "
+"orders not received or partially received"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
+msgid ""
+"Purchased in the last 365 days. Incoming represents confirmed sales order "
+"not received, or partially received"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -2640,11 +2529,6 @@ msgstr "Поставка последних 365 дней"
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Purchases"
 msgstr "Покупки"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_bill_union
-msgid "Purchases & Bills Union"
-msgstr "Закупки и счета"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -2750,6 +2634,7 @@ msgid "Read the documentation"
 msgstr "Читать документацию"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
 #: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
@@ -2757,9 +2642,15 @@ msgid "Receipt Reminder"
 msgstr "Напоминание о квитанции"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
-msgid "Receipt Reminder Email"
-msgstr "Напоминание о квитанции по электронной почте"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_status
+msgid "Receipt Status"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+msgid "Receive"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
@@ -2795,21 +2686,14 @@ msgstr "Создать новый счет от поставщика"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__reference
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Reference"
 msgstr "Справка"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
-msgid "Reference Document"
-msgstr "Документ ссылки"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__uom_id
 msgid "Reference Unit of Measure"
 msgstr "Справочная единица измерения"
 
@@ -2871,8 +2755,8 @@ msgstr "Запросы на коммерческое предложение"
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+#: model:portal.entry,name:purchase.portal_rfq
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Requests for Quotation"
 msgstr "Запросы на коммерческое предложение"
@@ -2911,11 +2795,6 @@ msgstr "Планируемая дата"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Search Purchase Order"
 msgstr "Поиск заказа на покупку"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
-msgid "Search Reference Document"
-msgstr "Поиск справочного документа"
 
 #. module: purchase
 #. odoo-javascript
@@ -2988,6 +2867,11 @@ msgstr ""
 "доставки"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_mass_mail
+msgid "Send by mail"
+msgstr ""
+
+#. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Send the request for quotation to your vendor."
@@ -3043,6 +2927,11 @@ msgid "Show Comparison"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__show_receive_button
+msgid "Show Receive Button"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records whose next activity date is past"
@@ -3058,7 +2947,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__origin
 msgid "Source"
 msgstr "Источник"
@@ -3220,6 +3108,18 @@ msgid "Technical field to get the vendor pricelist used to generate this line"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/product.py:0
+msgid "Template for Products"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Template for Requests for Quotation"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Terms &amp; Conditions"
 msgstr "Соглашение"
@@ -3241,6 +3141,14 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "The Price of one unit of the product's Unit of Measure"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid ""
+"The following purchase orders %(invalid_orders) can't be received. Cancelled "
+"all receptions."
 msgstr ""
 
 #. module: purchase
@@ -3406,11 +3314,6 @@ msgid "Total purchased amount"
 msgstr "Общая сумма закупки"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
-msgid "Translated Product Name"
-msgstr ""
-
-#. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
@@ -3439,7 +3342,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__uom_id
 msgid "Unit"
 msgstr "Единица"
 
@@ -3536,7 +3439,6 @@ msgid "Variant Grid Entry"
 msgstr "Ввод сетки вариантов"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
@@ -3552,11 +3454,6 @@ msgid "Vendor"
 msgstr "Продавец"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
-msgid "Vendor Bill"
-msgstr "Счет от Поставщика"
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Vendor Bill lines can only be added to one Purchase Order."
@@ -3565,7 +3462,6 @@ msgstr "Строки счета поставщика можно добавить
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Счета поставщиков"
 
@@ -3762,20 +3658,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas "
-"your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from "
-"other companies (%(bad_products)s)."
+"Your RFQ contains products from company %(product_company)s whereas your RFQ "
+"belongs to company %(quote_company)s. \n"
+" Please change the company of your RFQ or remove the products from other "
+"companies (%(bad_products)s)."
 msgstr ""
-"Коммерческое предложение содержит продукты компании %(product_company)s, "
-"хотя само предложение относится к компании %(quote_company)s.\n"
-"Пожалуйста, измените компанию для предложения или уберите продукты, которые "
-"относятся к другим компаниям (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "day(s) before"
-msgstr "днем(ями) ранее"
+msgid "billing"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3798,6 +3690,11 @@ msgstr "или создать новый"
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "partner_id"
 msgstr "partner_id"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "purchase"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -3829,6 +3726,11 @@ msgid "to learn all the ways to connect your software with"
 msgstr "чтобы узнать все способы интеграции вашей системы с"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "tracking"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "with"
@@ -3840,582 +3742,3 @@ msgstr "с"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Заказ (Ссылка {{ object.name or 'n/a' }})"
-
-#~ msgid "%(amount)s due %(date)s"
-#~ msgstr "%(amount)s должен %(date)s"
-
-#~ msgid "%s confirmed the receipt will take place on %s."
-#~ msgstr "%s подтвердил, что получение произойдет на %s."
-
-#~ msgid ""
-#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
-#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-#~ "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
-#~ "t>\n"
-#~ "        <t t-if=\"object.partner_id.parent_id\">\n"
-#~ "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
-#~ "Interior</t>)\n"
-#~ "        </t>\n"
-#~ "        <br><br>\n"
-#~ "        Here is a reminder that the delivery of the purchase order <span "
-#~ "style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
-#~ "        <t t-if=\"object.partner_ref\">\n"
-#~ "            <span style=\"font-weight:bold;\">(<t t-"
-#~ "out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
-#~ "        </t>\n"
-#~ "        is expected for \n"
-#~ "        <t t-if=\"object.date_planned\">\n"
-#~ "            <span style=\"font-weight:bold;\" t-"
-#~ "out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
-#~ "        </t>\n"
-#~ "         <t t-else=\"\">\n"
-#~ "            <span style=\"font-weight:bold;\">undefined</span>.\n"
-#~ "        </t>\n"
-#~ "        Could you please confirm it will be delivered on time?\n"
-#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-#~ "            <br><br>\n"
-#~ "            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
-#~ "Admin</t>\n"
-#~ "        </t>\n"
-#~ "        <br><br>\n"
-#~ "    </p>\n"
-#~ "</div>"
-#~ msgstr ""
-#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
-#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-#~ "        Дорогой <t t-out=\"object.partner_id.name or ''\">Брэндон Фримен</"
-#~ "t>\n"
-#~ "       <t t-if=\"object.partner_id.parent_id\">\n"
-#~ "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Лазурный "
-#~ "интерьер</t>)\n"
-#~ "       </t>\n"
-#~ "       <br><br>\n"
-#~ "        Напоминаем, что доставка заказа <span style=\"font-weight:bold;\" "
-#~ "t-out=\"object.name or ''\">P00015</span>\n"
-#~ "        <t t-if=\"object.partner_ref\">\n"
-#~ "            <span style=\"font-weight:bold;\"><t t-"
-#~ "out=\"object.partner_ref or ''\">(REF_XXX</t>)</span>\n"
-#~ "        </t>\n"
-#~ "        ожидается в течение \n"
-#~ "       <t t-if=\"object.date_planned\">\n"
-#~ "           <span style=\"font-weight:bold;\" t-"
-#~ "out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
-#~ "       </t>\n"
-#~ "        <t t-else=\"\">\n"
-#~ "           <span style=\"font-weight:bold;\">не определено</span>.\n"
-#~ "       </t>\n"
-#~ "        Не могли бы вы подтвердить, что он будет доставлен в срок?\n"
-#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-#~ "            <br><br>\n"
-#~ "            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
-#~ "Admin</t>\n"
-#~ "        </t>\n"
-#~ "       <br><br>\n"
-#~ "    </p>\n"
-#~ "</div>"
-
-#~ msgid ""
-#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
-#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-#~ "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
-#~ "t>\n"
-#~ "        <t t-if=\"object.partner_id.parent_id\">\n"
-#~ "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
-#~ "Interior</t>)\n"
-#~ "        </t>\n"
-#~ "        <br><br>\n"
-#~ "        Here is in attachment a purchase order <span style=\"font-"
-#~ "weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
-#~ "        <t t-if=\"object.partner_ref\">\n"
-#~ "            with reference: <t t-out=\"object.partner_ref or "
-#~ "''\">REF_XXX</t>\n"
-#~ "        </t>\n"
-#~ "        amounting in <span style=\"font-weight:bold;\" t-"
-#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-#~ "10.00</span>\n"
-#~ "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
-#~ "        <br><br>\n"
-#~ "        <t t-if=\"object.date_planned\">\n"
-#~ "            The receipt is expected for <span style=\"font-weight:bold;\" "
-#~ "t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
-#~ "            <br><br>\n"
-#~ "            Could you please acknowledge the receipt of this order?\n"
-#~ "        </t>\n"
-#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-#~ "            <br><br>\n"
-#~ "            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
-#~ "Admin</t>\n"
-#~ "        </t>\n"
-#~ "        <br><br>\n"
-#~ "    </p>\n"
-#~ "</div>"
-#~ msgstr ""
-#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
-#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-#~ "        Дорогой <t t-out=\"object.partner_id.name or ''\">Брэндон Фримен</"
-#~ "t>\n"
-#~ "       <t t-if=\"object.partner_id.parent_id\">\n"
-#~ "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Лазурный "
-#~ "интерьер</t>)\n"
-#~ "       </t>\n"
-#~ "       <br><br>\n"
-#~ "        Во вложении заказ на поставку <span style=\"font-weight:bold;\" t-"
-#~ "out=\"object.name or ''\">P00015</span>\n"
-#~ "       <t t-if=\"object.partner_ref\">\n"
-#~ "            со ссылкой: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
-#~ "t>\n"
-#~ "       </t>\n"
-#~ "        на сумму <span style=\"font-weight:bold;\" t-"
-#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-#~ "10.00</span>\n"
-#~ "        от <t t-out=\"object.company_id.name or ''\">Вашей компании</"
-#~ "t>. \n"
-#~ "       <br><br>\n"
-#~ "       <t t-if=\"object.date_planned\">\n"
-#~ "            Поступление ожидается <span style=\"font-weight:bold;\" t-"
-#~ "out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
-#~ "           <br><br>\n"
-#~ "            Не могли бы вы подтвердить получение этого заказа?\n"
-#~ "       </t>\n"
-#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-#~ "            <br><br>\n"
-#~ "            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
-#~ "Admin</t>\n"
-#~ "        </t>\n"
-#~ "       <br><br>\n"
-#~ "    </p>\n"
-#~ "</div>"
-
-#~ msgid ""
-#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
-#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-#~ "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
-#~ "t>\n"
-#~ "        <t t-if=\"object.partner_id.parent_id\">\n"
-#~ "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
-#~ "Interior</t>)\n"
-#~ "        </t>\n"
-#~ "        <br><br>\n"
-#~ "        Here is in attachment a request for quotation <span style=\"font-"
-#~ "weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
-#~ "        <t t-if=\"object.partner_ref\">\n"
-#~ "            with reference: <t t-out=\"object.partner_ref or "
-#~ "''\">REF_XXX</t>\n"
-#~ "        </t>\n"
-#~ "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-#~ "        <br><br>\n"
-#~ "        If you have any questions, please do not hesitate to contact us.\n"
-#~ "        <br><br>\n"
-#~ "        Best regards,\n"
-#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-#~ "            <br><br>\n"
-#~ "            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
-#~ "Admin</t>\n"
-#~ "        </t>\n"
-#~ "    </p>\n"
-#~ "</div>"
-#~ msgstr ""
-#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
-#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-#~ "        Дорогой <t t-out=\"object.partner_id.name or ''\">Брэндон Фримен</"
-#~ "t>\n"
-#~ "       <t t-if=\"object.partner_id.parent_id\">\n"
-#~ "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Лазурный "
-#~ "интерьер</t>)\n"
-#~ "       </t>\n"
-#~ "       <br><br>\n"
-#~ "        Во вложении запрос на коммерческое предложение <span style=\"font-"
-#~ "weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
-#~ "       <t t-if=\"object.partner_ref\">\n"
-#~ "            со ссылкой: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
-#~ "t>\n"
-#~ "       </t>\n"
-#~ "        от <t t-out=\"object.company_id.name or ''\">компании "
-#~ "YourCompany</t>.\n"
-#~ "       <br><br>\n"
-#~ "        Если у вас возникнут вопросы, пожалуйста, не стесняйтесь "
-#~ "обращаться к нам.\n"
-#~ "       <br><br>\n"
-#~ "        С наилучшими пожеланиями,\n"
-#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-#~ "            <br><br>\n"
-#~ "            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
-#~ "Admin</t>\n"
-#~ "        </t>\n"
-#~ "    </p>\n"
-#~ "</div>"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
-#~ "title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
-#~ "title=\"Done\"/><span class=\"d-none d-md-inline\"> Готово</span>"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-"
-#~ "label=\"Purchases\" title=\"Purchases\"/>"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-credit-card\" role=\"img\" aria-"
-#~ "label=\"Purchases\" title=\"Purchases\"/>"
-
-#~ msgid "<i class=\"fa fa-print\"/> View Details"
-#~ msgstr "<i class=\"fa fa-print\"/> Посмотреть детали"
-
-#~ msgid "<small class=\"text-muted\">Purchase Representative</small>"
-#~ msgstr "<small class=\"text-muted\">Представитель по закупкам</small>"
-
-#~ msgid ""
-#~ "<span class=\"text-muted\" invisible=\"not "
-#~ "mail_reception_confirmed\">(confirmed by vendor)</span>"
-#~ msgstr ""
-#~ "<span class=\"text-muted\" invisible=\"not "
-#~ "mail_reception_confirmed\">(подтверждено продавцом)</span>"
-
-#~ msgid ""
-#~ "<span class=\"text-muted\" invisible=\"not "
-#~ "mail_reminder_confirmed\">(confirmed by vendor)</span>"
-#~ msgstr ""
-#~ "<span class=\"text-muted\" invisible=\"not "
-#~ "mail_reminder_confirmed\">(подтверждено продавцом)</span>"
-
-#~ msgid "<strong>Date Req.</strong>"
-#~ msgstr "<strong>Дата запроса</strong>"
-
-#~ msgid "<strong>Purchase Representative:</strong>"
-#~ msgstr "<strong>Представитель по закупкам:</strong>"
-
-#~ msgid "<strong>Shipping address:</strong>"
-#~ msgstr "<strong>Адрес поставки:</strong>"
-
-#~ msgid "<strong>Your Order Reference:</strong>"
-#~ msgstr "<strong>Ссылка вашего заказа:</strong>"
-
-#~ msgid ""
-#~ "A storable product is a product for which you manage stock. The Inventory "
-#~ "app has to be installed.\n"
-#~ "A consumable product is a product for which stock is not managed.\n"
-#~ "A service is a non-material product you provide."
-#~ msgstr ""
-#~ "Складируемый продукт — это ТМЦ, запасами которых вы управляете. Должно "
-#~ "быть установлено приложение «Склад».\n"
-#~ "Расходный продукт — это ТМЦ, запасы которых не контролируются.\n"
-#~ "Услуга — это нематериальный продукт."
-
-#~ msgid ""
-#~ "Ability to select a package type in purchase orders and to force a "
-#~ "quantity that is a multiple of the number of units per package."
-#~ msgstr ""
-#~ "Возможность выбора типа упаковки в заказах на поставку и принудительного "
-#~ "указания количества, кратного количеству единиц в упаковке."
-
-#~ msgid "Accept"
-#~ msgstr "Принять"
-
-#~ msgid "All RFQs"
-#~ msgstr "Все запросы"
-
-#~ msgid "All Waiting RFQs"
-#~ msgstr "Все ожидающие запросы"
-
-#~ msgid "Auto-complete from a past bill / purchase order."
-#~ msgstr "Автозаполнение из прошлого счета/заказа на покупку."
-
-#~ msgid "Avg Order Value"
-#~ msgstr "Средняя стоимость заказа"
-
-#~ msgid "Bill Control"
-#~ msgstr "Контроль Счетов"
-
-#~ msgid "Blocking Message"
-#~ msgstr "Блокирующее сообщение"
-
-#~ msgid ""
-#~ "Calls for tenders are when you want to generate requests for quotations "
-#~ "with several vendors for a given set of products to compare offers."
-#~ msgstr ""
-#~ "Тендеры - это когда вы хотите провести запрос котировок у нескольких "
-#~ "поставщиков по определенному набору товаров, чтобы сравнить предложения."
-
-#~ msgid "Cannot delete a purchase order line which is in state %r."
-#~ msgstr ""
-#~ "Невозможно удалить строку заказа на поставку, которая находится в "
-#~ "состоянии %r."
-
-#~ msgid "Category"
-#~ msgstr "Категория"
-
-#~ msgid "Confirm Receipt Date"
-#~ msgstr "Подтверждение даты получения"
-
-#~ msgid ""
-#~ "Conversion between Units of Measure can only occur if they belong to the "
-#~ "same category. The conversion will be made based on the ratios."
-#~ msgstr ""
-#~ "Пересчет между единицами измерения может произойти только в том случае, "
-#~ "если они принадлежат к одной и той же категории. Пересчет будет "
-#~ "осуществляться на основе коэффициентов."
-
-#~ msgid "Create Bill"
-#~ msgstr "Создать счет"
-
-#~ msgid "Create Vendor Bills"
-#~ msgstr "Создание счетов поставщикам"
-
-#~ msgid "Days"
-#~ msgstr "Дней"
-
-#~ msgid "Done"
-#~ msgstr "Готово"
-
-#~ msgid "Draft RFQs"
-#~ msgstr "Проект запроса предложений"
-
-#~ msgid "Extended Filters"
-#~ msgstr "Расширенные фильтры"
-
-#~ msgid "Group By"
-#~ msgstr "Группировать по"
-
-#~ msgid "If true, the packaging can be used for purchase orders"
-#~ msgstr "Если true, упаковка может быть использована для заказов на поставку"
-
-#~ msgid "Late RFQs"
-#~ msgstr "Опоздавшие запросы предложений"
-
-#~ msgid "Lead Time to Purchase"
-#~ msgstr "Время до покупки"
-
-#~ msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-#~ msgstr ""
-#~ "Управляйте своими соглашениями о покупке (призыв к тендерам, офсетными "
-#~ "заказами)"
-
-#~ msgid ""
-#~ "Margin of error for vendor lead times. When the system generates Purchase "
-#~ "Orders for procuring products, they will be scheduled that many days "
-#~ "earlier to cope with unexpected vendor delays."
-#~ msgstr ""
-#~ "Поле погрешности для времени выполнения поставщиком. Когда система "
-#~ "генерирует заказы на поставку для закупки продуктов, они будут "
-#~ "запланированы на несколько дней раньше, чтобы справиться с "
-#~ "непредвиденными задержками поставщиков."
-
-#~ msgid ""
-#~ "Margin of error for vendor lead times. When the system generates Purchase "
-#~ "Orders for reordering products,they will be scheduled that many days "
-#~ "earlier to cope with unexpected vendor delays."
-#~ msgstr ""
-#~ "Поле погрешности для времени выполнения поставщиком. Когда система "
-#~ "генерирует заказы на перезаказ закупки продуктов, они будут запланированы "
-#~ "на несколько дней раньше, чтобы справиться с непредвиденными задержками "
-#~ "поставщиков."
-
-#~ msgid "My RFQs"
-#~ msgstr "Мои запросы"
-
-#~ msgid "No Message"
-#~ msgstr "Нет сообщений"
-
-#~ msgid "Ordered quantities"
-#~ msgstr "Заказанное количество"
-
-#~ msgid "Packaging"
-#~ msgstr "Упаковка"
-
-#~ msgid "Packaging Quantity"
-#~ msgstr "Количество в упаковке"
-
-#~ msgid "Price:"
-#~ msgstr "Цена:"
-
-#~ msgid "Print RFQ"
-#~ msgstr "Печать запроса цен"
-
-#~ msgid "Product Attributes"
-#~ msgstr "Атрибуты товаров"
-
-#~ msgid "Product Categories"
-#~ msgstr "Категории товаров"
-
-#~ msgid "Product Packaging"
-#~ msgstr "Упаковка продукта"
-
-#~ msgid "Purchase History"
-#~ msgstr "История покупок"
-
-#~ msgid "Purchase Lead Time"
-#~ msgstr "Запас времени на покупку"
-
-#~ msgid "Purchase Order Line Warning"
-#~ msgstr "Предупреждение о строке заказа на поставку"
-
-#~ msgid "Purchase Representative"
-#~ msgstr "Представитель по закупкам"
-
-#~ msgid "Purchase products by multiple of unit # per package"
-#~ msgstr "Приобретайте продукты, кратные количеству единиц в упаковке"
-
-#~ msgid "Purchased Last 7 Days"
-#~ msgstr "Куплено за последние 7 дней"
-
-#~ msgid "Quantities billed by vendors"
-#~ msgstr "Количества, выставленные поставщиками"
-
-#~ msgid "RFQ Done"
-#~ msgstr "ЗП выполнен"
-
-#~ msgid "RFQs"
-#~ msgstr "RFQs"
-
-#~ msgid "RFQs Sent Last 7 Days"
-#~ msgstr "RFQ, отправленные за последние 7 дней"
-
-#~ msgid "Ratio between the purchase order currency and the company currency"
-#~ msgstr "Соотношение между валютой заказа на покупку и валютой компании"
-
-#~ msgid "Re-Send by Email"
-#~ msgstr "Отправить по эл. почте"
-
-#~ msgid "Received quantities"
-#~ msgstr "Полученные объемы"
-
-#~ msgid "Reception Confirmed"
-#~ msgstr "Прием подтвержден"
-
-#~ msgid "Reminder Confirmed"
-#~ msgstr "Напоминание подтверждено"
-
-#~ msgid "Security Lead Time for Purchase"
-#~ msgstr "Страховое время для закупки"
-
-#~ msgid "Select a purchase order or an old bill"
-#~ msgstr "Выберите заказ на закупку или существующий счет"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "Выбор опции \"Предупреждение\" уведомит пользователя об этом сообщением. "
-#~ "При выборе \"Блокировать сообщение\" будет выдано исключение с сообщением "
-#~ "и заблокирован поток. Сообщение должно быть написано в следующем поле."
-
-#~ msgid "Sell and purchase products in different units of measure"
-#~ msgstr "Продать и закупить продукты в разных единицах измерения"
-
-#~ msgid "Send PO by Email"
-#~ msgstr "Отправить заказ на покупку по эл. почте"
-
-#~ msgid "Send by Email"
-#~ msgstr "Отправить по эл. почте"
-
-#~ msgid "Send message"
-#~ msgstr "Отправить сообщение"
-
-#~ msgid "Show all records which has next action date is before today"
-#~ msgstr ""
-#~ "Показать все записи, у которых дата следующего действия наступает до "
-#~ "сегодняшнего дня"
-
-#~ msgid "Source Document"
-#~ msgstr "Исходный документ"
-
-#~ msgid "Tax excl."
-#~ msgstr "Налог исключен."
-
-#~ msgid "Tax incl."
-#~ msgstr "Налог вкл."
-
-#~ msgid "The order receipt has been acknowledged by %s."
-#~ msgstr "Получение заказа было подтверждено %s."
-
-#~ msgid ""
-#~ "There is no invoiceable line. If a product has a control policy based on "
-#~ "received quantity, please make sure that a quantity has been received."
-#~ msgstr ""
-#~ "Нет строки для выставления счетов. Если продукт имеет политику контроля "
-#~ "на основе полученного количества, пожалуйста, убедитесь, что количество "
-#~ "было получено."
-
-#~ msgid ""
-#~ "This currency will be used, instead of the default one, for purchases "
-#~ "from the current partner"
-#~ msgstr ""
-#~ "Эта валюта будет использоваться вместо валюты по умолчанию при покупках у "
-#~ "текущего партнера"
-
-#~ msgid ""
-#~ "This default value is applied to any new product created. This can be "
-#~ "changed in the product detail form."
-#~ msgstr ""
-#~ "Это значение по умолчанию применяется к любому созданному продукту. Это "
-#~ "можно изменить в форме продукта."
-
-#~ msgid ""
-#~ "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
-#~ "purchase %(quantity).2f %(unit)s."
-#~ msgstr ""
-#~ "Этот продукт упакован по %(pack_size).2f %(pack_name)s. Вам следует "
-#~ "приобрести %(quantity).2f %(unit)s."
-
-#~ msgid "To Send"
-#~ msgstr "Отправить"
-
-#~ msgid "True if PO reception is confirmed by the vendor."
-#~ msgstr "Истина, если получение PO подтверждено поставщиком."
-
-#~ msgid "True if the reminder email is confirmed by the vendor."
-#~ msgstr "Истина, если письмо с напоминанием подтверждено продавцом."
-
-#~ msgid "Type a message..."
-#~ msgstr "Напишите сообщение..."
-
-#~ msgid ""
-#~ "Unable to cancel this purchase order. You must first cancel the related "
-#~ "vendor bills."
-#~ msgstr ""
-#~ "Невозможно отменить этот заказ на покупку. Сначала вы должны отменить "
-#~ "соответствующие счета поставщиков."
-
-#~ msgid "Unit of Measure"
-#~ msgstr "Ед. изм"
-
-#~ msgid "Units Of Measure"
-#~ msgstr "Единицы измерения"
-
-#~ msgid "Units of Measure"
-#~ msgstr "Единицы измерения"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Категории единиц измерения"
-
-#~ msgid "Units of Measures"
-#~ msgstr "Единицы измерения"
-
-#~ msgid "UoM"
-#~ msgstr "Ед. изм."
-
-#~ msgid "Update Dates"
-#~ msgstr "Даты обновления"
-
-#~ msgid "Waiting"
-#~ msgstr "Ожидание"
-
-#~ msgid "Waiting RFQs"
-#~ msgstr "Ожидание RFQ"
-
-#~ msgid "Warning"
-#~ msgstr "Предупреждение"
-
-#~ msgid "Warning for %s"
-#~ msgstr "Предупреждение для %s"
-
-#~ msgid "Warning on the Purchase Order"
-#~ msgstr "Предупреждение при заказе на покупку"
-
-#~ msgid "Warning when Purchasing this Product"
-#~ msgstr "Предупреждение при покупке данного продукта"
-
-#~ msgid "close"
-#~ msgstr "закрыть"

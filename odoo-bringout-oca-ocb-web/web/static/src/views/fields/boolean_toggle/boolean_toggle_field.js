@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 import { booleanField, BooleanField } from "../boolean/boolean_field";
 
 export class BooleanToggleField extends BooleanField {
-    static template = "web.BooleanToggleField";
     static props = {
         ...BooleanField.props,
         autosave: { type: Boolean, optional: true },
@@ -14,12 +13,17 @@ export class BooleanToggleField extends BooleanField {
         const changes = { [this.props.name]: newValue };
         await this.props.record.update(changes, { save: this.props.autosave });
     }
+
+    get displayAsToggle() {
+        return true;
+    }
 }
 
 export const booleanToggleField = {
     ...booleanField,
     component: BooleanToggleField,
     displayName: _t("Toggle"),
+    additionalClasses: ["o_boolean_interactive"],
     supportedOptions: [
         {
             label: _t("Autosave"),

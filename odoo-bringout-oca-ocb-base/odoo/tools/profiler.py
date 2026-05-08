@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from contextlib import nullcontext, ExitStack
-from datetime import datetime
 import json
 import logging
-import sys
-import time
-import threading
 import re
+import sys
+import threading
+import time
 import tracemalloc
+from contextlib import ExitStack, nullcontext
+from datetime import datetime
 
 from psycopg2 import OperationalError
 
@@ -16,7 +16,6 @@ from odoo import tools
 from odoo.tools import SQL
 
 from .gc import disabling_gc
-
 
 _logger = logging.getLogger(__name__)
 
@@ -26,17 +25,12 @@ real_time = time.time.__call__
 real_cpu_time = time.thread_time.__call__
 
 
-def _format_frame(frame):
-    code = frame.f_code
-    return (code.co_filename, frame.f_lineno, code.co_name, '')
-
-
 def _format_stack(stack):
     return [list(frame) for frame in stack]
 
 
 def get_current_frame(thread=None):
-    if thread:
+    if thread is not None:
         frame = sys._current_frames()[thread.ident]
     else:
         frame = sys._getframe()
@@ -47,12 +41,15 @@ def get_current_frame(thread=None):
 
 def _get_stack_trace(frame, limit_frame=None):
     stack = []
-    while frame is not None and frame != limit_frame:
-        stack.append(_format_frame(frame))
+    while frame is not None and frame is not limit_frame:
+        code = frame.f_code
+        line = (code.co_filename, frame.f_lineno, code.co_name, '')
+        stack.append(line)
         frame = frame.f_back
     if frame is None and limit_frame:
         _logger.runbot("Limit frame was not found")
-    return list(reversed(stack))
+    stack.reverse()
+    return stack
 
 
 def stack_size():
@@ -117,28 +114,26 @@ class Collector:
     def stop(self):
         """ Stop the collector. """
 
-    def add(self, entry=None, frame=None):
+    def add(self, entry=None, frame=None, check_limit=True):
         """ Add an entry (dict) to this collector. """
-        self._entries.append({
-            'stack': self._get_stack_trace(frame),
-            'exec_context': getattr(self.profiler.init_thread, 'exec_context', ()),
-            'start': real_time(),
-            **(entry or {}),
-        })
-
-    def progress(self, entry=None, frame=None):
-        """ Checks if the limits were met and add to the entries"""
-        if self.profiler.entry_count_limit \
-            and self.profiler.counter >= self.profiler.entry_count_limit:
+        if (
+            check_limit
+            and self.profiler.entry_count_limit
+            and self.profiler.counter >= self.profiler.entry_count_limit
+        ):
             self.profiler.end()
             return
         self.profiler.counter += 1
-        self.add(entry=entry,frame=frame)
-
-    def _get_stack_trace(self, frame=None):
-        """ Return the stack trace to be included in a given entry. """
-        frame = frame or get_current_frame(self.profiler.init_thread)
-        return _get_stack_trace(frame, self.profiler.init_frame)
+        if entry is None:
+            entry = {}
+        if 'start' not in entry:
+            entry['start'] = real_time()
+        if 'stack' not in entry:
+            frame = frame or get_current_frame(self.profiler.init_thread)
+            entry['stack'] = _get_stack_trace(frame, self.profiler.init_frame)
+        if 'exec_context' not in entry:
+            entry['exec_context'] = getattr(self.profiler.init_thread, 'exec_context', ())
+        self._entries.append(entry)
 
     def post_process(self):
         for entry in self._entries:
@@ -175,7 +170,7 @@ class SQLCollector(Collector):
         self.profiler.init_thread.query_hooks.remove(self.hook)
 
     def hook(self, cr, query, params, query_start, query_time):
-        self.progress({
+        self.add({
             'query': str(query),
             'full_query': str(cr._format(query, params)),
             'start': query_start,
@@ -196,16 +191,15 @@ class _BasePeriodicCollector(Collector):
 
     :param interval (float): time to wait in seconds between two samples.
     """
-    _min_interval = 0.001  # minimum interval allowed
+    _min_interval = 0.0001  # minimum interval allowed
     _max_interval = 5    # maximum interval allowed
     _default_interval = 0.001
 
     def __init__(self, interval=None):  # check duration. dynamic?
         super().__init__()
-        self.active = False
+        self._end_time = real_time()
         self.frame_interval = interval or self._default_interval
         self.__thread = threading.Thread(target=self.run)
-        self.last_frame = None
         self._stop_event = threading.Event()
 
     def start(self):
@@ -215,50 +209,61 @@ class _BasePeriodicCollector(Collector):
         init_thread = self.profiler.init_thread
         if not hasattr(init_thread, 'profile_hooks'):
             init_thread.profile_hooks = []
-        init_thread.profile_hooks.append(self.progress)
+        init_thread.profile_hooks.append(self.add)
+        self._end_time = None
         self.__thread.start()
 
     def run(self):
-        self.active = True
-        self.last_time = real_time()
-        while self.active:  # maybe add a check on parent_thread state?
-            self.progress()
-            self._stop_event.wait(self.frame_interval)
+        while self._end_time is None:
+            self.add()
+            self.sleep()
+
+    def sleep(self):
+        # Note: This may not be very precise. Most systems will sleep at
+        # minimum between 1 and 5 ms. "The suspension time may be longer
+        # than requested by an arbitrary amount, because of the scheduling
+        # of other activity in the system."
+        self._stop_event.wait(self.frame_interval)
 
     def stop(self):
-        self.active = False
+        self._end_time = real_time()
         self._stop_event.set()
         self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
         if self.__thread.is_alive() and self.__thread is not threading.current_thread():
             self.__thread.join()
-        self.profiler.init_thread.profile_hooks.remove(self.progress)
+        self.profiler.init_thread.profile_hooks.remove(self.add)
 
 
 class PeriodicCollector(_BasePeriodicCollector):
 
     name = 'traces_async'
 
-    def add(self, entry=None, frame=None):
+    def __init__(self, interval=None):
+        super().__init__(interval)
+        self._last_frame_id = 0  # incremental identifier if the frame has been seen
+        self._last_time = 0
+
+    def add(self, entry=None, frame=None, check_limit=True):
         """ Add an entry (dict) to this collector. """
-        if self.last_frame:
-            duration = real_time() - self._last_time
-            if duration > self.frame_interval * 10 and self.last_frame:
-                # The profiler has unexpectedly slept for more than 10 frame intervals. This may
-                # happen when calling a C library without releasing the GIL. In that case, the
-                # last frame was taken before the call, and the next frame is after the call, and
-                # the call itself does not appear in any of those frames: the duration of the call
-                # is incorrectly attributed to the last frame.
-                self._entries[-1]['stack'].append(('profiling', 0, '⚠ Profiler freezed for %s s' % duration, ''))
-            self.last_frame = None  # skip duplicate detection for the next frame.
-        self._last_time = real_time()
+        now = real_time()
+        last_frame_id = self._last_frame_id
+        if last_frame_id and (duration := now - self._last_time) > self.frame_interval * 10:
+            # The profiler has unexpectedly slept for more than 10 frame intervals. This may
+            # happen when calling a C library without releasing the GIL. In that case, the
+            # last frame was taken before the call, and the next frame is after the call, and
+            # the call itself does not appear in any of those frames: the duration of the call
+            # is incorrectly attributed to the last frame.
+            self._entries[-1]['stack'].append(('profiling', 0, '⚠ Profiler freezed for %s s' % duration, ''))
+        self._last_time = now
 
         frame = frame or get_current_frame(self.profiler.init_thread)
-        if frame == self.last_frame:
+        frame_locals = frame.f_locals
+        if frame_locals.get('$__PeriodicCollectorId') == last_frame_id:
             # don't save if the frame is exactly the same as the previous one.
-            # maybe modify the last entry to add a last seen?
             return
-        self.last_frame = frame
-        super().add(entry=entry, frame=frame)
+        frame_locals['$__PeriodicCollectorId'] = self._last_frame_id = last_frame_id + 1
+        entry = {'start': now}
+        super().add(entry, frame, check_limit=check_limit)
 
 
 _lock = threading.Lock()
@@ -276,12 +281,14 @@ class MemoryCollector(_BasePeriodicCollector):
         tracemalloc.start()
         super().start()
 
-    def add(self, entry=None, frame=None):
+    def add(self, entry=None, frame=None, check_limit=True):
         """ Add an entry (dict) to this collector. """
-        self._entries.append({
+        assert entry is None
+        super().add({
             'start': real_time(),
             'memory': tracemalloc.take_snapshot(),
-        })
+            'stack': None,  # prevent getting the stack trace
+        }, check_limit=check_limit)
 
     def stop(self):
         super().stop()
@@ -297,59 +304,7 @@ class MemoryCollector(_BasePeriodicCollector):
                 self._entries[i] = {"memory_tracebacks": modified_entry_statistics, "start": entry['start']}
 
 
-class SyncCollector(Collector):
-    """
-    Record complete execution synchronously.
-    Note that --limit-memory-hard may need to be increased when launching Odoo.
-    """
-    name = 'traces_sync'
-
-    def start(self):
-        if sys.gettrace() is not None:
-            _logger.error("Cannot start SyncCollector, settrace already set: %s", sys.gettrace())
-        assert not self._processed, "You cannot start SyncCollector after accessing entries."
-        sys.settrace(self.hook)  # todo test setprofile, but maybe not multithread safe
-
-    def stop(self):
-        sys.settrace(None)
-
-    def hook(self, _frame, event, _arg=None):
-        if event == 'line':
-            return
-        entry = {'event': event, 'frame': _format_frame(_frame)}
-        if event == 'call' and _frame.f_back:
-            # we need the parent frame to determine the line number of the call
-            entry['parent_frame'] = _format_frame(_frame.f_back)
-        self.progress(entry, frame=_frame)
-        return self.hook
-
-    def _get_stack_trace(self, frame=None):
-        # Getting the full stack trace is slow, and not useful in this case.
-        # SyncCollector only saves the top frame and event at each call and
-        # recomputes the complete stack at the end.
-        return None
-
-    def post_process(self):
-        # Transform the evented traces to full stack traces. This processing
-        # could be avoided since speedscope will transform that back to
-        # evented anyway, but it is actually simpler to integrate into the
-        # current speedscope logic, especially when mixed with SQLCollector.
-        # We could improve it by saving as evented and manage it later.
-        stack = []
-        for entry in self._entries:
-            frame = entry.pop('frame')
-            event = entry.pop('event')
-            if event == 'call':
-                if stack:
-                    stack[-1] = entry.pop('parent_frame')
-                stack.append(frame)
-            elif event == 'return':
-                stack.pop()
-            entry['stack'] = stack[:]
-        super().post_process()
-
-
-class QwebTracker():
+class QwebTracker:
 
     def __init__(self, view_id, arch, cr):
         current_thread = threading.current_thread()  # don't store current_thread on self
@@ -499,7 +454,7 @@ class QwebCollector(Collector):
                     assert event == "leave"
                     data = stack.pop()
 
-        self.add({'results': {'archs': archs, 'data': results}})
+        self.add({'results': {'archs': archs, 'data': results}}, check_limit=False)
         super().post_process()
 
 

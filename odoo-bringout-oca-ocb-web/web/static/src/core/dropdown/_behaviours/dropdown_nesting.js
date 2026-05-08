@@ -1,4 +1,5 @@
-import { EventBus, onWillDestroy, useChildSubEnv, useEffect, useEnv } from "@odoo/owl";
+import { useChildSubEnv, useEnv, useLayoutEffect } from "@web/owl2/utils";
+import { EventBus, onWillDestroy } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
@@ -82,7 +83,7 @@ export function useDropdownNesting(state) {
 
     // Set up UI active element related behavior ---------------------------
     const uiService = useService("ui");
-    useEffect(
+    useLayoutEffect(
         () => {
             Promise.resolve().then(() => {
                 current.activeEl = uiService.activeElement;
@@ -121,6 +122,14 @@ export function useDropdownNesting(state) {
             },
             hotkeys: {
                 escape: () => current.close(),
+                tab: {
+                    callback: (navigator) => navigator.next(),
+                    bypassEditableProtection: true,
+                },
+                "shift+tab": {
+                    callback: (navigator) => navigator.previous(),
+                    bypassEditableProtection: true,
+                },
                 arrowleft: {
                     isAvailable: () => true,
                     callback: (navigator) => {

@@ -1,13 +1,13 @@
-import { DYNAMIC_PLACEHOLDER_PLUGINS } from "@html_editor/backend/plugin_sets";
+import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
-import { MentionPlugin } from "./mention_plugin";
+import { MailFullComposerSuggestionPlugin } from "./mail_full_composer_suggestion_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { DisableBannerCommandsPlugin } from "./disable_banner_commands_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
-import { markup } from "@odoo/owl";
+import { markup, onWillUnmount } from "@odoo/owl";
 
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
@@ -36,23 +36,31 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 this.editor.shared.history.addStep();
             });
         }
+        this.lastAttachmentSet = new Set();
+        this.attachmentObserver = null;
+        onWillUnmount(() => {
+            if (this.attachmentObserver) {
+                this.attachmentObserver.disconnect();
+            }
+        });
     }
 
     getConfig() {
         const config = super.getConfig(...arguments);
-        config.Plugins = config.Plugins.filter((plugin) => !["video"].includes(plugin.id)).concat([
+        config.Plugins = [
+            ...config.Plugins.filter((plugin) => !["video"].includes(plugin.id)),
             DisableBannerCommandsPlugin,
-            MentionPlugin,
-        ]);
+            MailFullComposerSuggestionPlugin,
+        ];
         if (this.props.record.data.composition_comment_option === "reply_all") {
             config.Plugins.push(ContentExpandablePlugin);
         }
         if (!this.props.record.data.composition_batch) {
             config.Plugins = config.Plugins.filter(
-                (plugin) => !DYNAMIC_PLACEHOLDER_PLUGINS.includes(plugin)
+                (plugin) => !DYNAMIC_FIELD_PLUGINS.includes(plugin)
             );
         }
-        config.onAttachmentChange = (attachment) => {
+        config.onAttachmentChange = async (attachment) => {
             // This only needs to happen for the composer for now
             if (
                 !(
@@ -62,12 +70,24 @@ export class HtmlComposerMessageField extends HtmlMailField {
             ) {
                 return;
             }
+            await this.commitChanges();
             this.props.record.data.attachment_ids.linkTo(attachment.id, attachment);
         };
-        config.thread = this.env.services["mail.store"]?.Thread.get({
+        config.thread = this.env.services["mail.store"]?.["mail.thread"].get({
             model: this.props.record.data.model,
             id: JSON.parse(this.props.record.data.res_ids || "[]")[0],
         });
+        config.onEditorReady = () => {
+            this.attachmentObserver = new MutationObserver(
+                this._commitChangesIfInlineAttachmentsHasChanged.bind(this)
+            );
+            this.attachmentObserver.observe(this.editor.editable, {
+                attributes: true,
+                attributeFilter: ["data-attachment-id"],
+                childList: true, // to be notified when attachment links are removed
+                subtree: true,
+            });
+        };
         return config;
     }
 
@@ -77,6 +97,17 @@ export class HtmlComposerMessageField extends HtmlMailField {
             el.remove();
         }
         return elContent;
+    }
+
+    _commitChangesIfInlineAttachmentsHasChanged() {
+        const nodes = this.editor.editable.querySelectorAll("[data-attachment-id]");
+        const newAttachmentSet = new Set(
+            [...nodes].map((node) => node.getAttribute("data-attachment-id"))
+        );
+        if (newAttachmentSet.symmetricDifference(this.lastAttachmentSet).size) {
+            this.lastAttachmentSet = newAttachmentSet;
+            this.commitChanges();
+        }
     }
 }
 

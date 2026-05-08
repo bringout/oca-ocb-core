@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import datetime
 import json
 import logging
@@ -10,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, models, api
 from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.tools import BinaryBytes
 from odoo.tools.misc import str2bool
 from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.profiler import make_session
@@ -20,7 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class IrProfile(models.Model):
     _name = 'ir.profile'
-    _description = 'Profiling results'
+    _description = 'Profiling Result'
     _log_access = False  # avoid useless foreign key on res_user
     _order = 'session desc, id desc'
     _allow_sudo_commands = False
@@ -39,7 +39,6 @@ class IrProfile(models.Model):
     sql = fields.Text('Sql', prefetch=False)
     sql_count = fields.Integer('Queries Count')
     traces_async = fields.Text('Traces Async', prefetch=False)
-    traces_sync = fields.Text('Traces Sync', prefetch=False)
     others = fields.Text('others', prefetch=False)
     qweb = fields.Text('Qweb', prefetch=False)
     entry_count = fields.Integer('Entry count')
@@ -89,7 +88,7 @@ class IrProfile(models.Model):
         # When expanding this, it should be select from an enum to input only the correct values
         params = self._parse_params(self.env.context)
         for execution in self:
-            execution.speedscope = base64.b64encode(execution._generate_speedscope(params))
+            execution.speedscope = BinaryBytes(execution._generate_speedscope(params))
 
     def _default_profile_params(self):
         has_sql = any(profile.sql for profile in self)
@@ -156,7 +155,7 @@ class IrProfile(models.Model):
         If the profiling is enabled, return until when it is enabled.
         Otherwise return ``None``.
         """
-        limit = self.env['ir.config_parameter'].sudo().get_param('base.profiling_enabled_until', '')
+        limit = self.env['ir.config_parameter'].sudo().get_str('base.profiling_enabled_until')
         return limit if str(fields.Datetime.now()) < limit else None
 
     @api.model
@@ -235,5 +234,5 @@ class BaseEnableProfilingWizard(models.TransientModel):
             record.expiration = fields.Datetime.now() + relativedelta(**{unit: int(quantity)})
 
     def submit(self):
-        self.env['ir.config_parameter'].set_param('base.profiling_enabled_until', self.expiration)
+        self.env['ir.config_parameter'].set_str('base.profiling_enabled_until', self.expiration)
         return False

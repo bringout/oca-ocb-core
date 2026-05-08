@@ -1,4 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
+import { fields } from "@mail/model/misc";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
@@ -9,8 +10,8 @@ const storeServicePatch = {
     /** @override */
     setup() {
         super.setup();
-        /** @type {Map<number, Deferred>} */
-        this.channelIdsFetchingDeferred = new Map();
+        /** @type {Map<number, Promise<DiscussChannel|void>>} */
+        this.fetchChannelPromiseByChannelId = new Map();
         /**
          * Defines channel types that have the message seen indicator/info feature.
          * @see `discuss.channel`._types_allowing_seen_infos()
@@ -18,28 +19,30 @@ const storeServicePatch = {
          * @type {string[]}
          */
         this.channel_types_with_seen_infos = [];
+        // Debounce it to avoid intensive client => worker communication.
+        // Should be moved in the bus service at some point.
         this.updateBusSubscription = debounce(
             () => this.env.services.bus_service.forceUpdateChannels(),
             0
         );
-    },
-    get onlineMemberStatuses() {
-        return ["away", "bot", "busy", "online"];
+        this.favoriteChannels = fields.Many("discuss.channel", {
+            inverse: "storeAsFavoriteChannels",
+        });
     },
     /**
      * @param {Object} param0
      * @param {string} param0.default_display_mode
      * @param {number[]} param0.partners_to
      * @param {string} param0.name
-     * @returns {Promise<import("models").Thread>}
+     * @returns {Promise<import("models").DiscussChannel>}
      */
     async createGroupChat({ default_display_mode, partners_to, name }) {
         const { channel } = await this.fetchStoreData(
             "/discuss/create_group",
             { default_display_mode, partners_to, name },
-            { readonly: false, requestData: true }
+            { requestData: true }
         );
-        await channel.open({ focus: true });
+        channel.open({ focus: true });
         return channel;
     },
     /** @param {number} channelId */
@@ -48,7 +51,7 @@ const storeServicePatch = {
         if (fetchParam) {
             const [, channelIds, dataRequest] = fetchParam;
             channelIds.push(channelId);
-            await dataRequest._resultDef;
+            await dataRequest._resultResolvers.promise;
         } else {
             await this.fetchStoreData("discuss.channel", [channelId]);
         }
@@ -60,10 +63,12 @@ const storeServicePatch = {
      * @returns {number[]}
      */
     getRecentChatPartnerIds() {
-        return Object.values(this.Thread.records)
-            .filter((thread) => thread.channel_type === "chat" && thread.correspondent?.partner_id)
+        return Object.values(this["discuss.channel"].records)
+            .filter(
+                (channel) => channel?.channel_type === "chat" && channel.correspondent?.partner_id
+            )
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
-            .map((thread) => thread.correspondent.partner_id.id);
+            .map((channel) => channel.correspondent.partner_id.id);
     },
     /**
      * @param {import("models").ChannelMember} m1
@@ -80,7 +85,7 @@ const storeServicePatch = {
             chat.open({ focus: true, bypassCompact: true });
         } else if (partners_to.length === 2) {
             const correspondentId = partners_to.find(
-                (partnerId) => partnerId !== this.store.self.id
+                (partnerId) => partnerId !== this.store.self_user?.partner_id?.id
             );
             const chat = await this.joinChat(correspondentId, true);
             chat.open({ focus: true, bypassCompact: true });

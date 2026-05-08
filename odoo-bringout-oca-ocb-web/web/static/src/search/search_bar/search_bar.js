@@ -1,3 +1,4 @@
+import { useRef, useState } from "@web/owl2/utils";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
@@ -7,7 +8,7 @@ import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_se
 import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
 import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
-import { Component, status, useRef, useState } from "@odoo/owl";
+import { Component, status } from "@odoo/owl";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -70,6 +71,7 @@ export class SearchBar extends Component {
 
     setup() {
         this.dialogService = useService("dialog");
+        this.offlineService = useService("offline");
         this.fields = this.env.searchModel.searchViewFields;
         this.searchItemsFields = this.env.searchModel.getSearchItems((f) => f.type === "field");
         this.root = useRef("root");
@@ -492,12 +494,6 @@ export class SearchBar extends Component {
                 return [];
             },
             hotkeys: {
-                tab: {
-                    isAvailable: () => false,
-                },
-                "shift+tab": {
-                    isAvailable: () => false,
-                },
                 enter: {
                     isAvailable: () => !this.inputDropdownState.isOpen,
                     callback: () => this.env.searchModel.search() /** @todo keep this thing ?*/,
@@ -624,10 +620,7 @@ export class SearchBar extends Component {
 
     onFacetLabelClick(target, facet) {
         const { domain, groupId } = facet;
-        if (this.env.searchModel.canOrderByCount && facet.type === "groupBy") {
-            this.env.searchModel.switchGroupBySort();
-            return;
-        } else if (!domain) {
+        if ((this.env.searchModel.canOrderByCount && facet.type === "groupBy") || !domain) {
             return;
         }
         const { resModel } = this.env.searchModel;

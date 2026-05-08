@@ -9,7 +9,6 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -29,7 +28,7 @@ test("no conflicts between file uploads", async () => {
     await start();
     // Uploading file in the first thread: res.partner chatter.
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
+    await click("button:text('Send message')");
     await inputFiles(".o-mail-Chatter .o-mail-Composer input[type=file]", [text]);
     // Uploading file in the second thread: discuss.channel in chatWindow.
     await click("i[aria-label='Messages']");
@@ -49,7 +48,7 @@ test("Attachment shows spinner during upload", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "channel_1" });
     const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
-    onRpc("/mail/attachment/upload", () => new Deferred()); // never fulfill the attachment upload promise.
+    onRpc("/mail/attachment/upload", () => new Promise(() => {})); // never fulfill the attachment upload promise.
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer input[type=file]", [text2]);

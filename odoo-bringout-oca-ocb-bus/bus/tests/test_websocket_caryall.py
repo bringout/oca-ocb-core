@@ -5,16 +5,19 @@ import json
 import os
 from collections import defaultdict
 from datetime import timedelta
-from freezegun import freeze_time
 from threading import Event
 from unittest.mock import patch
 from weakref import WeakSet
+from freezegun import freeze_time
+try:
+    import websocket as ws
+except ImportError:
+    ws = None
 
-from odoo import http
 from odoo.api import Environment
-from odoo.tests import common, new_test_user
+from odoo.tests import new_test_user
 from odoo.tools import mute_logger
-from .common import WebsocketCase
+
 from .. import websocket as websocket_module
 from ..models.bus import dispatch
 from ..models.ir_websocket import IrWebsocket
@@ -26,8 +29,9 @@ from ..websocket import (
     Websocket,
     WebsocketConnectionHandler,
 )
+from .common import WebsocketCase
 
-@common.tagged('post_install', '-at_install')
+
 class TestWebsocketCaryall(WebsocketCase):
     def test_lifecycle_hooks(self):
         events = []
@@ -129,7 +133,13 @@ class TestWebsocketCaryall(WebsocketCase):
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
-        self.url_open('/web/session/logout')
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": self.csrf_token(),
+            },
+        )
         # The session with whom the websocket connected has been
         # deleted. WebSocket should disconnect in order for the
         # session to be updated.
@@ -141,7 +151,13 @@ class TestWebsocketCaryall(WebsocketCase):
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
         self.subscribe(websocket, ['channel1'], self.env['bus.bus']._bus_last_id())
-        self.url_open('/web/session/logout')
+        self.url_open(
+            '/web/session/logout',
+            method='POST',
+            data={
+                "csrf_token": self.csrf_token(),
+            },
+        )
         # Simulate postgres notify. The session with whom the websocket
         # connected has been deleted. WebSocket should be closed without
         # receiving the message.
@@ -193,8 +209,7 @@ class TestWebsocketCaryall(WebsocketCase):
         # preferred language), this could be a unknown language (ex. territorial
         # specific) or a known language that is uninstalled; in all cases this
         # should not crash the notif. dispatching.
-        self.session.context['lang'] = 'fr_LU'
-        http.root.session_store.save(self.session)
+        self.update_session_context(lang='fr_LU')
         self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
         self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
         self.trigger_notification_dispatching(["my_channel"])
@@ -222,7 +237,7 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assertEqual(mock.call_args[0][2], client_last_notification_id)
 
     def test_subscribe_to_custom_channel(self):
-        channel = self.env["res.partner"].create({"name": "John"})
+        channel = new_test_user(self.env, "John")
         websocket = self.websocket_connect()
         with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[channel]):
             self.subscribe(websocket, [], self.env['bus.bus']._bus_last_id())
@@ -343,3 +358,20 @@ class TestWebsocketCaryall(WebsocketCase):
                 terminate_done_event.wait(timeout=5),
                 'Server should have terminated the connection as it didn\'t receive any response.',
             )
+
+    def test_websocket_check_outdated_subscription(self):
+        self.env['bus.bus']._sendone('channel_A', 'some_notification', None)
+        self.env['bus.bus']._sendone('channel_A', 'some_notification', None)
+        self.trigger_notification_dispatching(["channel_A"])
+        last_id = self.env['bus.bus']._bus_last_id()
+        self._reset_bus()
+        websocket = self.websocket_connect()
+        self.subscribe(websocket, ['channel_A'], last_id, check_outdated=True)
+        message = json.loads(websocket.recv())[0]
+        self.assertEqual(
+            message,
+            {'type': 'bus/subscription_outdated', 'internal': True, 'payload': None},
+        )
+        self.subscribe(websocket, ['channel_A'], last_id, check_outdated=False)
+        with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
+            websocket.recv()

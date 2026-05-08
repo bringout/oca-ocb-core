@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
 "PO-Revision-Date: 2025-11-13 14:24+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -51,11 +51,6 @@ msgstr "啟動"
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
 msgid "Apps"
 msgstr "應用程式"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Cancel"
-msgstr "取消"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -113,6 +108,11 @@ msgstr ""
 "\n"
 " %(error_message)s \n"
 "\n"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__total_lines_of_code
+msgid "Extra lines of Code"
+msgstr ""
 
 #. module: base_import_module
 #. odoo-python
@@ -262,6 +262,14 @@ msgid ""
 msgstr ""
 
 #. module: base_import_module
+#: model:ir.model.fields,help:base_import_module.field_ir_module_module__total_lines_of_code
+msgid ""
+"Number of lines of code that may be billed under an Enterprise subscription. "
+"For exact pricing details, please contact your account manager or visit odoo."
+"com/pricing."
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
 msgid "Official Apps"
 msgstr "官方應用程式"
@@ -350,7 +358,3 @@ msgstr "完成"
 #: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__init
 msgid "init"
 msgstr "初始化"
-
-#~ msgid ""
-#~ "Note: you can only import data modules (.xml files and static assets)"
-#~ msgstr "注意：您只能匯入資料模組（.xml 檔和靜態資產）"

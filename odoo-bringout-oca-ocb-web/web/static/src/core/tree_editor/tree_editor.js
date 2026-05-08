@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -10,6 +11,7 @@ import { getResModel } from "@web/core/tree_editor/utils";
 import { areEquivalentTrees } from "@web/core/tree_editor/virtual_operators";
 import { useService } from "@web/core/utils/hooks";
 import { shallowEqual } from "@web/core/utils/objects";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 export class TreeEditor extends Component {
     static template = "web.TreeEditor";
@@ -42,6 +44,7 @@ export class TreeEditor extends Component {
         this.isTree = isTree;
         this.fieldService = useService("field");
         this.treeProcessor = useService("tree_processor");
+        this.hasTouch = hasTouch();
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
     }
@@ -220,7 +223,7 @@ export class TreeEditor extends Component {
             // this means that the parent might not render the domain selector
             // but we need to udpate editors
             await this.prepareInfo(this.props);
-            this.render();
+            render(this);
         }
         this.notifyChanges();
     }

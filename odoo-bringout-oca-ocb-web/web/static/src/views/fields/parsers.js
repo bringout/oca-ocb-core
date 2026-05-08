@@ -3,7 +3,17 @@ import { localization } from "@web/core/l10n/localization";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { escapeRegExp } from "@web/core/utils/strings";
-import { Operation } from "@web/model/relational_model/operation";
+import { ArithmeticOperation } from "@web/model/relational_model/operation";
+import { durationUnitsRegex, normalizeTimeStr } from "../../core/l10n/time";
+
+/**
+ * @typedef Duration
+ * @property {number} hours
+ * @property {number} minutes
+ * @property {number} seconds
+ *
+ * @typedef {"hours"|"minutes"|"seconds"} UnitOfTime
+ */
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -24,21 +34,6 @@ function evaluateMathematicalExpression(expr, context = {}) {
         safeEvalString += v;
     }
     return evaluateExpr(safeEvalString, context);
-}
-
-function parseOperation(value, parseValueFn) {
-    const regex = new RegExp(
-        `^(?<operator>[+\\-*/])\\s*=\\s*(?<operand>-?\\d+(?:[${escapeRegExp(
-            localization.decimalPoint
-        )}]\\d+)?)$`
-    );
-    const match = value.match(regex);
-    if (match?.groups) {
-        const operand = parseValueFn(match.groups.operand);
-        const operator = match.groups.operator;
-        return new Operation(operator, operand);
-    }
-    return false;
 }
 
 /**
@@ -86,8 +81,8 @@ export class InvalidNumberError extends Error {}
  * @returns {number} a float
  */
 export function parseFloat(value, { allowOperation = false } = {}) {
-    const operation = allowOperation ? parseOperation(value, parseFloat) : null;
-    if (operation instanceof Operation) {
+    const operation = allowOperation ? ArithmeticOperation.parse(value, parseFloat) : null;
+    if (operation) {
         return operation;
     }
     const thousandsSepRegex = localization.thousandsSep || "";
@@ -113,24 +108,104 @@ export function parseFloat(value, { allowOperation = false } = {}) {
  * The float time can have two formats: float or integer:integer.
  *
  * @param {string} value
+ * @param {UnitOfTime} [unit="hours"]
  * @returns {number} a float
  */
-export function parseFloatTime(value) {
-    let sign = 1;
+export function parseFloatTime(value, unit = "hours") {
+    const duration = parseDuration(value, unit);
+
+    if (unit === "hours") {
+        return duration.hours + duration.minutes / 60 + duration.seconds / 3600;
+    } else if (unit === "minutes") {
+        return duration.hours * 60 + duration.minutes + duration.seconds / 60;
+    } else {
+        return duration.hours * 3600 + duration.minutes * 60 + duration.seconds;
+    }
+}
+
+/**
+ *
+ * Parse a string into object Duration. The string can take 3 formats.
+ * - A single number that will be interpreted as the given unit.
+ * - Numeric format as hh:mm:ss
+ * - Human format as 12h 30m 45s (depends of the local)
+ *
+ * @param {string} value
+ * @param {UnitOfTime} [unit="hours"]
+ * @return {Duration}
+ */
+function parseDuration(value, unit = "hours") {
+    let isNegative;
+    const duration = {
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+    };
+
+    if (!value) {
+        return duration;
+    }
+
     if (value[0] === "-") {
-        value = value.slice(1);
-        sign = -1;
+        isNegative = true;
+        value = value.substring(1);
     }
-    const values = value.split(":");
-    if (values.length > 2) {
-        throw new InvalidNumberError(`"${value}" is not a correct number`);
+
+    value = value.replaceAll(" ", "");
+    value = value
+        .replaceAll(localization.decimalPoint, ".")
+        .replaceAll(localization.thousandsSep, "");
+
+    // Single number
+    if (!isNaN(value)) {
+        duration[unit] = Number(value);
+        value = "";
     }
-    if (values.length === 1) {
-        return sign * parseFloat(value);
+
+    // 12:30:45 format
+    else if (value.match(/(\d+)?:\d*(:\d*)?/)) {
+        const result = value.split(":");
+        let unitFound = result.length === 3;
+        let i = 0;
+        for (const key of Object.keys(duration)) {
+            if (!unitFound && key === unit) {
+                unitFound = true;
+            }
+
+            if (unitFound) {
+                duration[key] = parseInt(result[i], 10) || 0;
+                i++;
+            }
+        }
+        value = "";
     }
-    const hours = parseInteger(values[0]);
-    const minutes = parseInteger(values[1]);
-    return sign * (hours + minutes / 60);
+
+    // 12h 30m 45s format
+    else {
+        const regexTimes = durationUnitsRegex();
+
+        value = normalizeTimeStr(value, true);
+        let temp;
+        if ((temp = value.match(regexTimes.hours))) {
+            duration.hours = parseInt(temp[1], 10);
+            value = value.replace(regexTimes.hours, "");
+        }
+        if ((temp = value.match(regexTimes.minutes) || value.match(/^(\d+$)/))) {
+            duration.minutes = parseInt(temp[1], 10);
+            value = value.replace(/^\d+$/, "");
+            value = value.replace(regexTimes.minutes, "");
+        }
+        if ((temp = value.match(regexTimes.seconds) || value.match(/^(\d+)$/))) {
+            duration.seconds = parseInt(temp[1], 10);
+        }
+    }
+
+    if (isNegative) {
+        duration.hours = -duration.hours;
+        duration.minutes = -duration.minutes;
+        duration.seconds = -duration.seconds;
+    }
+    return duration;
 }
 
 /**
@@ -140,8 +215,8 @@ export function parseFloatTime(value) {
  * @returns {number} an integer
  */
 export function parseInteger(value, { allowOperation = false } = {}) {
-    const operation = allowOperation ? parseOperation(value, parseInteger) : null;
-    if (operation instanceof Operation) {
+    const operation = allowOperation ? ArithmeticOperation.parse(value, parseInteger) : null;
+    if (operation) {
         return operation;
     }
     const thousandsSepRegex = localization.thousandsSep || "";
@@ -198,8 +273,8 @@ export function parsePercentage(value) {
  * @returns {number}
  */
 export function parseMonetary(value, { allowOperation = false } = {}) {
-    const operation = allowOperation ? parseOperation(value, parseMonetary) : null;
-    if (operation instanceof Operation) {
+    const operation = allowOperation ? ArithmeticOperation.parse(value, parseMonetary) : null;
+    if (operation) {
         return operation;
     }
     value = value.trim();

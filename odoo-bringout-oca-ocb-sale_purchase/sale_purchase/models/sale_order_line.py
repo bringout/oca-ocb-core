@@ -24,7 +24,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_service_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type == 'service' and self.product_id.with_company(self._purchase_service_get_company()).service_to_purchase:
+        if self.state == 'sale' and self.product_id.type == 'service' and self.product_id.with_company(self._purchase_service_get_company()).service_tracking == 'subcontract':
             if self.product_uom_qty < self._origin.product_uom_qty:
                 if self.product_uom_qty < self.qty_delivered:
                     return {}
@@ -55,8 +55,8 @@ class SaleOrderLine(models.Model):
         decreased_values = {}
         if 'product_uom_qty' in vals:
             precision = self.env['decimal.precision'].precision_get('Product Unit')
-            increased_lines = self.sudo().filtered(lambda r: r.product_id.with_company(r._purchase_service_get_company()).service_to_purchase and r.purchase_line_count and float_compare(r.product_uom_qty, vals['product_uom_qty'], precision_digits=precision) == -1)
-            decreased_lines = self.sudo().filtered(lambda r: r.product_id.with_company(r._purchase_service_get_company()).service_to_purchase and r.purchase_line_count and float_compare(r.product_uom_qty, vals['product_uom_qty'], precision_digits=precision) == 1)
+            increased_lines = self.sudo().filtered(lambda r: r.product_id.with_company(r._purchase_service_get_company()).service_tracking == 'subcontract' and r.purchase_line_count and float_compare(r.product_uom_qty, vals['product_uom_qty'], precision_digits=precision) == -1)
+            decreased_lines = self.sudo().filtered(lambda r: r.product_id.with_company(r._purchase_service_get_company()).service_tracking == 'subcontract' and r.purchase_line_count and float_compare(r.product_uom_qty, vals['product_uom_qty'], precision_digits=precision) == 1)
             increased_values = {line.id: line.product_uom_qty for line in increased_lines}
             decreased_values = {line.id: line.product_uom_qty for line in decreased_lines}
 
@@ -105,7 +105,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             last_purchase_line = self.env['purchase.order.line'].search([('sale_line_id', '=', line.id)], order='create_date DESC', limit=1)
             if last_purchase_line.state in ['draft', 'sent', 'to approve']:  # update qty for draft PO lines
-                quantity = line.product_uom_id._compute_quantity(new_qty, last_purchase_line.product_uom_id)
+                quantity = line.product_uom_id._compute_quantity(new_qty, last_purchase_line.uom_id)
                 last_purchase_line.write({'product_qty': quantity})
             elif last_purchase_line.state in ['purchase', 'cancel']:  # create new PO, by forcing the quantity as the difference from SO line
                 quantity = new_qty - origin_values.get(line.id, 0.0)
@@ -193,8 +193,8 @@ class SaleOrderLine(models.Model):
             date=purchase_order.date_order and purchase_order.date_order.date(),  # and purchase_order.date_order[:10],
             uom_id=self.product_id.uom_id
         )
-        if supplierinfo and supplierinfo.product_uom_id != self.product_id.uom_id:
-            purchase_qty_uom = self.product_id.uom_id._compute_quantity(purchase_qty_uom, supplierinfo.product_uom_id)
+        if supplierinfo and supplierinfo.uom_id != self.product_id.uom_id:
+            purchase_qty_uom = self.product_id.uom_id._compute_quantity(purchase_qty_uom, supplierinfo.uom_id)
 
         price_unit, taxes = self._purchase_service_get_price_unit_and_taxes(supplierinfo, purchase_order)
         name = self._purchase_service_get_product_name(supplierinfo, purchase_order, quantity)
@@ -207,7 +207,7 @@ class SaleOrderLine(models.Model):
             'name': name,
             'product_qty': purchase_qty_uom,
             'product_id': self.product_id.id,
-            'product_uom_id': supplierinfo.product_uom_id.id or self.product_id.uom_id.id,
+            'uom_id': supplierinfo.uom_id.id or self.product_id.uom_id.id,
             'price_unit': price_unit,
             'date_planned': purchase_order.date_order + relativedelta(days=int(supplierinfo.delay)),
             'tax_ids': [(6, 0, taxes.ids)],
@@ -300,7 +300,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line = line.with_company(line._purchase_service_get_company())
             # Do not regenerate PO line if the SO line has already created one in the past (SO cancel/reconfirmation case)
-            if line.product_id.service_to_purchase and not line.purchase_line_count:
+            if line.product_id.service_tracking == 'subcontract' and not line.purchase_line_count:
                 result = line._purchase_service_create()
                 sale_line_purchase_map.update(result)
         return sale_line_purchase_map

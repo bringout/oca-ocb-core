@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import json
 
 from odoo.exceptions import UserError
-from odoo.http import Controller, request, Response, route, content_disposition
+from odoo.http import Controller, Response, request, route
+from odoo.http.stream import content_disposition
 
 
 class Profiling(Controller):
@@ -44,7 +44,7 @@ class Profiling(Controller):
             'profiles': profiles,
             'speedscope_base64': base64.b64encode(speedscope_result).decode('utf-8'),
             'url_root': request.httprequest.url_root,
-            'cdn': icp.sudo().get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/")
+            'cdn': icp.sudo().get_str('speedscope_cdn') or "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/"
         }
         response = request.render('web.view_speedscope_index', context)
         if action == 'speedscope_download_html':

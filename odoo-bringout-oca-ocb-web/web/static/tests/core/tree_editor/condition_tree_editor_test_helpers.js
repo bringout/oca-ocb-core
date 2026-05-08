@@ -169,7 +169,7 @@ export const SELECTORS = {
     connectorValue: ".o_tree_editor_connector .o_tree_editor_connector_value",
     connectorToggler: ".o_tree_editor_connector .o_tree_editor_connector_value button.o-dropdown",
     condition: ".o_tree_editor_condition",
-    addNewRule: ".o_tree_editor_row > a",
+    addNewRule: ".o_tree_editor_row > button",
     buttonAddNewRule: ".o_tree_editor_node_control_panel > button[data-tooltip='Add rule']",
     buttonAddBranch: ".o_tree_editor_node_control_panel > button[data-tooltip='Add nested rule']",
     buttonDeleteNode: ".o_tree_editor_node_control_panel > button[data-tooltip='Delete rule']",
@@ -467,4 +467,26 @@ export async function followRelation(index, target) {
 
 export function getFocusedFieldName() {
     return queryText(".o_model_field_selector_popover_item.active");
+}
+
+/**
+ * Generates a Python expression string representing a UTC datetime at midnight (00:00:00)
+ * for a specific date relative to the user's current context date.
+ * @param {string} [delta="today"] - The relative delta argument (e.g., "days=1", "months=-1") or "today".
+ * @returns {string} The formatted Python expression for the target datetime.
+ */
+export function pyDatetimeStr(delta = "today") {
+    const b = delta === "today" ? "context_today()" : `context_today() + relativedelta(${delta})`;
+    return `datetime.datetime.combine(${b}, datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
+}
+
+/**
+ * Generates a Python expression string representing a formatted date ('YYYY-MM-DD')
+ * relative to the user's current context date.
+ * @param {string} [delta="today"] - The relative delta argument (e.g., "days=1", "months=-1") or "today".
+ * @returns {string} The formatted Python expression for the target date.
+ */
+export function pyDateStr(delta = "today") {
+    const b = delta === "today" ? "context_today()" : `(context_today() + relativedelta(${delta}))`;
+    return `${b}.strftime("%Y-%m-%d")`;
 }

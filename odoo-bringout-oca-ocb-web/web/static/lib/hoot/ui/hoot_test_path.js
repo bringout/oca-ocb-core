@@ -29,24 +29,24 @@ export class HootTestPath extends Component {
     };
 
     static template = xml`
-        <t t-set="statusInfo" t-value="getStatusInfo()" />
+        <t t-set="statusInfo" t-value="this.getStatusInfo()" />
         <div class="flex items-center gap-1 whitespace-nowrap overflow-hidden">
-            <t t-if="props.showStatus">
+            <t t-if="this.props.showStatus">
                 <span
                     t-attf-class="inline-flex min-w-3 min-h-3 rounded-full bg-{{ statusInfo.className }}"
                     t-att-title="statusInfo.text"
                 />
             </t>
             <span class="flex items-center overflow-hidden">
-                <t t-if="uiState.selectedSuiteId and !props.full">
+                <t t-if="this.uiState.selectedSuiteId and !this.props.full">
                     <span class="text-gray font-bold p-1 select-none hidden md:inline">...</span>
                     <span class="select-none hidden md:inline">/</span>
                 </t>
-                <t t-foreach="getTestPath()" t-as="suite" t-key="suite.id">
-                    <t t-if="props.inert">
+                <t t-foreach="this.getTestPath()" t-as="suite" t-key="suite.id">
+                    <t t-if="this.props.inert">
                         <span
                             class="text-gray whitespace-nowrap font-bold p-1 hidden md:inline transition-colors"
-                            t-esc="suite.name"
+                            t-out="suite.name"
                         />
                     </t>
                     <t t-else="">
@@ -54,11 +54,11 @@ export class HootTestPath extends Component {
                             ids="{ id: suite.id }"
                             class="'text-gray hover:text-primary hover:underline whitespace-nowrap font-bold p-1 hidden md:inline transition-colors'"
                             title="'Run ' + suite.fullName"
-                            t-esc="suite.name"
+                            t-out="suite.name"
                         />
                         <t t-if="suite.config.multi">
                             <strong class="text-amber whitespace-nowrap me-1">
-                                x<t t-esc="suite.config.multi" />
+                                x<t t-out="suite.config.multi" />
                             </strong>
                         </t>
                     </t>
@@ -66,22 +66,22 @@ export class HootTestPath extends Component {
                 </t>
                 <span
                     class="text-primary truncate font-bold p-1"
-                    t-att-class="{ 'text-cyan': props.test.config.skip }"
-                    t-att-title="props.test.name"
-                    t-esc="props.test.name"
+                    t-att-class="{ 'text-cyan': this.props.test.config.skip }"
+                    t-att-title="this.props.test.name"
+                    t-out="this.props.test.name"
                 />
-                <t t-if="props.canCopy">
-                    <HootCopyButton text="props.test.name" altText="props.test.id" />
+                <t t-if="this.props.canCopy">
+                    <HootCopyButton text="this.props.test.name" altText="this.props.test.id" />
                 </t>
-                <t t-if="results.length > 1">
+                <t t-if="this.results.length > 1">
                     <strong class="text-amber whitespace-nowrap mx-1">
-                        x<t t-esc="results.length" />
+                        x<t t-out="this.results.length" />
                     </strong>
                 </t>
             </span>
-            <t t-if="props.test.tags.length">
+            <t t-if="this.props.test.tags.length">
                 <ul class="flex items-center gap-1">
-                    <t t-foreach="props.test.tags.slice(0, 5)" t-as="tag" t-key="tag.name">
+                    <t t-foreach="this.props.test.tags.slice(0, 5)" t-as="tag" t-key="tag.name">
                         <li class="flex">
                             <HootTagButton tag="tag" />
                         </li>

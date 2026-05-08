@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-01-23 07:37+0000\n"
+"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"PO-Revision-Date: 2026-02-07 12:25+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "mail_group/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -47,8 +47,6 @@ msgid ""
 "<br/>\n"
 "                    Get the conversation started by sending an email to"
 msgstr ""
-"<br/>\n"
-"                    다음 주소로 이메일을 보내서 대화를 시작하세요"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -74,11 +72,11 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                안녕하세요,<br/><br/>\n"
-"                메일링 리스트 구독을 신청하셨습니다<strong t-"
-"out=\"object.name or ''\"/>.\n"
+"                메일링 리스트 구독을 신청하셨습니다<strong t-out=\"object."
+"name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                확인하려면 다음 링크를 눌러주세요: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"                확인하려면 다음 링크를 눌러주세요: <strong t-if=\"ctx."
+"get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
 "out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
 "                구독을 요청하지 않으셨거나 실수로 누르신 경우 이 메시지는 무"
@@ -108,8 +106,8 @@ msgstr ""
 "                메일링 리스트 구독 해지를 신청하셨습니다<strong t-"
 "out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                확인하려면 다음 링크를 눌러주세요: <strong t-"
-"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"                확인하려면 다음 링크를 눌러주세요: <strong t-if=\"ctx."
+"get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
 "out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
 "                구독 취소를 요청하지 않으셨거나 실수로 누르신 경우 이 메시지"
@@ -122,8 +120,8 @@ msgstr ""
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Please find below the guidelines of the <t t-"
-"out=\"object.mail_group_id.name\"/> mailing list.</p>\n"
+"                <p>Please find below the guidelines of the <t t-out=\"object."
+"mail_group_id.name\"/> mailing list.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
 "or ''\"/></p>\n"
 "            </div>\n"
@@ -552,11 +550,6 @@ msgstr "기본값"
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__description
 msgid "Description"
 msgstr "설명"
-
-#. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
-msgid "Discard"
-msgstr "취소"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
@@ -1328,7 +1321,7 @@ msgstr "이메일 전송"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "신규 회원에게 가이드라인 보내기"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
@@ -1545,6 +1538,11 @@ msgid "You have messages to moderate, please go for the proceedings."
 msgstr "중재한 메시지가 있습니다. 절차를 진행하십시오."
 
 #. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "_______________________________________________"
+msgstr "_______________________________________________"
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "alias"
 msgstr "별칭"
@@ -1582,7 +1580,7 @@ msgstr "예: mycompany.com"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "예: “예의를 지켜 주세요...”"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1638,9 +1636,3 @@ msgstr "구독 취소"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "your email..."
 msgstr "귀하의 이메일..."
-
-#~ msgid "_______________________________________________"
-#~ msgstr "_______________________________________________"
-
-#~ msgid "Group By"
-#~ msgstr "그룹별"

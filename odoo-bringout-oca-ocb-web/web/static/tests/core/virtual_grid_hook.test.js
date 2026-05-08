@@ -4,6 +4,7 @@ import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useRef, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
+import { range } from "@web/core/utils/numbers";
 import { useVirtualGrid } from "@web/core/virtual_grid_hook";
 
 function objectToStyle(obj) {
@@ -43,7 +44,7 @@ function getTestComponent(virtualGridParams) {
     class Item extends Component {
         static props = ["row", "col"];
         static template = xml`
-            <div class="item" t-att-data-row-id="props.row.id" t-att-data-col-id="props.col.id" t-att-style="style" t-esc="content"/>
+            <div class="item" t-att-data-row-id="this.props.row.id" t-att-data-col-id="this.props.col.id" t-att-style="this.style" t-out="this.content"/>
         `;
         get content() {
             return `${this.props.row.id}|${this.props.col.id}`;
@@ -60,9 +61,9 @@ function getTestComponent(virtualGridParams) {
         static components = { Item };
         static template = xml`
             <div class="scrollable" t-ref="scrollable" style="${CONTAINER_STYLE}" dir="${localization.direction}">
-                <div class="inner" t-att-style="innerStyle">
-                    <t t-foreach="virtualRows" t-as="row" t-key="row.id">
-                        <t t-foreach="virtualColumns" t-as="col" t-key="col.id">
+                <div class="inner" t-att-style="this.innerStyle">
+                    <t t-foreach="this.virtualRows" t-as="row" t-key="row.id">
+                        <t t-foreach="this.virtualColumns" t-as="col" t-key="col.id">
                             <Item row="row" col="col"/>
                         </t>
                     </t>
@@ -75,27 +76,23 @@ function getTestComponent(virtualGridParams) {
                 scrollableRef,
                 ...virtualGridParams,
             });
-            this.virtualGrid.setRowsHeights(Array.from({ length: ROW_COUNT }, () => ITEM_HEIGHT));
-            this.virtualGrid.setColumnsWidths(
-                Array.from({ length: COLUMN_COUNT }, () => ITEM_WIDTH)
-            );
+            this.virtualGrid.setRowsHeights(Array(ROW_COUNT).fill(ITEM_HEIGHT));
+            this.virtualGrid.setColumnsWidths(Array(COLUMN_COUNT).fill(ITEM_WIDTH));
         }
         get innerStyle() {
             return `height: ${ROW_COUNT * ITEM_HEIGHT}px; width: ${COLUMN_COUNT * ITEM_WIDTH}px;`;
         }
         get virtualRows() {
             const [rowStart, rowEnd] = this.virtualGrid.rowsIndexes;
-            return Array.from({ length: ROW_COUNT }, (_, i) => ({ id: i + 1 })).slice(
-                rowStart,
-                rowEnd + 1
-            );
+            return range(1, ROW_COUNT + 1)
+                .map((id) => ({ id }))
+                .slice(rowStart, rowEnd + 1);
         }
         get virtualColumns() {
             const [colStart, colEnd] = this.virtualGrid.columnsIndexes;
-            return Array.from({ length: COLUMN_COUNT }, (_, i) => ({ id: i + 1 })).slice(
-                colStart,
-                colEnd + 1
-            );
+            return range(1, COLUMN_COUNT + 1)
+                .map((id) => ({ id }))
+                .slice(colStart, colEnd + 1);
         }
     }
     return TestComponent;
@@ -219,7 +216,7 @@ test("with columns only", async () => {
         setup() {
             const scrollableRef = useRef("pseudoScrollable");
             this.virtualGrid = useVirtualGrid({ scrollableRef });
-            this.virtualGrid.setColumnsWidths(Array.from({ length: 100 }, () => 1));
+            this.virtualGrid.setColumnsWidths(Array(100).fill(1));
         }
     }
     const comp = await mountWithCleanup(C);
@@ -236,7 +233,7 @@ test("with rows only", async () => {
         setup() {
             const scrollableRef = useRef("pseudoScrollable");
             this.virtualGrid = useVirtualGrid({ scrollableRef });
-            this.virtualGrid.setRowsHeights(Array.from({ length: 100 }, () => 1));
+            this.virtualGrid.setRowsHeights(Array(100).fill(1));
         }
     }
     const comp = await mountWithCleanup(C);

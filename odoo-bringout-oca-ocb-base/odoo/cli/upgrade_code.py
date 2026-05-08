@@ -33,10 +33,10 @@ import argparse
 import functools
 import sys
 
+from collections.abc import Iterator
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
 from types import ModuleType
-from typing import Iterator
 
 ROOT = Path(__file__).parent.parent
 UPGRADE = ROOT / 'upgrade_code'
@@ -84,7 +84,11 @@ class FileAccessor:
     @property
     def content(self):
         if self._content is None:
-            self._content = self.path.read_text()
+            try:
+                self._content = self.path.read_text()
+            except Exception as e:
+                e.add_note(f"File: {self.path}")
+                raise
         return self._content
 
     @content.setter
@@ -109,6 +113,7 @@ class FileManager:
             if path.suffix in AVAILABLE_EXT
             if path.is_file()
         }
+        self._summary = []
 
     def __iter__(self) -> Iterator[FileAccessor]:
         return iter(self._files.values())
@@ -119,12 +124,23 @@ class FileManager:
     def get_file(self, path):
         return self._files.get(str(path))
 
+    def add_to_summary(self, message: str) -> None:
+        if message:
+            self._summary.append(message)
+
     if sys.stdout.isatty():
         def print_progress(self, current: int, total: int | None =None, file_name : str | Path = ""):
             total = total or len(self) or 1
             print(f'\033[K{current / total:>4.0%} \033[37m{file_name}\033[0m', end='\r', file=sys.stderr)  # noqa: T201
+
+        def print_summary(self) -> None:
+            if self._summary:
+                print("\n" + "\n".join(self._summary))  # noqa: T201
     else:
         def print_progress(self, current: int, total: int | None =None, file_name : str | Path = ""):
+            pass
+
+        def print_summary(self) -> None:
             pass
 
 
@@ -147,9 +163,13 @@ def migrate(
     dry_run: bool = False,
 ):
     if script:
-        script_path = next(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py'), None)
-        if not script_path:
-            raise FileNotFoundError(script)
+        script_path = Path(script).absolute()
+        if not script_path.is_file():
+            candidate_paths = list(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py'))
+            if len(candidate_paths) == 1:
+                script_path = candidate_paths[0]
+            else:
+                raise FileNotFoundError(script)
         script_path.relative_to(UPGRADE)  # safeguard, prevent going up
         module = SourceFileLoader(script_path.name, str(script_path)).load_module()
         modules = [(script_path.name, module)]
@@ -169,6 +189,7 @@ def migrate(
                 with file.path.open("w") as f:
                     f.write(file.content)
 
+    file_manager.print_summary()
     return any(file.dirty for file in file_manager)
 
 

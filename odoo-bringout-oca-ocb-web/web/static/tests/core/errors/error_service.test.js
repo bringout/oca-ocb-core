@@ -1,12 +1,11 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { Deferred, advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, OwlError, onError, onWillStart, xml } from "@odoo/owl";
 import {
     makeMockEnv,
     mockService,
     mountWithCleanup,
-    onRpc,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
@@ -17,7 +16,7 @@ import {
     standardErrorDialogProps,
 } from "@web/core/errors/error_dialogs";
 import { UncaughtPromiseError } from "@web/core/errors/error_service";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { omit } from "@web/core/utils/objects";
 
@@ -45,7 +44,7 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
     expect.errors(1);
     const error = new RPCError();
     error.code = 701;
-    error.message = "Some strange error occured";
+    error.message = "Some strange error occurred";
     error.data = { debug: "somewhere" };
     error.subType = "strange_error";
     error.model = "some model";
@@ -61,18 +60,18 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
                     debug: "somewhere",
                 },
                 subType: "strange_error",
-                message: "Some strange error occured",
+                message: "Some strange error occurred",
                 exceptionName: null,
                 model: "some model",
             });
             expect(props.traceback).toMatch(/RPC_ERROR/);
-            expect(props.traceback).toMatch(/Some strange error occured/);
+            expect(props.traceback).toMatch(/Some strange error occurred/);
         },
     });
     await makeMockEnv();
     Promise.reject(error);
     await animationFrame();
-    expect.verifyErrors(["RPC_ERROR: Some strange error occured"]);
+    expect.verifyErrors(["RPC_ERROR: Some strange error occurred"]);
 });
 
 test("handle custom RPC_ERROR of type='server' and associated custom dialog class", async () => {
@@ -85,7 +84,7 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
     }
     const error = new RPCError();
     error.code = 701;
-    error.message = "Some strange error occured";
+    error.message = "Some strange error occurred";
     error.model = "some model";
     const errorData = {
         context: { exception_class: "strange_error" },
@@ -102,19 +101,19 @@ test("handle custom RPC_ERROR of type='server' and associated custom dialog clas
                 code: 701,
                 data: errorData,
                 subType: null,
-                message: "Some strange error occured",
+                message: "Some strange error occurred",
                 exceptionName: null,
                 model: "some model",
             });
             expect(props.traceback).toMatch(/RPC_ERROR/);
-            expect(props.traceback).toMatch(/Some strange error occured/);
+            expect(props.traceback).toMatch(/Some strange error occurred/);
         },
     });
     await makeMockEnv();
     errorDialogRegistry.add("strange_error", CustomDialog);
     Promise.reject(error);
     await animationFrame();
-    expect.verifyErrors(["RPC_ERROR: Some strange error occured"]);
+    expect.verifyErrors(["RPC_ERROR: Some strange error occurred"]);
 });
 
 test("handle normal RPC_ERROR of type='server' and associated custom dialog class", async () => {
@@ -132,7 +131,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     }
     const error = new RPCError();
     error.code = 701;
-    error.message = "A normal error occured";
+    error.message = "A normal error occurred";
     const errorData = {
         context: { exception_class: "strange_error" },
     };
@@ -148,12 +147,12 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
                 code: 701,
                 data: errorData,
                 subType: null,
-                message: "A normal error occured",
+                message: "A normal error occurred",
                 exceptionName: "normal_error",
                 model: "some model",
             });
             expect(props.traceback).toMatch(/RPC_ERROR/);
-            expect(props.traceback).toMatch(/A normal error occured/);
+            expect(props.traceback).toMatch(/A normal error occurred/);
         },
     });
     await makeMockEnv();
@@ -161,50 +160,7 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     errorDialogRegistry.add("normal_error", NormalDialog);
     Promise.reject(error);
     await animationFrame();
-    expect.verifyErrors(["RPC_ERROR: A normal error occured"]);
-});
-
-test("handle CONNECTION_LOST_ERROR", async () => {
-    expect.errors(1);
-    mockService("notification", {
-        add(message) {
-            expect.step(`create (${message})`);
-            return () => {
-                expect.step(`close`);
-            };
-        },
-    });
-    const values = [false, true]; // simulate the 'back online status' after 2 'version_info' calls
-    onRpc("/web/webclient/version_info", async () => {
-        expect.step("version_info");
-        const online = values.shift();
-        if (online) {
-            return true;
-        } else {
-            return Promise.reject();
-        }
-    });
-
-    await makeMockEnv();
-    const error = new ConnectionLostError("/fake_url");
-    Promise.reject(error);
-    await animationFrame();
-    patchWithCleanup(Math, {
-        random: () => 0,
-    });
-    // wait for timeouts
-    await advanceTime(2000);
-    await advanceTime(3500);
-    expect.verifySteps([
-        "create (Connection lost. Trying to reconnect...)",
-        "version_info",
-        "version_info",
-        "close",
-        "create (Connection restored. You are back online.)",
-    ]);
-    expect.verifyErrors([
-        `Error: Connection to "/fake_url" couldn't be established or was interrupted`,
-    ]);
+    expect.verifyErrors(["RPC_ERROR: A normal error occurred"]);
 });
 
 test("will let handlers from the registry handle errors first", async () => {
@@ -242,7 +198,7 @@ test("originalError is the root cause of the error chain", async () => {
     });
 
     class ErrHandler extends Component {
-        static template = xml`<t t-component="props.comp"/>`;
+        static template = xml`<t t-component="this.props.comp"/>`;
         static props = ["*"];
         setup() {
             onError(async (err) => {
@@ -264,7 +220,7 @@ test("originalError is the root cause of the error chain", async () => {
     mountWithCleanup(ErrHandler, { props: { comp: ThrowInSetup } });
     await prom;
     expect.verifyErrors([
-        `Error: An error occured in the owl lifecycle (see this Error's "cause" property)`,
+        `Error: An error occurred in the owl lifecycle (see this Error's "cause" property)`,
     ]);
     expect.verifySteps(["in handler"]);
 

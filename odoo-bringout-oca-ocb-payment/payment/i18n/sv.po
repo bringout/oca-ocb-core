@@ -18,15 +18,13 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# symbiotech <symbiotech3@gmail.com>, 2026.
-# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-04-14 14:51+0000\n"
-"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"POT-Creation-Date: 2026-03-12 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 21:23+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/payment/"
 "sv/>\n"
 "Language: sv\n"
@@ -34,7 +32,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -61,8 +59,8 @@ msgstr ""
 "att\n"
 "                                matcha beteendet hos leverantörer och deras "
 "integration med Odoo\n"
-"                                när det gäller denna betalningsmetod. Alla "
-"ändringar kan resultera i fel\n"
+"                                Odoo när det gäller denna betalningsmetod. "
+"Alla ändringar kan resultera i fel\n"
 "                                och bör testas på en testdatabas först."
 
 #. module: payment
@@ -192,7 +190,7 @@ msgstr ""
 "ett\n"
 "                    ögonblick för att den ska behandlas. Kontrollera din "
 "betalningsleverantörs konfiguration om\n"
-"                    registreringen fortfarande är väntande efter några "
+"                    om registreringen fortfarande är väntande efter några "
 "minuter."
 
 #. module: payment
@@ -222,7 +220,7 @@ msgid ""
 "                                    correct partner before making this "
 "payment."
 msgstr ""
-"<strong>Varning</strong> Se till att du är inloggad som \n"
+"<strong>Varning</strong> Se till att du är inloggad som rätt\n"
 "                                    rätt partner innan du gör denna "
 "betalning."
 
@@ -240,11 +238,6 @@ msgstr "<strong>Warning</strong> Du måste vara inloggad för att betala."
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
 msgid "ACH Direct Debit"
 msgstr "ACH Direktdebitering"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "ACTIVATE"
-msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
@@ -630,6 +623,11 @@ msgid "CMR"
 msgstr "CMR"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "CONNECT"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_cabal
 msgid "Cabal"
 msgstr "Cabal"
@@ -681,13 +679,10 @@ msgstr "Fånga transaktion"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
 msgid ""
-"Capture the amount from Odoo, when the delivery is completed.\n"
-"Use this if you want to charge your customers cards only when\n"
-"you are sure you can ship the goods to them."
+"Capture the amount from Odoo, when the delivery is completed. Use this if "
+"you want to charge your customers cards only when you are sure you can ship "
+"the goods to them."
 msgstr ""
-"Fånga upp beloppet från Odoo när leveransen är klar.\n"
-"Använd detta om du vill debitera dina kunders kort först när du är\n"
-"du är säker på att du kan skicka varorna till dem."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_card
@@ -784,10 +779,6 @@ msgstr "Färg"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
-msgid "Companies"
-msgstr "Företag"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__company_id
 #: model:ir.model.fields,field_description:payment.field_payment_provider__company_id
 #: model:ir.model.fields,field_description:payment.field_payment_token__company_id
@@ -796,24 +787,18 @@ msgstr "Företag"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_config_settings
 msgid "Config Settings"
-msgstr "Inställningar"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Configuration"
 msgstr "Konfiguration"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/interactions/payment_form.js:0
-msgid "Confirm"
-msgstr "Bekräfta"
 
 #. module: payment
 #. odoo-javascript
@@ -874,7 +859,7 @@ msgstr "Skapa pollett"
 #. module: payment
 #: model:ir.model,website_form_label:payment.model_res_partner
 msgid "Create a Customer"
-msgstr "Skapa en kund"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -970,7 +955,7 @@ msgstr "Diners Club International"
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Disabled"
-msgstr "Avaktiverad"
+msgstr "Inaktiverad"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_discover
@@ -985,6 +970,7 @@ msgstr "Upptäck"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:payment.field_portal_entry__display_name
 #: model:ir.model.fields,field_description:payment.field_res_company__display_name
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:payment.field_res_country__display_name
@@ -1134,7 +1120,7 @@ msgstr "Generera betalningslänk"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr "Skapa länk till betalning"
+msgstr "Generera betallänk"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1164,7 +1150,7 @@ msgstr "HD Bank"
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP-routing"
+msgstr "HTTP-rutt"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_halan
@@ -1219,6 +1205,7 @@ msgstr "Humm"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment.field_payment_token__id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:payment.field_portal_entry__id
 #: model:ir.model.fields,field_description:payment.field_res_company__id
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__id
 #: model:ir.model.fields,field_description:payment.field_res_country__id
@@ -1476,7 +1463,7 @@ msgstr ""
 "leverantören är inaktiverad."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
+#: model:portal.entry,description:payment.payment_methods_portal_entry
 msgid "Manage your payment methods"
 msgstr "Hantera dina betalningsmetoder"
 
@@ -1531,7 +1518,7 @@ msgid "Mercado Livre"
 msgstr "Fri marknad"
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__mercado_pago
+#: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__mercado_pago
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
 msgid "Mercado Pago"
 msgstr "Mercado Pago"
@@ -1551,6 +1538,11 @@ msgstr "Meddelande"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Messages"
 msgstr "Meddelanden"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
+msgid "Minimum Amount"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_momo
@@ -1693,6 +1685,7 @@ msgid "OmanNet"
 msgstr "OmanNet"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__onboarding_payment_module
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__onboarding_payment_module
 msgid "Onboarding Payment Module"
 msgstr ""
@@ -1800,7 +1793,7 @@ msgstr "Delvis betald"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Partner"
-msgstr "Partner"
+msgstr "Kontakt"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
@@ -1816,6 +1809,16 @@ msgstr "Betala"
 #: model:payment.method,name:payment.payment_method_paylater_india
 msgid "Pay Later"
 msgstr "Betala senare"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__pay_later_label
+msgid "Pay Later Label"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__pay_now_label
+msgid "Pay Now Label"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paybright
@@ -1906,6 +1909,7 @@ msgstr "Betalningsmetod Kod"
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #: model:ir.actions.act_window,name:payment.action_payment_method
+#: model:portal.entry,name:payment.payment_methods_portal_entry
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Methods"
@@ -1985,7 +1989,6 @@ msgstr "Betalningsmetod"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
-#: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Payment methods"
 msgstr "Betalningsmetoder"
 
@@ -2084,6 +2087,11 @@ msgid "Please wait..."
 msgstr "Vänligen vänta..."
 
 #. module: payment
+#: model:ir.model,name:payment.model_portal_entry
+msgid "Portal Entry"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Post-process"
 msgstr ""
@@ -2179,7 +2187,7 @@ msgid "Ratepay"
 msgstr "Räntebetalning"
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__razorpay
+#: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__razorpay
 #: model:payment.provider,name:payment.payment_provider_razorpay
 msgid "Razorpay"
 msgstr "Razorpay"
@@ -2224,7 +2232,7 @@ msgstr "Referensen måste vara unik!"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
 msgid "Refund"
-msgstr "Återbetalning"
+msgstr "Kreditfaktura"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_refund
@@ -2291,6 +2299,11 @@ msgstr ""
 #: model:payment.method,name:payment.payment_method_samsung_pay
 msgid "Samsung Pay"
 msgstr "Samsung Betalning"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_satispay
+msgid "Satispay"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2384,7 +2397,7 @@ msgstr "Källtransaktion"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "State"
-msgstr "Status"
+msgstr "Läge"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -2393,7 +2406,7 @@ msgid "Status"
 msgstr "Status"
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__stripe
+#: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__stripe
 #: model:payment.provider,name:payment.payment_provider_stripe
 msgid "Stripe"
 msgstr "Stripe"
@@ -2629,6 +2642,20 @@ msgid "The internal reference of the transaction"
 msgstr "Transaktionens interna referens"
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_res_company__pay_later_label
+msgid ""
+"The label to be displayed on the payment buttons for 'Pay Later' payment "
+"methods."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_res_company__pay_now_label
+msgid ""
+"The label to be displayed on the payment buttons for 'Pay Now' payment "
+"methods."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_country_ids
 msgid ""
 "The list of countries in which this payment method can be used (if the "
@@ -2702,6 +2729,13 @@ msgstr ""
 msgid "The message displayed to explain and help the payment process"
 msgstr ""
 "Det meddelande som visas för att förklara och underlätta betalningsprocessen"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__minimum_amount
+msgid ""
+"The minimum payment amount that this payment provider is available for. "
+"Leave blank to make it available for any payment amount."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -2852,25 +2886,17 @@ msgstr ""
 #: code:addons/payment/models/payment_provider.py:0
 msgid ""
 "This action will also archive %s tokens that are registered with this "
-"provider. "
+"provider."
 msgstr ""
-"Denna åtgärd kommer också att arkiveras %s polletter som är registrerade med "
-"denna betalningsmetod. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
 msgid ""
 "This controls whether customers can save their payment methods as payment "
-"tokens.\n"
-"A payment token is an anonymous link to the payment method details saved in "
-"the\n"
-"provider's database, allowing the customer to reuse it for a next purchase."
+"tokens. A payment token is an anonymous link to the payment method details "
+"saved in the provider's database, allowing the customer to reuse it for a "
+"next purchase."
 msgstr ""
-"Detta styr om kunder kan spara sina betalningsmetoder som "
-"betalningspollett.\n"
-"En betalningspollett är en anonym länk till betalningsmetodens detaljer som "
-"sparats i\n"
-"leverantörens databas, så att kunden kan återanvända den för ett nästa köp."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -3101,11 +3127,6 @@ msgid "Void Transaction"
 msgstr "Annullera transaktion"
 
 #. module: payment
-#: model:payment.method,name:payment.payment_method_wero
-msgid "WERO"
-msgstr ""
-
-#. module: payment
 #: model:payment.method,name:payment.payment_method_wallets_india
 msgid "Wallets India"
 msgstr "Plånböcker Indien"
@@ -3219,6 +3240,12 @@ msgid ""
 msgstr ""
 "Du kan inte byta företag för en betalningsleverantör med befintliga "
 "transaktioner."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+msgid "You cannot delete a payment method linked to a provider."
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -3392,8 +3419,8 @@ msgstr "Dina betalningsmetoder"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"Your payment operation could not be completed for following transactions: %"
-"(tx_refs)s"
+"Your payment operation could not be completed for following transactions: "
+"%(tx_refs)s"
 msgstr ""
 
 #. module: payment
@@ -3436,7 +3463,6 @@ msgstr "expressutcheckning stöds inte"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal
-#: model:payment.method,name:payment.payment_method_ideal_brand
 msgid "iDEAL"
 msgstr "iDEAL"
 
@@ -3478,8 +3504,8 @@ msgstr "manuell registrering stöds inte"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
-msgid "maximum amount exceeded"
-msgstr "maximalt belopp överskridits"
+msgid "minimum or maximum amount exceeded"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -3518,141 +3544,3 @@ msgstr "tokenisering stöds inte"
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr "tokenisering utan betalning utan stöd"
-
-#~ msgid "ACTIVATE STRIPE"
-#~ msgstr "AKTIVERA STRIPE"
-
-#~ msgid " Data Fetched"
-#~ msgstr "Data hämtad"
-
-#~ msgid "<b>Amount:</b>"
-#~ msgstr "<b>Belopp:</b>"
-
-#~ msgid "<b>Reference:</b>"
-#~ msgstr "<b>Referens:</b>"
-
-#~ msgid ""
-#~ "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account "
-#~ "Number: %s</li><li>Account Holder: %s</li></ul>"
-#~ msgstr ""
-#~ "<h3>Vänligen gör en betalning till: </h3><ul><li>Bank: %s</"
-#~ "li><li>Kontonummer: %s</li><li>Kontoinnehavarer: %s</li></ul>"
-
-#~ msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-#~ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Tillbaka till mitt konto"
-
-#~ msgid "<i class=\"fa fa-trash\"/> Delete"
-#~ msgstr "<i class=\"fa fa-trash\"/> Ta bort"
-
-#~ msgid ""
-#~ "<strong>No suitable payment option could be found.</strong><br/>\n"
-#~ "                                If you believe that it is an error, "
-#~ "please contact the website administrator."
-#~ msgstr ""
-#~ "<strong>Något lämpligt betalningsalternativ hittades inte.</strong><br/>\n"
-#~ "                                Om du tror att det är ett fel, kontakta "
-#~ "webbplatsadministratören."
-
-#~ msgid "Account"
-#~ msgstr "Konto"
-
-#~ msgid "Account Number"
-#~ msgstr "Kontonummer"
-
-#~ msgid "Add Extra Fees"
-#~ msgstr "Lägg till extra avgifter"
-
-#~ msgid "An error occurred during the processing of this payment."
-#~ msgstr "Ett fel uppstod under behandlingen av denna betalning."
-
-#~ msgid "Apply"
-#~ msgstr "Verkställ"
-
-#~ msgid "Bank"
-#~ msgstr "Bank"
-
-#~ msgid "Bank Name"
-#~ msgstr "Bankens namn"
-
-#~ msgid "Cancel"
-#~ msgstr "Avbryt"
-
-#~ msgid "Choose a payment method"
-#~ msgstr "Välj en betalmetod"
-
-#~ msgid "Click here to be redirected to the confirmation page."
-#~ msgstr "Klicka här för att omdirigeras till bekräftelsesidan."
-
-#~ msgid "Custom payment instructions"
-#~ msgstr "Anpassade betalinstruktioner"
-
-#~ msgid "Dismiss"
-#~ msgstr "Avfärda"
-
-#~ msgid "Displayed as"
-#~ msgstr "Visad som"
-
-#~ msgid "Done"
-#~ msgstr "Klar"
-
-#~ msgid "Error: %s"
-#~ msgstr "Fel: %s"
-
-#~ msgid "Fees"
-#~ msgstr "Avgifter"
-
-#~ msgid "Fixed domestic fees"
-#~ msgstr "Fasta inrikesavgifter"
-
-#~ msgid "Fixed international fees"
-#~ msgstr "Fasta internationella avgifter"
-
-#~ msgid "From"
-#~ msgstr "Från"
-
-#~ msgid "Group By"
-#~ msgstr "Gruppera efter"
-
-#~ msgid "If the payment hasn't been confirmed you can contact us."
-#~ msgstr "Om betalningen inte har bekräftats kan du kontakta oss."
-
-#~ msgid "Just done"
-#~ msgstr "Precis färdig"
-
-#~ msgid "Manual"
-#~ msgstr "Manuell"
-
-#~ msgid "Method"
-#~ msgstr "Metod"
-
-#~ msgid "Not done"
-#~ msgstr "Inte färdig"
-
-#~ msgid "Ok"
-#~ msgstr "Ok"
-
-#~ msgid "Other"
-#~ msgstr "Annat"
-
-#~ msgid "PDT Identity Token"
-#~ msgstr "PDT identitetskod"
-
-#~ msgid "Payment Instructions"
-#~ msgstr "Betalningsinstruktioner"
-
-#~ msgid "Server Error"
-#~ msgstr "Server Fel"
-
-#~ msgid "We are not able to find your payment, but don't worry."
-#~ msgstr "Vi kan tyvärr inte hitta din betalning ännu, men oroa dig inte."
-
-#~ msgid ""
-#~ "You should receive an email confirming your payment in a few minutes."
-#~ msgstr "Du bör få ett mail inom några minuter som bekräftar din betalning."
-
-#~ msgid ""
-#~ "Your payment has been successfully processed but is waiting for approval."
-#~ msgstr "Din betalning har behandlats men väntar på godkännande."
-
-#~ msgid "Your payment has been successfully processed. Thank you!"
-#~ msgstr "Din betalning har behandlats. Tack!"

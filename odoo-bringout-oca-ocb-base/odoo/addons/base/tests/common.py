@@ -1,18 +1,15 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
 from unittest.mock import patch, Mock
 
-from odoo import Command, modules
+from odoo import Command
 from odoo.tests.common import new_test_user, TransactionCase, HttpCase
 from odoo.tools.mail import email_split_and_format
 
-DISABLED_MAIL_CONTEXT = {
-    'tracking_disable': True,
+DISABLED_MAIL_CREATE_CONTEXT = {
     'mail_create_nolog': True,
     'mail_create_nosubscribe': True,
-    'mail_notrack': True,
     'no_reset_password': True,
 }
 
@@ -52,6 +49,7 @@ class BaseCommon(TransactionCase):
             'name': 'Test Partner',
         })
 
+        cls.group_public = cls.quick_ref('base.group_public')
         cls.group_portal = cls.quick_ref('base.group_portal')
         cls.group_user = cls.quick_ref('base.group_user')
         cls.group_system = cls.quick_ref('base.group_system')
@@ -59,7 +57,7 @@ class BaseCommon(TransactionCase):
     @classmethod
     def default_env_context(cls):
         """ To Override to reactivate the tracking """
-        return {**DISABLED_MAIL_CONTEXT}
+        return {**DISABLED_MAIL_CREATE_CONTEXT}
 
     @classmethod
     def setup_other_currency(cls, code, **kwargs):
@@ -109,7 +107,7 @@ class BaseCommon(TransactionCase):
         # Enforce constant currency
         currency = cls._enable_currency(currency_code)
         if company.currency_id != currency:
-            cls.env.transaction.cache.set(cls.env.company, type(cls.env.company).currency_id, currency.id, dirty=True)
+            company.__class__.currency_id._update_cache(cls.env.company, currency.id, dirty=True)
             # this is equivalent to cls.env.company.currency_id = currency but without triggering buisness code checks.
             # The value is added in cache, and the cache value is set as dirty so that that
             # the value will be written to the database on next flush.
@@ -166,7 +164,7 @@ class TransactionCaseWithUserDemo(TransactionCase):
         cls.partner_demo = cls.user_demo.partner_id
 
         if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
@@ -191,7 +189,7 @@ class HttpCaseWithUserDemo(HttpCase):
         cls.partner_demo = cls.user_demo.partner_id
 
         if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
@@ -215,7 +213,7 @@ class SavepointCaseWithUserDemo(TransactionCase):
         cls.partner_demo = cls.user_demo.partner_id
 
         if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
@@ -340,7 +338,7 @@ class TransactionCaseWithUserPortal(TransactionCase):
         cls.partner_portal = cls.user_portal.partner_id
 
         if not cls.user_portal:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_portal = cls.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
@@ -362,7 +360,7 @@ class HttpCaseWithUserPortal(HttpCase):
         cls.partner_portal = cls.user_portal.partner_id
 
         if not cls.user_portal:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
             cls.partner_portal = cls.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
@@ -529,7 +527,7 @@ class MockSmtplibCase:
     @classmethod
     def _init_mail_gateway(cls):
         cls.default_from_filter = False
-        cls.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', cls.default_from_filter)
+        cls.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', cls.default_from_filter)
 
     @classmethod
     def _init_mail_servers(cls):

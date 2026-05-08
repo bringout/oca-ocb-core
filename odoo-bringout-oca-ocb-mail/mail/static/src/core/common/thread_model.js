@@ -1,11 +1,10 @@
-import { AND, fields, Record } from "@mail/core/common/record";
+import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
-import { assignDefined } from "@mail/utils/common/misc";
-import { rpc } from "@web/core/network/rpc";
+import { compareDatetime } from "@mail/utils/common/misc";
 
+import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { Deferred } from "@web/core/utils/concurrency";
 
 /**
  * @typedef SuggestedRecipient
@@ -15,8 +14,20 @@ import { Deferred } from "@web/core/utils/concurrency";
  * @property {string} reason
  */
 
+/**
+ * @typedef {Object} MessageFetchParams
+ * @property {number} [after]
+ * @property {number} [around]
+ * @property {number} [before]
+ */
+
+/**
+ * @typedef {Object} MessageRouteParams Specific overrides for the RPC route metadata usually provided by the caller component.
+ */
+
 export class Thread extends Record {
     static id = AND("model", "id");
+    static _name = "mail.thread";
     /**
      * @param {string} localId
      * @returns {string}
@@ -29,6 +40,10 @@ export class Thread extends Record {
         return localId.split(",").slice(1).join("_").replace(" AND ", "_");
     }
     static async getOrFetch(data, fieldNames = []) {
+        if (data.model === "discuss.channel") {
+            const channel = await this.store["discuss.channel"].getOrFetch(data.id);
+            return channel?.thread;
+        }
         let thread = this.get(data);
         if (
             data.id > 0 &&
@@ -48,7 +63,17 @@ export class Thread extends Record {
     }
 
     autofocus = 0;
+    activities = fields.Many("mail.activity", {
+        sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
+        onDelete: (r) => r?.remove(),
+    });
     create_uid = fields.One("res.users");
+    /**
+     * Server-side value used in chatter to determine if the thread has pinned messages without
+     * having to load them all. Dynamic value should count "pinnedMessages" instead.
+     * @type {boolean}
+     **/
+    has_pinned_messages;
     /** @type {number} */
     id;
     /** @type {string} */
@@ -58,15 +83,6 @@ export class Thread extends Record {
     allMessages = fields.Many("mail.message", {
         inverse: "thread",
     });
-    storeAsAllChannels = fields.One("Store", {
-        compute() {
-            if (this.model === "discuss.channel") {
-                return this.store;
-            }
-        },
-        eager: true,
-    });
-    /** @type {boolean} */
     areAttachmentsLoaded = false;
     group_public_id = fields.One("res.groups");
     attachments = fields.Many("ir.attachment", {
@@ -76,95 +92,47 @@ export class Thread extends Record {
          */
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
-    get allowedToLeaveChannelTypes() {
-        return ["channel", "group"];
-    }
-    get canLeave() {
-        return (
-            this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
-            this.group_ids.length === 0 &&
-            this.store.self_partner
-        );
-    }
-    get allowedToUnpinChannelTypes() {
-        return ["chat"];
-    }
-    get canUnpin() {
-        return (
-            this.parent_channel_id || this.allowedToUnpinChannelTypes.includes(this.channel_type)
-        );
-    }
-    /** @type {boolean} */
     can_react = true;
-    chat_window = fields.One("ChatWindow", {
-        inverse: "thread",
-    });
     close_chat_window = fields.Attr(undefined, {
         /** @this {import("models").Thread} */
         onUpdate() {
             if (this.close_chat_window) {
                 this.close_chat_window = undefined;
-                this.closeChatWindow({ force: true });
+                this.closeChatWindow();
             }
         },
     });
     composer = fields.One("Composer", {
         compute: () => ({}),
         inverse: "thread",
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
     counter = 0;
     counter_bus_id = 0;
     /** @type {string} */
+    defaultSubject;
+    /** @type {string} */
     description;
     /** @type {string} */
     display_name;
-    displayToSelf = fields.Attr(false, {
-        compute() {
-            return (
-                this.self_member_id?.is_pinned ||
-                (["channel", "group"].includes(this.channel_type) &&
-                    this.hasSelfAsMember &&
-                    !this.parent_channel_id)
-            );
-        },
-        onUpdate() {
-            this.onPinStateUpdated();
-        },
-    });
     followers = fields.Many("mail.followers", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             r.thread = this;
         },
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
     selfFollower = fields.One("mail.followers", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             r.thread = this;
         },
-        onDelete: (r) => r.delete(),
+        onDelete: (r) => r?.delete(),
     });
     /** @type {integer|undefined} */
     followersCount;
     loadOlder = false;
     loadNewer = false;
-    get importantCounter() {
-        if (this.model === "mail.box") {
-            return this.counter;
-        }
-        return this.message_needaction_counter;
-    }
-    isDisplayed = fields.Attr(false, {
-        compute() {
-            return this.computeIsDisplayed();
-        },
-        onUpdate() {
-            this.isDisplayedOnUpdate();
-        },
-    });
-    isDisplayedOnUpdate() {}
     get isFocused() {
         return this.isFocusedCounter !== 0;
     }
@@ -185,16 +153,18 @@ export class Thread extends Record {
         },
     });
     isLoadingAttachments = false;
-    isLoadedDeferred = new Deferred();
+    isLoadedPromise = new Promise((resolve) => (this._resolveIsLoaded = resolve));
     isLoaded = fields.Attr(false, {
         /** @this {import("models").Thread} */
         onUpdate() {
             if (this.isLoaded) {
-                this.isLoadedDeferred.resolve();
+                this._resolveIsLoaded();
             } else {
-                const def = this.isLoadedDeferred;
-                this.isLoadedDeferred = new Deferred();
-                this.isLoadedDeferred.then(() => def.resolve());
+                const { promise, resolve } = Promise.withResolvers();
+                this.isLoadedPromise = promise;
+                // chain the current resolve before overwriting it
+                this.isLoadedPromise.then(this._resolveIsLoaded);
+                this._resolveIsLoaded = resolve;
             }
         },
     });
@@ -230,6 +200,10 @@ export class Thread extends Record {
      * when fetching newer messages.
      */
     pendingNewMessages = fields.Many("mail.message");
+    /** @type {'0'|'1'|'2'|'3'} */
+    priority;
+    /** @type {Array<[string,string]>} */
+    priority_definition;
     needactionMessages = fields.Many("mail.message", {
         inverse: "threadAsNeedaction",
         sort: (message1, message2) => message1.id - message2.id,
@@ -248,10 +222,19 @@ export class Thread extends Record {
     /* The additional recipients are the recipients that are manually added
      * by the user by using the "To" field of the Chatter. */
     additionalRecipients = fields.Attr([]);
+    /** @type {number|undefined} */
+    recipients = fields.Many("mail.followers");
+    recipientsCount = undefined;
     /* The suggested recipients are the recipients that are suggested by the
      * current model and includes the recipients of the last message. (e.g: for
      * a crm lead, the model will suggest the customer associated to the lead). */
     suggestedRecipients = fields.Attr([]);
+    /** @type {Boolean|undefined} */
+    showSubjectInSmallComposer;
+    /** 
+     * similar to suggested recipients, except for the subject and optional per model.
+    @type {String|undefined} */
+    suggestedSubject;
     /** @type {String[]|undefined} */
     partner_fields;
     /** @type {String|undefined} */
@@ -259,17 +242,11 @@ export class Thread extends Record {
     hasLoadingFailed = false;
     /** @type {Error} */
     hasLoadingFailedError;
+    /** @type {boolean|undefined} */
+    hasReadAccess;
     canPostOnReadonly;
     /** @type {Boolean} */
     is_editable;
-    /** @type {Boolean} */
-    isLocallyPinned = fields.Attr(false, {
-        onUpdate() {
-            this.onPinStateUpdated();
-        },
-    });
-    /** @type {"not_fetched"|"pending"|"fetched"} */
-    fetchMembersState = "not_fetched";
     /** @type {integer|null} */
     highlightMessage = fields.One("mail.message");
     /** @type {String|undefined} */
@@ -281,10 +258,38 @@ export class Thread extends Record {
      *  @type {integer|undefined}
      */
     pid;
+    composerDisabled = fields.Attr(false, {
+        compute() {
+            return this.computeComposerDisabled();
+        },
+        onUpdate() {
+            this.composerDisabledonUpdate();
+        },
+    });
+    pinnedMessages = fields.Many("mail.message", {
+        inverse: "threadAsPinned",
+        sort: (m1, m2) => {
+            if (m1.pinned_at === m2.pinned_at) {
+                return m2.id - m1.id;
+            }
+            return m1.pinned_at < m2.pinned_at ? 1 : -1;
+        },
+    });
+
+    async fetchPinnedMessages() {
+        await this.store.fetchStoreData("mail.thread", {
+            thread_model: this.model,
+            thread_id: this.id,
+            request_list: ["pinned_messages"],
+        });
+    }
 
     get accessRestrictedToGroupText() {
-        if (!this.group_public_id?.full_name) {
+        if (this.channel?.channel_type === "chat") {
             return false;
+        }
+        if (!this.group_public_id?.full_name) {
+            return _t("Accessible to anyone with the link");
         }
         return _t('Access restricted to group "%(groupFullName)s"', {
             groupFullName: this.group_public_id.full_name,
@@ -310,24 +315,12 @@ export class Thread extends Record {
         return attachments;
     }
 
-    get isUnread() {
-        return this.needactionMessages.length > 0;
-    }
-
-    get typesAllowingCalls() {
-        return ["chat", "channel", "group"];
-    }
-
-    get allowCalls() {
-        return (
-            !this.isTransient &&
-            this.typesAllowingCalls.includes(this.channel_type) &&
-            !this.correspondent?.persona.eq(this.store.odoobot)
-        );
-    }
-
     get canPostMessage() {
         return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
+    }
+
+    get isUnread() {
+        return this.needactionMessages.length > 0;
     }
 
     /**
@@ -341,39 +334,12 @@ export class Thread extends Record {
         return persona?.displayName || persona?.name;
     }
 
-    get hasAttachmentPanel() {
-        return this.model === "discuss.channel";
-    }
-
-    get isChatChannel() {
-        return ["chat", "group"].includes(this.channel_type);
-    }
-
-    get supportsCustomChannelName() {
-        return this.isChatChannel && this.channel_type !== "group";
-    }
-
     get displayName() {
-        return this.display_name;
-    }
-
-    computeIsDisplayed() {
-        return this.store.ChatWindow.get({ thread: this })?.isOpen;
+        return this.channel?.displayName ?? this.display_name;
     }
 
     get avatarUrl() {
-        return this.module_icon ?? this.store.DEFAULT_AVATAR;
-    }
-
-    get allowDescription() {
-        return ["channel", "group"].includes(this.channel_type);
-    }
-
-    get fullNameWithParent() {
-        const text = this.parent_channel_id
-            ? `${this.parent_channel_id.displayName} > ${this.displayName}`
-            : this.displayName;
-        return text;
+        return this.channel?.avatarUrl ?? this.module_icon ?? this.store.DEFAULT_AVATAR;
     }
 
     get isTransient() {
@@ -425,14 +391,9 @@ export class Thread extends Record {
         return this.messages.find((msg) => Number.isInteger(msg.id));
     }
 
-    onPinStateUpdated() {}
+    computeComposerDisabled() {}
 
-    get invitationLink() {
-        if (!this.uuid || this.channel_type === "chat") {
-            return undefined;
-        }
-        return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
-    }
+    composerDisabledonUpdate() {}
 
     get isEmpty() {
         return this.messages.length === 0;
@@ -447,7 +408,7 @@ export class Thread extends Record {
     }
 
     get prefix() {
-        return this.isChatChannel ? "@" : "#";
+        return this.channel?.isChatChannel ? "@" : "#";
     }
 
     get rpcParams() {
@@ -455,62 +416,72 @@ export class Thread extends Record {
     }
 
     async checkReadAccess() {
-        await this.store.Thread.getOrFetch(this, ["hasReadAccess"]);
+        await this.store["mail.thread"].getOrFetch(this, ["hasReadAccess"]);
         return this.hasReadAccess;
     }
 
-    executeCommand(command, body = "") {
-        return this.store.env.services.orm.call(
-            "discuss.channel",
-            command.methodName,
-            [[this.id]],
-            { body }
-        );
-    }
-
-    /** @param {{after: Number, before: Number}} */
-    async fetchMessages({ after, around, before } = {}) {
+    /**
+     * @param {Object} [options]
+     * @param {MessageFetchParams} [options.fetchParams]
+     * @param {MessageRouteParams} [options.routeParams]
+     */
+    async fetchMessages({ fetchParams = {}, routeParams = {} } = {}) {
         this.status = "loading";
         if (!["mail.box", "discuss.channel"].includes(this.model) && !this.id) {
             this.isLoaded = true;
             return [];
         }
-        let res;
         try {
-            res = await this.fetchMessagesData({ after, around, before });
+            const { messages } = await this.fetchMessagesData({ fetchParams, routeParams });
             this.hasLoadingFailedError = undefined;
             this.hasLoadingFailed = false;
+            return messages.reverse();
         } catch (e) {
             this.hasLoadingFailed = true;
             this.hasLoadingFailedError = e;
+            throw e;
+        } finally {
             this.isLoaded = true;
             this.status = "ready";
-            throw e;
         }
-        this.store.insert(res.data);
-        const msgs = this.store["mail.message"].insert(res.messages.reverse());
-        this.isLoaded = true;
-        this.status = "ready";
-        return msgs;
     }
 
-    /** @param {{after: Number, before: Number}} */
-    async fetchMessagesData({ after, around, before } = {}) {
+    /**
+     * @param {Object} [options]
+     * @param {MessageFetchParams} [options.fetchParams]
+     * @param {MessageRouteParams} [options.routeParams]
+     * @returns {Promise<{messages: number[]}>}
+     */
+    async fetchMessagesData({
+        fetchParams: { after, around, before } = {},
+        routeParams = {},
+    } = {}) {
         // ordered messages received: newest to oldest
-        return await rpc(this.getFetchRoute(), {
-            ...this.getFetchParams(),
-            fetch_params: {
-                limit:
-                    !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
-                after,
-                around,
-                before,
+        return await this.store.fetchStoreData(
+            this.getFetchRoute(),
+            {
+                ...this.getFetchParams(),
+                ...routeParams,
+                fetch_params: {
+                    limit:
+                        !around && around !== 0
+                            ? this.store.FETCH_LIMIT
+                            : this.store.FETCH_LIMIT * 2,
+                    after,
+                    around,
+                    before,
+                },
             },
-        });
+            { readonly: this.model === "mail.box", requestData: true }
+        );
     }
 
-    /** @param {"older"|"newer"} epoch */
-    async fetchMoreMessages(epoch = "older") {
+    /**
+     * @param {Object} [options]
+     * @param {"older"|"newer"} [options.epoch="older"]
+     * @param {MessageRouteParams} [options.routeParams]
+     */
+    async fetchMoreMessages({ epoch = "older", routeParams = {} } = {}) {
         if (
             this.status === "loading" ||
             (epoch === "older" && !this.loadOlder) ||
@@ -522,7 +493,7 @@ export class Thread extends Record {
         const after = epoch === "newer" ? this.newestPersistentMessage?.id : undefined;
         let fetched = [];
         try {
-            fetched = await this.fetchMessages({ after, before });
+            fetched = await this.fetchMessages({ fetchParams: { after, before }, routeParams });
         } catch {
             return;
         }
@@ -563,13 +534,17 @@ export class Thread extends Record {
      * Get the effective persona performing actions on this thread.
      * Priority order: logged-in user, portal partner (token-authenticated), guest.
      *
-     * @returns {import("models").Persona}
+     * @returns {import("models").ResPartner | import("models").MailGuest}
      */
     get effectiveSelf() {
-        return this.store.self_partner || this.store.self_guest;
+        return this.store.self_user?.partner_id || this.store.self_guest;
     }
 
-    async fetchNewMessages() {
+    /**
+     * @param {Object} [options]
+     * @param {MessageRouteParams} [options.routeParams]
+     */
+    async fetchNewMessages({ routeParams = {} } = {}) {
         if (
             this.status === "loading" ||
             (this.isLoaded && ["discuss.channel", "mail.box"].includes(this.model))
@@ -579,7 +554,7 @@ export class Thread extends Record {
         const after = this.isLoaded ? this.newestPersistentMessage?.id : undefined;
         let fetched = [];
         try {
-            fetched = await this.fetchMessages({ after });
+            fetched = await this.fetchMessages({ fetchParams: { after }, routeParams });
         } catch {
             return;
         }
@@ -619,7 +594,7 @@ export class Thread extends Record {
     }
 
     getFetchParams() {
-        if (this.model === "discuss.channel") {
+        if (this.channel) {
             return { channel_id: this.id };
         }
         if (this.model === "mail.box") {
@@ -633,14 +608,14 @@ export class Thread extends Record {
     }
 
     getFetchRoute() {
-        if (this.model === "discuss.channel") {
+        if (this.channel) {
             return "/discuss/channel/messages";
         }
         if (this.model === "mail.box" && this.id === "inbox") {
             return `/mail/inbox/messages`;
         }
-        if (this.model === "mail.box" && this.id === "starred") {
-            return `/mail/starred/messages`;
+        if (this.model === "mail.box" && this.id === "bookmark") {
+            return `/mail/bookmark/messages`;
         }
         if (this.model === "mail.box" && this.id === "history") {
             return `/mail/history/messages`;
@@ -657,9 +632,11 @@ export class Thread extends Record {
      * messages around the message to jump to if required, and update the thread
      * messages accordingly.
      *
-     * @param {import("models").Message} [messageId] if not provided, load around newest message
+     * @param {Object} options
+     * @param {number} [options.messageId]
+     * @param {MessageRouteParams} [options.routeParams]
      */
-    async loadAround(messageId) {
+    async loadAround({ messageId, routeParams = {} } = {}) {
         if (
             this.status === "loading" ||
             (this.isLoaded && this.messages.some(({ id }) => id === messageId))
@@ -670,7 +647,10 @@ export class Thread extends Record {
         this.scrollTop = undefined;
         try {
             this.phantomMessages = this.messages;
-            this.messages = await this.fetchMessages({ around: messageId });
+            this.messages = await this.fetchMessages({
+                fetchParams: { around: messageId },
+                routeParams,
+            });
             this.phantomMessages = [];
         } catch {
             this.isLoaded = true;
@@ -704,19 +684,13 @@ export class Thread extends Record {
         this.message_needaction_counter = 0;
     }
 
-    async markAsFetched() {
-        await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
-            [this.id],
-        ]);
-    }
-
     /**
      * @param {Object} [options] used in overrides
      */
     markAsRead(options) {
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
         if (!newestPersistentMessage && !this.isLoaded) {
-            this.isLoadedDeferred
+            this.isLoadedPromise
                 .then(() => new Promise(setTimeout))
                 .then(() => this.markAsRead(options));
             return;
@@ -726,26 +700,44 @@ export class Thread extends Record {
         }
     }
 
-    /** @param {string} data base64 representation of the binary */
-    async notifyAvatarToServer(data) {
-        await rpc("/discuss/channel/update_avatar", {
-            channel_id: this.id,
-            data,
+    messagePin(message) {
+        this.setMessagePin(message, true).then(() => {
+            const closeFn = this.store.env.services.notification.add(_t("Message pinned"), {
+                buttons: [
+                    {
+                        name: _t("Undo"),
+                        onClick: () => {
+                            this.messageUnpin(message);
+                            closeFn();
+                        },
+                    },
+                ],
+                type: "success",
+            });
         });
     }
 
-    async notifyDescriptionToServer(description) {
-        this.description = description;
-        return this.store.env.services.orm.call(
-            "discuss.channel",
-            "channel_change_description",
-            [[this.id]],
-            { description }
-        );
+    messageUnpin(message) {
+        this.setMessagePin(message, false).then(() => {
+            const closeFn = this.store.env.services.notification.add(_t("Message unpinned"), {
+                buttons: [
+                    {
+                        name: _t("Undo"),
+                        onClick: () => {
+                            this.messagePin(message);
+                            closeFn();
+                        },
+                    },
+                ],
+                type: "success",
+            });
+        });
     }
 
     /** @param {import("models").Message} message */
-    onNewSelfMessage(message) {}
+    onNewSelfMessage(message) {
+        this.channel?.onNewSelfMessage(message);
+    }
 
     /**
      * @param {Object} [options]
@@ -755,52 +747,26 @@ export class Thread extends Record {
         return false;
     }
 
-    async openChatWindow({ focus = false, fromMessagingMenu, bypassCompact, swapOpened } = {}) {
-        const thread = await this.store.Thread.getOrFetch(this);
+    async openChatWindow({
+        focus = false,
+        fromMessagingMenu,
+        bypassCompact,
+        swapOpened,
+        highlight,
+    } = {}) {
+        const thread = await this.store["mail.thread"].getOrFetch(this);
         if (!thread) {
             return;
         }
         await this.store.chatHub.initPromise;
-        const cw = this.store.ChatWindow.insert(
-            assignDefined({ thread: this }, { fromMessagingMenu, bypassCompact })
-        );
-        cw.open({ focus, swapOpened });
-        return cw;
+        this.channel.chatWindow = { fromMessagingMenu, bypassCompact };
+        this.channel.chatWindow.open({ focus, swapOpened, highlight });
+        return this.channel.chatWindow;
     }
 
-    async closeChatWindow(options = {}) {
+    async closeChatWindow() {
         await this.store.chatHub.initPromise;
-        const chatWindow = this.store.ChatWindow.get({ thread: this });
-        await chatWindow?.close({ notifyState: false, ...options });
-    }
-
-    /** @param {string} name */
-    async rename(name) {
-        const newName = name.trim();
-        if (
-            newName !== this.displayName &&
-            ((newName && this.channel_type === "channel") || this.isChatChannel)
-        ) {
-            if (this.channel_type === "channel" || this.channel_type === "group") {
-                this.name = newName;
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_rename",
-                    [[this.id]],
-                    { name: newName }
-                );
-            } else if (this.supportsCustomChannelName) {
-                if (this.self_member_id) {
-                    this.self_member_id.custom_channel_name = newName;
-                }
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_set_custom_name",
-                    [[this.id]],
-                    { name: newName }
-                );
-            }
-        }
+        this.channel?.chatWindow?.close();
     }
 
     addOrReplaceMessage(message, tmpMsg) {
@@ -837,8 +803,8 @@ export class Thread extends Record {
                 res_id: this.id,
                 model: "discuss.channel",
             };
-            if (this.store.self_partner) {
-                tmpData.author_id = this.store.self_partner;
+            if (this.store.self_user) {
+                tmpData.author_id = this.store.self_user.partner_id;
             } else {
                 tmpData.author_guest_id = this.store.self_guest;
             }
@@ -880,6 +846,17 @@ export class Thread extends Record {
         ]);
     }
 
+    async setMessagePin(message, pinned) {
+        await this.store.env.services.orm.call(this.model, "set_message_pin", [this.id], {
+            message_id: message.id,
+            pinned,
+        });
+    }
+
+    get shouldMarkAsReadOnFocus() {
+        return this.scrollTop === "bottom" && !this.scrollUnread && !this.channel?.markedAsUnread;
+    }
+
     /**
      * Following a load more or load around, listing of messages contains persistent messages.
      * Transient messages are missing, so this function puts known transient messages at the
@@ -899,33 +876,6 @@ export class Thread extends Record {
                 this.messages.splice(afterIndex - 1, 0, message);
             }
         }
-    }
-
-    async leaveChannel({ force = false } = {}) {
-        if (
-            this.channel_type !== "group" &&
-            this.create_uid?.eq(this.store.self.main_user_id) &&
-            !force
-        ) {
-            await this.askLeaveConfirmation(
-                _t("You are the administrator of this channel. Are you sure you want to leave?")
-            );
-        }
-        if (this.channel_type === "group" && !force) {
-            await this.askLeaveConfirmation(
-                _t(
-                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
-                )
-            );
-        }
-        await this.closeChatWindow();
-        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
-            this.id,
-        ]);
-    }
-
-    _getActualModelName() {
-        return this.model === "discuss.channel" ? "discuss.channel" : "mail.thread";
     }
 }
 

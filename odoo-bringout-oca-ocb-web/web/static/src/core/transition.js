@@ -1,14 +1,7 @@
+import { render, useComponent, useLayoutEffect, useState } from "@web/owl2/utils";
 import { browser } from "./browser/browser";
 
-import {
-    Component,
-    onWillUpdateProps,
-    status,
-    useComponent,
-    useEffect,
-    useState,
-    xml,
-} from "@odoo/owl";
+import { Component, onWillUpdateProps, status, xml } from "@odoo/owl";
 
 // Allows to disable transitions globally, useful for testing (and maybe for
 // a reduced motion setting in the future?)
@@ -70,7 +63,7 @@ export function useTransition({
     // onNextPatch allows us to activate the class that we want the next time
     // the component is patched.
     let onNextPatch = null;
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (onNextPatch) {
             onNextPatch();
             onNextPatch = null;
@@ -94,7 +87,7 @@ export function useTransition({
                 if (status(component) === "mounted" || immediate) {
                     state.stage = "enter";
                     // force a render here so that we get a patch even if the state didn't change
-                    component.render();
+                    render(component);
                     onNextPatch = () => {
                         state.stage = "enter-active";
                     };
@@ -129,7 +122,7 @@ export function useTransition({
  * to be created. @see useTransition
  */
 export class Transition extends Component {
-    static template = xml`<t t-slot="default" t-if="transition.shouldMount" className="transition.className"/>`;
+    static template = xml`<t t-slot="default" t-if="this.transition.shouldMount" className="this.transition.className"/>`;
     static props = {
         name: String,
         visible: { type: Boolean, optional: true },

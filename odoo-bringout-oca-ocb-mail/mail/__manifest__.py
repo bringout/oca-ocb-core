@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 {
     'name': 'Discuss',
@@ -42,12 +41,13 @@ these accounts will be automatically downloaded into your Odoo system. All
 POP3/IMAP-compatible servers are supported, included those that require an
 encrypted SSL/TLS connection.
 This can be used to easily create email-based workflows for many email-enabled Odoo documents, such as:
-----------------------------------------------------------------------------------------------------------
-    * CRM Leads/Opportunities
-    * CRM Claims
-    * Project Issues
-    * Project Tasks
-    * Human Resource Recruitment (Applicants)
+
+* CRM Leads/Opportunities
+* CRM Claims
+* Project Issues
+* Project Tasks
+* Human Resource Recruitment (Applicants)
+
 Just install the relevant application, and you can assign any of these document
 types (Leads, Project Issues) to your incoming email accounts. New emails will
 automatically spawn new documents of the chosen type, so it's a snap to create a
@@ -73,13 +73,13 @@ For more specific needs, you may also assign custom-defined actions
         'views/ir_filters_views.xml',
         'views/ir_mail_server_views.xml',
         'views/mail_message_subtype_views.xml',
-        'views/mail_tracking_value_views.xml',
         'views/mail_notification_views.xml',
         'views/mail_message_views.xml',
         'views/mail_message_schedule_views.xml',
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
         'views/mail_ice_server_views.xml',
+        'views/discuss_category_views.xml',
         'views/discuss_channel_member_views.xml',
         'views/discuss_channel_rtc_session_views.xml',
         'views/mail_link_preview_views.xml',
@@ -91,17 +91,17 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_activity_plan_views.xml',
         'views/mail_activity_plan_template_views.xml',
         'views/res_config_settings_views.xml',
+        'data/mail_templates_chatter.xml',
         'data/ir_config_parameter_data.xml',
         'data/res_partner_data.xml',
         'data/mail_message_subtype_data.xml',
-        'data/mail_templates_chatter.xml',
         'data/mail_templates_email_layouts.xml',
         'data/mail_templates_mailgateway.xml',
         'data/discuss_channel_data.xml',
         'data/mail_activity_type_data.xml',
         'data/security_notifications_templates.xml',
         'data/ir_cron_data.xml',
-        'data/ir_actions_client.xml',
+        'data/ir_actions_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
         'views/discuss_public_templates.xml',
@@ -131,9 +131,10 @@ For more specific needs, you may also assign custom-defined actions
         'demo/mail_activity_demo.xml',
         'demo/discuss_channel_demo.xml',
         'demo/discuss/public_channel_demo.xml',
+        "demo/discuss/readonly_channel_demo.xml",
+        "demo/mail_poll_demo.xml",
         "demo/mail_canned_response_demo.xml",
     ],
-    'installable': True,
     'application': True,
     'post_init_hook': '_mail_post_init',
     'assets': {
@@ -150,11 +151,11 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/model/**/*',
             'mail/static/src/core/common/**/*',
             'mail/static/src/core/public_web/**/*',
-            'mail/static/src/core/web_portal/**/*',
+            'mail/static/src/core/web_portal_project/**/*',
             'mail/static/src/core/web/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/public_web/**/*',
-            'mail/static/src/**/web_portal/**/*',
+            'mail/static/src/**/web_portal_project/**/*',
             'mail/static/src/**/web/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
             # discuss (loaded last to fix dependencies)
@@ -178,14 +179,15 @@ For more specific needs, you may also assign custom-defined actions
         ],
         "web.assets_frontend": [
             "mail/static/src/utils/common/format.js",
+            "mail/static/src/utils/common/html.js",
+        ],
+        "web.assets_web_print": [
+            "mail/static/src/scss/discuss_print.scss",
         ],
         'mail.assets_discuss_public_test_tours': [
             'web/static/lib/hoot-dom/**/*',
             'web_tour/static/src/js/**/*',
             'web_tour/static/src/tour_utils.js',
-            'web/static/tests/legacy/helpers/cleanup.js',
-            'web/static/tests/legacy/helpers/utils.js',
-            'web/static/tests/legacy/utils.js',
             'mail/static/tests/tours/discuss_channel_public_tour.js',
             'mail/static/tests/tours/discuss_channel_as_guest_tour.js',
             'mail/static/tests/tours/discuss_channel_call_action.js',
@@ -196,14 +198,10 @@ For more specific needs, you may also assign custom-defined actions
         # Unit test files
         'web.assets_unit_tests': [
             'mail/static/tests/**/*',
-            ('remove', 'mail/static/tests/legacy/helpers/mock_services.js'), # to remove when all legacy tests are ported
             ('remove', 'mail/static/tests/tours/**/*'),
         ],
         'web.assets_tests': [
             'mail/static/tests/tours/**/*',
-        ],
-        'web.tests_assets': [
-            'mail/static/tests/legacy/helpers/mock_services.js',
         ],
         'mail.assets_odoo_sfu': [
             'mail/static/lib/odoo_sfu/odoo_sfu.js',
@@ -216,7 +214,6 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'mail.assets_public': [
             'web/static/lib/jquery/jquery.js',
-            'web/static/lib/odoo_ui_icons/style.css',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
@@ -225,7 +222,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/lib/bootstrap/scss/_maps.scss',
             ('include', 'web._assets_bootstrap_backend'),
             'web/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
+            ('include', 'web.icons_fonts'),
             'web/static/src/scss/animation.scss',
             'web/static/src/webclient/webclient.scss',
             'web/static/src/scss/mimetypes.scss',
@@ -259,7 +256,58 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/public/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
             ('remove', 'web/static/src/**/*.dark.scss'),
-        ]
+        ],
+        'im_livechat.assets_embed_core': [
+            ("include", "html_editor.assets_editor"),
+            'mail/static/src/model/**/*',
+            'mail/static/src/core/common/**/*',
+            'mail/static/src/discuss/core/common/*',
+            'mail/static/src/discuss/call/common/**',
+            'mail/static/src/discuss/typing/**/*',
+            'mail/static/src/utils/common/**/*',
+            ('remove', 'mail/static/src/**/*.dark.scss'),
+        ],
+        'im_livechat.assets_embed_external': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            ('include', 'web._assets_bootstrap_backend'),
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/ui.scss',
+            ('include', 'web.icons_fonts'),
+            'web/static/src/scss/animation.scss',
+            'web/static/src/webclient/webclient.scss',
+            ('include', 'web._assets_core'),
+            'web/static/src/views/fields/formatters.js',
+            'web/static/src/views/fields/file_handler.*',
+            'web/static/src/scss/mimetypes.scss',
+            ('remove', 'web/static/src/**/*.dark.scss'),
+            'bus/static/src/*.js',
+            'bus/static/src/services/**/*.js',
+            'bus/static/src/workers/*.js',
+            ('remove', 'bus/static/src/workers/bus_worker_script.js'),
+            ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
+            ('remove', 'bus/static/src/simple_notification_service.js'),
+            ('include', 'im_livechat.assets_embed_core'),
+        ],
+        'im_livechat.assets_embed_cors': [
+            ('include', 'im_livechat.assets_embed_external'),
+            ('remove', 'web/static/src/core/browser/title_service.js'),
+        ],
+        'im_livechat.embed_assets_unit_tests_setup': [
+            ('include', 'web.assets_unit_tests_setup'),
+            ('remove', 'mail/static/src/discuss/core/web/discuss_core_common_service_patch.js'),
+            'web/static/tests/web_test_helpers.js',
+            'bus/static/tests/bus_test_helpers.js',
+            'mail/static/tests/mail_test_helpers.js',
+            'mail/static/tests/mail_test_helpers_contains.js',
+            'bus/static/tests/mock_server/**/*',
+            'mail/static/tests/mock_server/**/*',
+            'bus/static/tests/mock_*.js',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -1,11 +1,15 @@
-import { toRaw, useComponent, useEffect, useRef, useState } from "@odoo/owl";
-import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
+import { useComponent, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
+
+import { toRaw } from "@odoo/owl";
+import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { markEventHandled } from "@web/core/utils/misc";
-import { Action, ACTION_TAGS, UseActions } from "@mail/core/common/action";
+import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -13,13 +17,7 @@ export const composerActionsRegistry = registry.category("mail.composer/actions"
 /** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 /** @typedef {import("models").Composer} Composer */
 /**
- * @typedef {Object} ComposerActionSpecificDefinition
- * @property {boolean|(comp: Component) => boolean} [condition=true]
- * @property {boolean} [isPicker]
- * @property {string|(comp: Component) => string} [pickerName]
- */
-/**
- * @typedef {ActionDefinition & ComposerActionSpecificDefinition} ComposerActionDefinition
+ * @typedef {ActionDefinition} ComposerActionDefinition
  */
 
 /**
@@ -30,35 +28,26 @@ export function registerComposerAction(id, definition) {
     composerActionsRegistry.add(id, definition);
 }
 
-export function pickerOnClick(component, action, ev) {
+export function pickerGetAnchor({ action, owner }) {
     let anchorEl;
-    if (component.ui.isSmall) {
-        anchorEl = component.pickerTargetRef.el;
-    } else if (!anchorEl) {
+    if (owner.ui.isSmall) {
+        return null;
+    }
+    if (!anchorEl) {
         if (action.sequenceQuick) {
-            anchorEl = component.quickActionsRef.el;
+            anchorEl = owner.quickActionsRef.el;
         } else {
-            anchorEl = component.moreActionsRef.el ?? component.extraActionsRef.el;
+            anchorEl = owner.moreActionsRef.el ?? owner.extraActionsRef.el;
         }
     }
-    const previousPicker = component.getActivePicker();
-    previousPicker?.close();
-    if (toRaw(previousPicker) === toRaw(action.picker)) {
-        component.setActivePicker(null);
-    } else {
-        component.setActivePicker(action.picker);
-        component.getActivePicker().open({ el: anchorEl });
-    }
+    return anchorEl;
 }
 
-export function pickerSetup(action, func) {
+export function pickerSetup() {
     const component = useComponent();
-    component.pickerTargetRef = useRef("picker-target");
     component.quickActionsRef = useRef("quick-actions");
     component.moreActionsRef = useRef("more-actions");
     component.extraActionsRef = useRef("extra-actions");
-    action.ref = useRef(action.id);
-    action.picker = func();
 }
 
 registerComposerAction("send-message", {
@@ -71,7 +60,7 @@ registerComposerAction("send-message", {
     name: ({ composer, owner }) =>
         composer.message
             ? _t("Save editing")
-            : composer.targetThread?.model === "discuss.channel"
+            : composer.targetThread?.channel
             ? _t("Send")
             : owner.props.type === "note"
             ? _t("Log")
@@ -79,7 +68,7 @@ registerComposerAction("send-message", {
     onSelected: ({ owner }) => owner.sendMessage(),
     setup: ({ owner }) => {
         owner.sendMessageState = useState({ active: false });
-        useEffect(
+        useLayoutEffect(
             () => {
                 owner.sendMessageState.active = !owner.isSendButtonDisabled;
             },
@@ -87,31 +76,42 @@ registerComposerAction("send-message", {
         );
     },
     sequenceQuick: 30,
+    tags: ({ action }) => (action.isActive ? ACTION_TAGS.PRIMARY : undefined),
 });
 registerComposerAction("add-emoji", {
+    actionPanelClose: ({ action }) => action.popover?.close(),
+    actionPanelComponent: EmojiPicker,
+    actionPanelComponentProps: ({ action, owner }) => ({
+        onSelect: (emoji) => owner.addEmoji(emoji),
+        onClose: () => action.actionPanelClose(),
+        storeScroll: action.emojiStoreScroll,
+    }),
+    actionPanelName: _t("Emoji"),
+    actionPanelOpen(...args) {
+        const anchorEl = pickerGetAnchor(...args);
+        this.popover?.open(anchorEl, this.actionPanelComponentProps);
+    },
+    disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
     icon: "fa fa-smile-o",
-    isPicker: true,
-    pickerName: _t("Emoji"),
     name: _t("Add Emojis"),
-    onSelected({ owner }, ev) {
-        pickerOnClick(owner, this, ev);
+    onSelected(params, ev) {
         markEventHandled(ev, "Composer.onClickAddEmoji");
     },
-    setup({ owner }) {
-        pickerSetup(this, () =>
-            useEmojiPicker(
-                undefined,
-                {
-                    onSelect: (emoji) => owner.addEmoji(emoji),
-                    onClose: () => owner.setActivePicker(null),
-                },
-                { arrow: false }
-            )
-        );
+    setup({ store }) {
+        pickerSetup();
+        if (store.env.services.ui.isSmall) {
+            return;
+        }
+        this.emojiStoreScroll = useEmojiPickerStoreScroll();
+        this.popover = usePopover(EmojiPicker, {
+            arrow: false,
+            onClose: () => this.actionPanelClose(),
+        });
     },
     sequenceQuick: 20,
 });
 registerComposerAction("upload-files", {
+    disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
     condition: ({ owner }) => owner.allowUpload,
     icon: "fa fa-paperclip",
     name: _t("Attach Files"),
@@ -157,6 +157,21 @@ registerComposerAction("add-canned-response", {
     onSelected: ({ owner }, ev) => owner.onClickInsertCannedResponse(ev),
     sequence: 5,
 });
+registerComposerAction("start-poll", {
+    name: _t("Start a poll"),
+    icon: "oi oi-view-cohort",
+    condition: ({ composer, store }) => {
+        if (!store.self_user || store.self_user.share) {
+            return false;
+        }
+        return ["channel", "group"].includes(composer.targetThread?.channel?.channel_type);
+    },
+    onSelected: ({ composer, owner }) =>
+        owner.dialogService.add(CreatePollDialog, { thread: composer.targetThread }),
+    setup: ({ owner }) => {
+        owner.dialogService = useService("dialog");
+    },
+});
 
 export class ComposerAction extends Action {
     /** @type {() => Composer} */
@@ -185,31 +200,10 @@ export class ComposerAction extends Action {
     get params() {
         return Object.assign(super.params, { composer: this.composerFn() });
     }
-
-    get isPicker() {
-        return this.definition.isPicker;
-    }
-
-    get pickerName() {
-        return typeof this.definition.pickerName === "function"
-            ? this.definition.pickerName(this._component)
-            : this.definition.pickerName;
-    }
 }
 
 class UseComposerActions extends UseActions {
-    get partition() {
-        const res = super.partition;
-        const actions = this.transformedActions.filter((action) => action.condition);
-        const groupedPickers = Object.groupBy(
-            actions.filter((a) => a.isPicker),
-            (a) => (a.sequenceQuick ? "quick" : "other")
-        );
-        groupedPickers.quick?.sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
-        groupedPickers.other?.sort((a1, a2) => a1.sequence - a2.sequence);
-        const pickers = (groupedPickers.other ?? []).concat(groupedPickers.quick ?? []);
-        return Object.assign(res, { pickers });
-    }
+    ActionClass = ComposerAction;
 }
 
 /**
@@ -217,19 +211,7 @@ class UseComposerActions extends UseActions {
  * @param {Composer|() => Composer} composer
  */
 export function useComposerActions({ composer } = {}) {
-    const component = useComponent();
-    const transformedActions = composerActionsRegistry
-        .getEntries()
-        .map(
-            ([id, definition]) => new ComposerAction({ owner: component, id, definition, composer })
-        );
-    for (const action of transformedActions) {
-        action.setup();
-    }
-    const state = useState(
-        new UseComposerActions(component, transformedActions, useService("mail.store"))
-    );
-    component.getActivePicker = () => state.activePicker;
-    component.setActivePicker = (newActivePicker) => (state.activePicker = newActivePicker);
-    return state;
+    return useAction(composerActionsRegistry, UseComposerActions, ComposerAction, {
+        composer,
+    });
 }

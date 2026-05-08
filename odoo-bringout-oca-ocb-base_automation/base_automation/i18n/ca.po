@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
 "PO-Revision-Date: 2025-11-09 15:10+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
@@ -163,6 +163,11 @@ msgstr "Activitats"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "Activitat d'excepció de decoració"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_state
@@ -523,8 +528,8 @@ msgstr "Nom del model"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule %"
-"(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule "
+"%(rule_name)s."
 msgstr ""
 
 #. module: base_automation
@@ -681,13 +686,9 @@ msgstr "Error de lliurament SMS"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
+#: model:ir.model,name:base_automation.model_ir_cron
 msgid "Scheduled Action"
 msgstr "Acció planificada"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_cron
-msgid "Scheduled Actions"
-msgstr "Accions planificades"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -804,11 +805,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
-"(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
 msgstr ""
-"El \"%(trigger_value)s\" %(trigger_label)s només es pot utilitzar amb el \"%"
-"(state_value)s\" tipus d'acció"
+"El \"%(trigger_value)s\" %(trigger_label)s només es pot utilitzar amb el "
+"\"%(state_value)s\" tipus d'acció"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -1021,22 +1022,3 @@ msgstr ""
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "path"
 msgstr ""
-
-#~ msgid "Action Name"
-#~ msgstr "Nom d'acció"
-
-#~ msgid "Delay after trigger date"
-#~ msgstr "Retard després de la data d'activació"
-
-#~ msgid "Delay type"
-#~ msgstr "Tipus de retard"
-
-#~ msgid ""
-#~ "If present, this condition must be satisfied before the update of the "
-#~ "record."
-#~ msgstr ""
-#~ "Si està present, aquesta condició ha de satisfer-se abans de "
-#~ "l'actualització del registre."
-
-#~ msgid "Least Delay Msg"
-#~ msgstr "Missatge de mínim retard"

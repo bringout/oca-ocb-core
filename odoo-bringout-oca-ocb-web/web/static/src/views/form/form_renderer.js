@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -15,19 +16,10 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-import {
-    Component,
-    onMounted,
-    onWillUnmount,
-    useEffect,
-    useSubEnv,
-    useRef,
-    useState,
-    xml,
-} from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, xml } from "@odoo/owl";
 
 export class FormRenderer extends Component {
-    static template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
+    static template = xml`<t t-call="{{ this.templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
     static components = {
         Field,
         FormLabel,
@@ -45,7 +37,7 @@ export class FormRenderer extends Component {
         Compiler: { type: Function, optional: true },
         record: Object,
         // Template props : added by the FormCompiler
-        class: { type: String, optional: 1 },
+        class: { type: String, optional: true },
         translateAlert: { type: [Object, { value: null }], optional: true },
         onNotebookPageChange: { type: Function, optional: true },
         activeNotebookPages: { type: Object, optional: true },
@@ -75,13 +67,13 @@ export class FormRenderer extends Component {
         const { autofocusFieldIds } = archInfo;
         const rootRef = useRef("compiled_view_root");
         if (this.shouldAutoFocus) {
-            useEffect(
-                (isNew, rootEl) => {
+            useLayoutEffect(
+                (record, rootEl) => {
                     if (!rootEl) {
                         return;
                     }
                     let elementToFocus;
-                    if (isNew) {
+                    if (record.isNew) {
                         const focusableSelectors = [
                             'input[type="text"]',
                             "textarea",
@@ -105,7 +97,7 @@ export class FormRenderer extends Component {
                         elementToFocus.focus();
                     }
                 },
-                () => [this.props.record.isNew, rootRef.el]
+                () => [this.props.record, rootRef.el]
             );
         }
 

@@ -1,4 +1,5 @@
-import { Component, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -67,6 +68,16 @@ export class ReferenceField extends Component {
                         record.update({ [props.name]: false });
                     }
                     this.currentModelId = record.data[props.modelField]?.id;
+                }
+            });
+        } else {
+            /** Sync the currentRelation with current value's resModel */
+            useRecordObserver(async (record, props) => {
+                if (
+                    record.data[props.name]?.resModel &&
+                    this.state.currentRelation !== record.data[props.name].resModel
+                ) {
+                    this.state.currentRelation = record.data[props.name].resModel;
                 }
             });
         }

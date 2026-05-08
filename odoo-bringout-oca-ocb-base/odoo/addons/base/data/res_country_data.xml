@@ -153,6 +153,7 @@
             <field name="code">bh</field>
             <field name="currency_id" ref="BHD" />
             <field eval="973" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="bi" model="res.country">
             <field name="name">Burundi</field>
@@ -514,6 +515,7 @@
             <field name="code">ge</field>
             <field name="currency_id" ref="GEL" />
             <field eval="995" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="gf" model="res.country">
             <field name="name">French Guiana</field>
@@ -613,6 +615,7 @@
             <field name='zip_required'>0</field>
             <field name="currency_id" ref="HKD" />
             <field eval="852" name="phone_code" />
+            <field name="vat_label">BRN</field>
         </record>
         <record id="hm" model="res.country">
             <field name="name">Heard Island and McDonald Islands</field>
@@ -797,6 +800,7 @@
             <field name="code">kw</field>
             <field name="currency_id" ref="KWD" />
             <field eval="965" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="ky" model="res.country">
             <field name="name">Cayman Islands</field>
@@ -1151,6 +1155,7 @@
             <field name="currency_id" ref="PKR" />
             <field eval="92" name="phone_code" />
             <field name="vat_label">NTN</field>
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="pl" model="res.country">
             <field name="name">Poland</field>
@@ -1208,6 +1213,7 @@
             <field name="code">qa</field>
             <field name="currency_id" ref="QAR" />
             <field eval="974" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="re" model="res.country">
             <field name="name">Réunion</field>
@@ -1503,7 +1509,7 @@
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="USD" />
             <field eval="1" name="phone_code" />
-            <field name="vat_label"/> <!-- Empty to reset on existing DBs-->
+            <field name="vat_label">TIN</field>
         </record>
         <record id="uy" model="res.country">
             <field name="name">Uruguay</field>

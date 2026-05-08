@@ -1,4 +1,5 @@
-import { Component, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -10,6 +11,8 @@ import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
+import { QuickCreateState } from "./kanban_record_quick_create";
+import { odoomark } from "@web/core/utils/html";
 
 class KanbanHeaderTooltip extends Component {
     static template = "web.KanbanGroupTooltip";
@@ -29,7 +32,7 @@ export class KanbanHeader extends Component {
         dialogClose: { type: Array },
         group: { type: Object },
         list: { type: Object },
-        quickCreateState: { type: Object },
+        quickCreateState: QuickCreateState,
         scrollTop: { type: Function },
         tooltipInfo: { type: Object },
         progressBarState: { type: true, optional: true },
@@ -41,6 +44,7 @@ export class KanbanHeader extends Component {
         this.rootRef = useRef("root");
         this.popover = usePopover(KanbanHeaderTooltip);
         this.onTitleMouseEnter = useDebounced(this.onTitleMouseEnter, 400);
+        this.odoomark = odoomark;
     }
 
     async onTitleMouseEnter(ev) {
@@ -126,8 +130,8 @@ export class KanbanHeader extends Component {
             .map((fieldName) => ({ title: tooltipInfo[fieldName], value: values[fieldName] }));
     });
 
-    quickCreate(group) {
-        this.props.quickCreateState.groupId = this.group.id;
+    async quickCreate() {
+        this.props.quickCreateState.openQuickCreate(this.group.id);
     }
 
     toggleGroup() {

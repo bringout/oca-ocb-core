@@ -1,4 +1,5 @@
-import { Component, onMounted, useExternalListener, useRef } from "@odoo/owl";
+import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { Component, onMounted } from "@odoo/owl";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
@@ -6,6 +7,7 @@ export class ActivityMarkAsDone extends Component {
         "activity",
         "close?",
         "hasHeader?",
+        "onClickDone?",
         "onClickDoneAndScheduleNext?",
         "onActivityChanged",
     ];
@@ -13,13 +15,10 @@ export class ActivityMarkAsDone extends Component {
         hasHeader: false,
     };
 
-    get isSuggested() {
-        return this.props.activity.chaining_type === "suggest";
-    }
-
     setup() {
         super.setup();
         this.textArea = useRef("textarea");
+        this.state = useState({ disableDoneButton: false });
         onMounted(() => {
             this.textArea.el.focus();
         });
@@ -33,19 +32,30 @@ export class ActivityMarkAsDone extends Component {
     }
 
     async onClickDone() {
+        if (this.state.disableDoneButton) {
+            return;
+        }
         const { res_id, res_model } = this.props.activity;
-        const thread = this.env.services["mail.store"].Thread.insert({
+        const thread = this.env.services["mail.store"]["mail.thread"].insert({
             model: res_model,
             id: res_id,
         });
-        await this.props.activity.markAsDone();
-        this.props.onActivityChanged(thread);
-        await thread.fetchNewMessages();
+        this.state.disableDoneButton = true;
+        try {
+            if (this.props.onClickDone) {
+                this.props.onClickDone();
+            }
+            await this.props.activity.markAsDone();
+            this.props.onActivityChanged(thread);
+            await thread.fetchNewMessages();
+        } finally {
+            this.state.disableDoneButton = false;
+        }
     }
 
     async onClickDoneAndScheduleNext() {
         const { res_id, res_model } = this.props.activity;
-        const thread = this.env.services["mail.store"].Thread.insert({
+        const thread = this.env.services["mail.store"]["mail.thread"].insert({
             model: res_model,
             id: res_id,
         });

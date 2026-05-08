@@ -49,7 +49,7 @@ class IrModelAccessTest(TransactionCase):
     def test_display_name_for(self):
         # Internal User with access rights can access the business name
         result = self.env['ir.model'].with_user(self.spreadsheet_user).display_name_for(["res.company"])
-        self.assertEqual(result, [{"display_name": "Companies", "model": "res.company"}])
+        self.assertEqual(result, [{"display_name": "Company", "model": "res.company"}])
         # external user with access rights cannot access business name
         result = self.env['ir.model'].with_user(self.portal_user).display_name_for(["res.company"])
         self.assertEqual(result, [{"display_name": "res.company", "model": "res.company"}])
@@ -58,16 +58,16 @@ class IrModelAccessTest(TransactionCase):
         self.assertEqual(result, [{"display_name": "res.company", "model": "res.company"}])
         # admin has all rights
         result = self.env['ir.model'].display_name_for(["res.company"])
-        self.assertEqual(result, [{"display_name": "Companies", "model": "res.company"}])
+        self.assertEqual(result, [{"display_name": "Company", "model": "res.company"}])
         # non existent model yields same result as a lack of access rights
         result = self.env['ir.model'].display_name_for(["unexistent"])
         self.assertEqual(result, [{"display_name": "unexistent", "model": "unexistent"}])
         # non existent model comes after existent model
         result = self.env['ir.model'].display_name_for(["res.company", "unexistent"])
-        self.assertEqual(result, [{"display_name": "Companies", "model": "res.company"}, {"display_name": "unexistent", "model": "unexistent"}])
+        self.assertEqual(result, [{"display_name": "Company", "model": "res.company"}, {"display_name": "unexistent", "model": "unexistent"}])
         # transient models
         result = self.env['ir.model'].display_name_for(["res.company", "base.language.export"])
-        self.assertEqual(result, [{"display_name": "Companies", "model": "res.company"}, {"display_name": "base.language.export", "model": "base.language.export"}])
+        self.assertEqual(result, [{"display_name": "Company", "model": "res.company"}, {"display_name": "base.language.export", "model": "base.language.export"}])
 
         # do not return results for transient models
         result = self.env['ir.model'].get_available_models()
@@ -76,6 +76,7 @@ class IrModelAccessTest(TransactionCase):
         self.assertNotIn("base.language.export", result)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrModel(TransactionCase):
 
     @classmethod
@@ -88,7 +89,7 @@ class TestIrModel(TransactionCase):
         # the database before setUpClass(), which is not correct.  Instead, a
         # test cursor will correspond to the state of the database of cls.cr at
         # that point, i.e., before the call to setUp().
-        cls.registry_enter_test_mode_cls()
+        cls.enterClassContext(cls.registry_test_mode())
 
         # model and records for banana stages
         cls.env['ir.model'].create({

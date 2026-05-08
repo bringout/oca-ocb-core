@@ -1,3 +1,4 @@
+import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
@@ -10,7 +11,6 @@ import {
     ConfirmationDialog,
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { useComponent, useEffect } from "@odoo/owl";
 import { DynamicList } from "@web/model/relational_model/dynamic_list";
 
 /**
@@ -45,10 +45,10 @@ export function useActionLinks({ resModel, reload }) {
         if (data.method !== undefined && data.model !== undefined) {
             const options = {};
             if (data.reloadOnClose) {
-                options.onClose = reload || (() => component.render());
+                options.onClose = reload || (() => render(component));
             }
             const action = await keepLast.add(orm.call(data.model, data.method));
-            if (action !== undefined) {
+            if (action !== null) {
                 keepLast.add(Promise.resolve(doAction(action, options)));
             }
         } else if (target.getAttribute("name")) {
@@ -101,7 +101,7 @@ export function useActionLinks({ resModel, reload }) {
 export function useBounceButton(containerRef, shouldBounce) {
     let timeout;
     const ui = useService("ui");
-    useEffect(
+    useLayoutEffect(
         (containerEl) => {
             if (!containerEl) {
                 return;
@@ -208,6 +208,7 @@ export function useDeleteRecords(model) {
             cancelLabel: _t("No, keep it"),
             confirm,
             confirmLabel: _t("Delete"),
+            confirmClass: "btn-danger",
             title: _t("Bye-bye, record!"),
         };
     }

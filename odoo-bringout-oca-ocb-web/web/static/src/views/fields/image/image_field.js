@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -7,7 +8,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -35,6 +36,7 @@ export class ImageField extends Component {
         height: { type: Number, optional: true },
         reload: { type: Boolean, optional: true },
         convertToWebp: { type: Boolean, optional: true },
+        fileNameField: { type: String, optional: true },
     };
     static defaultProps = {
         acceptedFileExtensions: "image/*",
@@ -70,6 +72,14 @@ export class ImageField extends Component {
 
     get imgClass() {
         return ["img", "img-fluid"].concat(this.props.imgClass.split(" ")).join(" ");
+    }
+
+    get containerClass() {
+        let containerClass = "position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover";
+        if (this.isMobile) {
+            containerClass += " o_mobile_controls";
+        }
+        return containerClass;
     }
 
     get fieldType() {
@@ -140,7 +150,13 @@ export class ImageField extends Component {
     }
     onFileRemove() {
         this.state.isValid = true;
-        this.props.record.update({ [this.props.name]: false });
+
+        const { fileNameField, record } = this.props;
+        const changes = { [this.props.name]: false };
+        if (fileNameField in record.fields) {
+            changes[fileNameField] = false;
+        }
+        record.update(changes);
     }
     async onFileUploaded(info) {
         this.state.isValid = true;
@@ -196,7 +212,7 @@ export class ImageField extends Component {
                         {
                             name: info.name,
                             description: size === originalSize ? "" : `resize: ${size}`,
-                            datas:
+                            raw:
                                 size === originalSize
                                     ? info.data
                                     : canvas.toDataURL("image/webp").split(",")[1],
@@ -213,7 +229,7 @@ export class ImageField extends Component {
                         {
                             name: info.name.replace(/\.webp$/, ".jpg"),
                             description: "format: jpeg",
-                            datas: canvas.toDataURL("image/jpeg").split(",")[1],
+                            raw: canvas.toDataURL("image/jpeg").split(",")[1],
                             res_id: resizedId,
                             res_model: "ir.attachment",
                             mimetype: "image/jpeg",
@@ -222,7 +238,16 @@ export class ImageField extends Component {
                 ]);
             }
         }
-        this.props.record.update({ [this.props.name]: info.data });
+        const { fileNameField, record } = this.props;
+        const changes = { [this.props.name]: info.data || false };
+        if (
+            this.fieldType !== "many2one" &&
+            fileNameField in record.fields &&
+            record.data[fileNameField] !== info.name
+        ) {
+            changes[fileNameField] = info.name || "";
+        }
+        record.update(changes);
     }
     onLoadFailed() {
         this.state.isValid = false;
@@ -298,6 +323,7 @@ export const imageField = {
         width: options.size && Boolean(options.size[0]) ? options.size[0] : undefined,
         height: options.size && Boolean(options.size[1]) ? options.size[1] : undefined,
         reload: "reload" in options ? Boolean(options.reload) : true,
+        fileNameField: attrs.filename,
     }),
 };
 

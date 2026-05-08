@@ -1,12 +1,14 @@
+import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { isObject, pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
-import { Component, xml, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, xml, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
 class StandaloneRelationalModel extends RelationalModel {
+    static withCache = false;
     load(params = {}) {
         if (params.values) {
             const data = params.values;
@@ -21,7 +23,7 @@ class StandaloneRelationalModel extends RelationalModel {
 }
 
 class _Record extends Component {
-    static template = xml`<t t-slot="default" record="model.root"/>`;
+    static template = xml`<t t-slot="default" record="this.model.root"/>`;
     static props = ["slots", "info", "fields", "values?"];
     setup() {
         this.orm = useService("orm");

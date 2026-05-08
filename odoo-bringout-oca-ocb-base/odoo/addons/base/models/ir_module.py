@@ -1,35 +1,36 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import functools
-from collections import defaultdict, OrderedDict
-from textwrap import dedent
 import logging
 import os
 import platform
 import shutil
-import typing
+import warnings
+from collections import OrderedDict, defaultdict
+from textwrap import dedent
 
+import lxml.html
+import psycopg2
 from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
 from markupsafe import Markup
-import lxml.html
-import psycopg2
 
 import odoo
-from odoo import api, fields, models, modules, tools, _
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import config
-from odoo.tools.parse_version import parse_version
-from odoo.tools.misc import topological_sort, get_flag
-from odoo.tools.translate import TranslationImporter, get_po_paths, get_datafile_translation_path
 from odoo.http import request
 from odoo.modules.module import Manifest, MissingDependency
+from odoo.tools import SQL, BinaryBytes, config
+from odoo.tools.misc import file_open, get_flag, topological_sort
+from odoo.tools.parse_version import parse_version
+from odoo.tools.translate import (
+    TranslationImporter,
+    get_datafile_translation_path,
+    get_po_paths,
+)
 
-T = typing.TypeVar('T')
 _logger = logging.getLogger(__name__)
 
 ACTION_DICT = {
@@ -38,6 +39,7 @@ ACTION_DICT = {
     'target': 'new',
     'type': 'ir.actions.act_window',
 }
+
 
 def backup(path, raise_exception=True):
     path = os.path.normpath(path)
@@ -54,7 +56,7 @@ def backup(path, raise_exception=True):
         cnt += 1
 
 
-def assert_log_admin_access(method: T, /) -> T:
+def assert_log_admin_access[T](method: T, /) -> T:
     """Decorator checking that the calling user is an administrator, and logging the call.
 
     Raises an AccessDenied error if the user does not have administrator privileges, according
@@ -187,8 +189,8 @@ class IrModuleModule(models.Model):
                 continue
             path = os.path.join(module.name, 'static/description/index.html')
             try:
-                with tools.file_open(path, 'rb') as desc_file:
-                    doc = desc_file.read().decode()
+                with tools.file_open(path) as desc_file:
+                    doc = desc_file.read()
                     module.description_html = _apply_description_images(doc)
             except FileNotFoundError:
                 overrides = {
@@ -201,7 +203,7 @@ class IrModuleModule(models.Model):
                 raw_description = module.description or ''
 
                 try:
-                    output = publish_string(source=raw_description, settings_overrides=overrides, writer=MyWriter())
+                    output = publish_string(source=raw_description, source_path=module.name, settings_overrides=overrides, writer=MyWriter())
                 except Exception as e:  # noqa: BLE001
                     _logger.warning("Failed to render module description for %s: %s. Falling back to raw description.", module.name, e)
                     output = Markup('<pre><code>%s</code></pre>') % raw_description
@@ -229,7 +231,7 @@ class IrModuleModule(models.Model):
 
             # then, search and group ir.model.data records
             imd_models = defaultdict(list)
-            imd_domain = [('module', '=', module.name), ('model', 'in', tuple(dmodels))]
+            imd_domain = [('module', '=', module.name), ('model', 'in', tuple(dmodels)), ('res_id', '!=', False)]
             for data in IrModelData.sudo().search(imd_domain):
                 imd_models[data.model].append(data.res_id)
 
@@ -262,10 +264,10 @@ class IrModuleModule(models.Model):
             path = path.removeprefix("/")
             if path:
                 try:
-                    with tools.file_open(path, 'rb', filter_ext=('.png', '.svg', '.gif', '.jpeg', '.jpg')) as image_file:
-                        module.icon_image = base64.b64encode(image_file.read())
+                    with file_open(path, 'rb', filter_ext=('.png', '.svg', '.gif', '.jpeg', '.jpg')) as f:
+                        module.icon_image = BinaryBytes(f.read())
                 except OSError:
-                    module.icon_image = ''
+                    module.icon_image = False
             countries = manifest.get('countries', [])
             country_code = len(countries) == 1 and countries[0]
             module.icon_flag = get_flag(country_code.upper()) if country_code else ''
@@ -322,16 +324,12 @@ class IrModuleModule(models.Model):
     icon_image = fields.Binary(string='Icon', compute='_get_icon_image')
     icon_flag = fields.Char(string='Flag', compute='_get_icon_image')
     to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
-    has_iap = fields.Boolean(compute='_compute_has_iap')
+    iap_paid_service = fields.Boolean("Contains In-App Purchases")
 
     _name_uniq = models.Constraint(
         'UNIQUE (name)',
         "The name of the module must be unique!",
     )
-
-    def _compute_has_iap(self):
-        for module in self:
-            module.has_iap = bool(module.id) and 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_installed(self):
@@ -340,8 +338,10 @@ class IrModuleModule(models.Model):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
 
     def unlink(self):
-        self.env.registry.clear_cache('stable')
-        return super().unlink()
+        res = super().unlink()
+        if self:
+            self.env.registry.clear_cache('stable')
+        return res
 
     def _get_modules_to_load_domain(self):
         """ Domain to retrieve the modules that should be loaded by the registry. """
@@ -525,7 +525,7 @@ class IrModuleModule(models.Model):
         they rely on data that don't exist anymore if the module is removed.
         """
         domain = Domain.OR(Domain('key', '=like', m.name + '.%') for m in self)
-        orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
+        orphans = self.env['ir.ui.view'].with_context(active_test=False, force_delete=True).search(domain)
         orphans.unlink()
 
     def downstream_dependencies(self, known_deps=None,
@@ -560,23 +560,34 @@ class IrModuleModule(models.Model):
         """
         if not self:
             return self
+        if known_deps is not None:
+            warnings.warn(
+                "The `known_deps` parameter is deprecated since Odoo 20.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
         self.flush_model(['name', 'state'])
         self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
-        known_deps = known_deps or self.browse()
-        query = """ SELECT DISTINCT m.id
-                    FROM ir_module_module_dependency d
-                    JOIN ir_module_module m ON (d.module_id=m.id)
-                    WHERE
-                        m.name IN (SELECT name from ir_module_module_dependency where module_id in %s) AND
-                        m.state NOT IN %s AND
-                        m.id NOT IN %s """
-        self.env.cr.execute(query, (tuple(self.ids), tuple(exclude_states), tuple(known_deps.ids or self.ids)))
-        new_deps = self.browse([row[0] for row in self.env.cr.fetchall()])
-        missing_mods = new_deps - known_deps
-        known_deps |= new_deps
-        if missing_mods:
-            known_deps |= missing_mods.upstream_dependencies(known_deps, exclude_states)
-        return known_deps
+        self.env.cr.execute(SQL(
+            """
+            WITH RECURSIVE dependencies AS (
+                SELECT m.id
+                FROM ir_module_module_dependency d
+                JOIN ir_module_module m ON (d.name = m.name)
+                WHERE d.module_id = any(%(ids)s) AND m.state != all(%(states)s)
+            UNION
+                SELECT m.id
+                FROM dependencies
+                JOIN ir_module_module_dependency d ON (d.module_id = dependencies.id)
+                JOIN ir_module_module m ON (d.name = m.name)
+                WHERE m.state != all(%(states)s)
+            )
+            SELECT id FROM dependencies WHERE id != any(%(ids)s)
+            """,
+            ids=self.ids,
+            states=list(exclude_states),
+        ))
+        return self.browse(row[0] for row in self.env.cr.fetchall())
 
     def next(self):
         """
@@ -596,7 +607,7 @@ class IrModuleModule(models.Model):
         }
 
     def _button_immediate_function(self, function):
-        if not self.env.registry.ready or self.env.registry._init:
+        if not self.env.registry.ready:
             raise UserError(_('The method _button_immediate_install cannot be called on init or non loaded registries. Please use button_install instead.'))
 
         if modules.module.current_test:
@@ -607,13 +618,14 @@ class IrModuleModule(models.Model):
                 "for help."
             )
 
-        # raise error if database is updating for module operations
-        if self.search_count([('state', 'in', ('to install', 'to upgrade', 'to remove'))], limit=1):
-            raise UserError(_("Odoo is currently processing another module operation.\n"
-                               "Please try again later or contact your system administrator."))
+        self.env.cr.execute("SET LOCAL lock_timeout = '3s'")
+
         try:
+            # raise error if database is updating for module operations
+            # acquire the shared-lock for the current transaction only
+            self.env.cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading')) NOWAIT")
             # raise error if another transaction is trying to schedule module operations concurrently
-            self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE NOWAIT")
+            self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE")
         except psycopg2.OperationalError:
             raise UserError(_("Odoo is currently processing another module operation.\n"
                                "Please try again later or contact your system administrator."))
@@ -622,7 +634,7 @@ class IrModuleModule(models.Model):
             # This is done because the installation/uninstallation/upgrade can modify a currently
             # running cron job and prevent it from finishing, and since the ir_cron table is locked
             # during execution, the lock won't be released until timeout.
-            self.env.cr.execute("SELECT FROM ir_cron FOR UPDATE NOWAIT")
+            self.env.cr.execute("SELECT FROM ir_cron FOR UPDATE")
         except psycopg2.OperationalError:
             raise UserError(_("Odoo is currently processing a scheduled action.\n"
                               "Module operations are not possible at this time, "
@@ -631,13 +643,11 @@ class IrModuleModule(models.Model):
 
         self.env.cr.commit()
         registry = modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
-        self.env.cr.commit()
-        if request and request.registry is self.env.registry:
-            request.env.cr.reset()
-            request.registry = request.env.registry
-            assert request.env.registry is registry
-        self.env.cr.reset()
+        self.env.transaction.reset()
         assert self.env.registry is registry
+        if request:
+            assert request.env.transaction is self.env.transaction, "request on another transaction than the model"
+            request.registry = request.env.registry
 
         # pylint: disable=next-method-called
         config = self.env['ir.module.module'].next() or {}
@@ -663,7 +673,9 @@ class IrModuleModule(models.Model):
 
     @assert_log_admin_access
     def button_uninstall(self):
-        un_installable_modules = set(odoo.tools.config['server_wide_modules']) & set(self.mapped('name'))
+        un_installable_modules = set(self.mapped('name')) & (
+            set(tools.config['server_wide_modules']) | set(odoo.modules.loading._FORCED_MODULES)
+        )
         if un_installable_modules:
             raise UserError(_("Those modules cannot be uninstalled: %s", ', '.join(un_installable_modules)))
         if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
@@ -760,7 +772,8 @@ class IrModuleModule(models.Model):
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
             'url': terp.get('url') or terp.get('live_test_url', ''),
-            'to_buy': False
+            'to_buy': False,
+            'iap_paid_service': terp.get('iap_paid_service', False),
         }
 
     @api.model_create_multi

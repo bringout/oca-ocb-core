@@ -1,15 +1,16 @@
-import { Component, onWillRender, useEffect, useExternalListener, useRef } from "@odoo/owl";
+import { onWillRender, render, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { groupBy } from "@web/core/utils/arrays";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * @typedef {import("../standard_field_props").StandardFieldProps & {
@@ -70,10 +71,10 @@ export class StatusBarField extends Component {
         const adjust = () => {
             status = "adjusting";
             this.adjustVisibleItems();
-            this.render();
+            render(this);
         };
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             if (status === "shouldAdjust") {
                 adjust();
             }
@@ -101,15 +102,17 @@ export class StatusBarField extends Component {
                 if (foldField) {
                     fieldNames.push(foldField);
                 }
-                const value = record.data[fieldName];
                 let domain = getFieldDomain(record, fieldName, props.domain);
                 domain = Domain.and([this.getDomain(), domain]).toList();
-                if (domain.length && value) {
-                    domain = Domain.or([[["id", "=", value.id]], domain]).toList(
-                        record.evalContext
-                    );
-                }
-                const res = orm.searchRead(relation, domain, fieldNames);
+                const res = await orm.searchRead(relation, domain, fieldNames).catch((error) => {
+                    if (error instanceof ConnectionLostError) {
+                        if (this.props.record.data[this.props.name]) {
+                            return [this.props.record.data[this.props.name]];
+                        }
+                        return [];
+                    }
+                    throw error;
+                });
                 forceRecomputeItems = true;
                 return res;
             });
@@ -178,7 +181,7 @@ export class StatusBarField extends Component {
      * Override this to change the fields to fetch
      */
     getFieldNames() {
-        return ["display_name"];
+        return ['display_name'];
     }
 
     /**
@@ -270,12 +273,22 @@ export class StatusBarField extends Component {
         const currentValue = record.data[name];
         if (this.field.type === "many2one") {
             // Many2one
-            return this.specialData.data.map((option) => ({
+            const items = this.specialData.data.map((option) => ({
                 value: option.id,
                 label: option.display_name,
                 isFolded: option[foldField],
                 isSelected: Boolean(currentValue && option.id === currentValue.id),
             }));
+
+            if (currentValue && !items.find((item) => item.value === currentValue.id)) {
+                items.unshift({
+                    value: currentValue.id,
+                    label: currentValue.display_name,
+                    isFolded: false,
+                    isSelected: true,
+                });
+            }
+            return items;
         } else {
             // Selection
             let { selection } = this.field;
@@ -315,7 +328,7 @@ export class StatusBarField extends Component {
     getSortedItems() {
         const before = [];
         const after = [];
-        const { true: inline = [], false: folded = [] } = groupBy(
+        const { true: inline = [], false: folded = [] } = Object.groupBy(
             this.getAllItems(),
             (item) => item.isSelected || !item.isFolded
         );

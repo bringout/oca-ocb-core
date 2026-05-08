@@ -1,39 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from lxml import etree
 from odoo import Command
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import tagged, TransactionCase
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestResCurrency(TransactionCase):
-    def test_view_company_rate_label(self):
-        """Tests the label of the company_rate and inverse_company_rate fields
-        are well set according to the company currency in the currency form view and the currency rate list view.
-        e.g. in the currency rate list view of a company using EUR, the company_rate label must be `Unit per EUR`"""
-        company_foo, company_bar = self.env['res.company'].create([
-            {'name': 'foo', 'currency_id': self.env.ref('base.EUR').id},
-            {'name': 'bar', 'currency_id': self.env.ref('base.USD').id},
-        ])
-        for company, expected_currency in [(company_foo, 'EUR'), (company_bar, 'USD')]:
-            for model, view_type in [('res.currency', 'form'), ('res.currency.rate', 'list')]:
-                arch = self.env[model].with_company(company).get_view(view_type=view_type)['arch']
-                tree = etree.fromstring(arch)
-                node_company_rate = tree.find('.//field[@name="company_rate"]')
-                node_inverse_company_rate = tree.find('.//field[@name="inverse_company_rate"]')
-                self.assertEqual(node_company_rate.get('string'), f'Unit per {expected_currency}')
-                self.assertEqual(node_inverse_company_rate.get('string'), f'{expected_currency} per Unit')
-
     def test_currency_cache(self):
         currencyA, currencyB = self.env['res.currency'].create([{
             'name': 'AAA',
             'symbol': 'AAA',
-            'rate_ids': [Command.create({'name': '2009-09-09', 'rate': 1})]
+            'rate_ids': [Command.create({'name': '2009-09-08', 'rate': 1})],
         }, {
             'name': 'BBB',
             'symbol': 'BBB',
             'rate_ids': [
-                Command.create({'name': '2009-09-09', 'rate': 1}),
-                Command.create({'name': '2011-11-11', 'rate': 2}),
+                Command.create({'name': '2009-09-08', 'rate': 1}),
+                Command.create({'name': '2011-11-10', 'rate': 2}),
             ],
         }])
 
@@ -47,7 +30,7 @@ class TestResCurrency(TransactionCase):
         # update the (cached) rate of the to_currency used in the previous query
         self.env['res.currency.rate'].search([
             ('currency_id', '=', currencyB.id),
-            ('name', '=', '2009-09-09')]
+            ('name', '=', '2009-09-08')],
         ).rate = 3
 
         # repeat _convert call
@@ -62,7 +45,7 @@ class TestResCurrency(TransactionCase):
 
         # create a new rate of the to_currency for the date used in the previous query
         self.env['res.currency.rate'].create({
-            'name': '2010-10-10',
+            'name': '2010-10-09',
             'rate': 4,
             'currency_id': currencyB.id,
             'company_id': self.env.company.id,
@@ -118,3 +101,32 @@ class TestResCurrency(TransactionCase):
         self.assertEqual(self.env["res.currency"].search_count([["rate_ids", "=", "0.69"]]), 1)
         # should not try to match any of 'name' and 'rate'
         self.assertEqual(self.env["res.currency"].search_count([["rate_ids", "=", "irrelevant"]]), 0)
+
+    def test_amount_to_text_10(self):
+        """ verify that amount_to_text works as expected """
+        currency = self.env.ref('base.EUR')
+
+        amount_target = currency.amount_to_text(0.29)
+        amount_test = currency.amount_to_text(0.28)
+        self.assertNotEqual(amount_test, amount_target,
+                            "Amount in text should not depend on float representation")
+
+    def test_rounding_04(self):
+        """ check that proper rounding is performed for float persistence """
+        currency = self.env.ref('base.EUR')
+        currency_rate = self.env['res.currency.rate']
+
+        def try_roundtrip(value, expected, date):
+            rate = currency_rate.create({'name': date,
+                                         'rate': value,
+                                         'currency_id': currency.id})
+            self.assertEqual(rate.rate, expected,
+                             'Roundtrip error: got %s back from db, expected %s' % (rate, expected))
+
+        # res.currency.rate no more uses 6 digits of precision by default, it now uses whatever precision it gets
+        try_roundtrip(10000.999999, 10000.999999, '2000-01-03')
+
+        #TODO re-enable those tests when tests are made on dedicated models
+        # (res.currency.rate don't accept negative value anymore)
+        #try_roundtrip(-2.6748955, -2.674896, '2000-01-02')
+        #try_roundtrip(-10000.999999, -10000.999999, '2000-01-04')

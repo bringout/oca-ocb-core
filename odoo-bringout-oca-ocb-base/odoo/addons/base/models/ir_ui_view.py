@@ -141,6 +141,7 @@ class IrUiView(models.Model):
     _description = 'View'
     _order = "priority,name,id"
     _allow_sudo_commands = False
+    _clear_cache_name = 'templates'
 
     name = fields.Char(string='View Name', required=True)
     model = fields.Char(index=True)
@@ -203,6 +204,9 @@ actual arch.
     model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
 
     invalid_locators = fields.Json(compute='_compute_invalid_locators')
+    # used mainly for technical sort and find of views, as well to give specific
+    # ACLs for specific flows like email marketing (snippets management)
+    technical_usage = fields.Selection(selection=[], string="View's Technical Usage")
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')
@@ -459,7 +463,7 @@ actual arch.
 
                     # During an upgrade, we can only use the views that have been
                     # fully upgraded already.
-                    if self.pool._init and sibling_primary_views and self.pool._init_modules:
+                    if not self.pool.ready and sibling_primary_views and self.pool._init_modules:
                         query = sibling_primary_views._get_filter_xmlid_query()
                         sql = SQL(query, res_ids=tuple(sibling_primary_views.ids), modules=tuple(self.pool._init_modules))
                         loaded_view_ids = {id_ for id_, in self.env.execute_query(sql)}
@@ -633,7 +637,6 @@ actual arch.
                         values['arch_updated'] = False
             values.update(self._compute_defaults(values))
 
-        self.env.registry.clear_cache('templates')
         result = super().create(vals_list)
         result.with_context(ir_ui_view_partial_validation=True)._check_xml()
         return result
@@ -650,7 +653,6 @@ actual arch.
         if custom_view:
             custom_view.unlink()
 
-        self.env.registry.clear_cache('templates')
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
@@ -664,9 +666,8 @@ actual arch.
 
     def unlink(self):
         # if in uninstall mode and has children views, emulate an ondelete cascade
-        if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
+        if self.env.context.get('force_delete') and self.inherit_children_ids:
             self.inherit_children_ids.unlink()
-        self.env.registry.clear_cache('templates')
         return super().unlink()
 
     def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
@@ -727,14 +728,15 @@ actual arch.
             return self.browse()
         domain = self._get_inheriting_views_domain()
         query = self._search(domain)
-        where_clause = query.where_clause
-        assert query.from_clause == SQL.identifier('ir_ui_view'), f"Unexpected from clause: {query.from_clause}"
 
         field_names = [f.name for f in self._fields.values() if f.prefetch is True and not f.groups]
         aliased_names = SQL(', ').join(
-            SQL("%s AS %s", self._field_to_sql('ir_ui_view', name), SQL.identifier(name))
+            SQL("%s AS %s", query.table[name], SQL.identifier(name))
             for name in field_names
         )
+
+        assert query.from_clause == SQL.identifier('ir_ui_view'), f"Unexpected from clause: {query.from_clause}"
+        where_clause = query.where_clause
 
         query = SQL("""
             WITH RECURSIVE ir_ui_view_inherits AS (
@@ -832,7 +834,7 @@ actual arch.
         err.context = {
             'view': self,
             'name': getattr(self, 'name', None),
-            'xmlid': self.env.context.get('install_xmlid') or self.xml_id,
+            'xmlid': self.xml_id,
             'view.model': self.model,
             'view.parent': self.inherit_id,
             'file': self.env.context.get('install_filename'),
@@ -850,7 +852,7 @@ actual arch.
         error_context = {
             'view': self,
             'name': getattr(self, 'name', None),
-            'xmlid': self.env.context.get('install_xmlid') or self.xml_id,
+            'xmlid': self.xml_id,
             'view.model': self.model,
             'view.parent': self.inherit_id,
             'file': self.env.context.get('install_filename'),
@@ -1073,7 +1075,7 @@ actual arch.
 
         # During an upgrade, we can only use the views that have been
         # fully upgraded already.
-        if self.pool._init and not self.env.context.get('load_all_views'):
+        if not self.pool.ready and not self.env.context.get('load_all_views'):
             all_tree_views = all_tree_views._filter_loaded_views(set(views.env.context['check_view_ids']))
 
         # get the global children views then get hierarchy for each views
@@ -1124,10 +1126,19 @@ actual arch.
 
     @api.model
     @tools.ormcache('id_or_xmlid', 'isinstance(id_or_xmlid, str) and self._get_template_minimal_cache_keys()', cache='templates')
-    def _get_cached_template_info(self, id_or_xmlid, _view=None):
-        """ Return the ir.ui.view id from the xml id, use `_preload_views`.
+    def _get_cached_template_info(self, id_or_xmlid: int | str, *, _view: models.BaseModel | None = None):
+        """Return cached template data for ``id_or_xmlid``.
+
+        ``_view`` may be provided as a shortcut to avoid resolving
+        ``id_or_xmlid`` again. Passing an empty recordset means the template is
+        known to be missing and results in ``info['error']`` being a
+        :class:`odoo.exceptions.MissingError`.
+
+        ``_view`` is intentionally not part of the cache key: when provided and
+        correct, it is equivalent to the view resolved from ``id_or_xmlid`` and
+        does not change the result.
         """
-        view = None
+        view = self.browse()
         error = False
         if _view is not None:
             view = _view
@@ -1136,11 +1147,7 @@ actual arch.
             try:
                 view.key
             except MissingError:
-                view = None
-                error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
-            except UserError as e:
-                view = None
-                error = e
+                view = self.browse()
         else:
             preload = self.sudo()._preload_views([id_or_xmlid])
             if id_or_xmlid in preload:
@@ -1151,7 +1158,10 @@ actual arch.
                 error = SyntaxError('Error compiling template')
         info = {
             f: view[f] if view else None
-            for f in self._get_cached_template_prefetched_keys()}
+            for f in self._get_cached_template_prefetched_keys()
+        }
+        if not view and not error:
+            error = MissingError(self.env._("Template not found: '%s'", id_or_xmlid))
         info['error'] = error
         return info
 
@@ -1223,16 +1233,11 @@ actual arch.
             self._get_cached_template_info(key, _view=view)
 
         # create data and errors
-        for view_id in ids:
-            if view_id not in view_by_id:
-                # push information in cache
-                self._get_cached_template_info(view_id, _view=False)
-                view_by_id[view_id] = MissingError(self.env._("Template does not exist or has been deleted: %s", view_id))
-        for xmlid in xmlids:
-            if xmlid not in view_by_id:
-                # push information in cache
-                self._get_cached_template_info(xmlid, _view=False)
-                view_by_id[xmlid] = MissingError(self.env._("Template not found: '%s'", xmlid))
+        for id_or_xmlid in ids_or_xmlids:
+            if id_or_xmlid not in view_by_id:
+                # push information in cache for missing records
+                info = self._get_cached_template_info(id_or_xmlid, _view=self.browse())
+                view_by_id[id_or_xmlid] = info['error']
         return view_by_id
 
     @tools.ormcache(cache='templates')
@@ -1448,7 +1453,7 @@ actual arch.
         parent_name_manager = node_info['name_manager'] if node_info else None
 
         # combine model access groups with this model's access groups
-        model_groups &= self.env['ir.model.access']._get_access_groups(model_name)
+        model_groups &= self._get_access_groups(group_definitions, model_name)
 
         name_manager = NameManager(model, parent=parent_name_manager, model_groups=model_groups)
 
@@ -1519,6 +1524,14 @@ actual arch.
             self._postprocess_on_change(root, model)
 
         return name_manager
+
+    def _get_access_groups(self, group_definitions, model_name):
+        group_list = self.env['ir.model.access']._get_all_access_groups()['read'].get(model_name, ())
+        if not group_list:
+            return group_definitions.empty
+        if False in group_list:  # there is some global access
+            return group_definitions.universe
+        return group_definitions.from_ids(group_list)
 
     def _add_missing_fields(self, node, name_manager):
         """ Add the fields required for evaluating expressions in the view given by ``node``. """
@@ -1635,7 +1648,7 @@ actual arch.
     # Specific node postprocessors
     #------------------------------------------------------
     def _postprocess_tag_calendar(self, node, name_manager, node_info):
-        for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
+        for additional_field in ('date_start', 'date_stop', 'color', 'all_day'):
             if fname := node.get(additional_field):
                 name_manager.has_field(node, fname, node_info)
         if fname := node.get('aggregate'):
@@ -1811,7 +1824,7 @@ actual arch.
         parent_name_manager = node_info['name_manager'] if node_info else None
 
         # combine model access groups with this model's access groups
-        model_groups &= self.env['ir.model.access']._get_access_groups(model_name)
+        model_groups &= self._get_access_groups(group_definitions, model_name)
 
         # fields_get() optimization: validation does not require translations
         model = self.env[model_name].with_context(lang=None)
@@ -1875,7 +1888,7 @@ actual arch.
                 value=editable_attr,
             )
             self._raise_view_error(msg, node)
-        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
+        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header', 'column')
         for child in node.iterchildren(tag=etree.Element):
             if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
                 msg = _(
@@ -1893,7 +1906,7 @@ actual arch.
                 self._raise_view_error(msg, child)
 
     def _validate_tag_calendar(self, node, name_manager, node_info):
-        for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
+        for additional_field in ('date_start', 'date_stop', 'color', 'all_day'):
             if fnames := node.get(additional_field):
                 name_manager.has_field(node, fnames.split('.', 1)[0], node_info)
         for f in node:
@@ -2217,7 +2230,7 @@ actual arch.
                 msg = "attribute 'group' is not valid.  Did you mean 'groups'?"
                 self._log_view_warning(msg, node)
 
-            elif (re.match(r'^(t\-att\-|t\-attf\-)?data-tooltip(-template|-info)?$', attr)):
+            elif (re.match(r'^(t\-att\-|t\-attf\-)?data-tooltip(-template|-info)$', attr)):
                 self._raise_view_error(_("Forbidden attribute used in arch (%s).", attr), node)
 
             elif (attr.startswith("t-")):
@@ -2288,7 +2301,7 @@ actual arch.
         valid_aria_attrs = {
             *att_names('title'), *att_names('aria-label'), *att_names('aria-labelledby'),
         }
-        valid_t_attrs = {'t-value', 't-raw', 't-field', 't-esc', 't-out'}
+        valid_t_attrs = {'t-value', 't-field', 't-out'}
 
         ## Following or preceding text
         if (node.tail or '').strip() or (node.getparent().text or '').strip():
@@ -2303,9 +2316,7 @@ actual arch.
                 return True
             if elem.tag in ['field', 'label'] and elem.get('string'):
                 return True
-            if elem.tag == 't' and (elem.get('t-esc') or elem.get('t-raw')):
-                return True
-            return False
+            return elem.tag == 't' and elem.get('t-out')
 
         if has_text(node.getnext()) or has_text(node.getprevious()):
             return
@@ -2350,7 +2361,6 @@ actual arch.
         if self._is_qweb_based_view(view_type):
             allowed_directives.extend([
                 "t-name",
-                "t-esc",
                 "t-out",
                 "t-set",
                 "t-value",
@@ -2438,7 +2448,7 @@ actual arch.
 
     def _contains_branded(self, node):
         return node.tag == 't'\
-            or 't-raw' in node.attrib\
+            or node.get('t-out') == '0'\
             or 't-call' in node.attrib\
             or any(self.is_node_branded(child) for child in node.iterdescendants())
 
@@ -2484,37 +2494,34 @@ actual arch.
         if not e.get('data-oe-model'):
             return
 
-        if {'t-esc', 't-raw', 't-out'}.intersection(e.attrib):
+        if e.get('t-out'):
             # nodes which fully generate their content and have no reason to
             # be branded because they can not sensibly be edited
             self._pop_view_branding(e)
         elif self._contains_branded(e):
             # if a branded element contains branded elements distribute own
-            # branding to children unless it's t-raw, then just remove branding
-            # on current element
+            # branding to children, then just remove branding on current element
             distributed_branding = self._pop_view_branding(e)
 
-            if 't-raw' not in e.attrib:
-                # TODO: collections.Counter if remove p2.6 compat
-                # running index by tag type, for XPath query generation
-                indexes = collections.defaultdict(lambda: 0)
-                for child in e.iterchildren(etree.Element, etree.ProcessingInstruction):
-                    if child.get('data-oe-xpath'):
-                        # injected by view inheritance, skip otherwise
-                        # generated xpath is incorrect
-                        self.distribute_branding(child)
-                    elif child.tag is etree.ProcessingInstruction:
-                        # If a node is known to have been replaced during
-                        # applying an inheritance, increment its index to
-                        # compute an accurate xpath for subsequent nodes
-                        if child.target == 'apply-inheritance-specs-node-removal':
-                            indexes[child.text] += 1
-                            e.remove(child)
-                    else:
-                        indexes[child.tag] += 1
-                        self.distribute_branding(
-                            child, distributed_branding,
-                            parent_xpath=node_path, index_map=indexes)
+            # running index by tag type, for XPath query generation
+            indexes = collections.Counter()
+            for child in e.iterchildren(etree.Element, etree.ProcessingInstruction):
+                if child.get('data-oe-xpath'):
+                    # injected by view inheritance, skip otherwise
+                    # generated xpath is incorrect
+                    self.distribute_branding(child)
+                elif child.tag is etree.ProcessingInstruction:
+                    # If a node is known to have been replaced during
+                    # applying an inheritance, increment its index to
+                    # compute an accurate xpath for subsequent nodes
+                    if child.target == 'apply-inheritance-specs-node-removal':
+                        indexes[child.text] += 1
+                        e.remove(child)
+                else:
+                    indexes[child.tag] += 1
+                    self.distribute_branding(
+                        child, distributed_branding,
+                        parent_xpath=node_path, index_map=indexes)
 
     def is_node_branded(self, node):
         """ Finds out whether a node is branded or qweb-active (bears a
@@ -2567,7 +2574,7 @@ actual arch.
         """ Validate the architecture of all the views of a given module that
             are impacted by view updates, but have not been checked yet.
         """
-        assert self.pool._init
+        assert not self.pool.ready
 
         # only validate the views that still exist...
         prefix = module + '.'
@@ -2886,14 +2893,8 @@ class Base(models.AbstractModel):
         set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
                      self._fields, 'color')
 
-        if not set_first_of(["date_stop", "date_end", "x_date_stop", "x_date_end"],
-                            self._fields, 'date_stop'):
-            if not set_first_of(["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"],
-                                self._fields, 'date_delay'):
-                raise UserError(_(
-                    "Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay",
-                    self._name
-                ))
+        set_first_of(["date_stop", "date_end", "x_date_stop", "x_date_end"],
+                     self._fields, 'date_stop')
 
         return view
 

@@ -1,5 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { useSequential } from "@mail/utils/common/hooks";
-import { useState, onWillUnmount, markup } from "@odoo/owl";
+import { getInnerHtml } from "@mail/utils/common/html";
+import { onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -59,7 +61,7 @@ export function searchHighlight(searchTerm, target) {
             element.replaceChildren(...newNode);
         }
     }
-    return markup(htmlDoc.body.innerHTML);
+    return getInnerHtml(htmlDoc.body);
 }
 
 /** @param {import('models').Thread} thread */
@@ -69,7 +71,7 @@ export function useMessageSearch(thread) {
     const state = useState({
         thread,
         async search(before = false) {
-            if (this.searchTerm) {
+            if (this.searchTerm || this.is_notification !== undefined) {
                 this.searching = true;
                 const data = await sequential(() =>
                     store.searchMessagesInThread(
@@ -98,12 +100,13 @@ export function useMessageSearch(thread) {
         },
         count: 0,
         clear() {
+            this.is_notification = undefined;
             this.messages = [];
             this.searched = false;
             this.searching = false;
             this.searchTerm = undefined;
         },
-        /** @type {true | false | undefined} */
+        /** @type {Boolean | undefined} */
         is_notification: undefined,
         loadMore: false,
         /** @type {import('@mail/core/common/message_model').Message[]} */

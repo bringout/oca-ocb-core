@@ -1,12 +1,9 @@
-import { inputFiles } from "@web/../tests/utils";
 import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("test_basic_purchase_flow_with_minimal_access_rights", {
     steps: () => [
-        {
-            trigger: ".o_menuitem[href='/odoo/purchase']",
-            run: "click",
-        },
+        ...stepUtils.goToAppSteps("purchase.menu_purchase_root", "Open the purchase app"),
         {
             content: "Check that at least one RFQ is present in the view",
             trigger: ".o_purchase_dashboard_list_view .o_data_row",
@@ -24,7 +21,7 @@ registry.category("web_tour.tours").add("test_basic_purchase_flow_with_minimal_a
             run: "click",
         },
         {
-            trigger: ".o_field_x2many_list_row_add > a",
+            trigger: ".o_field_x2many_list_row_add > button:contains('Add a product')",
             run: "click",
         },
         {
@@ -57,7 +54,7 @@ registry.category("web_tour.tours").add("test_basic_purchase_flow_with_minimal_a
         {
             content: "Upload the vendor bill",
             trigger: ".o_widget_purchase_file_uploader",
-            run: async () => {
+            async run({ inputFiles }) {
                 const testFile = new File(["Vendor, Bill"], "my_vendor_bill.png", {
                     type: "image/*",
                 });

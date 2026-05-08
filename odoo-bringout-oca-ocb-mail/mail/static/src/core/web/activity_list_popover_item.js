@@ -1,9 +1,10 @@
+import { useState } from "@web/owl2/utils";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay } from "@mail/utils/common/dates";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -31,7 +32,7 @@ export class ActivityListPopoverItem extends Component {
         this.state = useState({ hasMarkDoneView: false });
         if (this.props.activity.activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(
-                this.env.services["mail.store"].Thread.insert({
+                this.env.services["mail.store"]["mail.thread"].insert({
                     model: this.props.activity.res_model,
                     id: this.props.activity.res_id,
                 })
@@ -57,11 +58,6 @@ export class ActivityListPopoverItem extends Component {
         } else {
             return _t("Due in %s days", Math.round(Math.abs(diff)));
         }
-    }
-
-    get hasCancelButton() {
-        const activity = this.props.activity;
-        return activity.state !== "done" && activity.can_write;
     }
 
     get hasEditButton() {
@@ -93,12 +89,5 @@ export class ActivityListPopoverItem extends Component {
         });
         await this.props.activity.markAsDone([attachmentId]);
         this.props.onActivityChanged?.();
-    }
-
-    unlink() {
-        this.props.activity.remove();
-        this.env.services.orm
-            .unlink("mail.activity", [this.props.activity.id])
-            .then(() => this.props.onActivityChanged?.());
     }
 }

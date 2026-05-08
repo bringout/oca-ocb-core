@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { click, queryFirst } from "@odoo/hoot-dom";
@@ -39,19 +40,19 @@ test("notebook with multiple pages given as slots", async () => {
     expect(".nav").toHaveClass("flex-row", {
         message: "navigation container uses the right class to display as horizontal tabs",
     });
-    expect(".o_notebook_headers a.nav-link").toHaveCount(2, {
+    expect(".o_notebook_headers button.nav-link").toHaveCount(2, {
         message: "navigation link is present for each visible page",
     });
-    expect(".o_notebook_headers .nav-item:first-child a").toHaveClass("active", {
+    expect(".o_notebook_headers .nav-item:first-child .nav-link").toHaveClass("active", {
         message: "first page is selected by default",
     });
     expect(".active h3").toHaveText("About the bird", {
         message: "first page content is displayed by the notebook",
     });
 
-    await click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await click(".o_notebook_headers .nav-item:nth-child(2) .nav-link");
     await animationFrame();
-    expect(".o_notebook_headers .nav-item:nth-child(2) a").toHaveClass("active", {
+    expect(".o_notebook_headers .nav-item:nth-child(2) .nav-link").toHaveClass("active", {
         message: "second page is now selected",
     });
     expect(".active h3").toHaveText("Their favorite activity: hunting", {
@@ -81,7 +82,7 @@ test("notebook with defaultPage props", async () => {
 
     await mountWithCleanup(Parent);
     expect("div.o_notebook").toHaveCount(1);
-    expect(".o_notebook_headers .nav-item:nth-child(2) a").toHaveClass("active", {
+    expect(".o_notebook_headers .nav-item:nth-child(2) .nav-link").toHaveClass("active", {
         message: "second page is selected by default",
     });
     expect(".active h3").toHaveText("Their favorite activity: hunting", {
@@ -111,7 +112,7 @@ test("notebook with defaultPage set on invisible page", async () => {
     }
 
     await mountWithCleanup(Parent);
-    expect(".o_notebook_headers .nav-item a.active").toHaveText("About", {
+    expect(".o_notebook_headers .nav-item .nav-link.active").toHaveText("About", {
         message: "The first page is selected",
     });
 });
@@ -146,8 +147,8 @@ test("notebook set vertically", async () => {
 test("notebook pages rendered by a template component", async () => {
     class NotebookPageRenderer extends Component {
         static template = xml`
-                <h3 t-esc="props.heading"></h3>
-                <p t-esc="props.text" />
+                <h3 t-out="this.props.heading"></h3>
+                <p t-out="this.props.text" />
             `;
         static props = {
             heading: String,
@@ -156,7 +157,7 @@ test("notebook pages rendered by a template component", async () => {
     }
 
     class Parent extends Component {
-        static template = xml`<Notebook defaultPage="'page_three'" pages="pages">
+        static template = xml`<Notebook defaultPage="'page_three'" pages="this.pages">
                 <t t-set-slot="page_one" title="'Page 1'" isVisible="true">
                     <h3>Page 1</h3>
                     <p>First page set directly as a slot</p>
@@ -194,11 +195,11 @@ test("notebook pages rendered by a template component", async () => {
 
     await mountWithCleanup(Parent);
     expect("div.o_notebook").toHaveCount(1);
-    expect(".o_notebook_headers .nav-item:nth-child(3) a").toHaveClass("active", {
+    expect(".o_notebook_headers .nav-item:nth-child(3) .nav-link").toHaveClass("active", {
         message: "third page is selected by default",
     });
 
-    await click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await click(".o_notebook_headers .nav-item:nth-child(2) .nav-link");
     await animationFrame();
     expect(".o_notebook_content p").toHaveText("Second page rendered by a template component", {
         message: "displayed content corresponds to the current page",
@@ -212,7 +213,7 @@ test("each page is different", async () => {
     }
 
     class Parent extends Component {
-        static template = xml`<Notebook pages="pages"/>`;
+        static template = xml`<Notebook pages="this.pages"/>`;
         static components = { Notebook };
         static props = ["*"];
         setup() {
@@ -235,7 +236,7 @@ test("each page is different", async () => {
     const firstPage = queryFirst("h3");
     expect(firstPage).toBeInstanceOf(HTMLElement);
 
-    await click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await click(".o_notebook_headers .nav-item:nth-child(2) .nav-link");
     await animationFrame();
     const secondPage = queryFirst("h3");
     expect(secondPage).toBeInstanceOf(HTMLElement);
@@ -254,7 +255,7 @@ test("defaultPage recomputed when isVisible is dynamic", async () => {
                     <t t-set-slot="2" title="'page2'" isVisible="true">
                         <div class="page2" />
                     </t>
-                    <t t-set-slot="3" title="'page3'" isVisible="defaultPageVisible">
+                    <t t-set-slot="3" title="'page3'" isVisible="this.defaultPageVisible">
                         <div class="page3" />
                     </t>
                 </Notebook>`;
@@ -268,18 +269,18 @@ test("defaultPage recomputed when isVisible is dynamic", async () => {
     expect(".page1").toHaveCount(1);
     expect(".nav-link.active").toHaveText("page1");
     defaultPageVisible = true;
-    parent.render(true);
+    render(parent, true);
 
     await animationFrame();
     expect(".page3").toHaveCount(1);
     expect(".nav-link.active").toHaveText("page3");
 
-    await click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await click(".o_notebook_headers .nav-item:nth-child(2) .nav-link");
     await animationFrame();
     expect(".page2").toHaveCount(1);
     expect(".nav-link.active").toHaveText("page2");
 
-    parent.render(true);
+    render(parent, true);
     await animationFrame();
     expect(".page2").toHaveCount(1);
     expect(".nav-link.active").toHaveText("page2");
@@ -326,7 +327,7 @@ test("icons can be given for each page tab", async () => {
     class Parent extends Component {
         static components = { Notebook };
         static template = xml`
-            <Notebook defaultPage="'1'" icons="icons">
+            <Notebook defaultPage="'1'" icons="this.icons">
                 <t t-set-slot="1" title="'page1'" isVisible="true">
                     <div class="page1" />
                 </t>
@@ -389,7 +390,7 @@ test("switch notebook page after async work", async () => {
     const h3Capture1 = queryFirst("h3");
     expect(h3Capture1).toBeInstanceOf(HTMLElement);
 
-    await click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await click(".o_notebook_headers .nav-item:nth-child(2) .nav-link");
     await animationFrame();
     // async work is not finished
     const h3Capture2 = queryFirst("h3");
@@ -403,7 +404,7 @@ test("switch notebook page after async work", async () => {
     expect(h3Capture3).not.toBe(h3Capture1);
 
     ({ promise, resolve } = Promise.withResolvers());
-    await click(".o_notebook_headers .nav-item:nth-child(1) a");
+    await click(".o_notebook_headers .nav-item:nth-child(1) .nav-link");
     await animationFrame();
     // async work is not finished
     const h3Capture4 = queryFirst("h3");

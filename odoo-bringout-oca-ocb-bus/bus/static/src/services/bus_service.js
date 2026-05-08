@@ -1,9 +1,9 @@
+import { reactive } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { Deferred } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { EventBus, reactive } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
@@ -27,20 +27,12 @@ export const BACK_ONLINE_RECONNECT_DELAY = 5000;
  *  @emits BUS:WORKER_STATE_UPDATED
  */
 export const busService = {
-    dependencies: [
-        "bus.parameters",
-        "localization",
-        "multi_tab",
-        "legacy_multi_tab",
-        "notification",
-        "worker_service",
-    ],
+    dependencies: ["bus.parameters", "localization", "multi_tab", "notification", "worker_service"],
 
     start(
         env,
         {
             multi_tab: multiTab,
-            legacy_multi_tab: legacyMultiTab,
             notification,
             "bus.parameters": params,
             worker_service: workerService,
@@ -51,7 +43,10 @@ export const busService = {
         const subscribeFnToWrapper = new Map();
         let backOnlineTimeout;
         const startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
-        let connectionInitializedDeferred;
+        /** @type {?Promise<void>} */
+        let workerInitPromise = null;
+        /** @type {(value?: void) => void | null} */
+        let resolveWorkerInit = null;
 
         /**
          * Handle messages received from the shared worker and fires an
@@ -79,8 +74,13 @@ export const busService = {
                 }
                 case "BUS:NOTIFICATION": {
                     const notifications = data.map(({ id, message }) => ({ id, ...message }));
-                    state.lastNotificationId = notifications.at(-1).id;
-                    legacyMultiTab.setSharedValue("last_notification_id", state.lastNotificationId);
+                    const receivedLastId = notifications.at(-1).id;
+                    const lsLastId = parseInt(
+                        localStorage.getItem("bus.last_notification_id") ?? 0
+                    );
+                    if (receivedLastId > lsLastId) {
+                        localStorage.setItem("bus.last_notification_id", receivedLastId);
+                    }
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
                         busService._onMessage(env, id, type, payload);
@@ -88,14 +88,16 @@ export const busService = {
                     break;
                 }
                 case "BUS:INITIALIZED": {
-                    connectionInitializedDeferred.resolve();
+                    resolveWorkerInit();
                     break;
                 }
                 case "BUS:WORKER_STATE_UPDATED":
                     state.workerState = data;
                     break;
                 case "BUS:OUTDATED": {
-                    multiTab.unregister();
+                    if (data.unregisterMultiTab) {
+                        multiTab.unregister();
+                    }
                     notification.add(
                         _t(
                             "Save your work and refresh to get the latest updates and avoid potential issues."
@@ -127,26 +129,26 @@ export const busService = {
          * Start the "bus_service" workerService.
          */
         async function ensureWorkerStarted() {
-            if (!connectionInitializedDeferred) {
-                connectionInitializedDeferred = new Deferred();
-                let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
-                if (!uid && uid !== undefined) {
-                    uid = false;
-                }
-                await workerService.ensureWorkerStarted();
-                await workerService.registerHandler(handleMessage);
-                workerService.send("BUS:INITIALIZE_CONNECTION", {
-                    websocketURL: `${params.serverURL.replace("http", "ws")}/websocket?version=${
-                        session.websocket_worker_version
-                    }`,
-                    db: session.db,
-                    debug: odoo.debug,
-                    lastNotificationId: legacyMultiTab.getSharedValue("last_notification_id", 0),
-                    uid,
-                    startTs: startedAt.valueOf(),
-                });
+            if (workerInitPromise) {
+                return workerInitPromise;
             }
-            await connectionInitializedDeferred;
+            ({ promise: workerInitPromise, resolve: resolveWorkerInit } = Promise.withResolvers());
+            let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
+            if (!uid && uid !== undefined) {
+                uid = false;
+            }
+            await workerService.ensureWorkerStarted();
+            await workerService.registerHandler(handleMessage);
+            workerService.send("BUS:INITIALIZE_CONNECTION", {
+                websocketURL: `${params.serverURL.replace("http", "ws")}/websocket?version=${
+                    session.websocket_worker_version
+                }`,
+                db: session.db,
+                lastNotificationId: parseInt(localStorage.getItem("bus.last_notification_id") ?? 0),
+                uid,
+                startTs: startedAt.valueOf(),
+            });
+            return workerInitPromise;
         }
 
         browser.addEventListener("pagehide", ({ persisted }) => {
@@ -235,8 +237,6 @@ export const busService = {
             },
             startedAt,
             workerState: null,
-            /** The id of the last notification received by this tab. */
-            lastNotificationId: null,
         });
         return state;
     },

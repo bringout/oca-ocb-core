@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -7,7 +8,7 @@ import { Field } from "@web/views/fields/field";
 import { Record } from "@web/model/record";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
 
-import { Component, useExternalListener } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class CalendarCommonPopover extends Component {
     static template = "web.CalendarCommonPopover";
@@ -80,34 +81,47 @@ export class CalendarCommonPopover extends Component {
         const isSameDay = start.hasSame(end, "day");
 
         if (!record.isTimeHidden && !record.isAllDay && isSameDay) {
-            const timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
-            this.time = `${start.toFormat(timeFormat)} - ${end.toFormat(timeFormat)}`;
-
-            const duration = end.diff(start, ["hours", "minutes"]);
-            const formatParts = [];
-            if (duration.hours > 0) {
-                const hourString = duration.hours === 1 ? _t("hour") : _t("hours");
-                formatParts.push(`h '${hourString}'`);
-            }
-            if (duration.minutes > 0) {
-                const minuteStr = duration.minutes === 1 ? _t("minute") : _t("minutes");
-                formatParts.push(`m '${minuteStr}'`);
-            }
-            this.timeDuration = duration.toFormat(formatParts.join(", "));
+            this.time = this.formatTimeRange(start, end, is24HourFormat() ? "HH:mm" : "hh:mm a");
+            this.timeDuration = this.formatTimeDuration(end.diff(start, ["hours", "minutes"]));
         }
-
         if (!this.props.model.isDateHidden) {
-            this.date = getFormattedDateSpan(start, end);
-
-            if (record.isAllDay) {
-                if (isSameDay) {
-                    this.dateDuration = _t("All day");
-                } else {
-                    const duration = end.plus({ day: 1 }).diff(start, "days");
-                    this.dateDuration = duration.toFormat(`d '${_t("days")}'`);
-                }
-            }
+            this.date = this.formatDateRange(start, end);
+            this.dateDuration = this.formatDateDuration(start, end);
         }
+    }
+
+    formatTimeRange(start, end, timeFormat) {
+        return `${start.toFormat(timeFormat)} - ${end.toFormat(timeFormat)}`;
+    }
+
+    formatTimeDuration(duration) {
+        const formatParts = [];
+        if (duration.hours > 0) {
+            const hourString = duration.hours === 1 ? _t("hour") : _t("hours");
+            formatParts.push(`h '${hourString}'`);
+        }
+        if (duration.minutes > 0) {
+            const minuteStr = duration.minutes === 1 ? _t("minute") : _t("minutes");
+            formatParts.push(`m '${minuteStr}'`);
+        }
+        return duration.toFormat(formatParts.join(", "));
+    }
+
+    formatDateRange(start, end) {
+        return getFormattedDateSpan(start, end);
+    }
+
+    formatDateDuration(start, end) {
+        if (!this.props.record.isAllDay) {
+            return null;
+        }
+        if (start.hasSame(end, "day")) {
+            return _t("All day");
+        }
+        return end
+            .plus({ day: 1 })
+            .diff(start, "days")
+            .toFormat(`d '${_t("days")}'`);
     }
 
     onEditEvent() {

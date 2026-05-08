@@ -1,8 +1,6 @@
 import { after, expect, registerDebugInfo } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
 import {
     MockServer,
-    asyncStep,
     defineModels,
     getMockEnv,
     getService,
@@ -179,13 +177,16 @@ export function defineBusModels() {
 }
 
 /**
- * Returns a deferred that resolves when a websocket subscription is
- * done.
+ * Returns a promise that resolves when a websocket subscription is done.
  *
- * @returns {Deferred<void>}
+ * @returns {Promise<void>}
  */
 export function waitUntilSubscribe() {
-    const def = new Deferred();
+    const {
+        promise: subscriptionPromise,
+        reject: rejectSubscription,
+        resolve: resolveSubscription,
+    } = Promise.withResolvers();
     const timeout = setTimeout(() => handleResult(false), TIMEOUT);
 
     function handleResult(success) {
@@ -196,18 +197,18 @@ export function waitUntilSubscribe() {
             : "Websocket subscription not received.";
         expect(success).toBe(true, { message });
         if (success) {
-            def.resolve();
+            resolveSubscription();
         } else {
-            def.reject(new Error(message));
+            rejectSubscription(new Error(message));
         }
     }
     const offWebsocketEvent = onWebsocketEvent("subscribe", () => handleResult(true));
-    return def;
+    return subscriptionPromise;
 }
 
 /**
- * Returns a deferred that resolves when the given channel addition/deletion
- * occurs. Resolve immediately if the operation was already done.
+ * Returns a promise that resolves when the given channel addition/deletion
+ * occurs. Resolves immediately if the operation was already done.
  *
  * @param {string[]} channels
  * @param {object} [options={}]
@@ -216,7 +217,11 @@ export function waitUntilSubscribe() {
  */
 export async function waitForChannels(channels, { operation = "add" } = {}) {
     const { env } = MockServer;
-    const def = new Deferred();
+    const {
+        promise: channelUpdatePromise,
+        reject: rejectChannelUpdate,
+        resolve: resolveChannelUpdate,
+    } = Promise.withResolvers();
     let done = false;
     let failTimeout;
 
@@ -244,9 +249,9 @@ export async function waitForChannels(channels, { operation = "add" } = {}) {
                   }`;
         expect(success).toBe(true, { message });
         if (success) {
-            def.resolve();
+            resolveChannelUpdate();
         } else {
-            def.reject(new Error(message(false)));
+            rejectChannelUpdate(new Error(message(false)));
         }
         done = true;
     }
@@ -259,7 +264,7 @@ export async function waitForChannels(channels, { operation = "add" } = {}) {
     failTimeout = setTimeout(() => check(true), TIMEOUT);
     check(false);
 
-    return def;
+    return channelUpdatePromise;
 }
 
 /**
@@ -301,7 +306,7 @@ export function stepWorkerActions(targetActions) {
     patchWithCleanup(getWebSocketWorker(), {
         _onClientMessage(_, { action }) {
             if (targetActions.includes(action)) {
-                asyncStep(action);
+                expect.step(action);
             }
             return super._onClientMessage(...arguments);
         },

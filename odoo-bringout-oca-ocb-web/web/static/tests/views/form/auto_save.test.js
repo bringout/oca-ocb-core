@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { unload } from "@odoo/hoot-dom";
+import { press, unload, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockSendBeacon } from "@odoo/hoot-mock";
 import {
     contains,
@@ -93,6 +93,178 @@ test("save only once when hiding tab several times quickly", async () => {
     await hideTab();
     await hideTab();
     // should have saved, but only once
+    expect.verifySteps(["save"]);
+});
+
+test("hiding tab multiple times (server error)", async () => {
+    expect.errors(1);
+    onRpc("web_save", () => {
+        expect.step("save");
+        throw makeServerError({ message: "Cannot save" });
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="name"/></form>`,
+        resId: 1,
+    });
+    expect(".o_field_widget[name=name] input").toHaveValue("Xavier Lancer");
+    await contains(".o_field_widget[name=name] input").edit("Mathiew Brown");
+
+    // simulate a tab switch
+    await hideTab();
+    await waitFor(".o_dialog");
+    expect(".o_dialog .modal-body").toHaveText("Cannot save");
+    expect.verifySteps(["save"]);
+    expect.verifyErrors(["Cannot save"]);
+
+    // simulate another tab switch => should not try to save again
+    await hideTab();
+    await waitFor(".o_dialog");
+    expect.verifySteps([]);
+    expect.verifyErrors([]);
+});
+
+test("hiding tab multiple times (server error) + make another change", async () => {
+    expect.errors(2);
+    onRpc("web_save", () => {
+        expect.step("save");
+        throw makeServerError({ message: "Cannot save" });
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="name"/></form>`,
+        resId: 1,
+    });
+    expect(".o_field_widget[name=name] input").toHaveValue("Xavier Lancer");
+    await contains(".o_field_widget[name=name] input").edit("Mathiew Brown");
+
+    // simulate a tab switch
+    await hideTab();
+    await waitFor(".o_dialog");
+    expect(".o_dialog .modal-body").toHaveText("Cannot save");
+    expect.verifySteps(["save"]);
+    expect.verifyErrors(["Cannot save"]);
+
+    // close the dialog and simulate another tab switch
+    await contains(".o_dialog .btn-primary").click();
+    expect(".o_dialog").toHaveCount(0);
+    await hideTab();
+    await animationFrame();
+    expect.verifySteps([]);
+    expect.verifyErrors([]);
+
+    // make change and simulate another tab switch
+    await contains(".o_field_widget[name=name] input").edit("Mathiew Brown 2");
+    await hideTab();
+    await waitFor(".o_dialog");
+    expect(".o_dialog .modal-body").toHaveText("Cannot save");
+    expect.verifySteps(["save"]);
+    expect.verifyErrors(["Cannot save"]);
+});
+
+test("hiding tab multiple times (invalid fields)", async () => {
+    onRpc("web_save", () => {
+        expect.step("save"); // should not be called
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="name" required="1"/></form>`,
+        resId: 1,
+    });
+    expect(".o_field_widget[name=name] input").toHaveValue("Xavier Lancer");
+    await contains(".o_field_widget[name=name] input").edit("");
+
+    // simulate a tab switch
+    await hideTab();
+    await animationFrame();
+    expect(".o_notification").toHaveCount(1);
+    expect.verifySteps([]);
+
+    // simulate another tab switch => should not display the notification again
+    await hideTab();
+    await animationFrame();
+    expect(".o_notification").toHaveCount(1);
+    expect.verifySteps([]);
+});
+
+test("hiding tab multiple times (invalid fields, without bluring)", async () => {
+    onRpc("web_save", () => {
+        expect.step("save"); // should not be called
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="name" required="1"/></form>`,
+        resId: 1,
+    });
+    expect(".o_field_widget[name=name] input").toHaveValue("Xavier Lancer");
+    await contains(".o_field_widget[name=name] input").edit("", { confirm: false });
+
+    // simulate a tab switch
+    await hideTab();
+    await animationFrame();
+    expect(".o_notification").toHaveCount(1);
+    expect.verifySteps([]);
+
+    // simulate another tab switch => should not display the notification again
+    await hideTab();
+    await animationFrame();
+    expect(".o_notification").toHaveCount(1);
+    expect.verifySteps([]);
+});
+
+test("hiding tab multiple times (invalid field) + make another change", async () => {
+    onRpc("web_save", () => {
+        expect.step("save"); // should not be called
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="name" required="1"/></form>`,
+        resId: 1,
+    });
+    expect(".o_field_widget[name=name] input").toHaveValue("Xavier Lancer");
+    await contains(".o_field_widget[name=name] input").edit("");
+
+    // simulate a tab switch
+    await hideTab();
+    await animationFrame();
+    expect(".o_notification").toHaveCount(1);
+    expect.verifySteps([]);
+
+    // make change and simulate another tab switch
+    await contains(".o_field_widget[name=name] input").edit("Jean-Claude Dusse");
+    await hideTab();
+    await animationFrame();
+    expect.verifySteps(["save"]);
+});
+
+test("hiding tab multiple times (invalid field) + make another change (no blur)", async () => {
+    onRpc("web_save", () => {
+        expect.step("save"); // should not be called
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="name" required="1"/></form>`,
+        resId: 1,
+    });
+    expect(".o_field_widget[name=name] input").toHaveValue("Xavier Lancer");
+    await contains(".o_field_widget[name=name] input").edit("");
+
+    // simulate a tab switch
+    await hideTab();
+    await animationFrame();
+    expect(".o_notification").toHaveCount(1);
+    expect.verifySteps([]);
+
+    // make change and simulate another tab switch
+    await contains(".o_field_widget[name=name] input").edit("Jean-Claude", { confirm: false });
+    await hideTab();
+    await animationFrame();
     expect.verifySteps(["save"]);
 });
 
@@ -194,6 +366,51 @@ test(`save when breadcrumb clicked`, async () => {
     expect(`.o_form_editable`).toHaveCount(1);
     expect(`.o_breadcrumb`).toHaveText("Partner\naaa");
     expect('.o_field_widget[name="name"] input').toHaveValue("aaa");
+});
+
+test.tags("desktop");
+test(`save unblured char field when alt+B (breadcrumb back) pressed`, async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    Partner._views = {
+        list: `<list><field name="name"/></list>`,
+        form: `
+            <form>
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        `,
+    };
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args).toEqual([[1], { name: "aaa" }]);
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_field_cell:eq(0)`).toHaveText("Xavier Lancer");
+
+    await contains(`.o_data_row td.o_data_cell`).click();
+    expect(`.o_breadcrumb`).toHaveText("Partner\nXavier Lancer");
+
+    await contains(`.o_field_widget[name='name'] input`).edit("aaa", { confirm: false });
+    await press(["alt", "b"]);
+    await waitFor(".o_list_view");
+    expect(`.o_breadcrumb`).toHaveText("Partner");
+    expect(`.o_field_cell:eq(0)`).toHaveText("aaa");
+    expect.verifySteps(["web_save"]);
 });
 
 test.tags("desktop");
@@ -416,6 +633,28 @@ test("save on closing tab/browser (not dirty)", async () => {
     await unload();
     await animationFrame();
     expect.verifySteps([]);
+});
+
+test("save on closing tab/browser (new record, not dirty)", async () => {
+    mockSendBeacon(() => expect.step("sendBeacon"));
+    onRpc("partner", "web_save", () => expect.step("save"));
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <group>
+                    <field name="name"/>
+                </group>
+            </form>
+        `,
+    });
+
+    const [event] = await unload();
+    await animationFrame();
+    expect.verifySteps([]);
+    expect(event.defaultPrevented).toBe(false);
 });
 
 test("save on closing tab/browser (not dirty but trailing spaces)", async () => {

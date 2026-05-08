@@ -1,12 +1,9 @@
+import { useComponent, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
     onWillUpdateProps,
     onWillUnmount,
-    useEffect,
-    useExternalListener,
-    useRef,
-    useComponent,
 } from "@odoo/owl";
 
 function useResizable({
@@ -36,7 +33,7 @@ function useResizable({
     });
 
     let docDirection;
-    useEffect(
+    useLayoutEffect(
         (container) => {
             if (container) {
                 docDirection = getComputedStyle(container).direction;
@@ -47,7 +44,7 @@ function useResizable({
 
     onMounted(() => {
         if (handleRef.el) {
-            resize(initialWidth);
+            resize(Math.max(initialWidth, getMinWidth(props) || 0));
             handleRef.el.addEventListener("mousedown", onMouseDown);
         }
     });

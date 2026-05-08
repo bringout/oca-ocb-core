@@ -1,28 +1,29 @@
-import { ImStatus } from "@mail/core/common/im_status";
+import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { _t } from "@web/core/l10n/translation";
 
 class ChatBubblePreview extends Component {
+    static components = { MessageSeenIndicator };
     static props = ["chatWindow", "close"];
     static template = "mail.ChatBubblePreview";
 
-    /** @returns {import("models").Thread} */
-    get thread() {
-        return this.props.chatWindow.thread;
+    /** @returns {import("models").DiscussChannel} */
+    get channel() {
+        return this.props.chatWindow.channel;
     }
 
     get previewText() {
-        const lastMessage = this.thread?.newestPersistentOfAllMessage;
-        if (!lastMessage) {
-            return false;
-        }
-        return lastMessage.previewText;
+        const lastMessage = this.channel.newestPersistentOfAllMessage;
+        return lastMessage?.previewText || _t("This is the start of your conversation");
     }
 }
 
@@ -31,7 +32,7 @@ class ChatBubblePreview extends Component {
  * @extends {Component<Props, Env>}
  */
 export class ChatBubble extends Component {
-    static components = { CountryFlag, ImStatus };
+    static components = { CountryFlag, DiscussAvatar };
     static props = ["chatWindow"];
     static template = "mail.ChatBubble";
 
@@ -42,6 +43,7 @@ export class ChatBubble extends Component {
         this.isMobileOS = isMobileOS();
         this.popover = usePopover(ChatBubblePreview, {
             animation: false,
+            onClose: () => (this.state.isPopoverOpen = false),
             position: "left-middle",
             popoverClass:
                 "dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
@@ -57,29 +59,23 @@ export class ChatBubble extends Component {
             onHover: () => {
                 this.env.bus.trigger("ChatBubble:preview-will-open", this);
                 this.popover.open(this.rootRef.el, { chatWindow: this.props.chatWindow });
+                this.state.isPopoverOpen = true;
             },
             onAway: () => this.popover.close(),
         });
         this.rootRef = useRef("root");
-        this.state = useState({ bouncing: false });
-        useEffect(
+        this.state = useState({ bouncing: false, isPopoverOpen: false });
+        useLayoutEffect(
             (importantCounter) => {
                 this.state.bouncing = Boolean(importantCounter);
             },
-            () => [this.thread?.importantCounter]
+            () => [this.channel?.importantCounter]
         );
         useSubEnv({ inChatBubble: true });
     }
 
-    /** @returns {import("models").Thread} */
-    get thread() {
-        return this.props.chatWindow.thread;
-    }
-
-    get showImStatus() {
-        return (
-            this.thread?.correspondent?.im_status &&
-            this.thread.correspondent.im_status !== "offline"
-        );
+    /** @returns {import("models").Channel} */
+    get channel() {
+        return this.props.chatWindow.channel;
     }
 }

@@ -31,7 +31,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
 
     def test_access_saleperson(self):
         """ Check a saleperson (only) can generate a PO and a PO user can not confirm a SO """
-        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
+        SaleOrder = self.env['sale.order']
 
         sale_order = SaleOrder.with_user(self.user_salesperson).create({
             'partner_id': self.partner_a.id,
@@ -63,5 +63,6 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         purchase_orders.read()
 
         # try to access the PO lines from the SO, as sale person
+        self.assertFalse(sol_service_purchase.with_user(self.user_salesperson).purchase_line_ids)
         with self.assertRaises(AccessError):
-            sol_service_purchase.with_user(self.user_salesperson).purchase_line_ids.read()
+            sol_service_purchase.sudo().purchase_line_ids.with_user(self.user_salesperson).read()

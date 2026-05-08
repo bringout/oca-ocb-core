@@ -2,14 +2,15 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
-import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { render, useState } from "@web/owl2/utils";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 /**
@@ -26,10 +27,10 @@ export class Activity extends Component {
 
     setup() {
         super.setup();
-        this.storeService = useService("mail.store");
+        this.store = useService("mail.store");
         this.state = useState({ showDetails: false });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
-        this.avatarCard = usePopover(AvatarCardPopover);
+        this.avatarCard = usePopover(AvatarCard);
         onMounted(() => {
             this.updateDelayAtNight();
         });
@@ -47,7 +48,7 @@ export class Activity extends Component {
     updateDelayAtNight() {
         browser.clearTimeout(this.updateDelayMidnightTimeout);
         this.updateDelayMidnightTimeout = browser.setTimeout(
-            () => this.render(),
+            () => render(this),
             getMsToTomorrow() + 100
         ); // Make sure there is no race condition
     }
@@ -90,6 +91,7 @@ export class Activity extends Component {
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(target, {
                 id: this.props.activity.user_id.id,
+                model: "res.users",
             });
         }
     }
@@ -100,15 +102,8 @@ export class Activity extends Component {
         this.props.onActivityChanged(thread);
     }
 
-    async unlink() {
-        const thread = this.thread;
-        this.props.activity.remove();
-        await this.env.services.orm.unlink("mail.activity", [this.props.activity.id]);
-        this.props.onActivityChanged(thread);
-    }
-
     get thread() {
-        return this.env.services["mail.store"].Thread.insert({
+        return this.env.services["mail.store"]["mail.thread"].insert({
             model: this.props.activity.res_model,
             id: this.props.activity.res_id,
         });
@@ -118,6 +113,6 @@ export class Activity extends Component {
      * @param {MouseEvent} ev
      */
     async onClick(ev) {
-        this.storeService.handleClickOnLink(ev, this.thread);
+        this.store.handleClickOnLink(ev, this.thread);
     }
 }

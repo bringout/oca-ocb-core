@@ -8,33 +8,35 @@ import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
 import { Component, xml } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 const isSmall = utils.isSmall;
 
+const formatterRegistry = registry.category("formatters");
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
-const validFieldTypes = [
-    "binary",
-    "boolean",
-    "json",
-    "integer",
-    "float",
-    "monetary",
-    "properties",
-    "properties_definition",
-    "reference",
-    "many2one_reference",
-    "many2one",
-    "one2many",
-    "many2many",
-    "selection",
-    "date",
-    "datetime",
-    "char",
-    "text",
-    "html",
-];
+const validFieldTypes = {
+    binary: { availableOffline: false },
+    boolean: { availableOffline: true },
+    json: { availableOffline: true },
+    integer: { availableOffline: true },
+    float: { availableOffline: true },
+    monetary: { availableOffline: true },
+    properties: { availableOffline: false },
+    properties_definition: { availableOffline: false },
+    reference: { availableOffline: false },
+    many2one_reference: { availableOffline: false },
+    many2one: { availableOffline: true },
+    one2many: { availableOffline: false },
+    many2many: { availableOffline: true },
+    selection: { availableOffline: true },
+    date: { availableOffline: true },
+    datetime: { availableOffline: true },
+    char: { availableOffline: true },
+    text: { availableOffline: true },
+    html: { availableOffline: true },
+};
 
 const supportedInfoValidation = {
     type: Array,
@@ -71,7 +73,7 @@ fieldRegistry.addValidation({
         type: Array,
         element: String,
         optional: true,
-        validate: (array) => array.every((x) => validFieldTypes.includes(x)),
+        validate: (array) => array.every((x) => x in validFieldTypes),
     },
     extractProps: { type: Function, optional: true },
     isEmpty: { type: Function, optional: true },
@@ -143,7 +145,10 @@ export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
 }
 
 export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
-    const readonly = evaluateBooleanExpr(fieldInfo.readonly, record.evalContextWithVirtualIds);
+    const readonly =
+        fieldInfo.viewType === "form" && !record.isInEdition
+            ? true
+            : evaluateBooleanExpr(fieldInfo.readonly, record.evalContextWithVirtualIds);
     const required = evaluateBooleanExpr(fieldInfo.required, record.evalContextWithVirtualIds);
     const inEdit = record.isInEdition;
 
@@ -355,6 +360,7 @@ export class Field extends Component {
     };
 
     setup() {
+        this.offlineService = useService("offline");
         if (this.props.fieldInfo) {
             this.field = this.props.fieldInfo.field;
         } else {
@@ -409,7 +415,13 @@ export class Field extends Component {
 
     get fieldComponentProps() {
         const record = this.props.record;
-        let readonly = this.props.readonly || false;
+        // Disable edition in offline mode, except for a some fields
+        let readonly =
+            this.props.readonly ||
+            (this.offlineService.offline &&
+                !validFieldTypes[this.props.record.fields[this.props.name].type]
+                    .availableOffline) ||
+            false;
 
         let propsFromNode = {};
         if (this.props.fieldInfo) {
@@ -425,10 +437,12 @@ export class Field extends Component {
                         attrs: { ...fieldInfo.attrs, ...this.props.attrs },
                     };
                 }
-                if (fieldInfo.attrs.placeholder || fieldInfo.options.placeholder_field) {
-                    fieldInfo.placeholder =
-                        record.data[fieldInfo.options.placeholder_field] ||
-                        fieldInfo.attrs.placeholder;
+                if (fieldInfo.options.placeholder_field) {
+                    const placeholderField = fieldInfo.options.placeholder_field;
+                    const formatter = formatterRegistry.get(record.fields[placeholderField].type);
+                    fieldInfo.placeholder = formatter(record.data[placeholderField]);
+                } else if (fieldInfo.attrs.placeholder) {
+                    fieldInfo.placeholder = fieldInfo.attrs.placeholder;
                 }
 
                 const dynamicInfo = {
@@ -478,5 +492,11 @@ export class Field extends Component {
             }
         }
         return false;
+    }
+    onFieldFocus(isActive) {
+        const formLabelSelector = `.o_cell:has(+ .o_cell .o_field_widget[name=${this.props.name}]) .o_form_label`;
+        document
+            .querySelector(`label[for=${this.fieldComponentProps.id}], ${formLabelSelector}`)
+            ?.classList.toggle("o_label_active", isActive);
     }
 }

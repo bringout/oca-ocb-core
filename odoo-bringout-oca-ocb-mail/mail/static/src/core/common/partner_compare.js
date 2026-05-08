@@ -11,7 +11,7 @@ export const partnerCompareRegistry = registry.category("mail.partner_compare");
 
 partnerCompareRegistry.add(
     "mail.archived-last-except-odoobot",
-    (p1, p2) => {
+    function archivedLastExceptOdoobot(p1, p2) {
         const p1active = p1.active || p1.eq(p1.store.odoobot);
         const p2active = p2.active || p2.eq(p2.store.odoobot);
         if (!p1active && p2active) {
@@ -25,8 +25,41 @@ partnerCompareRegistry.add(
 );
 
 partnerCompareRegistry.add(
+    "mail.self-last",
+    function selfLast(p1, p2, { store }) {
+        const isSelf1 = p1.eq(store.self);
+        const isSelf2 = p2.eq(store.self);
+        if (isSelf1 && !isSelf2) {
+            return 1;
+        }
+        if (!isSelf1 && isSelf2) {
+            return -1;
+        }
+    },
+    { sequence: 7 }
+);
+
+partnerCompareRegistry.add(
+    "mail.recent-authors",
+    function recentAuthors(p1, p2, { context: { latestMessageIdByAuthorId } }) {
+        const p1MessageId = latestMessageIdByAuthorId.get(p1.id);
+        const p2MessageId = latestMessageIdByAuthorId.get(p2.id);
+        if (p1MessageId !== undefined && p2MessageId === undefined) {
+            return -1;
+        }
+        if (p1MessageId === undefined && p2MessageId !== undefined) {
+            return 1;
+        }
+        if (p1MessageId !== undefined && p2MessageId !== undefined && p1MessageId !== p2MessageId) {
+            return p2MessageId - p1MessageId;
+        }
+    },
+    { sequence: 10 }
+);
+
+partnerCompareRegistry.add(
     "mail.internal-users",
-    (p1, p2) => {
+    function internalUsers(p1, p2) {
         const isAInternalUser = p1.main_user_id?.share === false;
         const isBInternalUser = p2.main_user_id?.share === false;
         if (isAInternalUser && !isBInternalUser) {
@@ -41,7 +74,7 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.followers",
-    (p1, p2, { thread }) => {
+    function followers(p1, p2, { thread }) {
         if (thread) {
             const followerList = [...thread.followers];
             if (thread.selfFollower) {
@@ -62,7 +95,7 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.name",
-    (p1, p2, { searchTerm }) => {
+    function name(p1, p2, { searchTerm }) {
         const cleanedName1 = cleanTerm(p1.name);
         const cleanedName2 = cleanTerm(p2.name);
         if (cleanedName1.startsWith(searchTerm) && !cleanedName2.startsWith(searchTerm)) {
@@ -83,13 +116,13 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.email",
-    (p1, p2, { searchTerm }) => {
+    function email(p1, p2, { searchTerm }) {
         const cleanedEmail1 = cleanTerm(p1.email);
         const cleanedEmail2 = cleanTerm(p2.email);
-        if (cleanedEmail1.startsWith(searchTerm) && !cleanedEmail1.startsWith(searchTerm)) {
+        if (cleanedEmail1.startsWith(searchTerm) && !cleanedEmail2.startsWith(searchTerm)) {
             return -1;
         }
-        if (!cleanedEmail2.startsWith(searchTerm) && cleanedEmail2.startsWith(searchTerm)) {
+        if (!cleanedEmail1.startsWith(searchTerm) && cleanedEmail2.startsWith(searchTerm)) {
             return 1;
         }
         if (cleanedEmail1 < cleanedEmail2) {

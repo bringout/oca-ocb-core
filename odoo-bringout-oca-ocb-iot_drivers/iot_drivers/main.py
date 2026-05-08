@@ -1,16 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import socket
+
 import requests
 import schedule
 import subprocess
 from threading import Thread
 import time
 
-from odoo.addons.iot_drivers.tools import certificate, helpers, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI
+from odoo.addons.iot_drivers.tools import certificate, helpers, system, upgrade, wifi
 from odoo.addons.iot_drivers.websocket_client import WebsocketClient
 
-if IS_RPI:
+if system.IS_RPI:
     from dbus.mainloop.glib import DBusGMainLoop
     DBusGMainLoop(set_as_default=True)  # Must be started from main thread
 
@@ -23,14 +24,13 @@ unsupported_devices = {}
 
 
 class Manager(Thread):
-    daemon = True
     ws_channel = ""
 
     def __init__(self):
-        super().__init__()
-        self.identifier = helpers.get_identifier()
+        super().__init__(daemon=True)
+        self.identifier = system.IOT_IDENTIFIER
         self.domain = self._get_domain()
-        self.version = helpers.get_version(detailed_version=True)
+        self.version = system.get_version(detailed_version=True)
         self.previous_iot_devices = {}
         self.previous_unsupported_devices = {}
 
@@ -38,8 +38,8 @@ class Manager(Thread):
         """
         Get the iot box domain based on the IP address and subject.
         """
-        subject = helpers.get_conf('subject')
-        ip_addr = helpers.get_ip()
+        subject = system.get_conf('subject')
+        ip_addr = system.get_ip()
         if subject and ip_addr:
             return ip_addr.replace('.', '-') + subject.strip('*')
         return ip_addr or '127.0.0.1'
@@ -64,7 +64,7 @@ class Manager(Thread):
             self.domain = new_domain
             changed = True
         # Version change
-        new_version = helpers.get_version(detailed_version=True)
+        new_version = system.get_version(detailed_version=True)
         if self.version != new_version:
             self.version = new_version
             changed = True
@@ -82,9 +82,12 @@ class Manager(Thread):
         """
         iot_box = {
             'identifier': self.identifier,
+            'mac': system.get_mac_address(),
             'ip': self.domain,
             'token': helpers.get_token(),
             'version': self.version,
+            'name': socket.gethostname(),  # TODO: remove when v18.0 is deprecated (backward compatibility)
+            "l10n_eg_proxy_token": system.get_conf("proxy_access_token", "options"),
         }
         devices_list = {}
         for device in self.previous_iot_devices.values():
@@ -108,6 +111,7 @@ class Manager(Thread):
                     timeout=5,
                 )
                 response.raise_for_status()
+                # TODO: remove when v19 is deprecated, ws channel is provided by db
                 data = response.json()
                 self.ws_channel = data.get('result', '')
                 break  # Success, exit the retry loop
@@ -120,27 +124,25 @@ class Manager(Thread):
                     time.sleep(delay)
                 else:
                     _logger.exception('Could not reach configured server to send all IoT devices after %d attempts.', max_retries)
-            except ValueError:
-                _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
-                break
 
     def run(self):
         """Thread that will load interfaces and drivers and contact the odoo server
         with the updates. It will also reconnect to the Wi-Fi if the connection is lost.
         """
-        if IS_RPI:
+        _logger.info("==== Starting Odoo IoT Box Service ====")
+
+        if system.IS_RPI:
             # ensure that the root filesystem is writable retro compatibility (TODO: remove this in 19.0)
             subprocess.run(["sudo", "mount", "-o", "remount,rw", "/"], check=False)
             subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"], check=False)
 
-            wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
+            wifi.reconnect(system.get_conf('wifi_ssid'), system.get_conf('wifi_password'))
 
-        helpers.start_nginx_server()
-        _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
-        upgrade.check_git_branch()
+        system.start_nginx_server()
+        _logger.info("IoT Box Image version: %s", system.get_version(detailed_version=True))
 
-        if IS_RPI and helpers.get_odoo_server_url():
-            helpers.generate_password()
+        if system.IS_RPI and helpers.get_odoo_server_url():
+            system.generate_password()
 
         certificate.ensure_validity()
 
@@ -148,14 +150,12 @@ class Manager(Thread):
         # the identifier of the Box is not found in the DB. So add the Box to the DB.
         self._send_all_devices()
         helpers.download_iot_handlers()
-        helpers.load_iot_handlers()
-
-        for interface in interfaces.values():
-            interface().start()
 
         # Set scheduled actions
+        last_check_time = time.time()
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
+        schedule.every().monday.at("00:00").do(upgrade.check_git_branch)
 
         # Set up the websocket connection
         ws_client = WebsocketClient(self.ws_channel)
@@ -168,9 +168,17 @@ class Manager(Thread):
             try:
                 if self._get_changes_to_send():
                     self._send_all_devices()
-                if IS_RPI and helpers.get_ip() != '10.11.12.1':
-                    wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
+                if system.IS_RPI and system.get_ip() != '10.11.12.1':
+                    wifi.reconnect(system.get_conf('wifi_ssid'), system.get_conf('wifi_password'))
                 time.sleep(3)
+
+                current_time = time.time()
+                if abs(current_time - last_check_time) > 600:
+                    # The system clock was abruptly changed (e.g., NTP sync just happened).
+                    _logger.warning("System clock was abruptly changed, resetting scheduled jobs to avoid misfires")
+                    for job in schedule.get_jobs():
+                        job._schedule_next_run()  # reset the next execution time
+                last_check_time = current_time
                 schedule.run_pending()
             except Exception:
                 # No matter what goes wrong, the Manager loop needs to keep running

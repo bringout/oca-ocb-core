@@ -1,19 +1,13 @@
+import { render, useComponent } from "@web/owl2/utils";
 import { RPCError } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { Deferred, Race } from "@web/core/utils/concurrency";
+import { Race } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "./sample_server";
 
-import {
-    EventBus,
-    onWillStart,
-    onWillUnmount,
-    onWillUpdateProps,
-    status,
-    useComponent,
-} from "@odoo/owl";
+import { EventBus, onWillStart, onWillUnmount, onWillUpdateProps, status } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/env").OdooEnv} OdooEnv
@@ -34,8 +28,8 @@ export class Model {
         this.orm = services.orm;
         this.bus = new EventBus();
         this.isReady = false;
-        this.whenReady = new Deferred();
-        this.whenReady.then(() => {
+        this.whenReady = Promise.withResolvers();
+        this.whenReady.promise.then(() => {
             this.isReady = true;
             this.notify();
         });
@@ -143,7 +137,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
 
     const model = new ModelClass(component.env, params, services);
 
-    const onUpdate = () => component.render(true);
+    const onUpdate = () => render(component, true);
     model.bus.addEventListener("update", onUpdate);
     onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
 
@@ -155,6 +149,18 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     model.useSampleModel = false;
     const orm = model.orm;
     let sampleORM = localState.sampleORM;
+
+    // Always disable the sample model when `load` is called (can be called by the view itself).
+    // Note: the only case where the sample mode should be kept after a load is handled below (see
+    // @_load), and in that case, the flag is directly set to true afterwards.
+    if (useSampleModel) {
+        const originalLoad = model.load;
+        model.load = async function () {
+            const result = await originalLoad.call(this, ...arguments);
+            this.useSampleModel = false;
+            return result;
+        };
+    }
 
     /**
      * @param {Record<string, unknown>} props

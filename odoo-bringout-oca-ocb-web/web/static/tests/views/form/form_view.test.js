@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { after, before, expect, test } from "@odoo/hoot";
 import {
     clear,
@@ -45,6 +46,7 @@ import {
     getService,
     installLanguages,
     makeServerError,
+    mockOffline,
     MockServer,
     mockService,
     models,
@@ -58,7 +60,6 @@ import {
     toggleActionMenu,
     toggleMenuItem,
     toggleSearchBarMenu,
-    waitForSteps,
 } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -72,6 +73,7 @@ import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
 import { Field } from "@web/views/fields/field";
 import { IntegerField } from "@web/views/fields/integer/integer_field";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
@@ -256,6 +258,184 @@ test(`simple form rendering`, async () => {
     expect(`div.o_field_one2many table`).toHaveCount(1);
     expect(`div.o_cell:not(.o_list_record_selector) .o-checkbox input:checked`).toHaveCount(1);
     expect(`label.o_form_label_empty:contains(type_ids)`).toHaveCount(0);
+});
+
+test(`[Offline] form switches to readonly in offline mode`, async () => {
+    const setOffline = mockOffline();
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field" string="f3_description"/>
+                <field name="float_field"/>
+                <field name="child_ids">
+                    <list>
+                        <field name="foo"/>
+                        <field name="bar"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(1);
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).not.toHaveAttribute("disabled");
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(1);
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(1);
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(1);
+
+    await setOffline(true);
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(1); // We can modify char fields
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).not.toHaveAttribute("disabled"); // We can modify boolean fields
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(1); // We can modify int fields
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(1); // We can modify float fields
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(0); // For the moment, we can't modify x2many fields
+
+    await setOffline(false);
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(1);
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).not.toHaveAttribute("disabled");
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(1);
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(1);
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(1);
+});
+
+test(`[Offline] save a form view offline (click save icon)`, async () => {
+    let offline = false;
+    onRpc("/*", (request) => {
+        const route = new URL(request.url).pathname;
+        if (route === "/web/dataset/call_kw/partner/web_save") {
+            expect.step("web_save");
+        }
+        if (offline) {
+            return new Response("", { status: 502 });
+        }
+    });
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_form_renderer").toHaveClass("o_form_editable");
+    expect(".o_field_widget[name=foo] input").toHaveValue("yop");
+    await contains(".o_field_widget[name=foo] input").edit("new foo");
+
+    await runAllTimers(); // execute first _syncORM triggered after a delay in the service startup
+
+    offline = true;
+    await contains(".o_form_button_save").click();
+    expect(".o_form_renderer").not.toHaveClass("o_form_readonly"); // We can create/edit offline
+    expect(".o_form_renderer").toHaveClass("o_form_editable");
+    expect(".o_field_widget[name=foo] input").toHaveValue("new foo");
+    expect(getService("offline").offline).toBe(true);
+    expect.verifySteps(["web_save"]);
+
+    // The edited record will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "PARTNER",
+        "first record",
+        "Edited",
+        "",
+    ]);
+
+    offline = false;
+    await runAllTimers(); // execute checkConnection
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect(".o_data_cell:first").toHaveText("new foo");
+});
+
+test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
+    expect.errors(1); // 1x ConnectionLostError
+    // this test is the same as above, but in this one we don't manually save
+    // the record before leaving
+    let offline = false;
+    onRpc("/*", (request) => {
+        const route = new URL(request.url).pathname;
+        if (route === "/web/dataset/call_kw/partner/web_save") {
+            expect.step("web_save");
+        }
+        if (offline) {
+            return new Response("", { status: 502 });
+        }
+    });
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_form_renderer").toHaveClass("o_form_editable");
+    expect(".o_field_widget[name=foo] input").toHaveValue("yop");
+    await contains(".o_field_widget[name=foo] input").edit("new foo");
+
+    await runAllTimers(); // execute first _syncORM triggered after a delay in the service startup
+
+    offline = true;
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_cell:first").toHaveText("yop"); // Old value, not yet saved
+    expect(getService("offline").offline).toBe(true);
+    expect.verifySteps(["web_save"]);
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+
+    // The edited record will be save the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "PARTNER",
+        "first record",
+        "Edited",
+        "",
+    ]);
+
+    offline = false;
+    await runAllTimers(); // execute checkConnection
+
+    expect(getService("offline").offline).toBe(false);
+    // TODO: It should be nice to reload the current view after sync ?? For me it should be "new foo"
+    expect(".o_data_cell:first").toHaveText("yop");
+    await expect.waitForSteps(["web_save"]);
 });
 
 test(`form rendering with class and style attributes`, async () => {
@@ -489,7 +669,7 @@ test(`duplicate fields rendered properly (one2many)`, async () => {
     await animationFrame();
     expect(`.o_field_one2many:eq(1) .o_data_row:eq(0) .o_data_cell[name=foo]`).toHaveText("hello");
 
-    await contains(`.o_field_one2many:eq(0) .o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_one2many:eq(0) .o_field_x2many_list_row_add button`).click();
     expect(`.o_field_one2many:eq(0) .o_selected_row .o_field_widget[name="foo"] input`).toHaveValue(
         "My little Foo Value"
     );
@@ -581,7 +761,7 @@ test(`form with o2m having a many2many fields using the many2many_tags widget al
                     <field name="partner_ids">
                         <list>
                             <field name="name"/>
-                            <field name="type_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="type_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                         </list>
                     </field>
                 </form>
@@ -671,7 +851,7 @@ test(`form with o2m having a selection field with fieldDependencies`, async () =
     });
     expect(`.o_field_widget[name=o2m] .o_data_row`).toHaveCount(1);
 
-    await contains(`.o_field_widget[name=o2m] .o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_widget[name=o2m] .o_field_x2many_list_row_add button`).click();
     expect(`.modal .o_form_view .o_field_widget[name=display_name]`).toHaveCount(1);
 });
 
@@ -929,7 +1109,7 @@ test(`field ids are unique (same field name in 2 form views)`, async () => {
 
     expect(".o_field_widget input#foo_0").toHaveCount(1);
 
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".modal .o_form_view").toHaveCount(1);
     expect(".o_field_widget input#foo_0").toHaveCount(1);
     expect(".modal .o_field_widget input#foo_0").toHaveCount(1);
@@ -1107,7 +1287,7 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
     });
 
     await contains(
-        `[name=type_ids] .o_field_x2many_list_row_add a, [name=type_ids] .o-kanban-button-new`
+        `[name=type_ids] .o_field_x2many_list_row_add button, [name=type_ids] .o-kanban-button-new`
     ).click();
     expect.verifySteps(["get_views (partner.type)"]);
 
@@ -1127,7 +1307,7 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
         form_view_ref: "bar.rescompany_form_view",
     });
 
-    await contains(`.modal [name=company_ids] .o_field_x2many_list_row_add a`).click();
+    await contains(`.modal [name=company_ids] .o_field_x2many_list_row_add button`).click();
     expect.verifySteps(["get_views (res.company)", "onchange (res.company)"]);
 });
 
@@ -1278,8 +1458,8 @@ test(`invisible elements are properly hidden`, async () => {
         resId: 1,
     });
     expect(`.o_form_statusbar button:contains(coucou)`).toHaveCount(0);
-    expect(`.o_notebook li a:contains(visible)`).toHaveCount(1);
-    expect(`.o_notebook li a:contains(invisible)`).toHaveCount(0);
+    expect(`.o_notebook li button:contains(visible)`).toHaveCount(1);
+    expect(`.o_notebook li button:contains(invisible)`).toHaveCount(0);
     expect(`div.o_inner_group:contains(visgroup)`).toHaveCount(1);
     expect(`div.o_inner_group:contains(invgroup)`).toHaveCount(0);
 });
@@ -2218,7 +2398,7 @@ test(`input ids for multiple occurrences of fields in sub form view (inline)`, a
             </form>
         `,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     const fieldIdAttrs = queryAllAttributes(`.modal .o_form_view .o_field_widget input`, "id");
     const labelForAttrs = queryAllAttributes(`.modal .o_form_view .o_form_label`, "for");
     expect(new Set(fieldIdAttrs)).toHaveLength(4);
@@ -2254,7 +2434,7 @@ test(`input ids for multiple occurrences of fields in sub form view (not inline)
         type: "form",
         arch: `<form><field name="child_ids" widget="one2many"/></form>`,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     const fieldIdAttrs = queryAllAttributes(`.modal .o_form_view .o_field_widget input`, "id");
     const labelForAttrs = queryAllAttributes(`.modal .o_form_view .o_form_label`, "for");
     expect(new Set(fieldIdAttrs)).toHaveLength(4);
@@ -2494,7 +2674,7 @@ test(`required field computed by another field in a x2m`, async () => {
             </form>
         `,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_data_row [name='int_field'] input`).edit("1");
     await contains(".o_form_view").click();
     expect(`.o_form_editable`).toHaveCount(1);
@@ -3606,7 +3786,7 @@ test(`onchange only send present fields value`, async () => {
     });
 
     // add a o2m row
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_field_one2many .o_field_widget[name=name] input`).edit("valid line", {
         confirm: false,
     });
@@ -3671,7 +3851,7 @@ test(`onchange send relation parent field values (including readonly)`, async ()
     await contains(`.o_field_widget[name=name] input`).edit("Test");
 
     // add a o2m row
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect.verifySteps([]);
 
     // trigger an onchange by modifying float_field
@@ -3813,7 +3993,7 @@ test(`remove default value in subviews`, async () => {
     });
     expect.verifySteps(["onchange:partner"]);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect.verifySteps(["onchange:product"]);
 });
 
@@ -3860,7 +4040,7 @@ test(`form with one2many with dynamic context`, async () => {
     });
     expect.verifySteps(["web_read"]);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect.verifySteps(["onchange"]);
 });
 
@@ -3930,7 +4110,6 @@ test(`make default record with non empty one2many`, async () => {
     Partner._fields.child_ids = fields.One2many({
         relation: "partner",
         default: [
-            [6, 0, []], // replace with zero ids
             [0, 0, { foo: "new foo1", product_id: 41, child_ids: [] }], // create a new value
             [0, 0, { foo: "new foo2", product_id: 37, child_ids: [] }], // create a new value
         ],
@@ -4036,6 +4215,106 @@ test(`archive/unarchive a record`, async () => {
         "action_unarchive",
         "web_read",
     ]);
+});
+
+test(`[Offline] archiving a record`, async () => {
+    onRpc("action_archive", () => expect.step(`action_archive`));
+    // add active field on partner model to have archive option
+    Partner._fields.active = fields.Boolean();
+    Partner._views = {
+        "form,false": `<form><field name="active"/><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_breadcrumb`).toHaveText("first record");
+    await setOffline(true);
+    expect(getService("offline").offline).toBe(true);
+
+    // open action menu and delete
+    await toggleActionMenu();
+    await toggleMenuItem("Archive");
+    expect(`.modal`).toHaveCount(1);
+
+    await contains(`.modal-footer .btn-primary`).click();
+
+    // The edited record will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "first record",
+        "Archived",
+        "",
+    ]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["action_archive"]);
+});
+
+test(`[Offline] Unarchiving a record`, async () => {
+    onRpc("action_unarchive", () => expect.step(`action_unarchive`));
+    // add active field on partner model to have archive option
+    Partner._fields.active = fields.Boolean();
+    Partner._records[0].active = false;
+    Partner._views = {
+        "form,false": `<form><field name="active"/><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_breadcrumb`).toHaveText("first record");
+    await setOffline(true);
+    expect(getService("offline").offline).toBe(true);
+
+    // open action menu and delete
+    await toggleActionMenu();
+    await toggleMenuItem("Unarchive");
+
+    // The edited record will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "first record",
+        "Unarchived",
+        "",
+    ]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["action_unarchive"]);
 });
 
 test(`apply custom standard action menu (archive)`, async () => {
@@ -4687,7 +4966,7 @@ test(`nolabel`, async () => {
                         </group>
                         <group class="secondgroup">
                             <field name="product_id"/>
-                            <field name="int_field" nolabel="1"/><field name="float_field" nolabel="1"/>
+                            <field name="int_field" nolabel="true"/><field name="float_field" nolabel="True"/>
                         </group>
                         <group>
                             <field name="bar"/>
@@ -4832,7 +5111,7 @@ test(`discard changes on relational data on new record`, async () => {
             </form>
         `,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_input_dropdown input`).click();
     await contains(`.dropdown-item:contains(xphone)`).click();
     expect(`.o_field_widget[name="product_id"] input`).toHaveValue("xphone");
@@ -5017,7 +5296,7 @@ test(`discard changes on a new (dirty) form view`, async () => {
 test(`discard has to wait for changes in each field`, async () => {
     const def = new Deferred();
     class CustomField extends Component {
-        static template = xml`<input t-ref="input" t-att-value="value" t-on-blur="onBlur" t-on-input="onInput" />`;
+        static template = xml`<input t-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput" />`;
         static props = {
             ...standardFieldProps,
         };
@@ -6026,9 +6305,58 @@ test(`deleting a record`, async () => {
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1);
 
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect(`.o_breadcrumb`).toHaveText("second record");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
+});
+
+test(`[Offline] deleting a record`, async () => {
+    onRpc("unlink", () => expect.step(`unlink`));
+    Partner._views = {
+        "form,false": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(`.o_breadcrumb`).toHaveText("first record");
+    await setOffline(true);
+    expect(getService("offline").offline).toBe(true);
+
+    // open action menu and delete
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    expect(`.modal`).toHaveCount(1);
+
+    await contains(`.modal-footer button.btn-danger`).click();
+
+    // The edited record will be saved the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "ACTION 1",
+        "first record",
+        "Deleted",
+        "",
+    ]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["unlink"]);
 });
 
 test.tags("desktop");
@@ -6048,7 +6376,7 @@ test(`deleting a record on desktop`, async () => {
     await toggleActionMenu();
     await toggleMenuItem("Delete");
 
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(2);
 });
@@ -6074,7 +6402,7 @@ test(`deleting the last record`, async () => {
     expect(`.modal`).toHaveCount(1);
     expect.verifySteps([]);
 
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect(`.modal`).toHaveCount(0);
     expect.verifySteps(["unlink", "history-back"]);
 });
@@ -6096,7 +6424,7 @@ test("delete the last record (without previous action)", async () => {
     await mountWithCleanup(WebClient);
     await toggleActionMenu();
     await toggleMenuItem("Delete");
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect.verifySteps(["__DEFAULT_ACTION__ called"]);
 });
 
@@ -6316,7 +6644,6 @@ test(`properly apply onchange on one2many fields`, async () => {
     Partner._onChanges = {
         foo(record) {
             record.child_ids = [
-                [5],
                 [1, 4, { name: "updated record" }],
                 [0, null, { name: "created record" }],
             ];
@@ -6396,7 +6723,7 @@ test(`update many2many value in one2many after onchange`, async () => {
     Partner._records[1].child_ids = [4];
     Partner._onChanges = {
         foo(record) {
-            record.child_ids = [[5], [1, 4, { name: "gold", type_ids: [[5]] }]];
+            record.child_ids = [[1, 4, { name: "gold", type_ids: [[4, 12]] }]];
         },
     };
 
@@ -6419,7 +6746,7 @@ test(`update many2many value in one2many after onchange`, async () => {
     expect(queryAllTexts`.o_data_cell`).toEqual(["aaa", "No records"]);
 
     await contains(`.o_field_widget[name=foo] input`).edit("tralala");
-    expect(queryAllTexts`.o_data_cell`).toEqual(["gold", "No records"]);
+    expect(queryAllTexts`.o_data_cell`).toEqual(["gold", "1 record"]);
 });
 
 test(`delete a line in a one2many while editing another line`, async () => {
@@ -6897,7 +7224,7 @@ test(`args of onchanges in o2m fields are correct (inline edition)`, async () =>
     expect(`.o_data_row td[name=foo]`).toHaveText("[blip] 77");
 
     // create a new o2m record
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.o_data_row input:eq(0)`).toHaveValue("[blip] 14");
 });
 
@@ -6939,7 +7266,7 @@ test(`args of onchanges in o2m fields are correct (dialog edition)`, async () =>
     expect(`.o_data_row .o_data_cell`).toHaveText("[blip] 77");
 
     // create a new o2m record
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.modal .modal-title`).toHaveText("Create custom label");
     expect(`.modal .o_field_widget[name=foo] input`).toHaveValue("[blip] 14");
     await contains(`.modal-footer .btn-primary`).click();
@@ -7365,7 +7692,7 @@ test(`many2manys inside one2manys are saved correctly`, async () => {
         `,
     });
     // add a o2m subrecord with a m2m tag
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_input_dropdown input`).click();
     await contains(`.dropdown-item:contains(gold)`).click();
     await contains(`.o_form_button_save`).click();
@@ -7405,8 +7732,8 @@ test(`one2manys (list editable) inside one2manys are saved correctly`, async () 
     });
 
     // add a o2m subrecord
-    await contains(`.o_field_x2many_list_row_add a`).click();
-    await contains(`.modal .o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
+    await contains(`.modal .o_field_x2many_list_row_add button`).click();
     await contains(`.modal .o_field_widget[name=name] input`).edit("xtv");
     await contains(`.modal-footer .btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
@@ -7592,7 +7919,7 @@ test(`check if id is available in evaluation context`, async () => {
     });
 
     checkOnchange = true;
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect.verifySteps(["onchange"]);
 });
 
@@ -7969,7 +8296,7 @@ test(`correct amount of buttons`, async () => {
 
     const assertFormContainsNButtonsWithSizeClass = async function (sizeClass, n) {
         screenSize = sizeClass;
-        formView.render(true); // deep rendering
+        render(formView, true); // deep rendering
         await animationFrame();
         expect(`.o-form-buttonbox button.oe_stat_button`).toHaveCount(n);
     };
@@ -8241,7 +8568,7 @@ test(`check interactions between multiple FormViewDialogs`, async () => {
     expect(`.o_dialog:eq(1) .modal-title`).toHaveText("Open: Product");
     expect(`.o_dialog:eq(1) .o_field_widget[name=name] input`).toHaveValue("xphone");
 
-    await contains(`.o_dialog:eq(1) .o_field_x2many_list_row_add a`).click();
+    await contains(`.o_dialog:eq(1) .o_field_x2many_list_row_add button`).click();
     expect(`.modal`).toHaveCount(3);
 
     await contains(`.o_dialog:eq(2) .o_field_widget[name=name] input`).edit("xtv");
@@ -8429,11 +8756,12 @@ test(`default_order on x2many embedded view`, async () => {
         "My little Foo Value",
     ]);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.modal`).toHaveCount(1);
 
     await contains(`.modal .o_field_widget[name=foo] input`).edit("xop");
-    await contains(`.modal-footer .o_form_button_save_new`).click();
+    await contains(`.modal-footer .o_form_button_save`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.modal .o_field_widget[name=foo] input`).edit("zop");
     await contains(`.modal-footer .o_form_button_save`).click();
 
@@ -8706,9 +9034,9 @@ test(`form group with newline tag inside`, async () => {
     expect(`.main_inner_group .o_cell`).toHaveCount(6);
     expect(`.main_inner_group > .o_cell.o_wrap_label:first-child`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(2)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_label`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_input`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3)`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_label`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_input`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_label:nth-child(4)`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(5)`).toHaveCount(1);
 
@@ -8785,7 +9113,7 @@ test(`translation dialog with right context and domain`, async () => {
         resId: 1,
     });
     await contains(".o_field_translate").click();
-    await contains(`.o_field_translate.btn-link`).click();
+    await contains(`button.o_field_translate`).click();
     expect.verifySteps([
         `translate args [[1],"name"]`,
         `translate context {"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}`,
@@ -8818,7 +9146,7 @@ test(`save new record before opening translate dialog`, async () => {
     expect(`.o_form_editable`).toHaveCount(1);
 
     await contains(`.o_field_translate`).click();
-    await contains(`.o_field_translate.btn-link`).click();
+    await contains(`button.o_field_translate`).click();
     expect.verifySteps(["web_save", "get_field_translations"]);
     expect(`.modal`).toHaveCount(1);
     expect(`.modal-title`).toHaveText("Translate: name");
@@ -9213,7 +9541,7 @@ test(`context is correctly passed after save & new in FormViewDialog`, async () 
         arch: `<form><field name="product_ids"/></form>`,
         resId: 4,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.modal`).toHaveCount(1);
 
     // set a value on the m2o and click save & new
@@ -9225,7 +9553,9 @@ test(`context is correctly passed after save & new in FormViewDialog`, async () 
 
     // set a value on the m2o
     await contains(`.o_field_many2one[name="partner_type_id"] input`).click();
-    expect.verifySteps(["web_name_search"]);
+    expect.verifySteps([], {
+        message: "No additional name search since the request is identical",
+    });
 
     await contains(`.dropdown .dropdown-item:contains(silver)`).click();
     await contains(`.modal-footer .o_form_button_save`).click();
@@ -9276,7 +9606,7 @@ test(`readonly fields are not sent when saving`, async () => {
         `,
     });
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.modal .o_field_widget[name=foo] input`).toHaveCount(1);
 
     checkOnchange = true;
@@ -9338,7 +9668,7 @@ test(`delete a duplicated record`, async () => {
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1);
 
-    await contains(`.modal-footer .btn-primary`).click();
+    await contains(`.modal-footer .btn-danger`).click();
     expect(`.o_field_widget`).toHaveText("first record");
     expect.verifySteps(["unlink"]);
 });
@@ -9628,7 +9958,7 @@ test(`rainbowman attributes correctly passed on button click`, async () => {
 test(`basic support for widgets`, async () => {
     class MyComponent extends Component {
         static props = ["*"];
-        static template = xml`<div t-esc="value"/>`;
+        static template = xml`<div t-out="this.value"/>`;
         get value() {
             return JSON.stringify(this.props.record.data);
         }
@@ -9667,7 +9997,7 @@ test(`widget with class attribute`, async () => {
 test(`widget with readonly attribute`, async () => {
     class MyComponent extends Component {
         static props = ["*"];
-        static template = xml`<span t-esc="value"/>`;
+        static template = xml`<span t-out="this.value"/>`;
         get value() {
             return this.props.readonly ? "readonly" : "not readonly";
         }
@@ -9727,7 +10057,7 @@ test("support header button as widgets in submenu on form statusbar on mobile", 
                 <t t-set-slot="toggler">
                     <button>Upload Test</button>
                 </t>
-            </FileUploader>`
+            </FileUploader>`;
         static components = { FileUploader };
 
         onUploaded(ev) {
@@ -9754,13 +10084,13 @@ test("support header button as widgets in submenu on form statusbar on mobile", 
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
     await contains("input.o_input_file", { visible: false }).click();
     await setInputFiles([file]);
-    await waitForSteps(["File changed"]);
+    await expect.waitForSteps(["File changed"]);
 });
 
 test(`basic support for widgets: onchange update`, async () => {
     class MyWidget extends Component {
         static props = ["*"];
-        static template = xml`<t t-esc="state.dataToDisplay" />`;
+        static template = xml`<t t-out="this.state.dataToDisplay" />`;
         setup() {
             this.state = useState({
                 dataToDisplay: this.props.record.data.foo,
@@ -9983,7 +10313,7 @@ test(`keep editing after call_button fail`, async () => {
         `,
         resId: 1,
     });
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_field_widget[name=name] input`).edit("abc", { confirm: false });
     values = {
         name: "abc",
@@ -10085,7 +10415,7 @@ test(`save record with onchange on one2many with required field`, async () => {
         `,
     });
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.o_field_widget[name=name] input`).toHaveValue("");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("");
 
@@ -10484,12 +10814,12 @@ test(`resequence list lines when discardable lines are present`, async () => {
     expect(`[name="foo"] input`).toHaveValue("0");
 
     // Add one line
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_field_cell [name="name"] input`).edit("first line");
     expect.verifySteps(["onchange"]);
     expect(`[name="foo"] input`).toHaveValue("1");
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await animationFrame();
     // Drag and drop second line before first one (with 1 draft and invalid line)
     // TODO JUM: PRHOOT the events
@@ -10501,7 +10831,7 @@ test(`resequence list lines when discardable lines are present`, async () => {
     expect(`[name="foo"] input`).toHaveValue("1");
 
     // Add a second line
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_selected_row input`).edit("second line");
     expect.verifySteps(["onchange"]);
     expect(`[name="foo"] input`).toHaveValue("2");
@@ -10553,7 +10883,7 @@ test("resequence list lines when previous resequencing crashed", async () => {
     });
 
     // Add two lines
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
 
     await contains(".o_data_cell [name='name'] input").edit("first line");
     await animationFrame();
@@ -10833,7 +11163,7 @@ test(`field "length" with value 0: readonly fields are not sent when saving`, as
         `,
     });
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.modal .o_field_widget[name=foo] input`).toHaveCount(1);
 
     await contains(`.modal .o_field_widget[name=foo] input`).edit("foo value");
@@ -10851,7 +11181,7 @@ test(`fieldDependencies support for fields`, async () => {
     fieldsRegistry.add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="props.record.data.int_field"/>`;
+            static template = xml`<span t-esc="this.props.record.data.int_field"/>`;
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
     });
@@ -10871,7 +11201,7 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="props.record.data.product_id.display_name"/>`;
+            static template = xml`<span t-esc="this.props.record.data.product_id.display_name"/>`;
         },
         fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
     });
@@ -10982,9 +11312,11 @@ test(`form view with edit='0' but create='1', existing record`, async () => {
         resId: 1,
     });
     expect(`.o_form_readonly`).toHaveCount(1);
+    expect(`.o_field_widget[name=foo] span`).toHaveText("yop");
 
     await contains(`.o_form_button_create`).click();
     expect(`.o_form_editable`).toHaveCount(1);
+    expect(`.o_field_widget[name=foo] input`).toHaveValue("My little Foo Value");
 });
 
 test(`form view with edit='0' but create='1', new record`, async () => {
@@ -10994,6 +11326,23 @@ test(`form view with edit='0' but create='1', new record`, async () => {
         arch: `<form edit="0"><field name="foo"/></form>`,
     });
     expect(`.o_form_editable`).toHaveCount(1);
+    expect(`.o_field_widget[name=foo] input`).toHaveValue("My little Foo Value");
+});
+
+test(`form view with edit='0': all fields should be readonly`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form edit="0"><group><field name="foo"/></group></form>`,
+        resId: 1,
+    });
+    expect(`.o_form_editable`).toHaveCount(0);
+    expect(`.o_form_readonly`).toHaveCount(1);
+
+    expect(`label[for=foo_0].o_form_label_readonly`).toHaveCount(1);
+    expect(`.o_field_widget[name=foo].o_readonly_modifier`).toHaveCount(1);
+
+    expect(`input`).toHaveCount(0);
 });
 
 test(`save a form view with an invisible required field`, async () => {
@@ -11066,7 +11415,7 @@ test(`save a form view with an invisible required field in a x2many`, async () =
     });
     expect.verifySteps(["get_views", "onchange"]);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`[name='int_field'] input`).edit("1", { confirm: "blur" });
     expect(`[name='int_field'] input`).toHaveCount(0);
     expect.verifySteps(["onchange"]);
@@ -11412,10 +11761,10 @@ test(`Can't use FormRenderer implementation details in arch`, async () => {
         arch: `
             <form>
                 <div>
-                    <t t-esc="__owl__"/>
-                    <t t-esc="props"/>
-                    <t t-esc="env"/>
-                    <t t-esc="render"/>
+                    <t t-out="__owl__"/>
+                    <t t-out="props"/>
+                    <t t-out="env"/>
+                    <t t-out="render"/>
                 </div>
             </form>
         `,
@@ -11545,7 +11894,7 @@ test(`action button in x2many should display a notification if the record is vir
         `,
     });
 
-    await contains(`.o_field_one2many .o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_one2many .o_field_x2many_list_row_add button`).click();
     await contains(`button.oe_stat_button[name='test_action']`).click();
     expect.verifySteps([`danger:Please save your changes first`]);
 });
@@ -11573,7 +11922,7 @@ test(`open form view action in x2many should display a notification if the recor
         `,
     });
 
-    await contains(`.o_field_one2many .o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_one2many .o_field_x2many_list_row_add button`).click();
     await contains(`.o_list_record_open_form_view`).click();
     expect.verifySteps(["web_save", "ir.actions.act_window:partner(7)"]);
 });
@@ -11601,7 +11950,7 @@ test(`open form view action in x2many should work with several virtual record`, 
         `,
     });
     async function createVirtualRecord(x) {
-        await contains(`.o_field_x2many_list_row_add a`).click();
+        await contains(`.o_field_x2many_list_row_add button`).click();
         await contains(`.o_data_row [name='foo'] input`).edit(`record ${x}`);
     }
     await createVirtualRecord("a");
@@ -11634,7 +11983,7 @@ test(`open form view action in x2many with several virtual record with limit`, a
         `,
     });
     async function createVirtualRecord(x) {
-        await contains(`.o_field_x2many_list_row_add a`).click();
+        await contains(`.o_field_x2many_list_row_add button`).click();
         await contains(`.o_data_row [name='foo'] input`).edit(`record ${x}`);
     }
     await createVirtualRecord("a");
@@ -11683,7 +12032,7 @@ test(`prevent recreating a deleted record`, async () => {
     await contains(`.o-dropdown--menu .dropdown-item:contains(Delete)`).click();
     expect(`.modal`).toHaveCount(1);
 
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(0);
 });
@@ -11705,7 +12054,7 @@ test(`coming to an action with an error from a form view with a dirty x2m`, asyn
         static props = ["*"];
         static template = xml`
             <div class="test_widget">
-                <button t-on-click="onClick">MyButton</button>
+                <button t-on-click="this.onClick">MyButton</button>
             </div>
         `;
         setup() {
@@ -11750,7 +12099,9 @@ test(`coming to an action with an error from a form view with a dirty x2m`, asyn
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
 
-    await contains(`.o_field_one2many[name="child_ids"] .o_field_x2many_list_row_add a`).click();
+    await contains(
+        `.o_field_one2many[name="child_ids"] .o_field_x2many_list_row_add button`
+    ).click();
     await contains(`[name="child_ids"] input`).edit("new");
     expect.verifySteps(["web_read"]);
 
@@ -11785,7 +12136,7 @@ test(`coming to an action with an error from a form view with a record in creati
         static props = ["*"];
         static template = xml`
                 <div class="test_widget">
-                    <button t-on-click="onClick">MyButton</button>
+                    <button t-on-click="this.onClick">MyButton</button>
                 </div>`;
         setup() {
             this.actionService = useService("action");
@@ -11965,7 +12316,7 @@ test(`widget update several fields including an x2m`, async () => {
     };
     class TestWidget extends Component {
         static props = ["*"];
-        static template = xml`<div><button t-on-click="onClick">Click</button></div>`;
+        static template = xml`<div><button t-on-click="this.onClick">Click</button></div>`;
 
         onClick() {
             this.props.record.update({
@@ -12149,7 +12500,7 @@ test(`custom x2many with relatedFields and list view inline`, async () => {
         resId: 2,
     });
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_data_row [name='foo'] input`).edit("new record");
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_read", "web_save"]);
@@ -12200,7 +12551,7 @@ test(`custom x2many with a m2o in relatedFields and column_invisible`, async () 
         resId: 2,
     });
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_data_row [name='foo'] input`).edit("new record");
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_read", "web_save"]);
@@ -12257,7 +12608,7 @@ test(`custom x2many with relatedFields and list view not inline`, async () => {
         resId: 2,
     });
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_data_row [name='foo'] input`).edit("new record");
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_read", "web_save"]);
@@ -12266,12 +12617,12 @@ test(`custom x2many with relatedFields and list view not inline`, async () => {
 test(`custom many2one with relatedFields`, async () => {
     class CustomMany2One extends Component {
         static template = xml`
-            <t t-set="value" t-value="props.record.data[props.name]"/>
+            <t t-set="value" t-value="this.props.record.data[this.props.name]"/>
             <div class="content">
-                <div t-esc="value.id"/>
-                <div t-esc="value.display_name"/>
-                <div t-esc="value.foo"/>
-                <div t-esc="value.int_field"/>
+                <div t-out="value.id"/>
+                <div t-out="value.display_name"/>
+                <div t-out="value.foo"/>
+                <div t-out="value.int_field"/>
             </div>
             <button id="update-m2o" t-on-click="() => this.update()">Update</button>
         `;
@@ -12377,7 +12728,7 @@ test(`field with special data`, async () => {
 test(`field with special data (with persistent Cache)`, async () => {
     class MyWidget extends Component {
         static props = ["*"];
-        static template = xml`<div class="my_widget">MyWidget <t t-esc="specialData.data.test"/></div>`;
+        static template = xml`<div class="my_widget">MyWidget <t t-out="this.specialData.data.test"/></div>`;
         setup() {
             this.specialData = useSpecialData((orm, props) => {
                 const { record } = props;
@@ -12495,7 +12846,7 @@ test(`x2many field in form dialog view is correctly saved when using a view butt
     });
 
     expect(`.o_data_cell`).toHaveCount(0);
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     await contains(`.o_field_widget[name=name] input`).edit("new value");
     await contains(`.modal-dialog .o_form_button_save`).click();
     await contains(`.o_data_cell`).click();
@@ -12538,11 +12889,11 @@ test(`nested form view doesn't parasite the main one`, async () => {
     expect(`.o_form_view`).toHaveCount(1);
     expect(`.o-form-buttonbox`).toHaveCount(0);
 
-    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_field_x2many_list_row_add button`).click();
     expect(`.modal .modal-footer button[name='somename']`).toHaveCount(1);
     expect(`.modal .modal-footer button[name='someothername']`).toHaveCount(0);
 
-    await contains(`.modal .o_field_x2many_list_row_add a`).click();
+    await contains(`.modal .o_field_x2many_list_row_add button`).click();
     expect(`.modal:not(.o_inactive_modal) .modal-footer button[name='someothername']`).toHaveCount(
         1
     );
@@ -12554,7 +12905,7 @@ test(`an empty json object does not pass the required check`, async () => {
     class JsonField extends Component {
         static props = ["*"];
         static supportedTypes = ["json"];
-        static template = xml`<span><input t-on-change="onChange"/></span>`;
+        static template = xml`<span><input t-on-change="this.onChange"/></span>`;
 
         onChange(ev) {
             this.props.record.update({ [this.props.name]: JSON.parse(ev.target.value) });
@@ -12800,7 +13151,7 @@ test(`cog menu action is executed with up to date context`, async () => {
     });
 
     class MyField extends CharField {
-        static template = xml`<button class="my_btn" t-on-click="onClick">Reload</button>`;
+        static template = xml`<button class="my_btn" t-on-click="this.onClick">Reload</button>`;
         onClick() {
             this.props.record.model.load({ context: { x: "z" } });
         }
@@ -12841,7 +13192,7 @@ test(`cog menu action is executed with up to date context`, async () => {
 test("CogMenu receives the model in env", async () => {
     class CogItem extends Component {
         static props = ["*"];
-        static template = xml`<button class="test-cog" t-on-click="onClick">Test</button>`;
+        static template = xml`<button class="test-cog" t-on-click="this.onClick">Test</button>`;
         onClick() {
             expect.step([`cog clicked`, this.env.model.root.resModel, this.env.model.root.resId]);
         }
@@ -13387,4 +13738,119 @@ test(`cached onchange - don't loose changes`, async () => {
     expect(`.o_field_char input`).toHaveValue("This is yop");
     expect(`.o_last_breadcrumb_item`).toHaveText("New");
     expect.verifySteps(["onchange", "onchange"]);
+});
+
+test("twice same many2one, one invisible, one with widget with related field", async () => {
+    Product._records[0].write_date = "2023-02-13 10:00:00";
+    class MyM2O extends Component {
+        static props = ["*"];
+        static components = { Many2OneField };
+        static template = xml`
+            <div>
+                <Many2OneField t-props="this.props"/>
+                <span class="date" t-out="this.writeDate"/>
+            </div>`;
+        get writeDate() {
+            return this.props.record.data[this.props.name].write_date.toFormat("dd/MM/y");
+        }
+    }
+    const myM2O = {
+        ...buildM2OFieldDescription(MyM2O),
+        relatedFields: [{ name: "write_date", type: "datetime" }],
+    };
+    registry.category("fields").add("my_m2o", myM2O);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="product_id" invisible="1"/>
+                <field name="product_id" widget="my_m2o"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=product_id] input").toHaveValue("xphone");
+    expect(".o_field_widget[name=product_id] .date").toHaveText("13/02/2023");
+});
+
+test(`Do not mix dependencies across multiple widgets in multiple views`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    class MyField extends CharField {}
+    fieldsRegistry.add("my_widget", {
+        component: MyField,
+        fieldDependencies: [{ name: "name", type: "char" }],
+    });
+
+    Partner._records[1].child_ids = [1];
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo" widget="my_widget"/>
+                <field name="name" />
+                <field name="child_ids">
+                    <list editable="top">
+                        <field name="foo" widget="my_widget"/>
+                        <field name="name" required="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect(`.o_field_widget[name=name] input`).toHaveValue("second record");
+
+    await contains(`.o_field_widget[name=name] input`).edit("");
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+
+    await contains(`.o_field_one2many:eq(0) .o_field_x2many_list_row_add button`).click();
+    await contains(".o_selected_row input").edit("Foo value");
+    await clickSave();
+    expect(`.o_notification_content`).toHaveText("Missing required fields");
+});
+
+test("x2many with same m2o in list (plain) and form (widget with relatedFields)", async () => {
+    Product._records[0].write_date = "2023-02-13 10:00:00";
+    Partner._records[0].child_ids = [2];
+    Partner._records[1].product_id = 37;
+
+    class MyM2O extends Component {
+        static props = ["*"];
+        static components = { Many2OneField };
+        static template = xml`
+            <div>
+                <Many2OneField t-props="this.props"/>
+                <span class="date" t-out="this.writeDate"/>
+            </div>`;
+        get writeDate() {
+            return this.props.record.data[this.props.name].write_date.toFormat("dd/MM/y");
+        }
+    }
+    const myM2O = {
+        ...buildM2OFieldDescription(MyM2O),
+        relatedFields: [{ name: "write_date", type: "datetime" }],
+    };
+    registry.category("fields").add("my_m2o", myM2O);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="child_ids">
+                    <list><field name="product_id"/></list>
+                    <form><field name="product_id" widget="my_m2o"/></form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_data_row").toHaveCount(1);
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_field_widget[name=product_id] .date").toHaveText("13/02/2023");
 });

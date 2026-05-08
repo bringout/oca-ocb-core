@@ -1,4 +1,5 @@
-import { Component, useRef, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted } from "@odoo/owl";
 
 const AUTOCLOSE_DELAY = 4000;
 
@@ -15,7 +16,10 @@ export class Notification extends Component {
             optional: true,
             validate: (t) => ["warning", "danger", "success", "info"].includes(t),
         },
-        title: { type: [String, Boolean, { toString: Function }], optional: true },
+        title: {
+            type: [String, Boolean, { type: Object, shape: { toString: Function } }],
+            optional: true,
+        },
         className: { type: String, optional: true },
         buttons: {
             type: Array,

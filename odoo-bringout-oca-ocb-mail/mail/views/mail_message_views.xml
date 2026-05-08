@@ -76,7 +76,7 @@
                                     </group>
                                     <group>
                                         <field name="notified_partner_ids" widget="many2many_tags"/>
-                                        <field name="starred_partner_ids" widget="many2many_tags"/>
+                                        <field name="bookmarked_partner_ids" widget="many2many_tags"/>
                                     </group>
                                 </group>
                                 <group>
@@ -89,9 +89,6 @@
                                         </list>
                                     </field>
                                 </group>
-                            </page>
-                            <page string="Tracking" name="page_tracking">
-                                <field name="tracking_value_ids"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -143,7 +140,7 @@
                     <field name="type"/>
                     <templates>
                         <t t-name="menu">
-                            <a t-attf-href="/web/content/ir.attachment/#{record.id.raw_value}/datas?download=true" download="" class="dropdown-item">Download</a>
+                            <a t-attf-href="/web/content/#{record.id.raw_value}?download=true" download="" class="dropdown-item">Download</a>
                             <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         </t>
                         <t t-name="card" class="o_kanban_attachment flex-row">

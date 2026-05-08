@@ -1,9 +1,10 @@
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { getColor, hexToRGBA, getCustomColor } from "@web/core/colors/colors";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 
 const colorScheme = cookie.get("color_scheme");
@@ -23,7 +24,7 @@ export class JournalDashboardGraphField extends Component {
 
         onWillStart(async () => await loadBundle("web.chartjs_lib"));
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             this.renderChart();
             return () => {
                 if (this.chart) {
@@ -53,6 +54,7 @@ export class JournalDashboardGraphField extends Component {
         const labels = this.data[0].values.map(function (pt) {
             return pt.x;
         });
+
         const color10 = getColor(3, cookie.get("color_scheme"), "odoo");
         const borderColor = this.data[0].is_sample_data ? hexToRGBA(color10, 0.1) : color10;
         const backgroundColor = this.data[0].is_sample_data
@@ -66,21 +68,42 @@ export class JournalDashboardGraphField extends Component {
                     {
                         backgroundColor,
                         borderColor,
+                        pointBackgroundColor: (ctx) => {
+                            const index = ctx.index;
+                            const length = this.data[0].values.length;
+                            if (index === 0 || index === length - 1) {
+                                return "transparent";
+                            }
+                            return borderColor;
+                        },
+                        pointBorderColor: "transparent",
+                        hoverBackgroundColor: borderColor,
+                        pointHoverBorderColor: borderColor,
                         data: this.data[0].values,
                         fill: "start",
                         label: this.data[0].key,
                         borderWidth: 2,
+                        cubicInterpolationMode: "monotone",
                     },
                 ],
             },
             options: {
+                layout: {
+                    autoPadding: false,
+                },
                 plugins: {
                     legend: { display: false },
                     tooltip: {
                         enabled: !this.data[0].is_sample_data,
                         intersect: false,
-                        position: "nearest",
+                        position: "average",
                         caretSize: 0,
+                        usePointStyle: true,
+                        callbacks: {
+                            labelColor: (context) => ({
+                                backgroundColor: borderColor,
+                            }),
+                        },
                     },
                 },
                 scales: {
@@ -96,6 +119,10 @@ export class JournalDashboardGraphField extends Component {
                     line: {
                         tension: 0.000001,
                     },
+                },
+                interaction: {
+                    intersect: false,
+                    mode: "index",
                 },
             },
         };
@@ -148,7 +175,14 @@ export class JournalDashboardGraphField extends Component {
                     },
                     x: {
                         grid: {
-                            color: GRAPH_GRID_COLOR,
+                            color: (ctx) => {
+                                const index = ctx.tick?.value;
+                                const length = this.data[0].length;
+                                if (index === 0 || index === length) {
+                                    return "transparent";
+                                }
+                                return GRAPH_GRID_COLOR;
+                            },
                         },
                         ticks: {
                             color: GRAPH_LABEL_COLOR,
@@ -159,6 +193,10 @@ export class JournalDashboardGraphField extends Component {
                     },
                 },
                 maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: "index",
+                },
                 elements: {
                     line: {
                         tension: 0.000001,

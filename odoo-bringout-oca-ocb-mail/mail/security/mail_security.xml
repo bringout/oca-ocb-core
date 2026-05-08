@@ -47,11 +47,7 @@
             <field name="domain_force">
                 [
                     ('is_self', '=', True),
-                    "|",
-                        ("channel_id.channel_type", "!=", "channel"),
-                        "|",
-                            ("channel_id.group_public_id", "=", False),
-                            ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                    ('channel_id', 'access', 'read'),
                 ]
             </field>
             <!--
@@ -77,27 +73,61 @@
                 ]"
             />
             <field name="domain_force">
-                [
-                    "|",
-                        "&amp;",
-                            ("channel_id.channel_type", "!=", "channel"),
-                            "|",
-                                ("channel_id.is_member", "=", True),
-                                ("channel_id.parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_id.channel_type", "=", "channel"),
-                            "|",
-                                ("channel_id.group_public_id", "=", False),
-                                ("channel_id.group_public_id", "in", user.all_group_ids.ids),
-                ]
+                [('channel_id', 'access', 'read')]
             </field>
             <field name="perm_create" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_unlink" eval="False"/>
         </record>
 
+        <record id="ir_rule_discuss_channel_member_is_channel_owner_unlink" model="ir.rule">
+            <field name="name">discuss.channel.member: channel owner can remove members except owners</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups"
+                eval="[
+                    Command.link(ref('base.group_user')),
+                    Command.link(ref('base.group_portal')),
+                    Command.link(ref('base.group_public')),
+                ]"
+            />
+            <field name="domain_force">
+                [
+                    ("channel_id.self_member_id.channel_role", "=", "owner"),
+                    ("channel_role", "!=", "owner"),
+                    "|",
+                        ("channel_id.channel_type", "=", "channel"),
+                        ("channel_id.channel_type", "=", "group"),
+                ]
+            </field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+        <record id="ir_rule_discuss_channel_member_is_channel_admin_unlink" model="ir.rule">
+            <field name="name">discuss.channel.member: channel admin can remove members except admins and owners</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups"
+                eval="[
+                    Command.link(ref('base.group_user')),
+                    Command.link(ref('base.group_portal')),
+                    Command.link(ref('base.group_public')),
+                ]"
+            />
+            <field name="domain_force">
+                [
+                    ("channel_id.self_member_id.channel_role", "=", "admin"),
+                    ("channel_role", "=", False),
+                    "|",
+                        ("channel_id.channel_type", "=", "channel"),
+                        ("channel_id.channel_type", "=", "group"),
+                ]
+            </field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
         <record id="ir_rule_discuss_channel_member_create_is_group_matching_all" model="ir.rule">
-            <field name="name">discuss.channel.member: can join group restricted channels when group is matching</field>
+            <field name="name">discuss.channel.member: can join accessible channels</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
             <field name="groups"
                 eval="[
@@ -110,9 +140,7 @@
                 [
                     ('is_self', '=', True),
                     ('channel_id.channel_type', '=', 'channel'),
-                    '|',
-                        ('channel_id.group_public_id', '=', False),
-                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
+                    ('channel_id', 'access', 'read'),
                 ]
             </field>
             <!--
@@ -125,16 +153,14 @@
         </record>
 
         <record id="ir_rule_discuss_channel_member_create_is_group_matching_group_user" model="ir.rule">
-            <field name="name">discuss.channel.member: internal users can invite others in group restricted channels when group is matching</field>
+            <field name="name">discuss.channel.member: internal users can invite others in accessible channels</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="domain_force">
                 [
                     ('is_self', '=', False),
                     ('channel_id.channel_type', '=', 'channel'),
-                    '|',
-                        ('channel_id.group_public_id', '=', False),
-                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
+                    ('channel_id', 'access', 'read'),
                 ]
             </field>
             <field name="perm_read" eval="False"/>
@@ -173,19 +199,7 @@
                 ]"
             />
             <field name="domain_force">
-                [
-                    "|",
-                        "&amp;",
-                            ("channel_id.channel_type", "!=", "channel"),
-                            "|",
-                                ("channel_id.is_member", "=", True),
-                                ("channel_id.parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_id.channel_type", "=", "channel"),
-                            "|",
-                                ("channel_id.group_public_id", "=", False),
-                                ("channel_id.group_public_id", "in", user.all_group_ids.ids),
-                ]
+                [('channel_id', 'access', 'read')]
             </field>
             <field name="perm_create" eval="False"/>
             <field name="perm_write" eval="False"/>
@@ -237,14 +251,101 @@
             <field name="groups" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
         </record>
 
-        <record id="mail_activity_rule_user" model="ir.rule">
-            <field name="name">mail.activity: user: write/unlink only (created or assigned)</field>
+        <record model="ir.rule" id="mail_message_rule_access_read">
+            <field name="name">read res_model</field>
+            <field name="model_id" ref="model_mail_message"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">[('res_access_read', '=', True)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record model="ir.rule" id="mail_message_rule_access_write">
+            <field name="name">write res_model</field>
+            <field name="model_id" ref="model_mail_message"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">[('res_access_write', '=', True)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record model="ir.rule" id="mail_message_rule_access_create">
+            <field name="name">create res_model</field>
+            <field name="model_id" ref="model_mail_message"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">[('res_access_create', '=', True)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record model="ir.rule" id="mail_message_rule_access_unlink">
+            <field name="name">unlink res_model</field>
+            <field name="model_id" ref="model_mail_message"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">[('res_access_unlink', '=', True)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record model="ir.rule" id="mail_activity_rule_access_read">
+            <field name="name">read res_model</field>
+            <field name="model_id" ref="model_mail_activity"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">['|', ('user_id', '=', user.id), ('res_access_read', '=', True)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record model="ir.rule" id="mail_activity_rule_user">
+            <field name="name">mail.activity: write/unlink only (created or assigned)</field>
             <field name="model_id" ref="model_mail_activity"/>
             <field name="domain_force">['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <record model="ir.rule" id="mail_activity_rule_access_write">
+            <field name="name">write res_model</field>
+            <field name="model_id" ref="model_mail_activity"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">['|', 
+                '&amp;', ('res_model', '=', False), ('user_id', '=', user.id),
+                ('res_access_write', '=', True)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record model="ir.rule" id="mail_activity_rule_access_create">
+            <field name="name">create res_model</field>
+            <field name="model_id" ref="model_mail_activity"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">['|', 
+                '&amp;', ('res_model', '=', False), ('user_id', '=', user.id),
+                ('res_access_create', '=', True)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record model="ir.rule" id="mail_activity_rule_access_unlink">
+            <field name="name">unlink res_model</field>
+            <field name="model_id" ref="model_mail_activity"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">['|', 
+                '&amp;', ('res_model', '=', False), ('user_id', '=', user.id),
+                ('res_access_unlink', '=', True)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="True"/>
         </record>
 
@@ -350,5 +451,15 @@
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="False"/>
+        </record>
+        <record model="ir.rule" id="ir_rule_mail_scheduled_message">
+            <field name="name">access check to res_id</field>
+            <field name="model_id" ref="model_mail_scheduled_message"/>
+            <field name="groups" eval="[Command.set([ref('base.group_everyone')])]"/>
+            <field name="domain_force">[('res_access', '=', True)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
         </record>
 </odoo>

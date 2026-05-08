@@ -1,6 +1,7 @@
-import { reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import {
     extractInfoFromGroupData,
     getAggregateSpecifications,
@@ -96,7 +97,7 @@ class ProgressBarState {
                 count: group.count - bars.map((r) => r.count).reduce((a, b) => a + b, 0),
                 value: FALSE,
                 string: _t("Other"),
-                color: "200",
+                color: "300",
             });
 
             // Update activeBars count and aggreagates
@@ -314,13 +315,20 @@ class ProgressBarState {
     async loadProgressBar({ context, domain, groupBy, resModel }) {
         if (groupBy.length) {
             const { colors, fieldName: field, help } = this.progressAttributes;
-            const res = await this.model.orm.call(resModel, "read_progress_bar", [], {
-                domain,
-                group_by: groupBy[0],
-                progress_bar: { colors, field, help },
-                context,
-            });
-            this._pbCounts = res;
+            try {
+                this._pbCounts = await this.model.orm.call(resModel, "read_progress_bar", [], {
+                    domain,
+                    group_by: groupBy[0],
+                    progress_bar: { colors, field, help },
+                    context,
+                });
+            } catch (error) {
+                if (error instanceof ConnectionLostError) {
+                    this._pbCounts = null;
+                } else {
+                    throw error;
+                }
+            }
         }
     }
 

@@ -1,4 +1,5 @@
-import { onMounted, onWillDestroy, onWillUnmount, status, useComponent } from "@odoo/owl";
+import { useComponent } from "@web/owl2/utils";
+import { onMounted, onWillDestroy, onWillUnmount, status } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";

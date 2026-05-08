@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockFetch, runAllTimers } from "@odoo/hoot-mock";
@@ -63,7 +64,7 @@ defineActions([
 test("error in a client action (at rendering)", async () => {
     expect.assertions(9);
     class Boom extends Component {
-        static template = xml`<div><t t-esc="a.b.c"/></div>`;
+        static template = xml`<div><t t-out="this.a.b.c"/></div>`;
         static props = ["*"];
     }
     actionRegistry.add("Boom", Boom);
@@ -96,8 +97,8 @@ test("error in a client action (after the first rendering)", async () => {
     class Boom extends Component {
         static template = xml`
             <div>
-                <t t-if="boom" t-esc="a.b.c"/>
-                <button t-else="" class="my_button" t-on-click="onClick">Click Me</button>
+                <t t-if="this.boom" t-out="this.a.b.c"/>
+                <button t-else="" class="my_button" t-on-click="this.onClick">Click Me</button>
             </div>`;
         static props = ["*"];
         setup() {
@@ -109,7 +110,7 @@ test("error in a client action (after the first rendering)", async () => {
         }
         onClick() {
             this.boom = true;
-            this.render();
+            render(this);
         }
     }
     actionRegistry.add("Boom", Boom);
@@ -145,8 +146,6 @@ test("connection lost when opening form view from kanban", async () => {
     });
     await contains(".o_kanban_record").click();
     expect(".o_kanban_view").toHaveCount(1);
-    expect(".o_notification").toHaveCount(1);
-    expect(".o_notification").toHaveText("Connection lost. Trying to reconnect...");
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -204,8 +203,6 @@ test("connection lost when coming back to kanban from form", async () => {
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_kanban_view .o_kanban_renderer").toHaveCount(1);
     expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
-    expect(".o_notification").toHaveCount(1);
-    expect(".o_notification").toHaveText("Connection lost. Trying to reconnect...");
     expect.verifySteps([
         "/web/webclient/load_menus",
         "/web/action/load",

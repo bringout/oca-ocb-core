@@ -827,7 +827,7 @@ test("unique in url does not change on record change if reload option is set to 
         `,
     });
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
-    await contains("div[name='write_date'] > div > button").click();
+    await contains("div[name='write_date'] button").click();
     await edit("2022-08-05 08:39:00", { confirm: "enter" });
     await animationFrame();
     await clickSave();
@@ -841,12 +841,12 @@ test("convert image to webp", async () => {
         if (!args[0][0].res_id) {
             // Here we check the image data we pass and generated data.
             // Also we check the file type
-            expect(args[0][0].datas).not.toBe(imageData);
+            expect(args[0][0].raw).not.toBe(imageData);
             expect(args[0][0].mimetype).toBe("image/webp");
             return [1];
         }
         // This handles second RPC call to store jpeg
-        expect(args[0][0].datas).not.toBe(imageData);
+        expect(args[0][0].raw).not.toBe(imageData);
         expect(args[0][0].mimetype).toBe("image/jpeg");
         return true;
     });
@@ -869,6 +869,61 @@ test("convert image to webp", async () => {
         { message: "image field should not be set" }
     );
     await setFiles(imageFile);
+});
+
+test("ImageField: syncs filename when uploading/removing", async () => {
+    Partner._records[0].document = false;
+    Partner._records[0].foo = "";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="document" widget="image" filename="foo"/>
+                <field name="foo"/>
+            </form>
+        `,
+    });
+
+    expect("div[name='foo'] input").toHaveValue("", {
+        message: "Filename should initially be empty",
+    });
+
+    const file = new File(
+        [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
+        "new_avatar.png",
+        { type: "image/png" }
+    );
+
+    // Upload file
+    await click(".o_select_file_button");
+    await setInputFiles(file);
+    await runAllTimers();
+    await animationFrame();
+
+    expect("div[name='document'] img").toHaveAttribute(
+        "data-src",
+        `data:image/png;base64,${MY_IMAGE}`,
+        { message: "The image data should be set" }
+    );
+    expect("div[name='foo'] input").toHaveValue("new_avatar.png", {
+        message: "The filename field (foo) should be updated with the uploaded file's name",
+    });
+
+    // 4. Remove file
+    await click(".o_clear_file_button");
+    await animationFrame();
+
+    expect("div[name='document'] img").toHaveAttribute(
+        "data-src",
+        "/web/static/img/placeholder.png",
+        { message: "The image should be reset to placeholder" }
+    );
+    expect("div[name='foo'] input").toHaveValue("", {
+        message: "The filename field should be cleared when the image is removed",
+    });
 });
 
 test.tags("desktop");

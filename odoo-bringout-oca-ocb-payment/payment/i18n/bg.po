@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"POT-Creation-Date: 2026-03-12 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 15:27+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
@@ -196,11 +196,6 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
 msgid "ACH Direct Debit"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "ACTIVATE"
 msgstr ""
 
 #. module: payment
@@ -585,6 +580,11 @@ msgid "CMR"
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "CONNECT"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_cabal
 msgid "Cabal"
 msgstr ""
@@ -636,9 +636,9 @@ msgstr "Уловете тразакция"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
 msgid ""
-"Capture the amount from Odoo, when the delivery is completed.\n"
-"Use this if you want to charge your customers cards only when\n"
-"you are sure you can ship the goods to them."
+"Capture the amount from Odoo, when the delivery is completed. Use this if "
+"you want to charge your customers cards only when you are sure you can ship "
+"the goods to them."
 msgstr ""
 
 #. module: payment
@@ -736,10 +736,6 @@ msgstr "Цвят"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
-msgid "Companies"
-msgstr "Фирми"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__company_id
 #: model:ir.model.fields,field_description:payment.field_payment_provider__company_id
 #: model:ir.model.fields,field_description:payment.field_payment_token__company_id
@@ -760,12 +756,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Configuration"
 msgstr "Конфигурация"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/interactions/payment_form.js:0
-msgid "Confirm"
-msgstr ""
 
 #. module: payment
 #. odoo-javascript
@@ -937,6 +927,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:payment.field_portal_entry__display_name
 #: model:ir.model.fields,field_description:payment.field_res_company__display_name
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:payment.field_res_country__display_name
@@ -1167,6 +1158,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment.field_payment_token__id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:payment.field_portal_entry__id
 #: model:ir.model.fields,field_description:payment.field_res_company__id
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__id
 #: model:ir.model.fields,field_description:payment.field_res_country__id
@@ -1419,7 +1411,7 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
+#: model:portal.entry,description:payment.payment_methods_portal_entry
 msgid "Manage your payment methods"
 msgstr ""
 
@@ -1474,7 +1466,7 @@ msgid "Mercado Livre"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__mercado_pago
+#: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__mercado_pago
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
 msgid "Mercado Pago"
 msgstr ""
@@ -1494,6 +1486,11 @@ msgstr "Съобщение"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Messages"
 msgstr "Съобщения"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
+msgid "Minimum Amount"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_momo
@@ -1636,6 +1633,7 @@ msgid "OmanNet"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__onboarding_payment_module
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__onboarding_payment_module
 msgid "Onboarding Payment Module"
 msgstr ""
@@ -1761,6 +1759,16 @@ msgid "Pay Later"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__pay_later_label
+msgid "Pay Later Label"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_company__pay_now_label
+msgid "Pay Now Label"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_paybright
 msgid "PayBright"
 msgstr ""
@@ -1849,6 +1857,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #: model:ir.actions.act_window,name:payment.action_payment_method
+#: model:portal.entry,name:payment.payment_methods_portal_entry
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Methods"
@@ -1928,7 +1937,6 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
-#: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Payment methods"
 msgstr ""
 
@@ -2027,6 +2035,11 @@ msgid "Please wait..."
 msgstr ""
 
 #. module: payment
+#: model:ir.model,name:payment.model_portal_entry
+msgid "Portal Entry"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Post-process"
 msgstr ""
@@ -2122,7 +2135,7 @@ msgid "Ratepay"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__razorpay
+#: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__razorpay
 #: model:payment.provider,name:payment.payment_provider_razorpay
 msgid "Razorpay"
 msgstr ""
@@ -2234,6 +2247,11 @@ msgid "Samsung Pay"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_satispay
+msgid "Satispay"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Save"
 msgstr ""
@@ -2332,7 +2350,7 @@ msgid "Status"
 msgstr "Състояние"
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__stripe
+#: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__stripe
 #: model:payment.provider,name:payment.payment_provider_stripe
 msgid "Stripe"
 msgstr "Stripe"
@@ -2561,6 +2579,20 @@ msgid "The internal reference of the transaction"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_res_company__pay_later_label
+msgid ""
+"The label to be displayed on the payment buttons for 'Pay Later' payment "
+"methods."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_res_company__pay_now_label
+msgid ""
+"The label to be displayed on the payment buttons for 'Pay Now' payment "
+"methods."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_country_ids
 msgid ""
 "The list of countries in which this payment method can be used (if the "
@@ -2619,6 +2651,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
 msgid "The message displayed to explain and help the payment process"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__minimum_amount
+msgid ""
+"The minimum payment amount that this payment provider is available for. "
+"Leave blank to make it available for any payment amount."
 msgstr ""
 
 #. module: payment
@@ -2758,17 +2797,16 @@ msgstr ""
 #: code:addons/payment/models/payment_provider.py:0
 msgid ""
 "This action will also archive %s tokens that are registered with this "
-"provider. "
+"provider."
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
 msgid ""
 "This controls whether customers can save their payment methods as payment "
-"tokens.\n"
-"A payment token is an anonymous link to the payment method details saved in "
-"the\n"
-"provider's database, allowing the customer to reuse it for a next purchase."
+"tokens. A payment token is an anonymous link to the payment method details "
+"saved in the provider's database, allowing the customer to reuse it for a "
+"next purchase."
 msgstr ""
 
 #. module: payment
@@ -2987,11 +3025,6 @@ msgid "Void Transaction"
 msgstr "Невалидна транзакция"
 
 #. module: payment
-#: model:payment.method,name:payment.payment_method_wero
-msgid "WERO"
-msgstr ""
-
-#. module: payment
 #: model:payment.method,name:payment.payment_method_wallets_india
 msgid "Wallets India"
 msgstr ""
@@ -3095,6 +3128,12 @@ msgstr ""
 msgid ""
 "You cannot change the company of a payment provider with existing "
 "transactions."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+msgid "You cannot delete a payment method linked to a provider."
 msgstr ""
 
 #. module: payment
@@ -3265,8 +3304,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"Your payment operation could not be completed for following transactions: %"
-"(tx_refs)s"
+"Your payment operation could not be completed for following transactions: "
+"%(tx_refs)s"
 msgstr ""
 
 #. module: payment
@@ -3309,7 +3348,6 @@ msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal
-#: model:payment.method,name:payment.payment_method_ideal_brand
 msgid "iDEAL"
 msgstr ""
 
@@ -3351,7 +3389,7 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
-msgid "maximum amount exceeded"
+msgid "minimum or maximum amount exceeded"
 msgstr ""
 
 #. module: payment
@@ -3389,87 +3427,3 @@ msgstr ""
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
 msgstr ""
-
-#~ msgid "<b>Amount:</b>"
-#~ msgstr "<b>Сума:</b>"
-
-#~ msgid "<b>Reference:</b>"
-#~ msgstr "<b>Референция:</b>"
-
-#~ msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-#~ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Обратно към Моя профил"
-
-#~ msgid "<i class=\"fa fa-trash\"/> Delete"
-#~ msgstr "<i class=\"fa fa-trash\"/> Изтрий"
-
-#~ msgid "Account"
-#~ msgstr "Сметка"
-
-#~ msgid "Account Number"
-#~ msgstr "Номер на Сметка"
-
-#~ msgid "Add Extra Fees"
-#~ msgstr "Добавете допълнителни такси"
-
-#~ msgid "Apply"
-#~ msgstr "Приложи"
-
-#~ msgid "Bank"
-#~ msgstr "Банка"
-
-#~ msgid "Bank Name"
-#~ msgstr "Bank Name"
-
-#~ msgid "Callback Document Model"
-#~ msgstr "Модел на документ за обръщение"
-
-#~ msgid "Callback Hash"
-#~ msgstr "Хеш за обръщение"
-
-#~ msgid "Callback Method"
-#~ msgstr "Метод за обръщение"
-
-#~ msgid "Cancel"
-#~ msgstr "Отказ"
-
-#~ msgid "Displayed as"
-#~ msgstr "Показано като"
-
-#~ msgid "Done"
-#~ msgstr "Извършен"
-
-#~ msgid "Fees"
-#~ msgstr "Такси"
-
-#~ msgid "Fixed domestic fees"
-#~ msgstr "Фиксирани местни такси"
-
-#~ msgid "Fixed international fees"
-#~ msgstr "Фиксирани международни такси"
-
-#~ msgid "From"
-#~ msgstr "От"
-
-#~ msgid "Group By"
-#~ msgstr "Групиране по"
-
-#~ msgid "Image displayed on the payment form"
-#~ msgstr "Изображение, показано във формуляра за плащане"
-
-#~ msgid "Manual"
-#~ msgstr "Механично"
-
-#~ msgid "Method"
-#~ msgstr "Метод"
-
-#~ msgid "Ok"
-#~ msgstr "Добре"
-
-#~ msgid "Other"
-#~ msgstr "Друг"
-
-#~ msgid "Server Error"
-#~ msgstr "Сървърна грешка"
-
-#~ msgid "Sips"
-#~ msgstr "Sips"

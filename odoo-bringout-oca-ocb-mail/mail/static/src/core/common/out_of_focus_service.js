@@ -1,3 +1,5 @@
+import { htmlToTextContentInline } from "@mail/utils/common/format";
+
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -42,21 +44,22 @@ export class OutOfFocusService {
             notificationTitle = _t("New message");
         } else {
             icon = author.avatarUrl;
-            if (message.thread?.channel_type === "channel") {
+            if (message.thread?.channel?.channel_type === "channel") {
                 notificationTitle = _t("%(author name)s from %(channel name)s", {
                     "author name": message.authorName,
-                    "channel name": message.thread.displayName,
+                    "channel name": message.channel_id.displayName,
                 });
             } else {
                 notificationTitle = message.authorName;
             }
         }
-        const notificationContent = message.previewText
-            .toString()
-            .substring(0, PREVIEW_MSG_MAX_SIZE);
+        const notificationContent = htmlToTextContentInline(message.previewText).substring(
+            0,
+            PREVIEW_MSG_MAX_SIZE
+        );
         await this.sendNotification({
             message: notificationContent,
-            sound: message.thread?.model === "discuss.channel",
+            sound: Boolean(message.channel_id),
             title: notificationTitle,
             type: "info",
             icon,

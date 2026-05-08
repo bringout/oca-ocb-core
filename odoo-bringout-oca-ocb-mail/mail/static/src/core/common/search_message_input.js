@@ -1,4 +1,5 @@
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { useExternalListener, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -26,7 +27,7 @@ export class SearchMessageInput extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({ searchTerm: "", searchedTerm: "" });
+        this.state = useState({ searchTerm: "" });
         useAutofocus();
         useExternalListener(
             browser,
@@ -43,34 +44,37 @@ export class SearchMessageInput extends Component {
     search() {
         this.props.messageSearch.searchTerm = this.state.searchTerm;
         this.props.messageSearch.search();
-        this.state.searchedTerm = this.state.searchTerm;
     }
 
     clear() {
         this.state.searchTerm = "";
-        this.state.searchedTerm = this.state.searchTerm;
         this.props.messageSearch.clear();
+    }
+
+    onClickClose() {
+        this.clear();
         this.props.closeSearch?.();
     }
 
-    onKeydownSearch(ev) {
-        if (ev.key !== "Enter") {
+    onInputSearch(ev) {
+        if (!this.state.searchTerm) {
+            return this.clear();
+        }
+        if (
+            this.state.searchTerm.startsWith(this.props.messageSearch.searchTerm) &&
+            this.props.messageSearch.searched &&
+            this.props.messageSearch.count === 0
+        ) {
             return;
         }
-        if (!this.state.searchTerm) {
-            this.clear();
-        } else {
-            this.search();
-        }
+        this.search();
     }
 
     /** @param {SearchFilter} searchFilter */
     onChangeSearchFilter(searchFilter) {
         if (searchFilter.is_notification !== this.props.messageSearch.is_notification) {
             this.props.messageSearch.is_notification = searchFilter.is_notification;
-            if (this.state.searchTerm) {
-                this.search();
-            }
+            this.search();
         }
     }
 
@@ -93,5 +97,9 @@ export class SearchMessageInput extends Component {
                 is_notification: true,
             },
         ];
+    }
+
+    get inputPlaceholder() {
+        return _t("Search %(threadName)s", { threadName: this.props.thread.displayName });
     }
 }

@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
 import uuid
 from datetime import datetime, timedelta
 
@@ -9,6 +8,7 @@ from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
+from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 
@@ -34,7 +34,16 @@ class MailGuest(models.Model):
     channel_ids = fields.Many2many(string="Channels", comodel_name='discuss.channel', relation='discuss_channel_member', column1='guest_id', column2='channel_id', copy=False)
     presence_ids = fields.One2many("mail.presence", "guest_id", groups="base.group_system")
     # sudo: mail.guest - can access presence of accessible guest
-    im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    im_status = fields.Selection(
+        [
+            ("online", "Online"),
+            ("away", "Away"),
+            ("offline", "Offline"),
+        ],
+        "IM Status",
+        compute="_compute_im_status",
+        compute_sudo=True,
+    )
     offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
 
     @api.depends("presence_ids.status")
@@ -82,7 +91,7 @@ class MailGuest(models.Model):
 
     def _get_timezone_from_request(self, request):
         timezone = request.cookies.get('tz')
-        return timezone if timezone in pytz.all_timezones else False
+        return timezone if timezone in all_timezones else False
 
     def _update_name(self, name):
         self.ensure_one()
@@ -93,8 +102,8 @@ class MailGuest(models.Model):
             raise UserError(_("Guest's name is too long."))
         self.name = name
         for channel in self.channel_ids:
-            Store(bus_channel=channel).add(self, ["avatar_128", "name"]).bus_send()
-        Store(bus_channel=self).add(self, ["avatar_128", "name"]).bus_send()
+            Store(bus_channel=channel).add(self, "_store_avatar_fields")
+        Store(bus_channel=self).add(self, "_store_avatar_fields")
 
     def _update_timezone(self, timezone):
         query = """
@@ -116,21 +125,13 @@ class MailGuest(models.Model):
         self.ensure_one()
         return limited_field_access_token(self, "im_status", scope="mail.presence")
 
-    def _field_store_repr(self, field_name):
-        if field_name == "avatar_128":
-            return [
-                Store.Attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token()),
-                "write_date",
-            ]
-        if field_name == "im_status":
-            return [
-                "im_status",
-                Store.Attr("im_status_access_token", lambda g: g._get_im_status_access_token()),
-            ]
-        return [field_name]
+    def _store_avatar_fields(self, res: Store.FieldList):
+        res.attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token())
+        res.extend(["name", "write_date"])
 
-    def _to_store_defaults(self, target):
-        return ["avatar_128", "im_status", "name"]
+    def _store_im_status_fields(self, res: Store.FieldList):
+        res.attr("im_status")
+        res.attr("im_status_access_token", lambda g: g._get_im_status_access_token())
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route

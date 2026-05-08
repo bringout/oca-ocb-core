@@ -1,4 +1,4 @@
-import { destroy, expect, mockTouch, test } from "@odoo/hoot";
+import { destroy, expect, mockTouch, mockUserAgent, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, useState, xml } from "@odoo/owl";
@@ -74,7 +74,7 @@ test("hotkeys work on dialogs", async () => {
             <Dialog title="'Wow(l) Effect'">
                 Hello!
                 <t t-set-slot="footer">
-                    <button t-on-click="onClickOk">Ok</button>
+                    <button t-on-click="this.onClickOk">Ok</button>
                 </t>
             </Dialog>
         `;
@@ -100,6 +100,49 @@ test("hotkeys work on dialogs", async () => {
     await keyDown("control+enter");
     await keyUp("ctrl+enter");
     expect.verifySteps(["clickOk"]);
+});
+
+test("hotkey control+enter on input triggers blur event before clicking dialog button", async () => {
+    class Parent extends Component {
+        static components = { Dialog };
+        static template = xml`
+            <Dialog title="'Test Dialog'">
+                <input type="text" t-on-blur="this.onInputBlur" class="test_input"/>
+                
+                <t t-set-slot="footer">
+                    <button t-on-click="this.onConfirm">Confirm</button>
+                </t>
+            </Dialog>
+        `;
+        static props = ["*"];
+
+        setup() {
+            this.state = useState({ value: "" });
+        }
+
+        onInputBlur(ev) {
+            this.state.value = ev.target.value;
+            expect.step("inputBlur: " + ev.target.value);
+        }
+
+        onConfirm() {
+            expect.step("confirmed with value: " + this.state.value);
+        }
+    }
+
+    await makeDialogMockEnv();
+    await mountWithCleanup(Parent);
+
+    await contains(".test_input").edit("new value", { confirm: false });
+
+    expect.verifySteps([]);
+
+    await press("control+enter");
+
+    expect.verifySteps([
+        "inputBlur: new value",
+        "confirmed with value: new value"
+    ]);
 });
 
 test("simple rendering with two dialogs", async () => {
@@ -219,7 +262,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
     expect.assertions(4);
     class SubComponent extends Component {
         static template = xml`
-            <div class="o_subcomponent" t-esc="props.text" t-on-click="_onClick"/>
+            <div class="o_subcomponent" t-out="this.props.text" t-on-click="this._onClick"/>
         `;
         static props = ["*"];
         _onClick() {
@@ -231,7 +274,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
         static components = { Dialog, SubComponent };
         static template = xml`
             <Dialog>
-                <SubComponent text="'Wow(l) Effect'" onClicked="_onSubcomponentClicked"/>
+                <SubComponent text="'Wow(l) Effect'" onClicked="this._onSubcomponentClicked"/>
             </Dialog>
         `;
         static props = ["*"];
@@ -434,4 +477,27 @@ test("dialog's position is reset on resize", async () => {
         left: "0px",
         top: "0px",
     });
+});
+
+test.tags("mobile");
+test("back button closes dialog in mobile", async () => {
+    mockUserAgent("android");
+    class Parent extends Component {
+        static components = { Dialog };
+        static template = xml`
+            <Dialog title="'Wow(l) Effect'">
+                Hello!
+            </Dialog>
+        `;
+        static props = ["*"];
+    }
+    await makeDialogMockEnv({
+        dialogData: {
+            dismiss: () => expect.step("dismiss"),
+        },
+    });
+    await mountWithCleanup(Parent);
+    expect(".o_dialog").toHaveCount(1);
+    history.back();
+    expect.verifySteps(["dismiss"]);
 });

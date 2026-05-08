@@ -1,12 +1,21 @@
+/**
+ * @typedef DependencyInManifest
+ * ⚠️ Each dependency of this file in `mail` must be explicitly added in
+ * `web.assets_frontend` in the manifest. This error is not caught by the
+ * standard runbot, only during staging or nightly. The missing dependency might
+ * added by livechat so it only happens when frontend modules are installed and
+ * tested while livechat is not installed.
+ */
+import { getInnerHtml, getOuterHtml } from "@mail/utils/common/html";
+
 import { htmlEscape, markup } from "@odoo/owl";
 
 import { router } from "@web/core/browser/router";
-import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
-import { normalize } from "@web/core/l10n/utils";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { formatList, normalize } from "@web/core/l10n/utils";
 import {
     createDocumentFragmentFromContent,
     createElementWithContent,
-    htmlFormatList,
     htmlJoin,
     htmlReplace,
     htmlReplaceAll,
@@ -54,8 +63,11 @@ export function prettifyMessageText(rawBody, { validMentions = {}, thread } = {}
  */
 export async function generateEmojisOnHtml(htmlBody, { allowEmojiLoading = true } = {}) {
     let body = htmlBody;
-    if (allowEmojiLoading || odoo.loader.modules.get("@web/core/emoji_picker/emoji_data")) {
-        body = await _generateEmojisOnHtml(body);
+    if (allowEmojiLoading && !emojiLoader.loaded) {
+        await emojiLoader.load();
+    }
+    if (emojiLoader.loaded) {
+        body = _generateEmojisOnHtml(body);
     }
     return body;
 }
@@ -148,8 +160,7 @@ function linkify(text) {
             });
             link.classList.add("o_message_redirect");
         }
-        // markup: outerHTML is safe when used as a node
-        result = htmlJoin([result, markup(link.outerHTML)]);
+        result = htmlJoin([result, getOuterHtml(link)]);
         curIndex = match.index + match[0].length;
     }
     return htmlJoin([result, text.slice(curIndex)]);
@@ -175,10 +186,10 @@ export function addLink(node, transformChildren) {
         return node.textContent;
     }
     if (node.tagName === "A") {
-        return markup(node.outerHTML);
+        return getOuterHtml(node);
     }
     transformChildren();
-    return markup(node.outerHTML);
+    return getOuterHtml(node);
 }
 
 function generateMentionElement({ className, id, model, text }) {
@@ -229,15 +240,15 @@ export function generateSpecialMentionElement(label) {
     return link;
 }
 
-/** @param {import("models").Thread} thread */
-export function generateThreadMentionElement(thread) {
+/** @param {import("models").DiscussChannel} channel */
+export function generateChannelMentionElement(channel) {
     return generateMentionElement({
         className: `o_channel_redirect${
-            thread.parent_channel_id ? " o_channel_redirect_asThread" : ""
+            channel.parent_channel_id ? " o_channel_redirect_asThread" : ""
         }`,
-        id: thread.id,
+        id: channel.id,
         model: "discuss.channel",
-        text: `#${thread.fullNameWithParent}`,
+        text: `#${channel.fullNameWithParent}`,
     });
 }
 
@@ -253,7 +264,7 @@ export function generateThreadMentionElement(thread) {
  */
 function generateMentionsLinks(
     body,
-    { partners = [], roles = [], threads = [], specialMentions = [], thread }
+    { channels = [], partners = [], roles = [], specialMentions = [], thread }
 ) {
     const mentions = [];
     for (const partner of partners) {
@@ -265,11 +276,11 @@ function generateMentionsLinks(
         });
         body = htmlReplace(body, text, placeholder);
     }
-    for (const thread of threads) {
-        const placeholder = `#-mention-channel-${thread.id}`;
-        const text = `#${thread.fullNameWithParent}`;
+    for (const channel of channels) {
+        const placeholder = `#-mention-channel-${channel.id}`;
+        const text = `#${channel.fullNameWithParent}`;
         mentions.push({
-            link: generateThreadMentionElement(thread),
+            link: generateChannelMentionElement(channel),
             placeholder,
         });
         body = htmlReplace(body, text, placeholder);
@@ -294,8 +305,7 @@ function generateMentionsLinks(
     }
     for (const mention of mentions) {
         const link = mention.link;
-        // markup: outerHTML is safe when used as a node
-        body = htmlReplace(body, mention.placeholder, markup(link.outerHTML));
+        body = htmlReplace(body, mention.placeholder, getOuterHtml(link));
     }
     return htmlEscape(body);
 }
@@ -303,13 +313,11 @@ function generateMentionsLinks(
 /**
  * @private
  * @param {string|ReturnType<markup>} htmlString
- * @returns {Promise<ReturnType<markup>>}
  */
-async function _generateEmojisOnHtml(htmlString) {
-    const { emojis } = await loadEmoji();
-    for (const emoji of emojis) {
-        for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
-            const escapedSource = htmlEscape(String(source));
+function _generateEmojisOnHtml(htmlString) {
+    for (const emoji of emojiLoader.emojis) {
+        for (const source of emoji.shortcodes.concat(emoji.emoticons)) {
+            const escapedSource = htmlEscape(source);
             const regexp = new RegExp(
                 "(\\s|^)(" + escapeRegExp(escapedSource) + ")(?=\\s|$|<)",
                 "g"
@@ -324,7 +332,7 @@ async function _generateEmojisOnHtml(htmlString) {
  * @param {string|ReturnType<markup>} body
  * @returns {ReturnType<markup>}
  */
-export function getNonEditableMentions(body) {
+export function prepareBodyForEditing(body) {
     const doc = createDocumentFragmentFromContent(body);
     for (const block of doc.body.querySelectorAll(".o_mail_reply_hide")) {
         block.classList.remove("o_mail_reply_hide");
@@ -341,7 +349,13 @@ export function getNonEditableMentions(body) {
     for (const mention of doc.body.querySelectorAll(".o-discuss-mention")) {
         mention.setAttribute("contenteditable", false);
     }
-    return markup(doc.body.innerHTML);
+    // The "(edited)" label is added by the server and must never be editable.
+    // Remove it so that CTRL+A does not select it and it is always re-added at
+    // the end by the server upon saving.
+    for (const edited of doc.body.querySelectorAll(".o-mail-Message-edited")) {
+        edited.remove();
+    }
+    return getInnerHtml(doc.body);
 }
 
 /**
@@ -365,6 +379,10 @@ export function htmlToTextContentInline(htmlString) {
 export function convertBrToLineBreak(str) {
     str = htmlReplace(str, /<br\s*\/?>/gi, () => "\n");
     return createDocumentFragmentFromContent(str).body.textContent;
+}
+
+export function convertLineBreakToBr(str) {
+    return htmlReplace(str, /(\r|\n)/g, () => markup`<br/>`);
 }
 
 /**
@@ -447,8 +465,7 @@ export function trimEmptyBlocksAround(content) {
     };
     trimBoundaryParagraph("start");
     trimBoundaryParagraph("end");
-    // markup: innerHTML of the body is safe as it is generated from a DocumentFragment created from a trusted source and operations on body, the trim and removeNode, preserve it "safe".
-    return changed ? markup(body.innerHTML) : content;
+    return changed ? getInnerHtml(body) : content;
 }
 
 export function cleanTerm(term) {
@@ -477,7 +494,38 @@ export function parseEmail(text) {
     return [text, false];
 }
 
-export const EMOJI_REGEX = /\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200d/gu;
+const r = String.raw;
+/**
+ * Match Country Subdivision Flags.
+ * Black Flag emoji + tag-encoded subdivision name + cancel tag
+ * Example:
+ * 🏴 + [B] + [E] + [W] + [A] + [L] + [CANCEL] = Flag for Wallonia (BE-WAL)
+ */
+const SUBDIVISION_FLAG = r`🏴[\u{E0020}-\u{E007E}]+\u{E007F}`;
+/**
+ * Match Keycaps (e.g., 5️⃣, #️⃣).
+ * Numpad character + Variation Selector-16 + Combining Enclosing Keycap
+ */
+const KEYCAP = r`[#*\d]\uFE0F\u20E3`;
+const EMOJI_WITH_SKIN_TONE = r`\p{Emoji_Modifier_Base}\p{Emoji_Modifier}`;
+/**
+ * Match "regular" emojis.
+ * iOS keyboard sometimes appends an extraneous Variation Selector-16, which the
+ * optional \uFE0F accounts for.
+ */
+const EMOJI_PRESENTATION = r`\p{Emoji_Presentation}\uFE0F?`;
+/**
+ * Match "text-default" emojis (☃, ♥, ☂) that are followed by a Variation
+ * Selector-16 (U+FE0F), enabling their emoji representation (☃ → ☃️).
+ * Negative lookahead prevents matching incomplete keycap sequences.
+ */
+const QUALIFIED_TEXT = r`(?![#*\d])\p{Emoji}\uFE0F`;
+const EMOJI = r`(?:${SUBDIVISION_FLAG}|${KEYCAP}|${EMOJI_WITH_SKIN_TONE}|${EMOJI_PRESENTATION}|${QUALIFIED_TEXT})`;
+export const EMOJI_REGEX = new RegExp(
+    r`\p{Regional_Indicator}{2}|` + // Regional Indicator pairs (e.g., 🇧🇪)
+        r`${EMOJI}(?:\u200D${EMOJI})*`, // Zero Width Joiner sequences (e.g., 👨‍👩‍👧‍👦)
+    "gu"
+);
 
 /**
  * Wrap emojis present in the given text with a title and return a safe HTML
@@ -487,7 +535,7 @@ export const EMOJI_REGEX = /\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200d/gu;
  * @returns {ReturnType<markup>}
  */
 export function decorateEmojis(content) {
-    if (!loader.loaded || !content) {
+    if (!emojiLoader.loaded || !content) {
         return content;
     }
     const doc = createDocumentFragmentFromContent(content);
@@ -503,18 +551,19 @@ export function decorateEmojis(content) {
         const span = document.createElement("span");
         setElementContent(
             span,
-            htmlReplaceAll(node.textContent, loader.loaded.emojiRegex, (codepoints) =>
-                markup(
-                    `<span class="o-mail-emoji" title="${htmlFormatList(
-                        loader.loaded.emojiValueToShortcodes[codepoints],
-                        { style: "unit-narrow" }
-                    )}">${htmlEscape(codepoints)}</span>`
-                )
-            )
+            htmlReplaceAll(node.textContent, EMOJI_REGEX, (codepoints) => {
+                if (!emojiLoader.map.has(codepoints)) {
+                    return codepoints;
+                }
+                const title = formatList(emojiLoader.map.get(codepoints).shortcodes, {
+                    style: "unit-narrow",
+                });
+                return markup`<span class="o-mail-emoji" title="${title}">${codepoints}</span>`;
+            })
         );
         node.replaceWith(...span.childNodes);
     }
-    return markup(doc.body.innerHTML);
+    return getInnerHtml(doc.body);
 }
 
 /**

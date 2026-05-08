@@ -7,18 +7,7 @@ from odoo.tools import config
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    date_localization = fields.Date(string='Geolocation Date')
-
-    def write(self, vals):
-        # Reset latitude/longitude in case we modify the address without
-        # updating the related geolocation fields
-        if any(field in vals for field in ['street', 'zip', 'city', 'state_id', 'country_id']) \
-                and not all('partner_%s' % field in vals for field in ['latitude', 'longitude']):
-            vals.update({
-                'partner_latitude': 0.0,
-                'partner_longitude': 0.0,
-            })
-        return super().write(vals)
+    date_localization = fields.Date(string='Geolocation Updated On')
 
     @api.model
     def _geo_localize(self, street='', zip='', city='', state='', country=''):

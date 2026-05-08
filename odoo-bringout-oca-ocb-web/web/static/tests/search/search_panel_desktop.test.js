@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, press, test } from "@odoo/hoot";
 import { drag, queryAll, queryAllTexts, queryFirst, scroll } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
@@ -18,6 +18,7 @@ import {
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 
+import { range } from "@web/core/utils/numbers";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { WebClient } from "@web/webclient/webclient";
@@ -52,7 +53,7 @@ class TestComponent extends Component {
     static components = { SearchBarMenu, SearchPanel };
     static template = xml`
         <div class="o_test_component">
-            <SearchPanel t-if="env.searchModel.display.searchPanel" />
+            <SearchPanel t-if="this.env.searchModel.display.searchPanel" />
             <SearchBarMenu />
         </div>
     `;
@@ -760,6 +761,65 @@ test("use category (on selection) to refine search", async () => {
     expect(`.o_search_panel_category_value:nth-of-type(1) .active`).toHaveCount(1);
     expect(`.o_search_panel_category_value:first .active`).toHaveCount(1);
     expect(component.domain).toEqual([]);
+});
+
+test("use category (on many2many) to refine search", async () => {
+    Partner._records.push({
+        id: 5,
+        bar: true,
+        foo: "woof",
+        int_field: 8,
+        company_ids: [5, 3],
+        company_id: 5,
+        state: "def",
+        category_id: 7,
+    });
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <searchpanel>
+                    <field name="company_ids" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+    const component = await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+        domain: [["bar", "=", true]],
+        context: {
+            searchpanel_default_company_id: false,
+            searchpanel_default_state: "ghi",
+        },
+    });
+    expect(component.domain).toEqual([["bar", "=", true]]);
+
+    // select "asustek"
+    await contains(queryAll`.o_search_panel_category_value header`[1]).click();
+    expect(`.o_search_panel_category_value .active`).toHaveCount(1);
+    expect(`.o_search_panel_category_value:eq(1) .active`).toHaveCount(1);
+    // Since #3641f23, all domains `[(x, '=', value)]` become `[(x, 'in', [value])]`.
+    expect(component.env.searchModel.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_ids", "=", 3],
+    ]);
+
+    // select "agrolait"
+    await contains(queryAll`.o_search_panel_category_value header`[2]).click();
+    expect(`.o_search_panel_category_value .active`).toHaveCount(1);
+    expect(`.o_search_panel_category_value:eq(2) .active`).toHaveCount(1);
+    expect(component.env.searchModel.domain).toEqual([
+        "&",
+        ["bar", "=", true],
+        ["company_ids", "=", 5],
+    ]);
+
+    // select "All"
+    await contains(queryAll`.o_search_panel_category_value header`[0]).click();
+    expect(`.o_search_panel_category_value .active`).toHaveCount(1);
+    expect(`.o_search_panel_category_value:first .active`).toHaveCount(1);
+    expect(component.env.searchModel.domain).toEqual([["bar", "=", true]]);
 });
 
 test("category has been archived", async () => {
@@ -2182,9 +2242,9 @@ test("scroll position is kept when switching between controllers", async () => {
 });
 
 test("search panel is not instantiated in dialogs", async () => {
-    Company._records = Array.from(Array(8), (_, i) => ({
-        id: i + 1,
-        name: `Company${i + 1}`,
+    Company._records = range(1, 9).map((id) => ({
+        id: id,
+        name: `Company${id}`,
     }));
     Company._views = {
         [["list", false]]: /* xml */ `<list><field name="name"/></list>`,
@@ -3398,6 +3458,105 @@ test("many2one: select one, hierarchize and depth", async () => {
     await contains(`.o_search_panel_category_value header:contains(L3_2)`).click();
     expect(`.o_search_panel_field .o_search_panel_category_value`).toHaveCount(7);
     expect(`.o_toggle_fold > i`).toHaveCount(5);
+});
+
+test("many2one: keyboard navigation hierarchize and depth", async () => {
+    Company._records = [
+        { id: 1, name: "L0" },
+        { id: 2, name: "L1", parent_id: 1 },
+        { id: 3, name: "L2", parent_id: 2 },
+        { id: 4, name: "L3_1", parent_id: 3 },
+        { id: 5, name: "L3_2", parent_id: 3 },
+        { id: 6, name: "L_4_1", parent_id: 4 },
+        { id: 7, name: "L_4_2", parent_id: 5 },
+    ];
+    Partner._records[0].company_id = 6;
+    Partner._records[1].company_id = 7;
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <searchpanel>
+                    <field name="company_id" depth="3"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+
+    await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+    });
+    expect(`.o_search_panel_field .o_search_panel_category_value`).toHaveCount(6);
+    expect(`.o_toggle_fold > i`).toHaveCount(5);
+
+    await contains(`.o_search_panel_category_value header:contains(L3_2)`).click();
+    expect(`.o_search_panel_field .o_search_panel_category_value`).toHaveCount(7);
+    expect(`.o_toggle_fold > i`).toHaveCount(5);
+    await press("Enter");
+    await animationFrame();
+    expect(`.o_search_panel_field .o_search_panel_category_value`).toHaveCount(6);
+    expect(`.o_toggle_fold > i`).toHaveCount(5);
+    await press("Tab", { shiftKey: true });
+    await press("Tab", { shiftKey: true });
+    await press("Enter");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+    expect(`.o_search_panel_field .o_search_panel_category_value`).toHaveCount(4);
+    expect(`.o_toggle_fold > i`).toHaveCount(3);
+});
+
+test("many2one: toggle filter values using keyboard navigation", async () => {
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <filter name="Filter" domain="[('id', '=', 1)]"/>
+                <searchpanel>
+                    <field name="company_id" select="multi" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+
+    const component = await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+        domain: [["bar", "=", true]],
+    });
+    expect(`.o_search_panel_filter_value`).toHaveCount(2);
+    expect(`.o_search_panel_filter_value input:checked`).toHaveCount(0);
+    expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait: 1"]);
+    expect(component.domain).toEqual([["bar", "=", true]]);
+
+    // check 'asustek' using enter
+    await contains(queryAll`.o_search_panel_filter_value:eq(0)`).press("Enter");
+    expect(`.o_search_panel_filter_value input:checked`).toHaveCount(1);
+    expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait: 1"]);
+    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "in", [3]]]);
+
+    // tab to 'agrolait' and check it using space
+    await press("Tab");
+    await press(" ");
+    await animationFrame();
+    expect(`.o_search_panel_filter_value input:checked`).toHaveCount(2);
+    expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait: 1"]);
+    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "in", [3, 5]]]);
+
+    // shift tab to 'asustek' and uncheck it using space
+    await press("Tab", { shiftKey: true });
+    await press(" ");
+    await animationFrame();
+    expect(`.o_search_panel_filter_value input:checked`).toHaveCount(1);
+    expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait: 1"]);
+    expect(component.domain).toEqual(["&", ["bar", "=", true], ["company_id", "in", [5]]]);
+
+    // tab to 'agrolait' and uncheck it using enter
+    await press("Tab");
+    await press("Enter");
+    await animationFrame();
+    expect(`.o_search_panel_filter_value input:checked`).toHaveCount(0);
+    expect(getFiltersContent()).toEqual(["asustek: 2", "agrolait: 1"]);
+    expect(component.domain).toEqual([["bar", "=", true]]);
 });
 
 test("many2one: select one, hierarchize and depth and search_default", async () => {

@@ -5,7 +5,6 @@ import { markup } from "@odoo/owl";
 import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("discuss_channel_tour", {
-    url: "/odoo",
     steps: () => [
         {
             isActive: ["enterprise"],
@@ -37,6 +36,12 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             tooltipPosition: "right",
         },
         {
+            trigger: ".o-mail-CreateChannelDialog .btn-primary",
+            content: markup(_t("<p>Create a public or private channel.</p>")),
+            run: "click",
+            tooltipPosition: "bottom",
+        },
+        {
             trigger: ".o-mail-Composer-input",
             content: markup(
                 _t(
@@ -53,8 +58,9 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Message[data-persistent] [title='Add Star']:not(:visible)",
-            content: _t("Hover on your message and add a star"),
+            trigger:
+                ".o-mail-Message[data-persistent] [name='more-action:undefined']:not(:visible)",
+            content: _t("Hover and click to view more actions on the message"),
             tooltipPosition: "top",
             async run(helpers) {
                 await delay(1000);
@@ -62,9 +68,15 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             },
         },
         {
-            trigger: "button[data-mailbox-id='starred']",
+            trigger: ".o-dropdown-item[name='add-bookmark']",
+            content: _t("click to bookmark your message"),
+            tooltipPosition: "right",
+            run: "click",
+        },
+        {
+            trigger: "button[data-mailbox-id='bookmark']",
             content: _t(
-                "Once a message has been starred, you can come back and review it at any time here."
+                "Once a message has been bookmarked, you can come back and review it at any time here."
             ),
             tooltipPosition: "bottom",
             run: "click",

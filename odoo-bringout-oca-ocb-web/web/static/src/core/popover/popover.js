@@ -1,11 +1,12 @@
-import { Component, onMounted, onWillDestroy, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillDestroy } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { reverseForRTL } from "@web/core/position/utils";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { mergeClasses } from "@web/core/utils/classname";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 
 /**
  * @param {EventTarget} target
@@ -96,7 +97,7 @@ export class Popover extends Component {
 
         // Positioning props
         fixedPosition: { optional: true, type: Boolean },
-        extendedFlipping: { optional: true, type: Boolean },
+        shrink: { optional: true, type: Boolean },
         holdOnHover: { optional: true, type: Boolean },
         onPositioned: { optional: true, type: Function },
         position: {
@@ -131,12 +132,8 @@ export class Popover extends Component {
         this.popoverRef = useRef("ref");
         this.position = usePosition("ref", () => this.props.target, this.positioningOptions);
 
-        if (!this.props.animation) {
-            this.animationDone = true;
-        }
-
         const resizeObserver = new ResizeObserver(() => {
-            if (!this.props.fixedPosition && this.animationDone) {
+            if (!this.props.fixedPosition && (!this.props.animation || this.animationDone)) {
                 this.position.unlock();
             }
         });
@@ -159,6 +156,11 @@ export class Popover extends Component {
         } else {
             this.props.close();
         }
+
+        useBackButton(
+            () => this.props.close(),
+            () => this.props.target.isConnected
+        );
     }
 
     get defaultClassObj() {
@@ -167,14 +169,13 @@ export class Popover extends Component {
 
     get positioningOptions() {
         return {
-            extendedFlipping: this.props.extendedFlipping,
             margin: this.props.arrow ? 8 : 0,
             onPositioned: (el, solution) => {
                 this.onPositioned(solution);
                 this.props.onPositioned?.(el, solution);
             },
             position: this.props.position,
-            shrink: true,
+            shrink: this.props.shrink,
         };
     }
 

@@ -1,3 +1,6 @@
+import { useComponent, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { browser } from "@web/core/browser/browser";
+import { utils } from "@web/core/ui/ui_service";
 import { renderToElement } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
 import {
@@ -8,15 +11,7 @@ import {
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 
-import {
-    onMounted,
-    onWillUnmount,
-    status,
-    useComponent,
-    useEffect,
-    useExternalListener,
-    xml,
-} from "@odoo/owl";
+import { onMounted, onWillUnmount, status, xml } from "@odoo/owl";
 
 // This file defines a hook that encapsulates the column width logic of the list view. This logic
 // aims at optimizing the available space between columns and, once computed, at freezing the table
@@ -106,6 +101,37 @@ export const FIELD_WIDTHS = Object.freeze({
     text: [80, 1200],
 });
 
+/**
+ * @typedef {Object} Widths
+ * @property {number} min - The min width
+ * @property {number} [max] - The max width
+ */
+/**
+ * Parses the value of the `width` attribute set on columns in list view archs.
+ * The value can be either:
+ *   - a fixed width, e.g. `width="100px"`,
+ *   - a min width, e.g. `width="[100px]"`,
+ *   - a min and a max widths, e.g. `width="[100px,200px]"`.
+ * Note: the value is always in px, so in all cases above, "px" can be omitted (e.g. `width="100"`).
+ *
+ * @param {string} attr
+ * @returns Widths
+ */
+export function parseWidthAttribute(attr) {
+    const widths = {};
+    const widthAttr = attr.replaceAll("px", "");
+    const match = /\[(?<minWidth>\d+)(,(?<maxWidth>\d+))?\]/.exec(widthAttr);
+    if (match) {
+        widths.min = parseInt(match.groups.minWidth, 10);
+        if (match.groups.maxWidth) {
+            widths.max = parseInt(match.groups.maxWidth, 10);
+        }
+    } else {
+        widths.min = widths.max = parseInt(widthAttr, 10);
+    }
+    return widths;
+}
+
 export function resetDateFieldWidths() {
     // useful for tests
     _dateWidths = null;
@@ -152,9 +178,9 @@ function computeOptimalDateWidths() {
 
     const template = xml`
         <div class="invisible" style="font-variant-numeric: tabular-nums;">
-            <div t-foreach="Object.keys(values)" t-as="key" t-key="key" t-att-class="key">
-                <div t-foreach="values[key]" t-as="value" t-key="value_index">
-                    <span t-esc="value"/>
+            <div t-foreach="Object.keys(this.values)" t-as="key" t-key="key" t-att-class="key">
+                <div t-foreach="this.values[key]" t-as="value" t-key="value_index">
+                    <span t-out="value"/>
                 </div>
             </div>
         </div>`;
@@ -235,12 +261,15 @@ function computeWidths(table, state, allowedWidth, startingWidths) {
         // Case 1: table overflows its parent => shrink some columns
         const shrinkableColumns = [];
         let totalAvailableSpace = 0; // total space we can gain by shrinking columns
+        // In mobile, we don't want to shrink columns more than 80% of the viewport
+        const minShrinkWidth = utils.isSmall() ? browser.innerWidth * 0.8 : null;
         for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             const thIndex = columnIndex + columnOffset;
             const { minWidth, canShrink } = columnWidthSpecs[columnIndex];
-            if (_columnWidths[thIndex] > minWidth && canShrink) {
-                shrinkableColumns.push({ thIndex, minWidth });
-                totalAvailableSpace += _columnWidths[thIndex] - minWidth;
+            const targetWidth = minShrinkWidth || minWidth;
+            if (_columnWidths[thIndex] > targetWidth && canShrink) {
+                shrinkableColumns.push({ thIndex, minWidth: targetWidth });
+                totalAvailableSpace += _columnWidths[thIndex] - targetWidth;
             }
         }
         if (diff > totalAvailableSpace) {
@@ -316,21 +345,24 @@ function getWidthSpecs(columns) {
         let minWidth;
         let maxWidth;
         if (column.attrs && column.attrs.width) {
-            minWidth = maxWidth = parseInt(column.attrs.width.split("px")[0]);
+            const { min, max } = parseWidthAttribute(column.attrs.width);
+            minWidth = min;
+            maxWidth = max;
         } else {
             let width;
-            if (column.type === "field") {
-                if (column.field.listViewWidth) {
-                    width = column.field.listViewWidth;
+            if (column.type === "field" || column.type === "column_group") {
+                const fieldCol = column.type === "column_group" ? column.fields[0] : column;
+                if (fieldCol.field.listViewWidth) {
+                    width = fieldCol.field.listViewWidth;
                     if (typeof width === "function") {
                         width = width({
-                            type: column.fieldType,
-                            hasLabel: column.hasLabel,
-                            options: column.options,
+                            type: fieldCol.fieldType,
+                            hasLabel: fieldCol.hasLabel,
+                            options: fieldCol.options,
                         });
                     }
                 } else {
-                    width = FIELD_WIDTHS[column.widget || column.fieldType];
+                    width = FIELD_WIDTHS[fieldCol.widget || fieldCol.fieldType];
                 }
             } else if (column.type === "widget") {
                 width = column.widget.listViewWidth;
@@ -342,7 +374,11 @@ function getWidthSpecs(columns) {
                 minWidth = DEFAULT_MIN_WIDTH;
             }
         }
-        return { minWidth, maxWidth, canShrink: column.type === "field" };
+        return {
+            minWidth,
+            maxWidth,
+            canShrink: column.type === "field" || column.type === "column_group",
+        };
     });
 }
 
@@ -526,7 +562,7 @@ export function useMagicColumnWidths(tableRef, getState) {
 
     // Side effects
     if (renderer.constructor.useMagicColumnWidths) {
-        useEffect(forceColumnWidths);
+        useLayoutEffect(forceColumnWidths);
         // Forget computed widths (and potential manual column resize) on window resize
         useExternalListener(window, "resize", unsetWidths);
         // Listen to width changes on the parent node of the table, to recompute ideal widths

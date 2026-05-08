@@ -40,7 +40,6 @@ import {
     mountWithSearch,
     onRpc,
     removeFacet,
-    selectGroup,
     serverState,
     toggleMenuItem,
     toggleSearchBarMenu,
@@ -181,6 +180,29 @@ test("navigation with facets", async () => {
 });
 
 test.tags("desktop");
+test("Inner filter: facets are 'or' separated", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Garf">
+                    <filter string="Meow" name="meow" domain="[('garf', '=', 'meow')]"/>
+                    <filter string="Woof" name="woof" domain="[('garf', '=', 'woof')]"/>
+                </filter>
+            </search>
+        `,
+    });
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Garf");
+    await contains(`.o_item_option:eq(0)`).click();
+    await contains(`.o_item_option:eq(1)`).click();
+    expect(getFacetTexts().map((str) => str.replace(/\s+/g, " "))).toEqual(["Meow or Woof"]);
+});
+
+test.tags("desktop");
 test("navigation with facets (2)", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -260,8 +282,8 @@ test("search input is focused when being toggled", async () => {
     class Parent extends Component {
         static template = xml`
             <div>
-                <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
-                <SearchBar toggler="searchBarToggler"/>
+                <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
+                <SearchBar toggler="this.searchBarToggler"/>
             </div>
         `;
         static components = { SearchBar };
@@ -860,9 +882,9 @@ test("checks that an arrowUp always selects an item", async () => {
 test("many2one_reference fields are supported in search view", async () => {
     Partner._fields.res_id = fields.Many2oneReference({
         string: "Resource ID",
-        model_field: "bar",
-        relation: "partner",
+        model_field: "res_model",
     });
+    Partner._fields.res_model = fields.Char();
 
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -1766,7 +1788,9 @@ test("facets display with any / not any operator (check brackets)", async functi
 
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
-        `Company : ( Bar : ( Bool ${label("not set")} and Bool ${label("not set")} ) and Bar : ( Bool ${label("set")} ) ) or Bar ${label("not set")}`,
+        `Company : ( Bar : ( Bool ${label("not set")} and Bool ${label(
+            "not set"
+        )} ) and Bar : ( Bool ${label("set")} ) ) or Bar ${label("not set")}`,
     ]);
     expect.verifySteps([`/web/domain/validate`]);
 });
@@ -1873,59 +1897,6 @@ test("dropdown menu last element is 'Custom Filter...'", async () => {
     await editSearch("a");
     await animationFrame();
     expect(".o_searchview_autocomplete .o-dropdown-item:last").toHaveText("Custom Filter...");
-});
-
-test("order by count resets when there is no group left", async () => {
-    const searchBar = await mountWithSearch(SearchBar, {
-        resModel: "partner",
-        searchMenuTypes: ["groupBy", "filter"],
-        searchViewId: false,
-        searchViewArch: `
-            <search>
-                <filter string="Foo" name="foo" domain="[('foo', '=', 'qsdf')]"/>
-            </search>
-        `,
-    });
-    searchBar.env.searchModel.canOrderByCount = true;
-    await toggleSearchBarMenu();
-    await selectGroup("bool");
-    await selectGroup("bar");
-    await toggleMenuItem("Foo");
-    expect(".fa-sort").toHaveCount(1);
-    await contains(".fa-sort", { visible: false }).click();
-    expect(".fa-sort-numeric-desc").toHaveCount(1);
-    await contains(".fa-sort-numeric-desc").click();
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Foo");
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-
-    await toggleMenuItem("Foo");
-    await toggleMenuItem("Bool");
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-    await toggleMenuItem("Bar");
-    expect(".fa-sort-numeric-asc").toHaveCount(0);
-
-    await toggleMenuItem("Bar");
-    expect(".fa-sort-numeric-asc").toHaveCount(0);
-    expect(".fa-sort").toHaveCount(1);
-    await contains(".fa-sort", { visible: false }).click();
-    await contains(".fa-sort-numeric-desc").click();
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Bool");
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-
-    await contains(".o_facet_remove").click();
-    expect(".fa-sort-numeric-asc").toHaveCount(1);
-    await contains(".o_facet_remove").click();
-    expect(".o_searchview_facet").toHaveCount(0);
-
-    await toggleSearchBarMenu();
-    await toggleMenuItem("Bar");
-    expect(".fa-sort-numeric-asc").toHaveCount(0);
-    expect(".fa-sort").toHaveCount(1);
 });
 
 test("subitems have a load more item if there is more records available", async () => {

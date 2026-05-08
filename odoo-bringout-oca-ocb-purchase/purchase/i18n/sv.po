@@ -24,24 +24,22 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# symbiotech <symbiotech3@gmail.com>, 2026.
 # Hanna Kharraziha <hakha@odoo.com>, 2026.
-# Mathias Kindstedt <mathias.kindstedt@termisk.se>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-16 15:35+0000\n"
-"Last-Translator: Mathias Kindstedt <mathias.kindstedt@termisk.se>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/purchase/"
-"sv/>\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 20:35+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-1/"
+"purchase/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -133,8 +131,8 @@ msgid ""
 "        </t>\n"
 "        is expected for \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object."
+"date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">undefined</span>.\n"
@@ -146,12 +144,10 @@ msgid ""
 "color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "            Acknowledge</a>\n"
 "        <br/><br/>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "    </p>\n"
@@ -169,8 +165,8 @@ msgid ""
 "Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Here is in attachment a purchase order <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is in attachment a purchase order <span style=\"font-weight:"
+"bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
 "t>\n"
@@ -191,12 +187,10 @@ msgid ""
 "color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "                Acknowledge</a>\n"
 "        </t>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "    </p>\n"
@@ -225,12 +219,10 @@ msgid ""
 "        If you have any questions, please do not hesitate to contact us.\n"
 "        <br/><br/>\n"
 "        Best regards,\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
-"quote-container=\"1\">\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -315,15 +307,11 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Request for Quotation </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', "
+"'sent')\">Request for Quotation</span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
-"('draft', 'sent')\">Purchase Order </span>"
+"('draft', 'sent')\">Purchase Order</span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Förfrågan om offert </span>\n"
-"                        <span class=\"o_form_label\" invisible=\"state in "
-"('draft', 'sent')\">Köpsorder </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -347,25 +335,24 @@ msgid "<span class=\"o_stat_text\">Purchased</span>"
 msgstr "<span class=\"o_stat_text\">Köpt</span>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
-msgid "<span> day(s) before</span>"
-msgstr "<span> dag(ar) innan</span>"
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
+msgid ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                    Incoming\n"
+"                                </span>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>Grattis!</b> Du har nu gått igenom hela introduktionen.</span>"
+"<span><b>Bra jobbat!</b> Du gick igenom alla steg i den här turen.</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<span>Amount</span>"
 msgstr "<span>Belopp</span>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "<span>Ask confirmation</span>"
-msgstr "<span>Be om bekräftelse</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -386,6 +373,11 @@ msgstr "<strong class=\"d-block mb-1\">Från:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
 msgstr "<strong class=\"d-block mb-1\">Fakturor</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<strong class=\"d-block mb-1\">Shipping address:</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -423,7 +415,7 @@ msgstr "<strong>Beskrivning</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Disc.</strong>"
-msgstr "<strong>Rabatt</strong>"
+msgstr "<strong>Diskett </strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -540,7 +532,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__account_move_id
 msgid "Account Move"
-msgstr "Kontorörelse"
+msgstr "Flytta konto"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
@@ -560,7 +552,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
 msgid "Action Needed"
-msgstr "Åtgärd krävs"
+msgstr "Åtgärd Krävs"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_ids
@@ -575,12 +567,17 @@ msgstr "Aktiviteter för"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Undantagsaktiviteter dekoration"
+msgstr "Aktivitet undantaget dekoration"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
 msgid "Activity State"
-msgstr "Aktivitetsstatus"
+msgstr "Aktivitetstillstånd"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_icon
@@ -717,7 +714,6 @@ msgid "Aml"
 msgstr "Aml"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__amount_to_invoice_at_date
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Amount"
@@ -776,9 +772,14 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Ask confirmation"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "Antal bilagor"
+msgstr "Antal Bilagor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_template_attribute_value_ids
@@ -794,25 +795,13 @@ msgstr "Attribut"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Auto-Complete"
-msgstr "Fyll i automatiskt"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
-#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
-msgid "Auto-complete"
-msgstr "Fyll i automatiskt"
+msgstr "Autokomplettera"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_id
 msgid "Auto-complete from a past purchase order."
 msgstr "Autokomplettera från en tidigare inköpsorder."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
-#: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
-msgid "Auto-complete from a previous bill, refund, or purchase order."
-msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -877,17 +866,17 @@ msgstr "Fakturerat belopp Obeskattat"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
 msgid "Billed Qty"
-msgstr "Fakturerad mängd"
+msgstr "Antal fakturererade"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Billed Quantity"
-msgstr "Fakturerad mängd"
+msgstr "Antal fakturerade"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Billed Quantity:"
-msgstr "Fakturerad mängd:"
+msgstr "Antal fakturerade:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_status
@@ -960,7 +949,7 @@ msgstr "Kategorier"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Close"
-msgstr "Stäng"
+msgstr "Nära"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
@@ -974,24 +963,19 @@ msgstr "Kommuniktationshistorik"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
-msgid "Companies"
-msgstr "Företag"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__company_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__company_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__company_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_currency_id
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__company_currency_id
 msgid "Company Currency"
-msgstr "Företagets valuta"
+msgstr "Bolagsvaluta"
 
 #. module: purchase
 #. odoo-python
@@ -1031,17 +1015,11 @@ msgid "Confirm your purchase."
 msgstr "Bekräfta ditt köp."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_approve
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__date_approve
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Confirmation Date"
 msgstr "Bekräftelsedatum"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Confirmation Date Last Year"
-msgstr "Bekräftelsedatum Föregående år"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__lock
@@ -1117,7 +1095,6 @@ msgstr "Skapad den"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__currency_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__currency_id
@@ -1133,11 +1110,6 @@ msgstr "Valutakurs"
 #: model:ir.model.fields,help:purchase.field_purchase_order__access_url
 msgid "Customer Portal URL"
 msgstr "URL till kundportal"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
-msgid "Date"
-msgstr "Datum"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
@@ -1161,6 +1133,11 @@ msgstr "Datum:"
 #: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
 msgid "Days Before Receipt"
 msgstr "Dagar före mottagandet"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Days before confirmation"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
@@ -1212,15 +1189,6 @@ msgstr ""
 "leverantörens prislistas ledtid respektive dagens datum."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
-msgid ""
-"Delivery date promised by vendor. This date is used to determine expected "
-"arrival of products."
-msgstr ""
-"Leveransdatum utlovat av leverantören. Detta datum används för att bestämma "
-"produkternas förväntade ankomst."
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__date_order
 msgid ""
@@ -1239,7 +1207,7 @@ msgstr "Beskrivning"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Disc.%"
-msgstr "Rabatt %"
+msgstr "Rab.%"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__discount
@@ -1250,6 +1218,12 @@ msgstr "Rabatt (%)"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Discount:"
 msgstr "Rabatt:"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__display_auto_complete_field
+#: model:ir.model.fields,field_description:purchase.field_account_move__display_auto_complete_field
+msgid "Display Auto Complete Field"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__display_name
@@ -1263,7 +1237,6 @@ msgstr "Rabatt:"
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_template__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_name
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__display_name
@@ -1341,6 +1314,12 @@ msgid "Expected Arrival"
 msgstr "Förväntad ankomst"
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
+msgid ""
+"Expected delivery date of goods by the vendor based on the latest information"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Extra line with %s "
@@ -1353,12 +1332,12 @@ msgid "Fiscal Position"
 msgstr "Skatteområde"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model:portal.entry,description:purchase.portal_purchase_orders
 msgid "Follow orders you have to fulfill"
 msgstr "Följ order som du måste utföra"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model:portal.entry,description:purchase.portal_rfq
 msgid "Follow your Requests for Quotation"
 msgstr "Följ dina offertförfrågningar"
 
@@ -1370,7 +1349,7 @@ msgstr "Följare"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Följare (Partners)"
+msgstr "Följare (kontakter)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
@@ -1400,10 +1379,15 @@ msgid "Fully Billed"
 msgstr "Fullt fakturerat"
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__full
+msgid "Fully Received"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Future Activities"
-msgstr "Kommande aktiviteter"
+msgstr "Framtida aktiviteter"
 
 #. module: purchase
 #. odoo-python
@@ -1457,7 +1441,6 @@ msgstr "Dölj avbrutna linjer"
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase.field_product_template__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__id
@@ -1480,14 +1463,13 @@ msgstr "Ikon för att indikera en undantagsaktivitet."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-"Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
+msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om ikryssad, så finns det meddelanden med leveransfel."
+msgstr "Om markerad, en del meddelanden har leveransfel."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1506,18 +1488,6 @@ msgid ""
 msgstr ""
 "Om det är installerat kommer produktvarianterna att läggas till på "
 "inköpsorder via en rutnätspost."
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/product.py:0
-msgid "Import Template for Products"
-msgstr "Importmall för produkter"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
-msgid "Import Template for Requests for Quotation"
-msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -1614,12 +1584,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
 msgid "Journal Entry"
-msgstr "Bokföringspost"
+msgstr "Verifikat"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move_line
 msgid "Journal Item"
-msgstr "Affärshändelse"
+msgstr "Transaktion"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_uid
@@ -1644,7 +1614,7 @@ msgstr "Försenad(e)"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr "Försenade aktiviteter"
+msgstr "Sena aktiviteter"
 
 #. module: purchase
 #. odoo-javascript
@@ -1703,6 +1673,11 @@ msgstr "Linje Antal"
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_uom_id
 msgid "Line Uom"
 msgstr "Linje Uom"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Link RFQs together and compare them."
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1771,7 +1746,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
 msgid "Message Delivery error"
-msgstr "Leveransfel för meddelanden"
+msgstr "Fel vid leverans meddelande"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
@@ -1810,18 +1785,18 @@ msgstr "Saknade obligatoriska fält på raden för redovisningsbar inköpsorder.
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My"
-msgstr "Min"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "My Activities"
-msgstr "Mina aktiviteter"
+msgstr "Mina aktivieteter"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Tidsgräns för mina aktiviteter"
+msgstr "Mina aktiviteters sluttid"
 
 #. module: purchase
 #. odoo-javascript
@@ -1882,8 +1857,6 @@ msgstr "Namn, TIN, e-post eller referens"
 
 #. module: purchase
 #. odoo-javascript
-#. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "New"
@@ -1903,17 +1876,17 @@ msgstr "Nästa aktivitet"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Nästa aktivitetshändelse i kalendern"
+msgstr "Nästa Kalenderhändelse för Aktivitet"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Nästa tidsgräns för en aktivitet"
+msgstr "Nästa slutdatum för aktivitet"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssammanfattning"
+msgstr "Nästa aktivitetssammanställning"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
@@ -1970,6 +1943,11 @@ msgid "Not Acknowledged"
 msgstr "Inte bekräftad"
 
 #. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
+msgid "Not Received"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Not using Odoo?"
 msgstr "Använder du inte Odoo?"
@@ -2010,7 +1988,7 @@ msgstr "Antal fel"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Antal meddelanden som kräver åtgärder"
+msgstr "Antal meddelanden som kräver åtgärd"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
@@ -2073,25 +2051,27 @@ msgid "Order"
 msgstr "Order"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
 msgid "Order Date"
 msgstr "Orderdatum"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
-msgid "Order Date: Last 365 Days"
-msgstr "Orderdatum: Senaste 365 dagarna"
+msgid "Order DeadLine: Last 365 Days"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Order Deadline"
 msgstr "Orderdeadline"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Order Deadline: Last 365 Days"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2124,11 +2104,11 @@ msgstr "Förfallodag för order %(date)s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Other Information"
-msgstr "Övrig information"
+msgid "Other Info"
+msgstr ""
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model:portal.entry,name:purchase.portal_purchase_orders
 msgid "Our Orders"
 msgstr "Våra beställningar"
 
@@ -2136,6 +2116,11 @@ msgstr "Våra beställningar"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
 msgid "Parent Section Line"
 msgstr "Föräldrasektion Linje"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__partial
+msgid "Partially Received"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
@@ -2291,7 +2276,6 @@ msgstr "Tillhandahålla en dubbel valideringsmekanism för inköp"
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.menu,name:purchase.purchase_report
 #: model:res.groups.privilege,name:purchase.res_groups_privilege_purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase"
 msgstr "Inköp"
@@ -2300,6 +2284,11 @@ msgstr "Inköp"
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
 msgid "Purchase Agreements"
 msgstr "Inköpsavtal"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_alternative
+msgid "Purchase Alternative"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
@@ -2369,7 +2358,6 @@ msgstr "Matchning av inköp"
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_order_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__purchase_order_id
 #: model:ir.model.fields.selection,name:purchase.selection__account_analytic_applicability__business_domain__purchase_order
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__purchase
@@ -2401,7 +2389,7 @@ msgstr "Godkännande av inköpsorder"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
 msgid "Purchase Order Count"
-msgstr "Antal inköpsorders"
+msgstr "Antal Inköpsordrar"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
@@ -2454,11 +2442,10 @@ msgstr "Namn på inköpsorder"
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Orders"
-msgstr "Inköpsorders"
+msgstr "Inköpsordrar"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -2517,15 +2504,25 @@ msgstr "Köp: Påminnelse till leverantörer"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchased_product_qty
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "Purchased"
 msgstr "Inköpt"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
-msgid "Purchased in the last 365 days"
-msgstr "Köpt de senaste 365 dagarna"
+msgid ""
+"Purchased in the last 365 days. Incoming represents confirmed purchase "
+"orders not received or partially received"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
+msgid ""
+"Purchased in the last 365 days. Incoming represents confirmed sales order "
+"not received, or partially received"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
@@ -2534,11 +2531,6 @@ msgstr "Köpt de senaste 365 dagarna"
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Purchases"
 msgstr "Inköp"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_bill_union
-msgid "Purchases & Bills Union"
-msgstr "Inköp & fakturor Union"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -2636,7 +2628,7 @@ msgstr "Offertförfrågningar och inköp"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
 msgid "Ratings"
-msgstr "Omdömen"
+msgstr "Betyg"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -2644,6 +2636,7 @@ msgid "Read the documentation"
 msgstr "Läs dokumentationen"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
 #: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
@@ -2651,9 +2644,15 @@ msgid "Receipt Reminder"
 msgstr "Leveransbekräftelse"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
-msgid "Receipt Reminder Email"
-msgstr "E-post för påminnelse om kvitto"
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_status
+msgid "Receipt Status"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+msgid "Receive"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
@@ -2689,21 +2688,14 @@ msgstr "Registrera en ny leverantörsfaktura"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__reference
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Reference"
 msgstr "Referens"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
-msgid "Reference Document"
-msgstr "Referensdokument"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__uom_id
 msgid "Reference Unit of Measure"
 msgstr "Referensenhet"
 
@@ -2713,8 +2705,8 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a "
 "sales order)"
 msgstr ""
-"Referens till det dokument som genererade denna begäran om inköpsorder "
-"(t.ex. en försäljningsorder)"
+"Referens till det dokument som genererade denna begäran om inköpsorder (t."
+"ex. en försäljningsorder)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -2730,7 +2722,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_ir_actions_report
 msgid "Report Action"
-msgstr "Rapporteringsåtgärd"
+msgstr "Rapportera åtgärd"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report_main
@@ -2765,8 +2757,8 @@ msgstr "Offertförfrågningar"
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+#: model:portal.entry,name:purchase.portal_rfq
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Requests for Quotation"
 msgstr "Offertförfrågningar"
@@ -2792,7 +2784,7 @@ msgstr "Ansvarig användare"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Leveransfel för SMS"
+msgstr "SMS leveransfel"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2805,11 +2797,6 @@ msgstr "Schemalagt datum"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Search Purchase Order"
 msgstr "Sök Inköpsorder"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
-msgid "Search Reference Document"
-msgstr "Sök referensdokument"
 
 #. module: purchase
 #. odoo-javascript
@@ -2880,6 +2867,11 @@ msgid "Send an automatic reminder email to confirm delivery"
 msgstr "Skicka ett automatiskt påminnelsemail för att bekräfta leverans"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_mass_mail
+msgid "Send by mail"
+msgstr ""
+
+#. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Send the request for quotation to your vendor."
@@ -2935,6 +2927,11 @@ msgid "Show Comparison"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__show_receive_button
+msgid "Show Receive Button"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records whose next activity date is past"
@@ -2949,7 +2946,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__origin
 msgid "Source"
 msgstr "Källa"
@@ -2968,7 +2964,7 @@ msgstr "Starta på Odoo"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__state
 msgid "State"
-msgstr "Status"
+msgstr "Stat"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__state
@@ -2995,7 +2991,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_subsection
 msgid "Subsection"
-msgstr "Delavsnitt"
+msgstr "Underavsnitt"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3111,6 +3107,18 @@ msgid "Technical field to get the vendor pricelist used to generate this line"
 msgstr ""
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/product.py:0
+msgid "Template for Products"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Template for Requests for Quotation"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Terms &amp; Conditions"
 msgstr "Allmänna villkor"
@@ -3126,12 +3134,20 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO-kod med två tecken.\n"
-"Fältet används för snabbsökning."
+"ISO-landskoden med två tecken\n"
+"Du kan använda det här fältet för snabb sökning."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "The Price of one unit of the product's Unit of Measure"
+msgstr ""
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid ""
+"The following purchase orders %(invalid_orders) can't be received. Cancelled "
+"all receptions."
 msgstr ""
 
 #. module: purchase
@@ -3144,7 +3160,7 @@ msgid ""
 msgstr ""
 "Offertförfrågan är det första steget i inköpsflödet. När den\n"
 "                    omvandlas till en inköpsorder kan du kontrollera "
-"mottagandet\n"
+"mottagandet av\n"
 "                    av produkterna och leverantörsfakturan."
 
 #. module: purchase
@@ -3298,11 +3314,6 @@ msgid "Total purchased amount"
 msgstr "Totalt inköpt belopp"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
-msgid "Translated Product Name"
-msgstr ""
-
-#. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
@@ -3331,7 +3342,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__uom_id
 msgid "Unit"
 msgstr "Enhet"
 
@@ -3428,7 +3439,6 @@ msgid "Variant Grid Entry"
 msgstr "Variant Grid Entry"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
@@ -3444,11 +3454,6 @@ msgid "Vendor"
 msgstr "Leverantör"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
-msgid "Vendor Bill"
-msgstr "Leverantörsfaktura"
-
-#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Vendor Bill lines can only be added to one Purchase Order."
@@ -3457,7 +3462,6 @@ msgstr "Leverantörsfakturarader kan endast läggas till på en inköpsorder."
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Leverantörsfakturor"
 
@@ -3554,12 +3558,12 @@ msgstr "Varningar"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
 msgid "Website Messages"
-msgstr "Hemsidesmeddelanden"
+msgstr "Webbplatsmeddelanden"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
 msgid "Website communication history"
-msgstr "Hemsidans kommunikationshistorik"
+msgstr "Webbplatsens kommunikationshistorik"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
@@ -3654,20 +3658,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas "
-"your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from "
-"other companies (%(bad_products)s)."
+"Your RFQ contains products from company %(product_company)s whereas your RFQ "
+"belongs to company %(quote_company)s. \n"
+" Please change the company of your RFQ or remove the products from other "
+"companies (%(bad_products)s)."
 msgstr ""
-"Ditt erbjudande innehåller produkter från företaget %(product_company)s "
-"medan ditt erbjudande tillhör företaget %(quote_company)s. \n"
-" Var god ändra företaget för ditt erbjudande eller ta bort produkterna från "
-"andra företag (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "day(s) before"
-msgstr "dag(ar) innan"
+msgid "billing"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -3692,22 +3692,27 @@ msgid "partner_id"
 msgstr "partner_id"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "purchase"
+msgstr ""
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_id"
-msgstr "res_id"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_model_id"
-msgstr "res_model_id"
+msgstr ""
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 msgid "state"
-msgstr "status"
+msgstr "stat"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -3719,6 +3724,11 @@ msgstr "för att skapa offerter automatiskt."
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "to learn all the ways to connect your software with"
 msgstr "för att lära dig alla sätt att ansluta din programvara till"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "tracking"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -3733,304 +3743,3 @@ msgstr "med"
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Beställning (Ref {{ object.name or 'n/a' }})"
-
-#~ msgid "<i class=\"fa fa-comment\"/> Send message"
-#~ msgstr "<i class=\"fa fa-comment\"/> Skicka meddelande"
-
-#~ msgid "<i class=\"fa fa-download\"/> Download"
-#~ msgstr "<i class=\"fa fa-download\"/> Ladda ner"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
-#~ "title=\"Done\"/><span class=\"d-none d-md-inline\"> Done</span>"
-#~ msgstr ""
-#~ "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
-#~ "title=\"Done\"/><span class=\"d-none d-md-inline\"> Färdig</span>"
-
-#~ msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-#~ msgstr "<i class=\"fa fa-fw fa-check\"/><b>Betald</b>"
-
-#~ msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-#~ msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Inväntar betalning</b>"
-
-#~ msgid "<i class=\"fa fa-print\"/> Print"
-#~ msgstr "<i class=\"fa fa-print\"/> Skriv ut"
-
-#~ msgid ""
-#~ "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',"
-#~ "('draft','sent'))]}\">Request for Quotation </span>\n"
-#~ "                        <span class=\"o_form_label\" "
-#~ "attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order "
-#~ "</span>"
-#~ msgstr ""
-#~ "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',"
-#~ "('draft','sent'))]}\">Offertförfrågan </span>\n"
-#~ "                        <span class=\"o_form_label\" "
-#~ "attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Inköpsorder </"
-#~ "span>"
-
-#~ msgid ""
-#~ "<span class=\"text-muted\" attrs=\"{'invisible': "
-#~ "[('mail_reception_confirmed','=', False)]}\">(confirmed by vendor)</span>"
-#~ msgstr ""
-#~ "<span class=\"text-muted\" attrs=\"{'invisible': "
-#~ "[('mail_reception_confirmed','=', False)]}\">(bekräftad av leverantör)</"
-#~ "span>"
-
-#~ msgid ""
-#~ "<span class=\"text-muted\" attrs=\"{'invisible': "
-#~ "[('mail_reminder_confirmed', '=', False)]}\">(confirmed by vendor)</span>"
-#~ msgstr ""
-#~ "<span class=\"text-muted\" attrs=\"{'invisible': "
-#~ "[('mail_reminder_confirmed', '=', False)]}\">(bekräftad av leverantör)</"
-#~ "span>"
-
-#~ msgid "<strong class=\"text-muted\">Purchase Representative</strong>"
-#~ msgstr "<strong class=\"text-muted\">Inköpsansvarig</strong>"
-
-#~ msgid "<strong>Purchase Representative:</strong>"
-#~ msgstr "<strong>Inköpsansvarig:</strong>"
-
-#~ msgid "<strong>Shipping address:</strong>"
-#~ msgstr "<strong>Leveransadress:</strong>"
-
-#~ msgid "<strong>Your Order Reference:</strong>"
-#~ msgstr "<strong>Din beställningsreferens:</strong>"
-
-#~ msgid ""
-#~ "A storable product is a product for which you manage stock. The Inventory "
-#~ "app has to be installed.\n"
-#~ "A consumable product is a product for which stock is not managed.\n"
-#~ "A service is a non-material product you provide."
-#~ msgstr ""
-#~ "En lagerförd produkt är en produkt som du hanterar lager för. Appen Lager "
-#~ "måste installeras.\n"
-#~ "En förbrukningsvara är en produkt för vilken lager inte hanteras.\n"
-#~ "En tjänst är en icke-materiell produkt du tillhandahåller."
-
-#~ msgid "Accept"
-#~ msgstr "Godkänn"
-
-#~ msgid "All RFQs"
-#~ msgstr "Alla offertförfrågningar"
-
-#~ msgid "All Waiting RFQs"
-#~ msgstr "Alla väntande offertförfrågningar"
-
-#~ msgid "Auto-complete from a past bill / purchase order."
-#~ msgstr "Autokomplettera från en tidigare leverantörsfaktura / inköpsorder."
-
-#~ msgid "Bill Control"
-#~ msgstr "Fakturakontroll"
-
-#~ msgid "Blocking Message"
-#~ msgstr "Spärrmeddelande"
-
-#~ msgid "Category"
-#~ msgstr "Kategori"
-
-#~ msgid "Confirm"
-#~ msgstr "Bekräfta"
-
-#~ msgid "Confirm Receipt Date"
-#~ msgstr "Bekräfta mottagningsdatum"
-
-#~ msgid ""
-#~ "Conversion between Units of Measure can only occur if they belong to the "
-#~ "same category. The conversion will be made based on the ratios."
-#~ msgstr ""
-#~ "Omräkning av enheter kan endast ske om de tillhör samma kategori. "
-#~ "Omräkningen baseras på angiven ratio."
-
-#~ msgid "Create Bill"
-#~ msgstr "Skapa faktura"
-
-#~ msgid "Create Vendor Bills"
-#~ msgstr "Skapa leverantörsfakturor"
-
-#~ msgid "Days"
-#~ msgstr "Dagar"
-
-#~ msgid "Done"
-#~ msgstr "Klar"
-
-#~ msgid "Download"
-#~ msgstr "Ladda ner"
-
-#~ msgid "Draft RFQs"
-#~ msgstr "Utkast till offertförfrågningar "
-
-#~ msgid "Email composition wizard"
-#~ msgstr "E-postredigeringsguide"
-
-#~ msgid "Extended Filters"
-#~ msgstr "Utökade filter"
-
-#~ msgid "Group By"
-#~ msgstr "Gruppera efter"
-
-#~ msgid "History"
-#~ msgstr "Historik"
-
-#~ msgid "Late RFQs"
-#~ msgstr "Utestående offertförfrågningar"
-
-#~ msgid "Lead Time to Purchase"
-#~ msgstr "Ledtid för köp"
-
-#~ msgid ""
-#~ "Margin of error for vendor lead times. When the system generates Purchase "
-#~ "Orders for procuring products, they will be scheduled that many days "
-#~ "earlier to cope with unexpected vendor delays."
-#~ msgstr ""
-#~ "Felmarginal för leverantörers ledtider. När systemet genererar "
-#~ "inköpsordrar för att anskaffa produkter kommer de att schemaläggas så "
-#~ "många dagar tidigare för att klara av oväntade förseningar från "
-#~ "leverantörerna."
-
-#~ msgid ""
-#~ "Margin of error for vendor lead times. When the system generates Purchase "
-#~ "Orders for reordering products,they will be scheduled that many days "
-#~ "earlier to cope with unexpected vendor delays."
-#~ msgstr ""
-#~ "Felmarginal för leverantörers ledtider. När systemet genererar "
-#~ "inköpsordrar för ombeställning av produkter kommer de att schemaläggas så "
-#~ "många dagar tidigare för att klara av oväntade förseningar från "
-#~ "leverantörerna."
-
-#~ msgid "My RFQs"
-#~ msgstr "Mina offertförfrågningar"
-
-#~ msgid "No Message"
-#~ msgstr "Inget meddelande"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelanden som kräver en åtgärd"
-
-#~ msgid "Ordered quantities"
-#~ msgstr "Beställda kvantiteter"
-
-#~ msgid "Packaging"
-#~ msgstr "Förpackning"
-
-#~ msgid "Print RFQ"
-#~ msgstr "Skriv ut offertförfrågan"
-
-#~ msgid "Product Attributes"
-#~ msgstr "Produktattribut"
-
-#~ msgid "Product Categories"
-#~ msgstr "Produktkategorier"
-
-#~ msgid "Product Packaging"
-#~ msgstr "Produktförpackning"
-
-#~ msgid "Purchase Lead Time"
-#~ msgstr "Ledtid för köp"
-
-#~ msgid "Purchase Representative"
-#~ msgstr "Inköpsansvarig"
-
-#~ msgid "Quantities billed by vendors"
-#~ msgstr "Antal fakturerade av leverantörer"
-
-#~ msgid "RFQ Done"
-#~ msgstr "Offertförfrågan klar"
-
-#~ msgid "RFQs"
-#~ msgstr "Offertförfrågningar"
-
-#~ msgid "RFQs Sent Last 7 Days"
-#~ msgstr "Offertförfrågningar skickade de senaste 7 dagarna"
-
-#~ msgid "Re-Send by Email"
-#~ msgstr "Skicka igen via e-post"
-
-#~ msgid "Received quantities"
-#~ msgstr "Mottagna kvantiteter"
-
-#~ msgid "Security Lead Time for Purchase"
-#~ msgstr "Säkerhetsledtid för inköp"
-
-#~ msgid "Select a purchase order or an old bill"
-#~ msgstr "Välj en inköpsorder eller en gammal leverantörsfaktura"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "Val av \"Varning\"-alternativet kommer att meddela användare med "
-#~ "meddelandet, välj \"Spärrmeddelande\" kommer att skapa ett undantag med "
-#~ "meddelandet och blockera flödet. Meddelande måste skrivas i nästa fält."
-
-#~ msgid "Send PO by Email"
-#~ msgstr "Skicka inköpsorder via e-post"
-
-#~ msgid "Send by Email"
-#~ msgstr "Skicka med e-post"
-
-#~ msgid "Show all records which has next action date is before today"
-#~ msgstr "Visa alla poster som har nästa händelse före idag"
-
-#~ msgid "Source Document"
-#~ msgstr "Källdokument"
-
-#~ msgid ""
-#~ "There is no invoiceable line. If a product has a control policy based on "
-#~ "received quantity, please make sure that a quantity has been received."
-#~ msgstr ""
-#~ "Det finns ingen fakturerbar rad. Om en produkt har en kontrollpolicy för "
-#~ "mottagen kvantitet, säkerställ att en kvantitet har mottagits."
-
-#~ msgid ""
-#~ "This default value is applied to any new product created. This can be "
-#~ "changed in the product detail form."
-#~ msgstr ""
-#~ "Det här standardvärdet appliceras på alla nya produkter som skapas. Detta "
-#~ "kan ändras på varje enskild produkt."
-
-#~ msgid "This vendor bill has been created from: %s"
-#~ msgstr "Denna leverantörsfaktura har skapats från: %s"
-
-#~ msgid "This vendor bill has been modified from: %s"
-#~ msgstr "Denna leverantörsfaktura har modifierats från: %s"
-
-#~ msgid "To Send"
-#~ msgstr "Att skicka"
-
-#~ msgid "Unit of Measure"
-#~ msgstr "Måttenhet"
-
-#~ msgid "Units of Measure"
-#~ msgstr "Måttenheter"
-
-#~ msgid "Units of Measure Categories"
-#~ msgstr "Kategorier för måttenheter"
-
-#~ msgid "Units of Measures"
-#~ msgstr "Måttenheter"
-
-#~ msgid "UoM"
-#~ msgstr "Måttenhet"
-
-#~ msgid "Waiting"
-#~ msgstr "Väntar"
-
-#~ msgid "Waiting RFQs"
-#~ msgstr "Väntande offertförfrågningar"
-
-#~ msgid "Warning"
-#~ msgstr "Varning"
-
-#~ msgid "Warning for %s"
-#~ msgstr "Varning för %s"
-
-#~ msgid "Warning on the Purchase Order"
-#~ msgstr "Varning på inköpsordern"
-
-#~ msgid "Warning when Purchasing this Product"
-#~ msgstr "Varning vid inköp av denna produkt"
-
-#~ msgid "close"
-#~ msgstr "stäng"

@@ -1,4 +1,5 @@
-import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -110,7 +111,7 @@ export class ModelFieldSelectorPopover extends Component {
         close: Function,
         filter: { type: Function, optional: true },
         sort: { type: Function, optional: true },
-        followRelations: { type: Boolean, optional: true },
+        followRelation: { type: [Boolean, Function], optional: true },
         showDebugInput: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         path: { optional: true },
@@ -122,7 +123,7 @@ export class ModelFieldSelectorPopover extends Component {
     static defaultProps = {
         filter: (value) => value.searchable && value.type != "json" && value.type !== "separator",
         isDebugMode: false,
-        followRelations: true,
+        followRelation: true,
     };
 
     setup() {
@@ -135,8 +136,19 @@ export class ModelFieldSelectorPopover extends Component {
             this.state.page = await this.loadPages(this.props.resModel, this.props.path);
         });
 
+        onWillRender(() => {
+            const followRelation = this.props.followRelation;
+            if (followRelation instanceof Function) {
+                this._followRelation = followRelation;
+            } else if (followRelation) {
+                this._followRelation = () => {};
+            } else {
+                this._followRelation = () => false;
+            }
+        });
+
         const rootRef = useRef("root");
-        useEffect(() => {
+        useLayoutEffect(() => {
             const focusedElement = rootRef.el.querySelector(
                 ".o_model_field_selector_popover_item.active"
             );
@@ -145,7 +157,7 @@ export class ModelFieldSelectorPopover extends Component {
                 focusedElement.scrollIntoView({ block: "center" });
             }
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.props.showSearchInput) {
                     const searchInput = rootRef.el.querySelector(
@@ -170,10 +182,7 @@ export class ModelFieldSelectorPopover extends Component {
         if (fieldDef.type === "properties") {
             return true;
         }
-        if (!this.props.followRelations) {
-            return false;
-        }
-        return fieldDef.relation;
+        return this._followRelation?.({ fieldDef }) ?? fieldDef.relation;
     }
 
     filter(fieldDefs, path, resModel) {

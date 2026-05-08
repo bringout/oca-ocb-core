@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 15:21+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -62,25 +62,6 @@ msgstr "额外字段"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Advanced"
-msgstr "高级"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid ""
-"After each batch import, this delay is applied to avoid unthrottled calls"
-msgstr "每次批量导入后，都会应用此延迟以避免不受限制的调用"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Allow matching with subfields"
-msgstr "允许与子字段匹配"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
@@ -90,6 +71,12 @@ msgid ""
 msgstr ""
 "导入过程中出现未知问题（可能连接丢失、数据超过限制或内存超过限制）。如果问题"
 "是暂时的，请重试。如果问题仍然发生，尝试拆分文件，而不是立即导入它。"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Attachments"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -115,26 +102,20 @@ msgstr "批"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Batch Import"
-msgstr "批量导入"
+msgid "Batch interval"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Batch limit"
-msgstr "批量限制"
+msgid "Batch max size"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "But, you can also use .csv files"
-msgstr "但是，您也可以使用 .csv 文件"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Cancel"
-msgstr "取消"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Batch size"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -152,8 +133,8 @@ msgstr "列%(column)s包含不正确的值（值：%(value)s）"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: %"
-"(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
 msgstr "列%(column)s包含不正确的值。行%(line)d中有错误：%(error)s"
 
 #. module: base_import
@@ -166,12 +147,6 @@ msgstr "栏位名称"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Comma"
 msgstr "逗号"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
-msgid "Comments"
-msgstr "注释"
 
 #. module: base_import
 #. odoo-python
@@ -199,12 +174,6 @@ msgid "Created on"
 msgstr "创建日期"
 
 #. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Data to import"
-msgstr "要导入的数据"
-
-#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Database ID"
@@ -213,32 +182,46 @@ msgstr "数据库 ID"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Date Format:"
-msgstr "数据格式："
+msgid "Date Format"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Datetime Format:"
-msgstr "日期时间格式:"
+msgid "Datetime Format"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Decimals Separator:"
-msgstr "小数分隔符："
+msgid "Decimals Separator"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Defines how many megabytes can be imported in each batch import"
-msgstr "定义每次批量导入可以导入多少兆字节"
+msgid "Defines how many megabytes can be imported in each batch"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Delay after each batch"
-msgstr "每批后的延迟"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid ""
+"Defines the number of records that will be imported in one transaction. "
+"Reduce the batch size in case of heavy imports"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Delay applied after each batch to prevent unthrottled calls"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Delimiter"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -246,6 +229,13 @@ msgstr "每批后的延迟"
 #: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Documentation"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -262,15 +252,9 @@ msgstr "下载"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Drop or upload a file to import"
-msgstr "删除或上传要导入的文件"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Encoding:"
-msgstr "编码:"
+msgid "Encoding"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -296,8 +280,8 @@ msgstr "导入记录时出错： 文本分隔符应为单字符。"
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has %"
-"(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
 "导入记录时出错：所有行应该大小相同，但标题行有%(title_row_entries)d 条记项，"
 "而第一行有%(first_row_entries)d 条记项。您可能需要更改分隔符。"
@@ -315,22 +299,10 @@ msgid "Everything seems valid."
 msgstr "看上去一切正常。"
 
 #. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Excel files are recommended as formatting is automatic."
-msgstr "建议使用Excel文件，因为格式是自动的。"
-
-#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr "外部 ID"
-
-#. module: base_import
-#. odoo-python
-#: code:addons/base_import/models/base_import.py:0
-msgid "Field '%(field)s' does not accept date/time values."
-msgstr "字段 '%(field)s' 不接受日期/时间值。"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
@@ -366,14 +338,8 @@ msgstr "文件大小超出配置的最大值 (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
-msgid "File to check and/or import, raw binary (not base64)"
-msgstr "文件的检查或导入， 原始二进制编码（不是base64编码）"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Files to import"
-msgstr "要导入的文件"
+msgid "File to check and/or import"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -404,12 +370,6 @@ msgstr "发现无效的图像数据，图像应该用URL或 base64编码的数�
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Go to Import FAQ"
-msgstr "转至导入常见问题"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Help"
 msgstr "帮助"
 
@@ -428,6 +388,20 @@ msgstr "ID"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid ""
+"If checked, the changes are tracked in the chatter and notifications can be "
+"sent to followers, which could slow down the import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "If checked, the first row of the sheet will not be imported"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid ""
 "If the file contains\n"
@@ -441,16 +415,6 @@ msgstr ""
 "                    更加简单，特别是当文件有很多列时。"
 
 #. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid ""
-"If the model uses openchatter, history tracking will set up subscriptions "
-"and send notifications during the import, but lead to a slower import."
-msgstr ""
-"如果模型使用openchatter，则历史跟踪将在导入期间设置订阅并发送通知，但会导致导"
-"入速度变慢。"
-
-#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
@@ -459,21 +423,17 @@ msgstr "图像尺寸过大，导入的图像必须小于4200万像素"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_records/import_records.xml:0
 msgid "Import"
 msgstr "导入"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Import FAQ"
-msgstr "导入 FAQ"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.js:0
-msgid "Import a File"
-msgstr "导入文件"
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Import failed: see errors below"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -486,12 +446,6 @@ msgstr "导入文件没有内容或已损坏"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Import preview failed due to: \""
 msgstr "导入预览失败，原因：“"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_records/import_records.xml:0
-msgid "Import records"
-msgstr "导入记录"
 
 #. module: base_import
 #. odoo-javascript
@@ -512,8 +466,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"第%(row)s行、第%(col)s列的单元格格式无效：%(cell_value)s，格式为：%"
-"(cell_format)s，因为不支持 %(format_type)s格式。"
+"第%(row)s行、第%(col)s列的单元格格式无效：%(cell_value)s，格式为："
+"%(cell_format)s，因为不支持 %(format_type)s格式。"
 
 #. module: base_import
 #. odoo-python
@@ -535,12 +489,6 @@ msgstr "上次更新日期"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Load Data File"
-msgstr "加载数据文件"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Loading file..."
 msgstr "载入文件..."
@@ -550,12 +498,6 @@ msgstr "载入文件..."
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 msgid "Loading..."
 msgstr "正在加载..."
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Max size per batch"
-msgstr "每批次最大尺寸"
 
 #. module: base_import
 #. odoo-javascript
@@ -576,15 +518,21 @@ msgstr "发生多个错误"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Need Help?"
-msgstr "需要帮助?"
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "No Separator"
+msgstr "没有分隔符"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "No Separator"
-msgstr "没有分隔符"
+msgid "No date detected"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "No datetime detected"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -603,6 +551,12 @@ msgstr "找不到以下名称的匹配记录"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Odoo Field"
 msgstr "字段"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Other"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -636,15 +590,21 @@ msgstr "进度条"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Reimport"
-msgstr "再次导入"
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Re-Upload"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Relation Fields"
 msgstr "关联字段"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Required Fields"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -684,8 +644,8 @@ msgstr "分号"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Separator:"
-msgstr "分隔符："
+msgid "Separator"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -737,12 +697,6 @@ msgstr "标准字段"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Start at line"
-msgstr "开始行"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Stop Import"
 msgstr "停止导入"
@@ -772,24 +726,6 @@ msgid "Testing"
 msgstr "测试"
 
 #. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "Text Delimiter:"
-msgstr "文本分隔符："
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "The file contains blocking errors (see below)"
-msgstr "该文件包含异常错误（见下文）"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "The file will be imported by batches"
-msgstr "该文件将被分批导入"
-
-#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
@@ -814,8 +750,8 @@ msgstr "这一栏将在字段中串联起"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Thousands Separator:"
-msgstr "千分位分隔符:"
+msgid "Thousands Separator"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -832,8 +768,8 @@ msgstr "执行导入，请选择一个字段..."
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Track history during import"
-msgstr "导入时跟踪导入历史"
+msgid "Track changes in chatter"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -858,14 +794,17 @@ msgstr "未命名的"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload Data File"
-msgstr "上传数据文件"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Upload"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Upload your files"
-msgstr "上传您的文件"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid ""
+"Upload attachments such as images or files that can be mapped with imported "
+"data"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -897,17 +836,17 @@ msgid "Use first row as header"
 msgstr "使用第一行作为标题"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use unique key across objects for External ID's, for example \"lead_1\" "
+"instead of \"1\""
+msgstr ""
+
+#. module: base_import
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "用户"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid ""
-"Warning: ignores the labels line, empty lines and lines composed only of "
-"empty cells"
-msgstr "警告：忽略标签行、空行和仅由空单元格组成的行。"
 
 #. module: base_import
 #. odoo-javascript
@@ -967,6 +906,12 @@ msgstr "更多"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "or drag a file"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "out of"
 msgstr "之外"
@@ -983,37 +928,3 @@ msgstr "秒数"
 #: code:addons/base_import/models/base_import.py:0
 msgid "unknown error code %s"
 msgstr "未知编码错误 %s"
-
-#~ msgid "Column %s contains incorrect values (value: %s)"
-#~ msgstr "栏位 %s 包含非法数据(值: %s)"
-
-#~ msgid "Column %s contains incorrect values. Error in line %d: %s"
-#~ msgstr "栏位 %s 包含不正确的值。 出错行 %d: %s"
-
-#~ msgid "Error Parsing Date [%s:L%d]: %s"
-#~ msgstr "日期语法错误 [%s:L%d]: %s"
-
-#~ msgid ""
-#~ "Import timed out. Please retry. If you still encounter this issue, the "
-#~ "file may be too big for the system's configuration, try to split it "
-#~ "(import less records per file)."
-#~ msgstr ""
-#~ "导入超时。请重试。如果仍然遇到此问题，则该文件针对系统配置来说可能太大，请"
-#~ "尝试对其进行分割（每个文件导入更少的记录）。"
-
-#~ msgid "Imported file"
-#~ msgstr "导入文件"
-
-#~ msgid "Load File"
-#~ msgstr "加载文件"
-
-#~ msgid "Upload File"
-#~ msgstr "上传文件"
-
-#~ msgid "Upload an Excel or CSV file to import"
-#~ msgstr "上传要导入的 Excel 或 CSV 文件"
-
-#~ msgid ""
-#~ "You can not import images via URL, check with your administrator or "
-#~ "support for the reason."
-#~ msgstr "不能通过URL导入图像，请与管理员进行联系。"

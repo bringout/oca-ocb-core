@@ -1,16 +1,17 @@
-import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
+import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 
-import { Component, useState, useRef, useEffect } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { Deferred } from "@web/core/utils/concurrency";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class SettingsPage extends Component {
     static template = "web.SettingsPage";
-    static components = { ActionSwiper };
+    static components = { Dropdown, DropdownItem };
     static props = {
         modules: Array,
         anchors: Array,
-        initialTab: { type: String, optional: 1 },
+        initialTab: { type: String, optional: true },
         slots: Object,
     };
     setup() {
@@ -38,9 +39,8 @@ export class SettingsPage extends Component {
         }
 
         this.settingsRef = useRef("settings");
-        this.settingsTabRef = useRef("settings_tab");
         this.scrollMap = Object.create(null);
-        useEffect(
+        useLayoutEffect(
             (settingsEl, currentTab) => {
                 if (!settingsEl) {
                     return;
@@ -52,44 +52,23 @@ export class SettingsPage extends Component {
             },
             () => [this.settingsRef.el, this.state.selectedTab]
         );
-    }
-
-    getCurrentIndex() {
-        return this.props.modules.findIndex((object) => {
-            return object.key === this.state.selectedTab;
+        onWillRender(() => {
+            this.selectedModule = this.props.modules.find(
+                (module) => module.key === this.state.selectedTab
+            );
         });
     }
 
-    hasRightSwipe() {
-        return (
-            this.env.isSmall && this.state.search.value.length === 0 && this.getCurrentIndex() !== 0
-        );
-    }
-    hasLeftSwipe() {
-        return (
-            this.env.isSmall &&
-            this.state.search.value.length === 0 &&
-            this.getCurrentIndex() !== this.props.modules.length - 1
-        );
-    }
-    async onRightSwipe() {
-        this.tabChangeProm = new Deferred();
-        this.state.selectedTab = this.props.modules[this.getCurrentIndex() - 1].key;
-        await this.tabChangeProm;
-        this.scrollToSelectedTab();
-    }
-    async onLeftSwipe() {
-        this.tabChangeProm = new Deferred();
-        this.state.selectedTab = this.props.modules[this.getCurrentIndex() + 1].key;
-        await this.tabChangeProm;
-        this.scrollToSelectedTab();
-    }
-
-    scrollToSelectedTab() {
-        const key = this.state.selectedTab;
-        this.settingsTabRef.el
-            .querySelector(`[data-key='${key}']`)
-            .scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    get invalidApps() {
+        const invalidApps = [];
+        for (const anchor of this.props.anchors) {
+            if (
+                anchor.fieldNames.some((fieldName) => this.env.model.root.isFieldInvalid(fieldName))
+            ) {
+                invalidApps.push(anchor.app);
+            }
+        }
+        return invalidApps;
     }
 
     onSettingTabClick(key) {
@@ -98,6 +77,6 @@ export class SettingsPage extends Component {
             this.scrollMap[this.state.selectedTab] = { scrollTop };
         }
         this.state.selectedTab = key;
-        this.env.searchState.value = "";
+        this.env.searchState.clearSearch();
     }
 }

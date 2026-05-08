@@ -1,9 +1,16 @@
+import {
+    render,
+    useComponent,
+    useEnv,
+    useLayoutEffect,
+    useState,
+    useSubEnv,
+} from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
-import { RPCError } from "@web/core/network/rpc";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import {
     useBus,
@@ -12,6 +19,7 @@ import {
     useOwnedDialogs,
     useService,
 } from "@web/core/utils/hooks";
+import { SIZES } from "@web/core/ui/ui_service";
 import { createElement, parseXML } from "@web/core/utils/xml";
 import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
@@ -34,19 +42,10 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @property {boolean} [write]
  * @property {Function | null} onDelete
  *
- * @typedef {import("services").Services} Services
+ * @typedef {import("services").ServiceFactories} Services
  */
 
-import {
-    Component,
-    onWillUpdateProps,
-    status,
-    useComponent,
-    useEffect,
-    useEnv,
-    useState,
-    useSubEnv,
-} from "@odoo/owl";
+import { Component, onWillUpdateProps, status } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { deepEqual } from "@web/core/utils/objects";
@@ -126,7 +125,7 @@ export function useActiveActions({
         let evalFn = () => true;
         if (!isNull(crudOptions[actionName])) {
             const action = crudOptions[actionName];
-            evalFn = (evalContext) => Boolean(action && new Domain(action).contains(evalContext));
+            evalFn = (evalContext) => Boolean(action && evaluateBooleanExpr(action, evalContext));
         }
 
         if (actionName in subViewActiveActions) {
@@ -220,7 +219,6 @@ export class Many2XAutocomplete extends Component {
         searchMoreLimit: { type: Number, optional: true },
         searchThreshold: { type: Number, optional: true },
         setInputFloats: { type: Function, optional: true },
-        preventMemoization: { type: Boolean, optional: true },
         slots: { optional: true },
         specification: { type: Object, optional: true },
         update: Function,
@@ -234,13 +232,14 @@ export class Many2XAutocomplete extends Component {
         quickCreate: null,
         searchLimit: 7,
         searchThreshold: 0,
-        searchMoreLimit: 320,
+        searchMoreLimit: 1000,
         setInputFloats: () => {},
         specification: {},
         value: "",
     };
     setup() {
         this.orm = useService("orm");
+        this.offline = useService("offline");
 
         this.autoCompleteContainer = useForwardRefToParent("autocomplete_container");
         const { activeActions, resModel, update, isToMany, fieldString } = this.props;
@@ -354,33 +353,53 @@ export class Many2XAutocomplete extends Component {
         };
     }
 
-    async search(name) {
+    async search(name, domain, context) {
+        let result;
+        try {
+            result = await this.orm.call(this.props.resModel, "web_name_search", [], {
+                name,
+                operator: "ilike",
+                domain,
+                limit: this.props.searchLimit + 1,
+                context,
+                specification: this.searchSpecification,
+            });
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                return this.offline.searchMany2XRecords(this.props.resModel, name);
+            }
+            throw e;
+        }
+        this.offline.cacheMany2XSearch(this.props.resModel, result);
+        return result;
+    }
+
+    async memoizedSearch(name) {
         const domain = this.props.getDomain();
         const context = this.props.context;
         if (
-            !this.props.preventMemoization &&
-            this.lastEmptySearch &&
-            deepEqual(this.lastEmptySearch.domain, domain) &&
-            deepEqual(this.lastEmptySearch.context, context) &&
-            (name.startsWith(this.lastEmptySearch.name) || name.length < this.props.searchThreshold)
+            this.previousSearch &&
+            deepEqual(this.previousSearch.domain, domain) &&
+            deepEqual(this.previousSearch.context, context)
         ) {
-            return [];
+            if (this.previousSearch.name === name) {
+                return this.previousSearch.records;
+            }
+            if (
+                !this.previousSearch.records.length &&
+                (name.startsWith(this.previousSearch.name) ||
+                    name.length < this.props.searchThreshold)
+            ) {
+                return [];
+            }
         }
-        const records = await this.orm.call(this.props.resModel, "web_name_search", [], {
-            name,
-            operator: "ilike",
-            domain,
-            limit: this.props.searchLimit + 1,
+        const records = await this.search(name, domain, context);
+        this.previousSearch = {
             context,
-            specification: this.searchSpecification,
-        });
-        if (!records.length) {
-            this.lastEmptySearch = {
-                context,
-                domain,
-                name,
-            };
-        }
+            domain,
+            name,
+            records,
+        };
         return records;
     }
 
@@ -417,7 +436,7 @@ export class Many2XAutocomplete extends Component {
                 suggestions.push(this.buildStartTypingSuggestion());
             }
         } else {
-            records = await lock(this.search(request));
+            records = await lock(this.memoizedSearch(request));
             if (records.length) {
                 for (const record of records) {
                     suggestions.push(this.buildRecordSuggestion(request, record));
@@ -426,13 +445,18 @@ export class Many2XAutocomplete extends Component {
                 suggestions.push(this.buildNoRecordsSuggestion());
             } else if (this.addStartTypingSuggestion({ request, records })) {
                 suggestions.push(this.buildStartTypingSuggestion());
+            } else if (this.offline.offline) {
+                suggestions.push(this.buildNoRecordsSuggestion());
             }
         }
 
-        for (const action of this.actionSuggestions) {
-            const enabled = action.enabled ?? (() => true);
-            if (enabled({ request, records })) {
-                suggestions.push(action.build(request));
+        // Only add action suggestions if online!
+        if (!this.offline.offline) {
+            for (const action of this.actionSuggestions) {
+                const enabled = action.enabled ?? (() => true);
+                if (enabled({ request, records })) {
+                    suggestions.push(action.build(request));
+                }
             }
         }
 
@@ -569,6 +593,10 @@ export class Many2XAutocomplete extends Component {
                 limit: this.props.searchMoreLimit,
                 context,
             });
+            this.offline.cacheMany2XSearch(
+                resModel,
+                nameGets.map((r) => ({ id: r[0], display_name: r[1] }))
+            );
 
             dynamicFilters = [
                 {
@@ -688,6 +716,7 @@ export class X2ManyFieldDialog extends Component {
     };
     setup() {
         this.actionService = useService("action");
+        this.ui = useService("ui");
         this.archInfo = this.props.archInfo;
         this.record = this.props.record;
         this.title = this.props.title;
@@ -695,7 +724,7 @@ export class X2ManyFieldDialog extends Component {
         useSubEnv({ config: this.props.config });
         this.env.dialogData.dismiss = () => this.discard();
 
-        useBus(this.record.model.bus, "update", () => this.render(true));
+        useBus(this.record.model.bus, "update", () => render(this, true));
 
         this.modalRef = useChildRef();
 
@@ -723,7 +752,7 @@ export class X2ManyFieldDialog extends Component {
         const { autofocusFieldIds, disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
             // to simplify
-            useEffect(
+            useLayoutEffect(
                 (isInEdition) => {
                     let elementToFocus;
                     if (isInEdition) {
@@ -756,7 +785,9 @@ export class X2ManyFieldDialog extends Component {
             title: this.title,
             withBodyPadding: false,
             modalRef: this.modalRef,
-            contentClass: this.contentClass,
+            contentClass: `${this.contentClass}  ${
+                this.ui.size <= SIZES.XS ? " o_xxs_form_view" : ""
+            }`,
         };
         if (!this.record.isNew) {
             props.onExpand = async () => {
@@ -821,7 +852,7 @@ export class X2ManyFieldDialog extends Component {
             if (this.title) {
                 this.title = this.title.replace(_t("Open:"), _t("New:"));
             }
-            this.render(true);
+            render(this, true);
         }
     }
 }

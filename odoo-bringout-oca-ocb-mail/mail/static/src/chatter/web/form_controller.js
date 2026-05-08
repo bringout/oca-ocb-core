@@ -1,4 +1,5 @@
-import { EventBus, useSubEnv } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { EventBus } from "@odoo/owl";
 
 import { x2ManyCommands } from "@web/core/orm_service";
 import { useService } from "@web/core/utils/hooks";
@@ -20,14 +21,14 @@ patch(FormController.prototype, {
         useSubEnv({
             chatter: {
                 fetchThreadData: true,
-                fetchMessages: true,
+                shouldFetchMessages: true,
             },
         });
     },
     onWillLoadRoot(nextConfiguration) {
         super.onWillLoadRoot(...arguments);
         this.env.chatter.fetchThreadData = true;
-        this.env.chatter.fetchMessages = true;
+        this.env.chatter.shouldFetchMessages = true;
         const isSameThread =
             this.model.root?.resId === nextConfiguration.resId &&
             this.model.root?.resModel === nextConfiguration.resModel;

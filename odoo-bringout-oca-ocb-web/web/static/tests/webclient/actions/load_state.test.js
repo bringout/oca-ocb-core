@@ -187,7 +187,7 @@ defineModels([Partner]);
 class TestClientAction extends Component {
     static template = xml`
         <div class="test_client_action">
-            ClientAction_<t t-esc="props.action.params?.description"/>
+            ClientAction_<t t-out="this.props.action.params?.description"/>
         </div>
     `;
     static props = ["*"];
@@ -795,7 +795,6 @@ describe(`new urls`, () => {
         redirect("/odoo/action-3/2");
         logHistoryInteractions();
 
-        onRpc("unity_read", ({ kwargs }) => expect.step(`unity_read ${kwargs.method}`));
         stepAllNetworkCalls();
 
         await mountWebClient();
@@ -821,11 +820,12 @@ describe(`new urls`, () => {
         await contains(`.o_control_panel .breadcrumb a`).click();
         expect(`.o_list_view`).toHaveCount(1);
         expect(`.o_form_view`).toHaveCount(0);
-        expect.verifySteps(["web_search_read", "has_group"]);
-
-        await animationFrame(); // pushState is debounced
+        expect.verifySteps([
+            "web_search_read",
+            "has_group",
+            "pushState http://example.com/odoo/action-3",
+        ]);
         expect(browser.location.href).toBe("http://example.com/odoo/action-3");
-        expect.verifySteps(["pushState http://example.com/odoo/action-3"]);
     });
 
     test(`go back with breadcrumbs after doAction`, async () => {
@@ -1282,19 +1282,17 @@ describe(`new urls`, () => {
         ]);
 
         await contains(`.breadcrumb .dropdown-toggle`).click();
-        expect(`.o-overlay-container .dropdown-menu`).toHaveText("Partners Action 27");
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
-            "",
-            "Second record",
+        expect(`.o-overlay-container .dropdown-menu`).toHaveText(
+            "Second record\nPartners Action 27"
+        );
+        expect(queryAllTexts`.breadcrumb-item a, .o_breadcrumb .active`).toEqual([
             "Partners Action 28",
             "First record",
         ]);
-        expect(`.o-overlay-container .dropdown-menu a`).toHaveAttribute(
-            "data-tooltip",
-            "Back to “Partners Action 27”"
+        expect(queryAllAttributes(".o-overlay-container .dropdown-menu a", "data-tooltip")).toEqual(
+            ["Back to “Second record” form", "Back to “Partners Action 27”"]
         );
         expect(queryAllAttributes(".o_breadcrumb li.breadcrumb-item a", "data-tooltip")).toEqual([
-            'Back to "Second record" form',
             'Back to "Partners Action 28"',
         ]);
     });
@@ -1587,17 +1585,17 @@ describe(`new urls`, () => {
             "get current_state-null",
             "get current_action-null",
             'set current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
+            "pushState http://example.com/odoo/action-9001",
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             "set current_lang-en",
-            "pushState http://example.com/odoo/action-9001",
             "get menu_id-100", // F5 reload checks stored menu
             "get current_lang-en",
             'get current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
             'get current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             'set current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
+            "Update the state without updating URL, nextState: actionStack,action",
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             "set current_lang-en",
-            "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
 
@@ -1659,11 +1657,12 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe(
             "http://example.com/odoo/action-200/5/action-300/action-100/1"
         );
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
-            "Kanban Partners",
+        expect(queryAllTexts`.breadcrumb-item a, .o_breadcrumb .active`).toEqual([
             "List Partners with active id",
             "First record",
         ]);
+        await contains(`.breadcrumb .dropdown-toggle`).click();
+        expect(`.o-overlay-container .dropdown-menu`).toHaveText("Kanban Partners");
         expect(router.current.actionStack).toEqual([
             {
                 action: 200,
@@ -1747,11 +1746,12 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe(
             "http://example.com/odoo/action-200/5/action-300/action-100/1"
         );
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
-            "Kanban Partners",
+        expect(queryAllTexts`.breadcrumb-item a, .o_breadcrumb .active`).toEqual([
             "List Partners with active id",
             "First record",
         ]);
+        await contains(`.breadcrumb .dropdown-toggle`).click();
+        expect(`.o-overlay-container .dropdown-menu`).toHaveText("Kanban Partners");
         expect.verifySteps([
             "get menu_id-null",
             "get current_lang-en",
@@ -1869,9 +1869,7 @@ describe(`new urls`, () => {
 
         await mountWebClient();
         await getService("action").doAction(100);
-        await runAllTimers(); // wait for the router to be updated
         await contains(".o_data_cell").click();
-        await runAllTimers(); // wait for the router to be updated
         await getService("action").doAction(200);
         expect.verifySteps(["/web/action/load", "/web/action/load"]);
 
@@ -2125,9 +2123,6 @@ describe(`legacy urls`, () => {
     test(`lazy load multi record view if mono record one is requested`, async () => {
         redirect("/web#action=3&id=2&view_type=form");
         stepAllNetworkCalls();
-        onRpc("unity_read", ({ kwargs }) => {
-            expect.step(`unity_read ${kwargs.method}`);
-        });
 
         await mountWebClient();
         expect(`.o_list_view`).toHaveCount(0);

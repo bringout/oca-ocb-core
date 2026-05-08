@@ -20,14 +20,7 @@ import {
     safeSplit,
 } from "./mock_server_utils";
 
-const {
-    DEFAULT_FIELD_VALUES,
-    DEFAULT_RELATIONAL_FIELD_VALUES,
-    DEFAULT_SELECTION_FIELD_VALUES,
-    S_FIELD,
-    copyFields,
-    isComputed,
-} = fields;
+const { DEFAULT_FIELD_VALUES, DEFAULT_RELATIONAL_FIELD_VALUES, S_FIELD, copyFields } = fields;
 
 /**
  * @typedef {import("fields").INumerical["aggregator"]} Aggregator
@@ -729,9 +722,6 @@ function orderByField(model, orderBy, records) {
                 }
             })
         );
-    } else if (field.type in DEFAULT_SELECTION_FIELD_VALUES) {
-        // Selection order is determined by the index of each value
-        valuesMap = new Map(field.selection.map((v, i) => [v[0], i]));
     }
 
     // Actual sorting
@@ -759,8 +749,7 @@ function orderByField(model, orderBy, records) {
                 v2 = Number(v2);
                 break;
             }
-            case "many2one":
-            case "many2one_reference": {
+            case "many2one": {
                 v1 &&= valuesMap.get(v1[0] ?? v1);
                 v2 &&= valuesMap.get(v2[0] ?? v2);
                 break;
@@ -779,15 +768,11 @@ function orderByField(model, orderBy, records) {
                 v2 = Array.isArray(v2) ? new Date(v2[0]).getTime() : v2;
                 break;
             }
-            case "reference":
-            case "selection": {
-                v1 &&= valuesMap.get(v1);
-                v2 &&= valuesMap.get(v2);
-                break;
-            }
         }
         let result;
-        if (v1 === false) {
+        if (v1 === v2) {
+            result = 0;
+        } else if (v1 === false) {
             result = 1;
         } else if (v2 === false) {
             result = -1;
@@ -799,7 +784,7 @@ function orderByField(model, orderBy, records) {
                     }": values must be of the same primitive type (got ${typeof v1} and ${typeof v2})`
                 );
             }
-            result = v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+            result = v1 > v2 ? 1 : -1;
         }
         return direction === "DESC" ? -result : result;
     });
@@ -975,7 +960,7 @@ function parseView(model, params) {
 function searchPanelDomainImage(model, fieldName, domain, setCount = false, limit = false) {
     const field = model._fields[fieldName];
     let groupIdName;
-    if (isM2OField(field)) {
+    if (isM2OField(field) || field.type === "many2many") {
         groupIdName = (value) => value || [false, undefined];
         // formatted_read_group does not take care of the condition [fieldName, '!=', false]
         // in the domain defined below!!!
@@ -1605,6 +1590,7 @@ export class Model extends Array {
     _fold_name = "fold";
     /** @type {string | null} */
     _inherit = null;
+    _lastRecId = 0;
     /** @type {string} */
     _name = "";
     /** @type {Record<string, (record: ModelRecord) => any>} */
@@ -1929,7 +1915,7 @@ export class Model extends Array {
                 if (relation && !Array.isArray(value)) {
                     const relatedRecord = this.env[relation].find(({ id }) => id === value);
                     if (relatedRecord) {
-                        group[groupbySpec] = [value, relatedRecord.display_name];
+                        group[groupbySpec] = [value, this._getFormattedDisplayName(relatedRecord)];
                         const _fold_name = this.env[relation]._fold_name;
                         if (_fold_name in this.env[relation]._fields) {
                             group.__fold = relatedRecord[_fold_name] || false;
@@ -1942,8 +1928,9 @@ export class Model extends Array {
                         group[groupbySpec] = false;
                     } else {
                         const relatedRecord = this.env[this._name].find(({ id }) => id === value);
-                        const displayName = relatedRecord?.display_name || "";
-                        group[groupbySpec] = [value, displayName];
+                        const formattedDisplayName =
+                            this._getFormattedDisplayName(relatedRecord) || "";
+                        group[groupbySpec] = [value, formattedDisplayName];
                     }
                 }
                 if (isDateField(type)) {
@@ -2324,7 +2311,7 @@ export class Model extends Array {
 
         const field = this._fields[fieldName];
         const coModel = getRelation(field);
-        const supportedTypes = ["many2one", "selection"];
+        const supportedTypes = ["many2one", "selection", "many2many"];
         if (!supportedTypes.includes(field.type)) {
             throw new MockServerError(
                 `Only category types ${supportedTypes.join(" and ")} are supported, got "${
@@ -3152,6 +3139,10 @@ export class Model extends Array {
         }
     }
 
+    _getFormattedDisplayName(record) {
+        return record?.display_name;
+    }
+
     /**
      * @private
      * @param {string} fieldName
@@ -3259,7 +3250,9 @@ export class Model extends Array {
                 criterion = [criterion[0], "in", Array.from(childIds)];
             }
             // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
-            const field = this._fields[criterion[0]] || {};
+            const splitCriterion0 = safeSplit(criterion[0], ".");
+            const field = this._fields[splitCriterion0[0]] || {};
+
             if (isX2MField(field) && criterion[1] === "=") {
                 if (criterion[2] === false) {
                     // if undefined value asked, domain.js require equality with empty array
@@ -3267,6 +3260,21 @@ export class Model extends Array {
                 } else {
                     criterion = [criterion[0], "in", [criterion[2]]];
                 }
+            }
+
+            if (splitCriterion0.length > 1 && isX2MField(field)) {
+                const inverse = {
+                    "not in": "in",
+                    "!=": "=",
+                };
+                const result = this.env[field.relation]._filter([
+                    [splitCriterion0[1], inverse[criterion[1]] ?? criterion[1], criterion[2]],
+                ]);
+                criterion = [
+                    splitCriterion0[0],
+                    inverse[criterion[1]] ? "not in" : "in",
+                    [...result].map((r) => r.id),
+                ];
             }
             return criterion;
         });
@@ -3307,7 +3315,7 @@ export class Model extends Array {
      * @private
      */
     _getNextId() {
-        return Math.max(0, ...this.map((record) => record?.id || 0)) + 1;
+        return ++this._lastRecId;
     }
 
     /**
@@ -3686,7 +3694,7 @@ export class Model extends Array {
                         record[fieldName][property.name] = value;
                     }
                 }
-            } else if (!isComputed(field)) {
+            } else {
                 record[fieldName] = value;
             }
             i++;

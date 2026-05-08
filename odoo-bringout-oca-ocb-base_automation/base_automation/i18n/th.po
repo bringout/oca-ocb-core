@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
 "PO-Revision-Date: 2025-11-09 15:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
@@ -157,6 +157,11 @@ msgstr "กิจกรรม"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "การตกแต่งข้อยกเว้นกิจกรรม"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_state
@@ -515,8 +520,8 @@ msgstr "ชื่อโมเดล"
 #. odoo-python
 #: code:addons/base_automation/models/ir_actions_server.py:0
 msgid ""
-"Model of action %(action_name)s should match the one from automated rule %"
-"(rule_name)s."
+"Model of action %(action_name)s should match the one from automated rule "
+"%(rule_name)s."
 msgstr "รูปแบบการกระทำ %(action_name)s ควรตรงกับรูปแบบจากกฎอัตโนมัติ %(rule_name)s"
 
 #. module: base_automation
@@ -673,13 +678,9 @@ msgstr "ข้อผิดพลาดในการส่ง SMS"
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
+#: model:ir.model,name:base_automation.model_ir_cron
 msgid "Scheduled Action"
 msgstr "การดำเนินการตามกำหนดเวลา"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_cron
-msgid "Scheduled Actions"
-msgstr "การกระทำที่กำหนดไว้"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -802,11 +803,11 @@ msgstr "รูปแบบเป้าหมายของการกระท
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%"
-"(state_value)s\" action type"
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
 msgstr ""
-"\"%(trigger_value)s\" %(trigger_label)s ใช้ได้กับประเภทการกระทำ \"%"
-"(state_value)s\" เท่านั้น"
+"\"%(trigger_value)s\" %(trigger_label)s ใช้ได้กับประเภทการกระทำ "
+"\"%(state_value)s\" เท่านั้น"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -1020,12 +1021,3 @@ msgstr "ไม่มีการกำหนดการกระทำ..."
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "path"
 msgstr ""
-
-#~ msgid "Action Name"
-#~ msgstr "ชื่อการดำเนินการ"
-
-#~ msgid "Delay after trigger date"
-#~ msgstr "ความล่าช้าหลังจากวันเปิดใช้งาน"
-
-#~ msgid "Delay type"
-#~ msgstr "ประเภทการล่าช้า"

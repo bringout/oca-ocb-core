@@ -1,4 +1,5 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { render } from "@web/owl2/utils";
+import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
@@ -72,7 +73,7 @@ test("creating a field chain from scratch", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="false"
                 update="(path) => this.onUpdate(path)"
             />
@@ -84,7 +85,7 @@ test("creating a field chain from scratch", async () => {
         onUpdate(path) {
             expect.step(`update: ${path}`);
             this.path = path;
-            this.render();
+            render(this);
         }
     }
 
@@ -315,7 +316,7 @@ test("Using back button in popover", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 update="(path) => this.onUpdate(path)"
             />
         `;
@@ -325,7 +326,7 @@ test("Using back button in popover", async () => {
         }
         onUpdate(path) {
             this.path = path;
-            this.render();
+            render(this);
         }
     }
 
@@ -365,7 +366,7 @@ test("select a relational field does not follow relation", async () => {
         ".o_model_field_selector_popover_item:last-child .o_model_field_selector_popover_item_name"
     ).click();
     expect.verifySteps(["product_id"]);
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_model_field_selector_popover").toHaveCount(0);
 
     await openModelFieldSelectorPopover();
     expect(getDisplayedFieldNames()).toEqual([
@@ -387,11 +388,11 @@ test("select a relational field does not follow relation", async () => {
         "Last Modified on",
         "Product Name",
     ]);
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_model_field_selector_popover").toHaveCount(1);
 
     await contains(".o_model_field_selector_popover_item_name").click();
     expect.verifySteps(["product_id.create_date"]);
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_model_field_selector_popover").toHaveCount(0);
 });
 
 test("can follow relations", async () => {
@@ -400,7 +401,7 @@ test("can follow relations", async () => {
             readonly: false,
             path: "",
             resModel: "partner",
-            followRelations: true, // default
+            followRelation: true, // default
             update(path) {
                 expect(path).toBe("product_id");
             },
@@ -426,7 +427,7 @@ test("can follow relations", async () => {
         "Last Modified on",
         "Product Name",
     ]);
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_model_field_selector_popover").toHaveCount(1);
 });
 
 test("cannot follow relations", async () => {
@@ -435,7 +436,7 @@ test("cannot follow relations", async () => {
             readonly: false,
             path: "",
             resModel: "partner",
-            followRelations: false,
+            followRelation: false,
             update(path) {
                 expect(path).toBe("product_id");
             },
@@ -453,7 +454,7 @@ test("cannot follow relations", async () => {
     ]);
     expect(".o_model_field_selector_popover_relation_icon").toHaveCount(0);
     await contains(".o_model_field_selector_popover_item_name:last").click();
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_model_field_selector_popover").toHaveCount(0);
     expect(getModelFieldSelectorValues()).toEqual(["Product"]);
 });
 
@@ -469,7 +470,7 @@ test("Edit path in popover debug input", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="true"
                 update="(pathInfo) => this.onUpdate(pathInfo)"
             />
@@ -480,7 +481,7 @@ test("Edit path in popover debug input", async () => {
         }
         onUpdate(path) {
             this.path = path;
-            this.render();
+            render(this);
         }
     }
 
@@ -581,7 +582,7 @@ test("start on complex path and click prev", async () => {
 test("support of invalid paths (allowEmpty=false)", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" />`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ path: `` });
@@ -626,7 +627,7 @@ test("support of invalid paths (allowEmpty=false)", async () => {
 test("support of invalid paths (allowEmpty=true)", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" allowEmpty="true" />`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" allowEmpty="true" />`;
         static props = ["*"];
         setup() {
             this.state = useState({ path: `` });
@@ -673,7 +674,7 @@ test("debug input", async () => {
     let num = 1;
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="state.path" update.bind="update"/>`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="this.state.path" update.bind="this.update"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ path: `` });
@@ -729,7 +730,7 @@ test("debug input", async () => {
 test("focus on search input", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
-        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="state.path" update.bind="update"/>`;
+        static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" update.bind="this.update"/>`;
         static props = ["*"];
         setup() {
             this.state = useState({ path: `foo` });
@@ -754,7 +755,7 @@ test("support properties", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="true"
                 update="(path, fieldInfo) => this.onUpdate(path)"
             />
@@ -766,7 +767,7 @@ test("support properties", async () => {
         onUpdate(path) {
             this.path = path;
             expect.step(path);
-            this.render();
+            render(this);
         }
     }
 
@@ -848,7 +849,7 @@ test("clear button (allowEmpty=true)", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 allowEmpty="true"
                 isDebugMode="true"
                 update="(path, fieldInfo) => this.onUpdate(path)"
@@ -861,7 +862,7 @@ test("clear button (allowEmpty=true)", async () => {
         onUpdate(path) {
             this.path = path;
             expect.step(`path is ${JSON.stringify(path)}`);
-            this.render();
+            render(this);
         }
     }
 
@@ -901,9 +902,9 @@ test("Modify path in popover debug input and click away", async () => {
             <ModelFieldSelector
                 readonly="false"
                 resModel="'partner'"
-                path="path"
+                path="this.path"
                 isDebugMode="true"
-                update.bind="update"
+                update.bind="this.update"
             />
         `;
         static props = ["*"];
@@ -913,7 +914,7 @@ test("Modify path in popover debug input and click away", async () => {
         update(path) {
             this.path = path;
             expect.step(path);
-            this.render();
+            render(this);
         }
     }
 
@@ -927,7 +928,7 @@ test("Modify path in popover debug input and click away", async () => {
     );
     expect(getModelFieldSelectorValues()).toEqual(["Foo"]);
 
-    await contains(getFixture()).click();
+    await contains(".o_model_field_selector_popover_close").click();
     expect(getModelFieldSelectorValues()).toEqual(["foooooo"]);
     expect.verifySteps(["foooooo"]);
 });
@@ -981,4 +982,43 @@ test("models with a m2o of the same name should show the correct page data", asy
         "Last Modified on",
         "Link",
     ]);
+});
+
+test("Fields can be selected but not followable", async () => {
+    class Cat extends models.Model {
+        cat_name = fields.Char();
+        link = fields.Many2one({ relation: "dog" });
+        cats = fields.One2many({ relation: "cat" });
+    }
+
+    class Dog extends models.Model {}
+
+    defineModels([Cat, Dog]);
+
+    await mountWithCleanup(ModelFieldSelector, {
+        props: {
+            followRelation: ({ fieldDef }) => (fieldDef.type === "one2many" ? false : null),
+            readonly: false,
+            path: "",
+            resModel: "cat",
+        },
+    });
+
+    await openModelFieldSelectorPopover();
+    expect(getDisplayedFieldNames()).toEqual([
+        "Cat name",
+        "Cats",
+        "Created on",
+        "Display name",
+        "Id",
+        "Last Modified on",
+        "Link",
+    ]);
+
+    expect(
+        ".o_model_field_selector_popover_item:contains(Cats):not(:has(.o_model_field_selector_popover_item_relation))"
+    ).toHaveCount(1);
+    expect(
+        ".o_model_field_selector_popover_item:contains(Link):has(.o_model_field_selector_popover_item_relation)"
+    ).toHaveCount(1);
 });

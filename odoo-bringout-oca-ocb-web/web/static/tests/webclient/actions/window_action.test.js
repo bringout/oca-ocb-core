@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -19,6 +19,7 @@ import {
     getService,
     makeMockEnv,
     makeServerError,
+    mockOffline,
     models,
     mountWithCleanup,
     onRpc,
@@ -465,7 +466,7 @@ test("breadcrumbs are updated when switching between views", async () => {
 
     // open a record in form view
     await contains(".o_kanban_view .o_kanban_record").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "Partners",
         "First record",
     ]);
@@ -708,7 +709,6 @@ test("A new form view can be reloaded after a failed one", async () => {
 
     await getService("action").doAction(3);
     expect(".o_list_view").toHaveCount(1, { message: "The list view should be displayed" });
-    await runAllTimers(); // wait for the update of the router
     expect(router.current).toEqual({
         action: 3,
         actionStack: [
@@ -724,26 +724,24 @@ test("A new form view can be reloaded after a failed one", async () => {
     await contains(".o_list_view .o_data_row .o_data_cell").click();
     expect(".o_form_view").toHaveCount(1, { message: "The form view should be displayed" });
     expect(".o_last_breadcrumb_item").toHaveText("First record");
-    await runAllTimers(); // wait for the update of the router
     expect(browser.location.pathname).toBe("/odoo/action-3/1");
 
     // Delete the current record
     await contains(".o_cp_action_menus .fa-cog").click();
     await contains(".o_menu_item:contains(Delete)").click();
     expect(".modal").toHaveCount(1, { message: "a confirm modal should be displayed" });
-    await contains(".modal-footer button.btn-primary").click();
+    await contains(".modal-footer button.btn-danger").click();
     // The form view is automatically switched to the next record
     expect(".o_last_breadcrumb_item").toHaveText("Second record");
-    await runAllTimers(); // wait for the update of the router
     expect(browser.location.pathname).toBe("/odoo/action-3/2");
 
     // Go back to the previous (now deleted) record
     browser.history.back();
-    await runAllTimers();
-    expect(browser.location.pathname).toBe("/odoo/action-3/1");
+    await animationFrame();
+    await animationFrame(); // double rendering as the form is on error (record has been deleted)
     // As the previous one is deleted, we go back to the list
-    await runAllTimers(); // wait for the update of the router
     expect(".o_list_view").toHaveCount(1, { message: "should still display the list view" });
+    expect(browser.location.pathname).toBe("/odoo/action-3");
     // Click on the first record
     await contains(".o_list_view .o_data_row .o_data_cell").click();
     expect(".o_form_view").toHaveCount(1, {
@@ -892,8 +890,7 @@ test('reverse breadcrumb works on accesskey "b"', async () => {
     // open a record in form view
     await contains(".o_list_view .o_data_cell").click();
     await contains(".o_form_view button:contains(Execute action)").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "First record",
         "Partners Action 4",
     ]);
@@ -999,7 +996,7 @@ test("execute_action of type object: disable buttons (2)", async () => {
     Pony._views["form,44"] = `
         <form>
             <field name="name"/>
-            <button string="Cancel" class="cancel-btn" special="cancel"/>
+            <button class="cancel-btn" special="cancel"/>
         </form>`;
 
     defineActions([
@@ -1133,8 +1130,7 @@ test("execute_action of type action are handled", async () => {
         "First record",
     ]);
     await contains(".o_form_view button:contains(Execute action)").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "First record",
         "Partners Action 4",
     ]);
@@ -1548,30 +1544,29 @@ test("go back to a previous action using the breadcrumbs", async () => {
 
     // push another action on top of the first one, and come back to the form view
     await getService("action").doAction(4);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "First record",
         "Partners Action 4",
     ]);
 
     // go back using the breadcrumbs
-    await contains(".o_control_panel .breadcrumb a:eq(1)").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+    await contains(".o_control_panel .breadcrumb a").click();
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "Partners",
         "First record",
     ]);
 
     // push again the other action on top of the first one, and come back to the list view
     await getService("action").doAction(4);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "First record",
         "Partners Action 4",
     ]);
 
     // go back using the breadcrumbs
-    await contains(".o_control_panel .breadcrumb a:first").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
+    await contains(".o_control_panel .breadcrumb .dropdown-toggle").click();
+    await contains(".o-overlay-container .dropdown-menu a:contains(Partners)").click();
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual(["Partners"]);
 });
 
 test.tags("desktop");
@@ -1587,7 +1582,7 @@ test("form views are restored in edit when coming back in breadcrumbs", async ()
     await getService("action").doAction(4);
 
     // go back to form view
-    await contains(".o_control_panel .breadcrumb a:eq(1)").click();
+    await contains(".o_control_panel .breadcrumb a").click();
     expect(".o_form_view .o_form_editable").toHaveCount(1);
 });
 
@@ -1598,17 +1593,14 @@ test("form views restore the correct id in url when coming back in breadcrumbs",
 
     // open a record in form view
     await contains(".o_list_view .o_data_row .o_data_cell").click();
-    await runAllTimers(); // wait for the router to update its state
     expect(router.current.resId).toBe(1);
 
     // do some other action
     await getService("action").doAction(4);
-    await runAllTimers(); // wait for the router to update its state
     expect(router.current).not.toInclude("resId");
 
     // go back to form view
-    await contains(".o_control_panel .breadcrumb a:eq(1)").click();
-    await runAllTimers(); // wait for the router to update its state
+    await contains(".o_control_panel .breadcrumb a").click();
     expect(router.current.resId).toBe(1);
 });
 
@@ -2009,13 +2001,12 @@ test("execute action from dirty, new record, and come back", async () => {
     await contains(".o_field_widget[name=foo] input").edit("val");
     await contains(".o_form_uri").click();
     expect(".o_form_view .o_form_editable").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "test",
         "First record",
     ]);
     // go back to test using the breadcrumbs
-    await contains(".o_control_panel .breadcrumb-item a:eq(1)").click();
+    await contains(".o_control_panel .breadcrumb-item a").click();
     expect(".o_form_view .o_form_editable").toHaveCount(1);
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners", "test"]);
     expect.verifySteps([
@@ -2356,7 +2347,6 @@ test("do not pushState when target=new and dialog is opened", async () => {
 
     // Open Partner form in create mode
     await getService("action").doAction(3, { viewType: "form" });
-    await runAllTimers();
     const prevUrlState = Object.assign({}, router.current);
     // Edit another partner in a dialog
     await getService("action").doAction({
@@ -2368,7 +2358,6 @@ test("do not pushState when target=new and dialog is opened", async () => {
         target: "new",
         view_mode: "form",
     });
-    await runAllTimers();
     expect(router.current).toEqual(prevUrlState, {
         message: "push_state in dialog shouldn't change the hash",
     });
@@ -2735,26 +2724,31 @@ test("click on breadcrumb of a deleted record", async () => {
 
     await contains(".o_data_row .o_data_cell").click();
     expect(".o_form_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item")).toEqual(["", "First record", "Partners"]);
-    expect(".o_breadcrumb .active").toHaveText("First record");
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
+        "Partners",
+        "First record",
+    ]);
     // open action menu and delete
     await contains(".o_cp_action_menus .fa-cog").click();
     await toggleMenuItem("Delete");
     expect(".o_dialog").toHaveCount(1);
 
     // confirm
-    await contains(".o_dialog .modal-footer .btn-primary").click();
+    await contains(".o_dialog .modal-footer .btn-danger").click();
 
     expect(".o_form_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item")).toEqual(["", "First record", "Partners"]);
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
+        "Partners",
+        "Second record",
+    ]);
     expect(".o_breadcrumb .active").toHaveText("Second record");
 
     // click on "First record" in breadcrumbs, which doesn't exist anymore
-    await contains(".breadcrumb-item a").click();
+    await contains(".breadcrumb .dropdown-toggle").click();
+    await contains(".o-overlay-container .dropdown-menu a:contains(First record)").click();
     await animationFrame();
     expect(".o_list_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item")).toEqual([]);
-    expect(".o_breadcrumb .active").toHaveText("Partners");
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual(["Partners"]);
     expect.verifyErrors([
         "It seems the records with IDs 1 cannot be found. They might have been deleted.",
     ]);
@@ -2791,4 +2785,226 @@ test("execute a window action with mobile_view_mode", async () => {
         ],
     });
     expect(".o_list_view").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("[Offline] navigate through window actions", async () => {
+    expect.errors(6); // 6x ConnectionLostError
+    const setOffline = mockOffline();
+
+    await mountWithCleanup(WebClient);
+
+    // visit some actions and records to populate the caches
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+    await getService("action").doAction(4);
+    expect(".o_kanban_view").toHaveCount(1);
+    await contains(".o_cp_switch_buttons .o_list").click();
+    expect(".o_list_view").toHaveCount(1);
+    await contains(".o_data_row:eq(0) .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o_field_widget[name=foo] input").toHaveValue("yop");
+    await contains(".o_breadcrumb .o_back_button").click();
+    expect(".o_list_view").toHaveCount(1);
+    await contains(".o_data_row:eq(2) .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o_field_widget[name=foo] input").toHaveValue("gnap");
+    await contains(".o_pager_next").click();
+    expect(".o_field_widget[name=foo] input").toHaveValue("plop");
+
+    // switch offline and start over
+    await setOffline(true);
+    await getService("action").doAction(3, { clearBreadcrumbs: true });
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+    expect(".o_data_row.o_disabled_offline").toHaveCount(5);
+    expect(".o_cp_switch_buttons .o_kanban").toHaveClass("o_disabled_offline");
+    await getService("action").doAction(4);
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+    expect(".o_cp_switch_buttons .o_list").not.toHaveClass("o_disabled_offline");
+    await contains(".o_cp_switch_buttons .o_list").click();
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+    expect(".o_data_row.o_disabled_offline").toHaveCount(2);
+    await contains(".o_data_row:eq(0) .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o_pager").toHaveText("1 / 3"); // only 3 records are available offline
+    expect(".o_field_widget[name=foo] input").toHaveValue("yop");
+    await contains(".o_pager_next").click();
+    expect(".o_field_widget[name=foo] input").toHaveValue("gnap");
+    await contains(".o_pager_next").click();
+    expect(".o_field_widget[name=foo] input").toHaveValue("plop");
+
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_read" couldn't be established`,
+    ]);
+});
+
+test.tags("desktop");
+test("[Offline] execute unavailable action", async () => {
+    expect.errors(2); // 2x ConnectionLostError
+    const setOffline = mockOffline();
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+
+    // switch offline
+    await setOffline(true);
+
+    // execute an action which won't be able to be executed
+    getService("action").doAction({
+        name: "My Partners Action",
+        res_model: "partner",
+        views: [
+            [1, "kanban"],
+            [false, "list"],
+            [false, "form"],
+        ],
+        type: "ir.actions.act_window",
+    });
+    await animationFrame();
+    expect(".o_list_view").toHaveCount(1);
+
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/get_views" couldn't be established`,
+        // restore of previous action as action 4 threw an error
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+});
+
+test.tags("desktop");
+test("[Offline] open the asked viewType", async () => {
+    expect.errors(1); // 1x ConnectionLostError
+    const setOffline = mockOffline();
+
+    await mountWithCleanup(WebClient);
+
+    // visit some actions and records to populate the caches
+    await getService("action").doAction(4);
+    expect(".o_kanban_view").toHaveCount(1);
+    await contains(".o_cp_switch_buttons .o_list").click();
+    expect(".o_list_view").toHaveCount(1);
+
+    // switch offline
+    await setOffline(true);
+
+    // execute an action with viewType
+    await getService("action").doAction(4, { viewType: "list" });
+    await animationFrame();
+    expect(".o_list_view").toHaveCount(1);
+
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+});
+
+test.tags("desktop");
+test("[Offline] switch view with unavailable search", async () => {
+    expect.errors(3); // 3x ConnectionLostError
+    const setOffline = mockOffline();
+
+    Partner._views.search = `
+        <search>
+            <filter name="my_filter" string="My Filter" domain="[['id', '>', 3]]"/>
+        </search>`;
+    Partner._views.list = `<list><field name="display_name"/></list>`;
+
+    await mountWithCleanup(WebClient);
+
+    // Populate the caches
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My Filter");
+    expect(".o_data_row").toHaveCount(2);
+
+    await switchView("kanban");
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    // Switch offline
+    await setOffline(true);
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+
+    await switchView("kanban");
+    expect(".o_offline_search_bar .o_searchview_facet").toHaveCount(0);
+    expect(".o_kanban_record").toHaveCount(0);
+    expect(".o_view_nocontent").toHaveCount(1);
+    expect(".o_view_nocontent p:eq(1)").toHaveText(
+        "There is no data to display offline for the given filters"
+    );
+    expect(".o_view_nocontent button").toHaveCount(1);
+
+    await contains(".o_view_nocontent button").click();
+    expect(".o_offline_search_bar .o_searchview_facet").toHaveCount(2);
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+});
+
+test.tags("mobile");
+test("[Offline] switch view with unavailable search (mobile)", async () => {
+    expect.errors(3); // 3x ConnectionLostError
+    const setOffline = mockOffline();
+
+    Partner._views.search = `
+        <search>
+            <filter name="my_filter" string="My Filter" domain="[['id', '>', 3]]"/>
+        </search>`;
+    Partner._views.list = `<list><field name="display_name"/></list>`;
+
+    await mountWithCleanup(WebClient);
+
+    // Populate the caches
+    await getService("action").doAction(3);
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My Filter");
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    await switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(2);
+
+    // Switch offline
+    await setOffline(true);
+    await getService("action").doAction(3);
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+
+    await switchView("list");
+    expect(".o_data_row").toHaveCount(0);
+    expect(".o_view_nocontent").toHaveCount(1);
+    expect(".o_view_nocontent p:eq(1)").toHaveText(
+        "There is no data to display offline for the given filters"
+    );
+    expect(".o_view_nocontent button").toHaveCount(1);
+
+    await contains(".o_view_nocontent button").click();
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(2);
+
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
 });

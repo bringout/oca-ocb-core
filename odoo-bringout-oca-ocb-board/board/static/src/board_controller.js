@@ -1,3 +1,4 @@
+import { render, useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -9,7 +10,7 @@ import { renderToString } from "@web/core/utils/render";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { BoardAction } from "./board_action";
-import { blockDom, Component, useState, useRef } from "@odoo/owl";
+import { blockDom, Component } from "@odoo/owl";
 
 export class BoardController extends Component {
     static template = "board.BoardView";
@@ -91,7 +92,7 @@ export class BoardController extends Component {
         if (document.querySelector("canvas")) {
             // horrible hack to force charts to be recreated so they pick up the
             // proper size. also, no idea why raf is needed :(
-            browser.requestAnimationFrame(() => this.render(true));
+            browser.requestAnimationFrame(() => render(this, true));
         }
     }
 
@@ -116,7 +117,9 @@ export class BoardController extends Component {
 
     saveBoard() {
         const templateFn = renderToString.app.getTemplate("board.arch");
-        const bdom = templateFn(this.board, {});
+        const ctx = Object.create(this.board);
+        ctx.this = this.board;
+        const bdom = templateFn(ctx, {});
         const root = document.createElement("rendertostring");
         blockDom.mount(bdom, root);
         const result = xmlSerializer.serializeToString(root);

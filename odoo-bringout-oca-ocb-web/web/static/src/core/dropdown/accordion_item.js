@@ -1,4 +1,5 @@
-import { Component, onPatched, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onPatched } from "@odoo/owl";
 
 export const ACCORDION = Symbol("Accordion");
 export class AccordionItem extends Component {
@@ -20,10 +21,15 @@ export class AccordionItem extends Component {
             type: String,
             optional: true,
         },
+        onWillToggle: {
+            type: Function,
+            optional: true,
+        },
     };
     static defaultProps = {
         class: "",
         selected: false,
+        onWillToggle: () => {},
     };
 
     setup() {
@@ -34,5 +40,10 @@ export class AccordionItem extends Component {
         onPatched(() => {
             this.parentComponent?.accordionStateChanged?.();
         });
+    }
+
+    async toggle() {
+        await this.props.onWillToggle();
+        this.state.open = !this.state.open;
     }
 }

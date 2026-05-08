@@ -1,10 +1,11 @@
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 
 export class GaugeField extends Component {
     static template = "web.GaugeField";
@@ -12,6 +13,7 @@ export class GaugeField extends Component {
         ...standardFieldProps,
         maxValueField: { type: String, optional: true },
         maxValue: { type: Number, optional: true },
+        maxTooltip: { type: String, optional: true },
         title: { type: String, optional: true },
     };
     static defaultProps = {
@@ -24,7 +26,7 @@ export class GaugeField extends Component {
 
         onWillStart(async () => await loadBundle("web.chartjs_lib"));
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             this.renderChart();
             return () => {
                 if (this.chart) {
@@ -47,9 +49,11 @@ export class GaugeField extends Component {
 
     renderChart() {
         const gaugeValue = this.props.record.data[this.props.name];
-        let maxValue = this.props.maxValueField ? this.props.record.data[this.props.maxValueField] : this.props.maxValue;
+        let maxValue = this.props.maxValueField
+            ? this.props.record.data[this.props.maxValueField]
+            : this.props.maxValue;
         maxValue = Math.max(gaugeValue, maxValue);
-        let maxLabel = maxValue;
+        let maxLabel = this.props.maxTooltip ?? maxValue;
         if (gaugeValue === 0 && maxValue === 0) {
             maxValue = 1;
             maxLabel = 0;
@@ -118,8 +122,14 @@ export const gaugeField = {
             name: "max_value",
             type: "string",
         },
+        {
+            label: _t("Max tooltip"),
+            name: "max_tooltip",
+            type: "string",
+        }
     ],
     extractProps: ({ options }) => ({
+        maxTooltip: options.max_tooltip,
         maxValueField: options.max_field,
         maxValue: options.max_value,
         title: options.title,

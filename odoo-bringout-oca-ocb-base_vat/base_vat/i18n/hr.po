@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:38+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
 "PO-Revision-Date: 2025-11-16 15:06+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
@@ -69,11 +69,6 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 ili 49098576"
 
 #. module: base_vat
-#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
-msgid "Base VAT: Sync updates from IAP VIES"
-msgstr ""
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -81,8 +76,8 @@ msgstr "CHE-123.456.788 TVA ili CHE-123.456.788 MWST ili CHE-123.456.788 IVA"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
-msgid "Companies"
-msgstr "Tvrtke"
+msgid "Company"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
@@ -119,6 +114,12 @@ msgstr "DE123456788 ili 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Error while checking the VAT number '%s' against the VIES service."
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -190,12 +191,6 @@ msgstr "Valjan unutar EU"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "Invalid IAP VIES endpoint"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
 msgstr ""
 
@@ -208,7 +203,6 @@ msgstr "Provjeri u VIESu"
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "Porezni broj"
 
@@ -216,8 +210,8 @@ msgstr "Porezni broj"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
-"(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
+"%(expected_note)s"
 msgstr ""
 
 #. module: base_vat
@@ -226,12 +220,6 @@ msgstr ""
 msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "The Intra-Community validity has been updated."
 msgstr ""
 
 #. module: base_vat
@@ -249,19 +237,7 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VIES check failed. Please check the Tax ID manually."
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "The VIES check is pending. The status will be updated soon."
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
+msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
 msgstr ""
 
 #. module: base_vat
@@ -284,12 +260,6 @@ msgstr "Validiraj brojeve korištenjem VIES servisa"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "XXXXXXXXX [9 digits]"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr "XXXXXXXXX [9 brojeva] trebalo bi poštivati Luhn algoritam za provjeru"
 
@@ -304,68 +274,3 @@ msgstr "između 11 znamenaka za CPF ili 14 znamenaka za CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partner [%s]"
-
-#~ msgid ""
-#~ "Connection with the VIES server failed. The VAT number %s could not be "
-#~ "validated."
-#~ msgstr ""
-#~ "Veza sa VIES serverom nije uspostavljena. Porezni broj %s nije bilo "
-#~ "moguće ovjeriti."
-
-#~ msgid "The VAT number %s could not be interpreted by the VIES server."
-#~ msgstr ""
-#~ "Porezni broj %s nije bilo moguće interpretirati od strane VIES servera."
-
-#~ msgid ""
-#~ "The request for VAT validation was not processed. VIES service has "
-#~ "responded with the following error: %s"
-#~ msgstr ""
-#~ "Zahtjev za provjerom poreznog proja nije obrađen. VIES servis je "
-#~ "odgovorio sa slijedećom greškom: %s"
-
-#~ msgid "17291716060 (NIN) or 1729171602 (VKN)"
-#~ msgstr "17291716060 (NIN) or 1729171602 (VKN)"
-
-#~ msgid "Fiscal Position"
-#~ msgstr "Fiskalna pozicija"
-
-#~ msgid ""
-#~ "If this checkbox is ticked, you will not be able to save a contact if its "
-#~ "VAT number cannot be verified by the European VIES service."
-#~ msgstr ""
-#~ "Ukoliko je ovdje označeno, nećete biti u mogućnosti snimiti partnera ako "
-#~ "njegov porezni broj nije potvrđen od strane EU-VIES servisa."
-
-#~ msgid ""
-#~ "Technical field display a message to the user if the VIES check fails."
-#~ msgstr ""
-#~ "Tehničko polje prikazuje poruku korisniku ako je VIES provjera neuspješna."
-
-#~ msgid ""
-#~ "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
-#~ "Note: the expected format is %(expected_format)s"
-#~ msgstr ""
-#~ "%(vat_label)s broj [%(wrong_vat)s] se čini neispravan. \n"
-#~ "Napomena: Očekivani format je %(expected_format)s"
-
-#~ msgid ""
-#~ "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not "
-#~ "seem to be valid. \n"
-#~ "Note: the expected format is %(expected_format)s"
-#~ msgstr ""
-#~ "%(vat_label)s broj [%(wrong_vat)s] za %(record_label)s se ne čini "
-#~ "ispravnim. \n"
-#~ "Napomena: očekivani format je %(expected_format)s"
-
-#~ msgid "The VAT number %s failed the VIES VAT validation check."
-#~ msgstr "Porezni broj %s nije prošao validaciju u VIES bazi."
-
-#~ msgid ""
-#~ "The country detected for this foreign VAT number does not match the one "
-#~ "set on this fiscal position."
-#~ msgstr ""
-#~ "Detektirana država za ovaj strani porezni broj ne odgovara onoj "
-#~ "postavljenoj na fiskalnoj poziciji."
-
-#~ msgid "fiscal position [%s]"
-#~ msgstr "fiskalna pozicija [%s]"

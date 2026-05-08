@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_user_group_settings", {
-    url: "/odoo/settings?debug=assets,tests",
     steps: () => [
         // create new privileges
         {
@@ -28,7 +27,7 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "edit Privi Foo",
         },
         {
-            trigger: ".o_field_x2many_list_row_add a",
+            trigger: ".o_field_x2many_list_row_add button",
             content: "add groups (open modal)",
             run: "click",
         },
@@ -56,12 +55,12 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "edit Bar Manager",
         },
         {
-            trigger: 'a[name="inherit_groups"]',
+            trigger: 'button[name="inherit_groups"]',
             content: "get implied groups",
             run: "click",
         },
         {
-            trigger: 'div[name="implied_ids"] .o_field_x2many_list_row_add a',
+            trigger: 'div[name="implied_ids"] .o_field_x2many_list_row_add button',
             content: "switch to implied",
             run: "click",
         },

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
 "PO-Revision-Date: 2025-09-16 21:14+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/base_import/"
@@ -64,25 +64,6 @@ msgstr "ฟิลด์เพิ่มเติม"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Advanced"
-msgstr "ระดับสูง"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid ""
-"After each batch import, this delay is applied to avoid unthrottled calls"
-msgstr "หลังจากการนำเข้าในแต่ละชุด ความล่าช้านี้จะถูกนำมาใช้เพื่อหลีกเลี่ยงการเรียกที่ไม่ถูกควบคุม"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Allow matching with subfields"
-msgstr "อนุญาตให้จับคู่กับฟิลด์ย่อย"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
@@ -93,6 +74,12 @@ msgstr ""
 "เกิดปัญหาโดยไม่ทราบสาเหตุในระหว่างการนำเข้า (การเชื่อมต่ออาจขาดหาย เกินขีดจำกัดข้อมูล "
 "หรือเกินขีดจำกัดหน่วยความจำ) โปรดลองอีกครั้งในกรณีที่ปัญหาเกิดขึ้นชั่วคราว หากปัญหายังคงเกิดขึ้น "
 "ให้ลองแยกไฟล์แทนที่จะนำเข้าพร้อมกัน"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Attachments"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -118,26 +105,20 @@ msgstr "ชุด"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Batch Import"
-msgstr "การนำเข้าเป็นกลุ่ม"
+msgid "Batch interval"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Batch limit"
-msgstr "ขีดจำกัดของชุด"
+msgid "Batch max size"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "But, you can also use .csv files"
-msgstr "แต่คุณยังสามารถใช้ไฟล์ .csv ได้ด้วย"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Cancel"
-msgstr "ยกเลิก"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Batch size"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -155,8 +136,8 @@ msgstr "คอลัมน์ %(column)s มีค่าไม่ถูกต้
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
-"Column %(column)s contains incorrect values. Error in line %(line)d: %"
-"(error)s"
+"Column %(column)s contains incorrect values. Error in line %(line)d: "
+"%(error)s"
 msgstr "คอลัมน์ %(column)s มีค่าไม่ถูกต้อง เกิดข้อผิดพลาดในบรรทัด %(line)d: %(error)s"
 
 #. module: base_import
@@ -169,12 +150,6 @@ msgstr "ชื่อคอลัมน์"
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Comma"
 msgstr "จุลภาค"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
-msgid "Comments"
-msgstr "ความคิดเห็น"
 
 #. module: base_import
 #. odoo-python
@@ -203,12 +178,6 @@ msgid "Created on"
 msgstr "สร้างเมื่อ"
 
 #. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Data to import"
-msgstr "ข้อมูลที่จะนำเข้า"
-
-#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Database ID"
@@ -217,32 +186,46 @@ msgstr "ID ของฐานข้อมูล"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Date Format:"
-msgstr "รูปแบบวันที่:"
+msgid "Date Format"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Datetime Format:"
-msgstr "รูปแบบวันที่และเวลา:"
+msgid "Datetime Format"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Decimals Separator:"
-msgstr "ตัวคั่นทศนิยม:"
+msgid "Decimals Separator"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Defines how many megabytes can be imported in each batch import"
-msgstr "กำหนดจำนวนเมกะไบต์ที่สามารถนำเข้าในแต่ละชุดนำเข้า"
+msgid "Defines how many megabytes can be imported in each batch"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Delay after each batch"
-msgstr "ความล่าช้าหลังจากแต่ละชุด"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid ""
+"Defines the number of records that will be imported in one transaction. "
+"Reduce the batch size in case of heavy imports"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Delay applied after each batch to prevent unthrottled calls"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Delimiter"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -250,6 +233,13 @@ msgstr "ความล่าช้าหลังจากแต่ละชุ
 #: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Documentation"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -266,15 +256,9 @@ msgstr "ดาวน์โหลด"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Drop or upload a file to import"
-msgstr "วางหรืออัปโหลดไฟล์เพื่อนำเข้า"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Encoding:"
-msgstr "ชุดรหัสภาษา:"
+msgid "Encoding"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -300,11 +284,11 @@ msgstr "เกิดข้อผิดพลาดขณะนำเข้าบ
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
 "Error while importing records: all rows should be of the same size, but the "
-"title row has %(title_row_entries)d entries while the first row has %"
-"(first_row_entries)d. You may need to change the separator character."
+"title row has %(title_row_entries)d entries while the first row has "
+"%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
-"เกิดข้อผิดพลาดขณะนำเข้าบันทึก: แถวทั้งหมดควรมีขนาดเท่ากัน แต่แถวหัวเรื่องมี %"
-"(title_row_entries)d รายการในขณะที่แถวแรกมี %(first_row_entries)d รายการ "
+"เกิดข้อผิดพลาดขณะนำเข้าบันทึก: แถวทั้งหมดควรมีขนาดเท่ากัน แต่แถวหัวเรื่องมี "
+"%(title_row_entries)d รายการในขณะที่แถวแรกมี %(first_row_entries)d รายการ "
 "คุณอาจต้องเปลี่ยนตัวอักษรตัวคั่น"
 
 #. module: base_import
@@ -320,22 +304,10 @@ msgid "Everything seems valid."
 msgstr "ทุกอย่างดูเหมือนถูกต้อง"
 
 #. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Excel files are recommended as formatting is automatic."
-msgstr "แนะนำให้ใช้ไฟล์ Excel เนื่องจากการจัดรูปแบบจะเป็นไปโดยอัตโนมัติ"
-
-#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr "ไอดีจากภายนอก"
-
-#. module: base_import
-#. odoo-python
-#: code:addons/base_import/models/base_import.py:0
-msgid "Field '%(field)s' does not accept date/time values."
-msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
@@ -371,14 +343,8 @@ msgstr "ขนาดไฟล์เกินค่าสูงสุดที่
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
-msgid "File to check and/or import, raw binary (not base64)"
-msgstr "ไฟล์ที่จะตรวจสอบและ/หรือนำเข้า ไบนารีแบบดิบ (ไม่ใช่ base64)"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Files to import"
-msgstr "ไฟล์ที่จะนำเข้า"
+msgid "File to check and/or import"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -409,12 +375,6 @@ msgstr "พบข้อมูลรูปภาพที่ไม่ถูกต
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Go to Import FAQ"
-msgstr "ไปที่คำถามที่พบบ่อยเกี่ยวกับการนำเข้า"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Help"
 msgstr "ช่วยเหลือ"
 
@@ -433,6 +393,20 @@ msgstr "ไอดี"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid ""
+"If checked, the changes are tracked in the chatter and notifications can be "
+"sent to followers, which could slow down the import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "If checked, the first row of the sheet will not be imported"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid ""
 "If the file contains\n"
@@ -446,17 +420,6 @@ msgstr ""
 "                   ง่ายขึ้นโดยเฉพาะเมื่อไฟล์มีหลายคอลัมน์"
 
 #. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid ""
-"If the model uses openchatter, history tracking will set up subscriptions "
-"and send notifications during the import, but lead to a slower import."
-msgstr ""
-"หากโมเดลใช้ openchatter "
-"การติดตามประวัติจะตั้งค่าการสมัครสมาชิกและส่งการแจ้งเตือนในระหว่างการนำเข้า "
-"แต่จะทำให้การนำเข้าช้าลง"
-
-#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
@@ -465,21 +428,17 @@ msgstr "ขนาดรูปภาพใหญ่เกินไป รูป�
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+#: code:addons/base_import/static/src/import_records/import_records.xml:0
 msgid "Import"
 msgstr "นำเข้า"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Import FAQ"
-msgstr "นำเข้าคำถามที่พบบ่อย"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.js:0
-msgid "Import a File"
-msgstr "นำเข้าไฟล์"
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Import failed: see errors below"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -492,12 +451,6 @@ msgstr "ไฟล์ที่นำเข้าไม่มีเนื้อห
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Import preview failed due to: \""
 msgstr "การแสดงตัวอย่างการนำเข้าล้มเหลวเนื่องจาก: \""
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_records/import_records.xml:0
-msgid "Import records"
-msgstr "นำเข้าบันทึก"
 
 #. module: base_import
 #. odoo-javascript
@@ -518,8 +471,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
-"รูปแบบเซลล์ไม่ถูกต้องที่แถว %(แถว)s คอลัมน์ %(col)s: %(cell_value)s โดยมีรูปแบบ: %"
-"(cell_format)s เนื่องจากไม่รองรับรูปแบบ (%(format_type)s)"
+"รูปแบบเซลล์ไม่ถูกต้องที่แถว %(แถว)s คอลัมน์ %(col)s: %(cell_value)s โดยมีรูปแบบ: "
+"%(cell_format)s เนื่องจากไม่รองรับรูปแบบ (%(format_type)s)"
 
 #. module: base_import
 #. odoo-python
@@ -541,12 +494,6 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Load Data File"
-msgstr "โหลดไฟล์ข้อมูล"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Loading file..."
 msgstr "กำลังโหลดไฟล์..."
@@ -556,12 +503,6 @@ msgstr "กำลังโหลดไฟล์..."
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 msgid "Loading..."
 msgstr "กำลังโหลด..."
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Max size per batch"
-msgstr "ขนาดสูงสุดต่อชุด"
 
 #. module: base_import
 #. odoo-javascript
@@ -582,15 +523,21 @@ msgstr "เกิดข้อผิดพลาดหลายอย่าง"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Need Help?"
-msgstr "ต้องการความช่วยเหลือ?"
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "No Separator"
+msgstr "ไม่มีตัวแยก"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "No Separator"
-msgstr "ไม่มีตัวแยก"
+msgid "No date detected"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "No datetime detected"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -609,6 +556,12 @@ msgstr "ไม่พบบันทึกที่ตรงกันสำหร
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Odoo Field"
 msgstr "ฟิลด์ Odoo"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Other"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -642,15 +595,21 @@ msgstr "แถบความคืบหน้า"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Reimport"
-msgstr "นำเข้าอีกครั้ง"
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Re-Upload"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Relation Fields"
 msgstr "ฟิลด์ความสัมพันธ์"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+msgid "Required Fields"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -690,8 +649,8 @@ msgstr "อัฒภาค"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Separator:"
-msgstr "ตัวคั้น:"
+msgid "Separator"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -743,12 +702,6 @@ msgstr "ฟิลด์มาตรฐาน"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Start at line"
-msgstr "เริ่มที่บรรทัด"
-
-#. module: base_import
-#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Stop Import"
 msgstr "หยุดการนำเข้า"
@@ -778,24 +731,6 @@ msgid "Testing"
 msgstr "ทดสอบ"
 
 #. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "Text Delimiter:"
-msgstr "ตัวคั่นข้อความ:"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "The file contains blocking errors (see below)"
-msgstr "ไฟล์มีข้อผิดพลาดในการบล็อก (ดูด้านล่าง)"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "The file will be imported by batches"
-msgstr "ไฟล์จะถูกนำเข้าทีละชุด"
-
-#. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid ""
@@ -820,8 +755,8 @@ msgstr "คอลัมน์นี้จะต่อกันในฟิลด
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Thousands Separator:"
-msgstr "ตัวคั่นหลักพัน:"
+msgid "Thousands Separator"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -838,8 +773,8 @@ msgstr "หากต้องการนำเข้า ให้เลือ�
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Track history during import"
-msgstr "ติดตามประวัติระหว่างการนำเข้า"
+msgid "Track changes in chatter"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -864,14 +799,17 @@ msgstr "ไม่มีชื่อ"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload Data File"
-msgstr "อัปโหลดไฟล์ข้อมูล"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Upload"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Upload your files"
-msgstr "อัปโหลดไฟล์ของคุณ"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid ""
+"Upload attachments such as images or files that can be mapped with imported "
+"data"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -905,17 +843,17 @@ msgid "Use first row as header"
 msgstr "ใช้แถวแรกเป็นส่วนหัว"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"Use unique key across objects for External ID's, for example \"lead_1\" "
+"instead of \"1\""
+msgstr ""
+
+#. module: base_import
 #: model:ir.model,name:base_import.model_res_users
 msgid "User"
 msgstr "ผู้ใช้"
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid ""
-"Warning: ignores the labels line, empty lines and lines composed only of "
-"empty cells"
-msgstr "คำเตือน: ละเว้นบรรทัดป้ายกำกับ บรรทัดว่าง และบรรทัดที่ประกอบด้วยเซลล์ว่างเท่านั้น"
 
 #. module: base_import
 #. odoo-javascript
@@ -972,6 +910,12 @@ msgstr "นาที"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "more"
 msgstr "เพิ่มเติม"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "or drag a file"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript

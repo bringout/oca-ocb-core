@@ -1,9 +1,11 @@
+import { useExternalListener, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { CountryFlag } from "@mail/core/common/country_flag";
+import { Priority } from "@mail/core/common/priority";
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 
-import { Component, useExternalListener, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -15,7 +17,14 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { DiscussContent } from "./discuss_content";
 
 export class MessagingMenu extends Component {
-    static components = { CountryFlag, DiscussContent, Dropdown, NotificationItem, ImStatus };
+    static components = {
+        CountryFlag,
+        DiscussContent,
+        Dropdown,
+        NotificationItem,
+        ImStatus,
+        Priority,
+    };
     static props = [];
     static template = "mail.MessagingMenu";
 
@@ -69,6 +78,8 @@ export class MessagingMenu extends Component {
             thread.markAllMessagesAsRead();
         }
     }
+
+    onSwipeLeftThreadNotification(thread) {}
 
     navigate(direction) {
         if (this.notificationItems.length === 0) {
@@ -157,7 +168,7 @@ export class MessagingMenu extends Component {
     get _tabs() {
         return [
             {
-                counter: this.store.discuss.chats.threadsWithCounter.length,
+                counter: this.store.discuss.chatCategory.channelsWithCounter.length,
                 icon: "oi oi-users",
                 id: "chat",
                 label: _t("Chats"),
@@ -165,7 +176,7 @@ export class MessagingMenu extends Component {
             },
             {
                 channelHasUnread: Boolean(this.store.discuss.unreadChannels.length),
-                counter: this.store.discuss.channels.threadsWithCounter.length,
+                counter: this.store.discuss.channelCategory.channelsWithCounter.length,
                 icon: "fa fa-hashtag",
                 id: "channel",
                 label: _t("Channels"),
@@ -189,16 +200,12 @@ export class MessagingMenu extends Component {
         ) {
             this.store.inbox.setAsDiscussThread();
         }
-        if (this.store.discuss.activeTab === "starred") {
-            this.store.starred.setAsDiscussThread();
+        if (this.store.discuss.activeTab === "bookmark") {
+            this.store.bookmarkBox.setAsDiscussThread();
         }
-        if (!["inbox", "starred"].includes(this.store.discuss.activeTab)) {
+        if (!["inbox", "bookmark"].includes(this.store.discuss.activeTab)) {
             this.store.discuss.thread = undefined;
         }
-    }
-
-    canUnpinItem(thread) {
-        return thread.canUnpin && thread.self_member_id?.message_unread_counter === 0;
     }
 }
 

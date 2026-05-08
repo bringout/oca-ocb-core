@@ -120,7 +120,7 @@
                             <t t-set="val_decimal" t-value="val_stars - val_integer"/>
                             <t t-set="empty_star" t-value="5 - (val_integer + Math.ceil(val_decimal))"/>
                             <aside class="col-3 me-2">
-                                <div class="display-3 fw-bold text-center text-primary mb-2" t-esc="val_stars"/>
+                                <div class="display-3 fw-bold text-center text-primary mb-2" t-out="val_stars"/>
                                 <i t-foreach="[...Array(val_integer).keys()]" t-as="num"  t-key="num"
                                     class="fa fa-star"
                                     aria-label="A star"
@@ -196,9 +196,9 @@
                     <filter string="Unhappy" name="rating_unhappy" domain="[('rating_text', '=', 'ko')]"/>
                     <separator/>
                     <filter name="filter_rated_on" string="Rated On" date="rated_on">
-                        <filter name="rated_on_last_7_days" string="Last 7 Days" domain="[('rated_on', '&gt;', 'today -7d +1d')]"/>
-                        <filter name="rated_on_last_30_days" string="Last 30 Days" domain="[('rated_on', '&gt;', 'today -30d +1d')]"/>
-                        <filter name="rated_on_last_365_days" string="Last 365 Days" domain="[('rated_on', '&gt;', 'today -365d +1d')]"/>
+                        <filter name="rated_on_last_7_days" string="Last 7 Days" domain="[('rated_on', '&gt;=', 'today -7d'), ('rated_on', '&lt;', 'today')]"/>
+                        <filter name="rated_on_last_30_days" string="Last 30 Days" domain="[('rated_on', '&gt;=', 'today -30d'), ('rated_on', '&lt;', 'today')]"/>
+                        <filter name="rated_on_last_365_days" string="Last 365 Days" domain="[('rated_on', '&gt;=', 'today -365d'), ('rated_on', '&lt;', 'today')]"/>
                     </filter>
                     <group>
                         <filter string="Rated Operator" name="responsible" context="{'group_by':'rated_partner_id'}"/>

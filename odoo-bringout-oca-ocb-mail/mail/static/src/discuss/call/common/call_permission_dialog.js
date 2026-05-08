@@ -1,24 +1,35 @@
 import { Component } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-
 import { _t } from "@web/core/l10n/translation";
+import { PermissionPromptDialog } from "@web/core/permission_prompt_dialog/permission_prompt_dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDialog extends Component {
-    static components = { Dialog };
+    static components = { PermissionPromptDialog };
     static props = {
         close: Function,
         media: {
             type: String,
             validate: (s) => ["camera", "microphone"].includes(s),
         },
+        permissionPrompt: {
+            type: String,
+            optional: true,
+        },
+        suggestAllMedias: {
+            type: Boolean,
+            optional: true,
+        },
         useMicrophone: Function,
         useCamera: Function,
+    };
+    static defaultProps = {
+        suggestAllMedias: true,
     };
     static template = "discuss.CallPermissionDialog";
 
     setup() {
         this.rtc = useService("discuss.rtc");
+        this.ui = useService("ui");
     }
 
     async onClickUseMicrophone() {
@@ -47,6 +58,9 @@ export class CallPermissionDialog extends Component {
     }
 
     get permissionPrompt() {
+        if (this.props.permissionPrompt) {
+            return this.props.permissionPrompt;
+        }
         if (this.props.media === "microphone") {
             return _t("Do you want people to hear you in the meeting?");
         }

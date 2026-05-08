@@ -539,6 +539,73 @@ for (const contextValue of ["True", "1"]) {
     });
 }
 
+test("Inner filter: toggle", async () => {
+    const searchBarMenu = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Foo">
+                    <filter string="Abcd" name="abcd" domain="[('foo', '=', 'abcd')]"/>
+                    <filter string="Qsdf" name="qsdf" domain="[('foo', '=', 'qsdf')]"/>
+                </filter>
+            </search>
+        `,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Foo");
+    expect(isItemSelected("Foo")).toBe(false);
+    expect(`.o_item_option`).toHaveCount(2);
+
+    await contains(`.o_item_option:eq(1)`).click();
+    expect(isItemSelected("Foo")).toBe(true);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([["foo", "=", "qsdf"]]);
+
+    await contains(`.o_item_option:eq(0)`).click();
+    expect(isItemSelected("Foo")).toBe(true);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([
+        "|",
+        ["foo", "=", "abcd"],
+        ["foo", "=", "qsdf"],
+    ]);
+});
+
+test("Inner filter: domain is correctly combined with other filters", async () => {
+    const searchBarMenu = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Foo">
+                    <filter string="Abcd" name="abcd" domain="[('foo', '=', 'abcd')]"/>
+                    <filter string="Qsdf" name="qsdf" domain="[('foo', '=', 'qsdf')]"/>
+                </filter>
+                <filter string="Bar" name="bar" domain="[('bar', '=', 'meow')]"/>
+            </search>
+        `,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Foo");
+    await contains(`.o_item_option:eq(0)`).click();
+    await contains(`.o_menu_item:eq(1)`).click();
+    expect(isItemSelected("Foo")).toBe(true);
+    expect(isItemSelected("Bar")).toBe(true);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([
+        "|",
+        ["foo", "=", "abcd"],
+        ["bar", "=", "meow"],
+    ]);
+
+    await contains(`.o_menu_item:eq(1)`).click();
+    await toggleMenuItem("Foo");
+    expect(`.o_item_option`).toHaveCount(0);
+    expect(isItemSelected("Foo")).toBe(true);
+    expect(isItemSelected("Bar")).toBe(false);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([["foo", "=", "abcd"]]);
+});
+
 test("filter domains are correcly combined by OR and AND", async () => {
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",
@@ -818,6 +885,49 @@ test("display of (not) set in facets", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([["boolean", "=", false]]);
 });
 
+test("relative date and datetime fields facets display", async () => {
+    serverState.debug = "1";
+    onRpc("/web/domain/validate", () => true);
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
+    });
+    expect(getFacetTexts()).toEqual([]);
+    expect(searchBar.env.searchModel.domain).toEqual([]);
+
+    // Pick a datetime field and select relative range option
+    await toggleSearchBarMenu();
+    await openAddCustomFilterDialog();
+    await openModelFieldSelectorPopover();
+    await contains(".o_model_field_selector_popover_item_name:contains(create_date)").click();
+    await selectValue("relativeRange");
+
+    // First test -5 months labels
+    await contains(`${SELECTORS.valueEditor} input[type="number"]`).edit(-5, { instantly: true });
+    await contains(`${SELECTORS.valueEditor} select:last`).select('"month"');
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual(["Created on is in last 5 months"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["create_date", ">=", "today -5m"],
+        ["create_date", "<", "today"],
+    ]);
+
+    // Then test +6 weeks weeks labels
+    await contains(".o_searchview_facet_label").click();
+    await contains(`${SELECTORS.valueEditor} input[type="number"]`).edit(6, { instantly: true });
+    await contains(`${SELECTORS.valueEditor} select:last`).select('"week"');
+    await contains(".modal footer button").click();
+    expect(getFacetTexts()).toEqual(["Created on is in next 6 weeks"]);
+    expect(searchBar.env.searchModel.domain).toEqual([
+        "&",
+        ["create_date", ">", "today +1d"],
+        ["create_date", "<=", "today +6w +1d"],
+    ]);
+});
+
 test("Add a custom filter: notification on invalid domain", async () => {
     serverState.debug = "1";
     mockService("notification", {
@@ -867,7 +977,7 @@ test("display names in facets", async () => {
 
     expect(getFacetTexts()).toEqual([
         "Bar = John",
-        "Bar = David or Inaccessible/missing record ID: 5555",
+        "Bar = David or Missing record",
         `Bar ${label("set")}`,
         "Id = 2",
     ]);
@@ -1049,7 +1159,7 @@ test(`"in range" facets`, async () => {
         ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(Birthday)"
     ).click();
     await addNewRule();
-    await selectValue("custom range");
+    await selectValue("dateRange");
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([
         "Birthday between 03/11/2019 and 03/11/2019 or Birthday is in Today",
@@ -1085,4 +1195,133 @@ test(`Custom filter with "&"" as value`, async function () {
     await contains(".modal footer button").click();
     expect(getFacetTexts()).toEqual([`Foo contains &`]);
     expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "&"]]);
+});
+
+test("lazy selection filter", async () => {
+    const searchBar = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Selection" name="selection_filter">
+                    <field name="selection"/>
+                </filter>
+            </search>
+        `,
+    });
+    await toggleSearchBarMenu();
+    expect(`.o_menu_item`).toHaveCount(2);
+    expect(`.o_accordion_toggle`).toHaveText("Selection");
+    await contains(`.o_accordion_toggle`).click();
+    expect(`.o_accordion_values .o_item_option`).toHaveCount(3);
+    expect(queryAllTexts(`.o_accordion_values .o_item_option`)).toEqual(["ABC", "DEF", "GHI"]);
+    await toggleMenuItemOption("Selection", "ABC");
+    expect(searchBar.env.searchModel.domain).toEqual([["selection", "=", "abc"]]);
+});
+
+test("lazy many2one filter", async () => {
+    Partner._records = [
+        { id: 1, name: "John" },
+        { id: 2, name: "David" },
+        { id: 3, name: "Bertrand" },
+        { id: 4, name: "Christophe" },
+        { id: 5, name: "Jean-Edouard" },
+        { id: 6, name: "Serge" },
+        { id: 7, name: "Amelie" },
+        { id: 8, name: "Sarah" },
+        { id: 9, name: "Tristan" },
+        { id: 10, name: "Paul" },
+    ];
+    onRpc("partner", "web_search_read", ({ kwargs }) => {
+        expect(kwargs.specification).toEqual({
+            display_name: {},
+            id: {},
+        });
+        expect(kwargs.domain).toEqual([["bar", "!=", false]]);
+        expect.step(`web_search_read ${kwargs.limit} partners`);
+    });
+    const searchBar = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Bar" name="m2o">
+                    <field name="bar" domain="[('bar', '!=', False)]"/>
+                </filter>
+            </search>
+        `,
+    });
+    expect.verifySteps([]);
+    await toggleSearchBarMenu();
+    expect(`.o_menu_item`).toHaveCount(2);
+    expect(`.o_accordion_toggle`).toHaveText("Bar");
+    await contains(`.o_accordion_toggle`).click();
+    expect.verifySteps(["web_search_read 8 partners"]);
+    expect(`.o_accordion_values .o_item_option`).toHaveCount(9);
+    expect(queryAllTexts(`.o_accordion_values .o_item_option`)).toEqual([
+        "John",
+        "David",
+        "Bertrand",
+        "Christophe",
+        "Jean-Edouard",
+        "Serge",
+        "Amelie",
+        "Sarah",
+        "More...",
+    ]);
+    await toggleMenuItemOption("Bar", "Christophe");
+    expect(searchBar.env.searchModel.domain).toEqual([["bar", "=", 4]]);
+    await toggleMenuItemOption("Bar", "More...");
+    expect.verifySteps(["web_search_read 16 partners"]);
+    expect(`.o_accordion_values .o_item_option`).toHaveCount(10);
+    expect(queryAllTexts(`.o_accordion_values .o_item_option`)).toEqual([
+        "John",
+        "David",
+        "Bertrand",
+        "Christophe",
+        "Jean-Edouard",
+        "Serge",
+        "Amelie",
+        "Sarah",
+        "Tristan",
+        "Paul",
+    ]);
+});
+
+test("lazy many2one filter with multiple domains", async () => {
+    Partner._records = [
+        { id: 1, name: "John" },
+        { id: 2, name: "David" },
+    ];
+    onRpc("partner", "web_search_read", ({ kwargs }) => {
+        expect(kwargs.domain).toEqual([["bar", "!=", false]]);
+        expect.step(`web_search_read`);
+    });
+    const searchBar = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Bar" name="m2o" domain="[('foo', '!=', 'a')]">
+                    <field name="bar" domain="[('bar', '!=', False)]"/>
+                </filter>
+            </search>
+        `,
+    });
+    expect.verifySteps([]);
+    await toggleSearchBarMenu();
+    expect(`.o_menu_item`).toHaveCount(2);
+    expect(`.o_accordion_toggle`).toHaveText("Bar");
+    await contains(`.o_accordion_toggle`).click();
+    expect.verifySteps(["web_search_read"]);
+    expect(`.o_accordion_values .o_item_option`).toHaveCount(2);
+    expect(queryAllTexts(`.o_accordion_values .o_item_option`)).toEqual(["John", "David"]);
+    await toggleMenuItemOption("Bar", "David");
+    expect(searchBar.env.searchModel.domain).toEqual(["&", ["foo", "!=", "a"], ["bar", "=", 2]], {
+        message:
+            "domain on filter is combined with the option, field domain is applied to the option search",
+    });
 });

@@ -20,7 +20,11 @@ const ALLOWED_TAGS = [
     "UL",
 ];
 
-const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o_channel_redirect", "o-discuss-mention"]);
+const PRESERVED_CLASSNAMES = new Set([
+    "o_mail_redirect",
+    "o_channel_redirect",
+    "o-discuss-mention",
+]);
 
 /**
  * This plugin works with the composer used in Discuss, ChatWindow and Chatter.
@@ -30,16 +34,16 @@ export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
     static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
     resources = {
-        before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
-        bypass_paste_image_files: () => true,
-        create_link_handlers: (linkEl) => (linkEl.target = "_blank"),
+        on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
+        paste_odoo_editor_html_overrides: this.handlePasteHtmlOverride.bind(this),
+        should_bypass_paste_image_files_predicates: () => true,
+        on_link_created_handlers: (linkEl) => (linkEl.target = "_blank"),
         hints: [
             withSequence(1, {
                 selector: `.odoo-editor-editable > ${baseContainerGlobalSelector}:only-child`,
                 text: this.config.placeholder,
             }),
         ],
-        handle_paste_html_override: this.handlePasteHtmlOverride.bind(this),
         hint_targets_providers: (selectionData, editable) => {
             const el = editable.firstChild;
             if (
@@ -53,7 +57,7 @@ export class MailComposerPlugin extends Plugin {
                 return [];
             }
         },
-        input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
+        on_input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
     };
 
     setup() {
@@ -73,7 +77,7 @@ export class MailComposerPlugin extends Plugin {
             this.config.composerPluginDependencies.onFocusout
         );
     }
-    handlePasteHtmlOverride(sanitizedFragment) {
+    handlePasteHtmlOverride(selection, sanitizedFragment) {
         if (sanitizedFragment.childNodes.length === 0) {
             return false;
         }

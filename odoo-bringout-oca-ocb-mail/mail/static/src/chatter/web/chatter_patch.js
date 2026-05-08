@@ -1,18 +1,19 @@
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
-import { Chatter } from "@mail/chatter/web_portal/chatter";
+import { MessageCardList } from "@mail/core/common/message_card_list";
+import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
-import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
+import { useHover } from "@mail/utils/common/hooks";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
-import { RecipientsInput } from "@mail/core/web/recipients_input";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { status, useEffect } from "@odoo/owl";
+import { status } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -34,7 +35,7 @@ Object.assign(Chatter.components, {
     Dropdown,
     FileUploader,
     FollowerList,
-    RecipientsInput,
+    MessageCardList,
     ScheduledMessage,
     SearchMessageInput,
     SearchMessageResult,
@@ -42,14 +43,12 @@ Object.assign(Chatter.components, {
 
 Chatter.props.push(
     "close?",
-    "compactHeight?",
     "has_activities?",
     "hasAttachmentPreview?",
     "hasParentReloadOnActivityChanged?",
     "hasParentReloadOnAttachmentsChanged?",
     "hasParentReloadOnFollowersUpdate?",
     "hasParentReloadOnMessagePosted?",
-    "highlightMessageId?",
     "isAttachmentBoxVisibleInitially?",
     "isChatterAside?",
     "isInFormSheetBg?",
@@ -58,7 +57,6 @@ Chatter.props.push(
 );
 
 Object.assign(Chatter.defaultProps, {
-    compactHeight: false,
     has_activities: true,
     hasAttachmentPreview: false,
     hasParentReloadOnActivityChanged: false,
@@ -71,18 +69,15 @@ Object.assign(Chatter.defaultProps, {
 });
 
 /**
- * @type {import("@mail/chatter/web_portal/chatter").Chatter }
+ * @type {import("@mail/chatter/web_portal_project/chatter").Chatter }
  * @typedef {Object} Props
  * @property {function} [close]
  */
-patch(Chatter.prototype, {
+const chatterPatch = {
     setup() {
-        this.messageHighlight = useMessageScrolling();
         super.setup(...arguments);
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
-        /** @deprecated equivalent to partner_fields and primary_email_field on thread */
-        this.mailImpactingFields = { recordFields: [], emailFields: [] };
         useRecordObserver((record) => this.updateRecipients(record));
         this.attachmentPopout = usePopoutAttachment();
         Object.assign(this.state, {
@@ -91,16 +86,23 @@ patch(Chatter.prototype, {
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
+            showPinnedMessages: false,
             showScheduledMessages: true,
         });
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(
-            this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
+            this.store["mail.thread"].insert({
+                model: this.props.threadModel,
+                id: this.props.threadId,
+            })
         );
         this.unfollowHover = useHover("unfollow");
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
+        this.subjectInputRef = useRef("subjectInput");
+        /** @type {Map<string, Function>} */
+        this.uploadHandlers = new Map();
         useCustomDropzone(
             this.rootRef,
             MailAttachmentDropzone,
@@ -130,9 +132,11 @@ patch(Chatter.prototype, {
                     }
                 },
             },
-            () => !this.store.meetingViewOpened || this.env.inMeetingView
+            () =>
+                (!this.store.meetingViewOpened || this.env.inMeetingView) &&
+                (this.state.thread?.isTransient || this.state.thread?.canPostMessage)
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.state.thread) {
                     return;
@@ -153,19 +157,15 @@ patch(Chatter.prototype, {
             },
             () => [this.state.thread, this.state.thread?.isLoadingAttachments]
         );
-        useEffect(
-            () => {
-                if (
-                    this.state.thread &&
-                    !["new", "loading"].includes(this.state.thread.status) &&
-                    this.attachments.length === 0
-                ) {
+        useLayoutEffect(
+            (status, attachmentsLength) => {
+                if (!["new", "loading"].includes(status) && attachmentsLength === 0) {
                     this.state.isAttachmentBoxOpened = false;
                 }
             },
-            () => [this.state.thread?.status, this.attachments]
+            () => [this.state.thread?.status, this.attachments.length]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.state.aside = this.props.isChatterAside;
             },
@@ -181,19 +181,19 @@ patch(Chatter.prototype, {
         Object.keys(record.data).forEach((field) => record.data[field]);
         const partnerIds = []; // Ensure that we don't have duplicates
         let email;
-        this.mailImpactingFields.recordFields.forEach((field) => {
+        (this.state.thread?.partner_fields ?? []).forEach((field) => {
             const value = record._changes[field];
             if (record.data[field] !== undefined && value) {
                 partnerIds.push(value.id);
             }
         });
-        this.mailImpactingFields.emailFields.forEach((field) => {
+        const field = this.state.thread?.primary_email_field;
+        if (field) {
             const value = record._changes[field];
             if (record.data[field] !== undefined && value) {
                 email = value;
-                return;
             }
-        });
+        }
         if ((!partnerIds.length && !email) || mode !== "message" || status(this) === "destroyed") {
             return;
         }
@@ -236,6 +236,7 @@ patch(Chatter.prototype, {
             "followers",
             "scheduledMessages",
             "suggestedRecipients",
+            "suggestedSubject",
         ];
     },
 
@@ -244,7 +245,7 @@ patch(Chatter.prototype, {
     },
 
     get childSubEnv() {
-        const res = Object.assign(super.childSubEnv, { messageHighlight: this.messageHighlight });
+        const res = super.childSubEnv;
         assignGetter(res.inChatter, { aside: () => this.props.isChatterAside });
         Object.assign(res.inChatter, { toggleComposer: this.toggleComposer.bind(this) });
         return res;
@@ -257,7 +258,11 @@ patch(Chatter.prototype, {
     get followingText() {
         return _t("Following");
     },
-
+    get hasPinnedMessages() {
+        return (
+            this.state.thread?.has_pinned_messages || this.state.thread?.pinnedMessages?.length > 0
+        );
+    },
     /**
      * @returns {boolean}
      */
@@ -275,9 +280,13 @@ patch(Chatter.prototype, {
             "activities",
             "attachments",
             "contact_fields",
+            "defaultSubject",
             "followers",
+            "has_pinned_messages",
             "scheduledMessages",
+            "showSubjectInSmallComposer",
             "suggestedRecipients",
+            "suggestedSubject",
         ];
     },
 
@@ -313,12 +322,6 @@ patch(Chatter.prototype, {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        this.mailImpactingFields = {
-            emailFields: this.state.thread.primary_email_field
-                ? [this.state.thread.primary_email_field]
-                : [],
-            recordFields: this.state.thread.partner_fields || [],
-        };
         this.updateRecipients(this.props.record);
     },
 
@@ -356,7 +359,12 @@ patch(Chatter.prototype, {
             return false;
         }
     },
-
+    onClickPinnedMessages() {
+        this.state.showPinnedMessages = !this.state.showPinnedMessages;
+        if (this.state.showPinnedMessages) {
+            this.state.thread?.fetchPinnedMessages();
+        }
+    },
     onClickSearch() {
         this.state.composerType = false;
         this.state.isSearchOpen = !this.state.isSearchOpen;
@@ -373,13 +381,6 @@ patch(Chatter.prototype, {
     onFollowerChanged() {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
-    },
-
-    _onMounted() {
-        super._onMounted();
-        if (this.state.thread && this.props.highlightMessageId) {
-            this.state.thread.highlightMessage = this.props.highlightMessageId;
-        }
     },
 
     onPostCallback() {
@@ -401,16 +402,34 @@ patch(Chatter.prototype, {
         this.load(thread, ["suggestedRecipients"]);
     },
 
-    async onUploaded(data) {
-        await this.attachmentUploader.uploadData(data);
-        if (this.props.hasParentReloadOnAttachmentsChanged) {
-            this.reloadParentView();
+    /**
+     * @param {string} data deprecated, passing thread is enough
+     * @param {import("models").Thread} thread
+     */
+    onUploaded(data, { thread } = {}) {
+        const threadLocalId = thread.localId;
+        if (!this.uploadHandlers.has(threadLocalId)) {
+            const self = this;
+            this.uploadHandlers.set(threadLocalId, async function handleUpload(data) {
+                try {
+                    await self.attachmentUploader.uploadData(data, { thread });
+                    if (!thread.eq(self.state.thread)) {
+                        return;
+                    }
+                    if (self.props.hasParentReloadOnAttachmentsChanged) {
+                        self.reloadParentView();
+                    }
+                    self.state.isAttachmentBoxOpened = true;
+                    if (self.rootRef.el) {
+                        self.rootRef.el.scrollTop = 0;
+                    }
+                    self.state.thread.scrollTop = "bottom";
+                } finally {
+                    self.uploadHandlers.delete(threadLocalId);
+                }
+            });
         }
-        this.state.isAttachmentBoxOpened = true;
-        if (this.rootRef.el) {
-            this.rootRef.el.scrollTop = 0;
-        }
-        this.state.thread.scrollTop = "bottom";
+        return this.uploadHandlers.get(threadLocalId);
     },
 
     async reloadParentView() {
@@ -475,4 +494,5 @@ patch(Chatter.prototype, {
     popoutAttachment() {
         this.attachmentPopout.popout();
     },
-});
+};
+patch(Chatter.prototype, chatterPatch);

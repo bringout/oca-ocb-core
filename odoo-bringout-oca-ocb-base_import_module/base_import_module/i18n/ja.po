@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-03-12 18:36+0000\n"
 "PO-Revision-Date: 2025-11-13 08:15+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -51,11 +51,6 @@ msgstr "有効化"
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
 msgid "Apps"
 msgstr "アプリ"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Cancel"
-msgstr "キャンセル"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -116,6 +111,11 @@ msgstr ""
 "\n"
 " %(error_message)s \n"
 "\n"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__total_lines_of_code
+msgid "Extra lines of Code"
+msgstr ""
 
 #. module: base_import_module
 #. odoo-python
@@ -271,6 +271,14 @@ msgstr ""
 "アセット)のみです"
 
 #. module: base_import_module
+#: model:ir.model.fields,help:base_import_module.field_ir_module_module__total_lines_of_code
+msgid ""
+"Number of lines of code that may be billed under an Enterprise subscription. "
+"For exact pricing details, please contact your account manager or visit odoo."
+"com/pricing."
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
 msgid "Official Apps"
 msgstr "オフィシャルアプリ"
@@ -363,37 +371,3 @@ msgstr "完了"
 #: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__init
 msgid "init"
 msgstr "初期化"
-
-#~ msgid "Import App"
-#~ msgstr "アプリのインポート"
-
-#~ msgid "Import module"
-#~ msgstr "モジュールのインポート"
-
-#~ msgid "Last Modified on"
-#~ msgstr "最終更新日"
-
-#~ msgid ""
-#~ "Note: you can only import data modules (.xml files and static assets)"
-#~ msgstr ""
-#~ "注：インポートできるのはデータモジュール（.xmlファイルと静的アセット）のみ"
-#~ "です。"
-
-#~ msgid "Open Modules"
-#~ msgstr "モジュールを開く"
-
-#~ msgid "Select module package to import (.zip file):"
-#~ msgstr ""
-#~ "インポートする（.zipファイル）モジュールパッケージを選択して下さい。"
-
-#~ msgid "Studio customizations require Studio"
-#~ msgstr "StudioのカスタマイズにはStudioが必要です"
-
-#~ msgid ""
-#~ "Unmet module dependencies: \n"
-#~ "\n"
-#~ " - %s"
-#~ msgstr ""
-#~ "モジュールのディペンデンシーが一致しません: \n"
-#~ "\n"
-#~ " - %s"

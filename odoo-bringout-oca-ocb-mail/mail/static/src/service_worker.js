@@ -3,10 +3,7 @@
 /* global idbKeyval */
 importScripts("/mail/static/lib/idb-keyval/idb-keyval.js");
 
-const MESSAGE_TYPE = {
-    UNEXPECTED_CALL_TERMINATION: "UNEXPECTED_CALL_TERMINATION", // deprecated
-    POST_RTC_LOGS: "POST_RTC_LOGS",
-};
+const MESSAGE_TYPE = { POST_RTC_LOGS: "POST_RTC_LOGS" };
 const PUSH_NOTIFICATION_TYPE = {
     CALL: "CALL",
     CANCEL: "CANCEL",
@@ -313,10 +310,6 @@ self.addEventListener("pushsubscriptionchange", async (event) => {
 });
 self.addEventListener("message", async ({ data, source }) => {
     switch (data.name) {
-        case MESSAGE_TYPE.UNEXPECTED_CALL_TERMINATION:
-            // deprecated
-            openDiscussChannel(data.channelId, { joinCall: true, source });
-            break;
         case MESSAGE_TYPE.POST_RTC_LOGS: {
             const { logs, download } = data;
             try {

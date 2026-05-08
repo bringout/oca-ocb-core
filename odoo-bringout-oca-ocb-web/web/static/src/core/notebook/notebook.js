@@ -1,4 +1,5 @@
-import { Component, onWillRender, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
@@ -12,8 +13,8 @@ import { KeepLast } from "@web/core/utils/concurrency";
  *
  *      e.g.:
  *          PageTemplate.template = xml`
-                    <h1 t-esc="props.heading" />
-                    <p t-esc="props.text" />`;
+                    <h1 t-out="this.props.heading" />
+                    <p t-out="this.props.text" />`;
 
  *      `pages` could be:
  *      [
@@ -77,7 +78,7 @@ export class Notebook extends Component {
         this.state = useState({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
         this.keepLastPageTransition = new KeepLast();
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.props.onPageUpdate(this.state.currentPage);
                 this.activePane.el?.classList.add("show");

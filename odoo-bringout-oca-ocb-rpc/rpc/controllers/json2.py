@@ -12,8 +12,7 @@ from werkzeug.exceptions import (
 
 from odoo import http
 from odoo.http import request
-from odoo.models import BaseModel
-from odoo.service.model import get_public_method
+from odoo.models import BaseModel, get_public_method
 from odoo.tools import frozendict
 
 _logger = logging.getLogger(__name__)
@@ -81,7 +80,7 @@ class WebJson2Controller(http.Controller):
         try:
             signature.bind(records, **kwargs)
         except TypeError as exc:
-            raise UnprocessableEntity(exc.args[0])
+            raise UnprocessableEntity(exc.args[0]) from exc
 
         result = func(records, **kwargs)
         if isinstance(result, BaseModel):

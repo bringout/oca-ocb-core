@@ -1,4 +1,5 @@
-import { markup, reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { markup } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -18,17 +19,11 @@ export class DiscussCoreCommon {
 
     setup() {
         this.busService.subscribe("discuss.channel/delete", (payload, metadata) => {
-            const thread = this.store.Thread.insert({
-                id: payload.id,
-                model: "discuss.channel",
-            });
-            this._handleNotificationChannelDelete(thread, metadata);
+            const channel = this.store["discuss.channel"].insert(payload.id);
+            this._handleNotificationChannelDelete(channel, metadata);
         });
         this.busService.subscribe("discuss.channel/new_message", (payload, metadata) => {
-            // Insert should always be done before any async operation. Indeed,
-            // awaiting before the insertion could lead to overwritting newer
-            // state coming from more recent `mail.record/insert` notifications.
-            this.store.insert(payload.data);
+            this.store.insert(payload.store_data);
             this._handleNotificationNewMessage(payload, metadata);
         });
         this.busService.subscribe("discuss.channel/transient_message", (payload) => {
@@ -45,18 +40,9 @@ export class DiscussCoreCommon {
             message.thread.messages.push(message);
             message.thread.transientMessages.push(message);
         });
-        this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
-            const { channel_id, id, last_message_id, partner_id } = payload;
-            this.store["discuss.channel.member"].insert({
-                id,
-                fetched_message_id: { id: last_message_id },
-                partner_id: { id: partner_id },
-                thread: { id: channel_id, model: "discuss.channel" },
-            });
-        });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
-            if (message.thread) {
-                const { self_member_id } = message.thread;
+            const self_member_id = message.channel_id?.self_member_id;
+            if (self_member_id) {
                 if (
                     message.id > self_member_id?.seen_message_id.id &&
                     notifId > self_member_id.message_unread_counter_bus_id
@@ -68,25 +54,22 @@ export class DiscussCoreCommon {
     }
 
     /**
-     * @param {import("models").Thread} thread
+     * @param {import("models").DiscussChannel} channel
      * @param {{ notifId: number}} metadata
      */
-    async _handleNotificationChannelDelete(thread, metadata) {
-        await thread.closeChatWindow({ force: true });
-        thread.messages.splice(0, thread.messages.length);
-        thread.delete();
+    async _handleNotificationChannelDelete(channel, metadata) {
+        await channel.closeChatWindow();
+        channel.messages.splice(0, channel.messages.length);
+        channel.delete();
     }
 
     async _handleNotificationNewMessage(payload, { id: notifId }) {
-        const { data, id: channelId, silent, temporary_id } = payload;
-        const channel = await this.store.Thread.getOrFetch({
-            model: "discuss.channel",
-            id: channelId,
-        });
+        const { store_data, id: channelId, silent, temporary_id } = payload;
+        const channel = await this.store["discuss.channel"].getOrFetch(channelId);
         if (!channel) {
             return;
         }
-        const message = this.store["mail.message"].get(data["mail.message"][0]);
+        const message = this.store["mail.message"].get(store_data["mail.message"][0]);
         if (!message) {
             return;
         }
@@ -114,19 +97,10 @@ export class DiscussCoreCommon {
             }
         }
         if (
-            channel.channel_type !== "channel" &&
-            this.store.self_partner &&
-            channel.self_member_id
-        ) {
-            // disabled on non-channel threads and
-            // on "channel" channels for performance reasons
-            channel.markAsFetched();
-        }
-        if (
             !channel.loadNewer &&
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
-            this.store.self_partner &&
+            this.store.self_user &&
             channel.newestPersistentMessage?.eq(channel.newestMessage) &&
             !channel.markedAsUnread
         ) {

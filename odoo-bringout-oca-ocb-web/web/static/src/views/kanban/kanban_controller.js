@@ -1,3 +1,4 @@
+import { render, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -8,10 +9,12 @@ import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
+import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
 import { useModelWithSampleData } from "@web/model/model";
+import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
@@ -22,16 +25,9 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import {
-    Component,
-    onMounted,
-    onWillStart,
-    reactive,
-    useEffect,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@odoo/owl";
+import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { QuickCreateState } from "./kanban_record_quick_create";
+import { effect } from "@web/core/utils/reactive";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -40,11 +36,13 @@ const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "m
 export class KanbanController extends Component {
     static template = `web.KanbanView`;
     static components = {
+        OfflineActionHelper,
         ActionMenus,
         DropdownItem,
         Layout,
         KanbanRenderer,
         MultiRecordViewButton,
+        OfflineSearchBar,
         SearchBar,
         CogMenu: KanbanCogMenu,
         SelectionBox,
@@ -55,7 +53,6 @@ export class KanbanController extends Component {
         forceGlobalClick: { type: Boolean, optional: true },
         onSelectionChanged: { type: Function, optional: true },
         readonly: { type: Boolean, optional: true },
-        showButtons: { type: Boolean, optional: true },
         Compiler: Function,
         Model: Function,
         Renderer: Function,
@@ -67,12 +64,12 @@ export class KanbanController extends Component {
         createRecord: () => {},
         forceGlobalClick: false,
         selectRecord: () => {},
-        showButtons: true,
     };
 
     setup() {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
+        this.offlineService = useService("offline");
         const { Model, archInfo } = this.props;
 
         class KanbanSampleModel extends Model {
@@ -118,20 +115,16 @@ export class KanbanController extends Component {
         }
         this.headerButtons = archInfo.headerButtons;
 
-        const self = this;
-        this.quickCreateState = reactive({
-            get groupId() {
-                return this._groupId || false;
-            },
-            set groupId(groupId) {
-                if (self.model.useSampleModel) {
-                    self.model.removeSampleDataInGroups();
-                    self.model.useSampleModel = false;
+        this.quickCreateState = new QuickCreateState(archInfo.quickCreateView);
+        effect(
+            ({ isOpen }) => {
+                if (isOpen && this.model.useSampleModel) {
+                    this.model.removeSampleDataInGroups();
+                    this.model.useSampleModel = false;
                 }
-                this._groupId = groupId;
             },
-            view: archInfo.quickCreateView,
-        });
+            [this.quickCreateState]
+        );
 
         this.rootRef = useRef("root");
         useViewButtons(this.rootRef, {
@@ -168,7 +161,7 @@ export class KanbanController extends Component {
                 return state;
             },
         });
-        useEffect(
+        useLayoutEffect(
             (isReady) => {
                 if (isReady) {
                     if (this.env.isSmall && this.model.root.isGrouped) {
@@ -202,9 +195,8 @@ export class KanbanController extends Component {
                     total: count,
                     onUpdate: async ({ offset, limit }, hasNavigated) => {
                         await this.model.root.load({ offset, limit });
-                        await this.onUpdatedPager();
                         if (hasNavigated) {
-                            this.onPageChangeScroll();
+                            this.onPageChange();
                         }
                     },
                     updateTotal: hasLimitedCount ? () => root.fetchCount() : undefined,
@@ -216,7 +208,7 @@ export class KanbanController extends Component {
         onMounted(() => {
             this.firstLoad = false;
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.onSelectionChanged();
             },
@@ -247,7 +239,7 @@ export class KanbanController extends Component {
             ...this.props.display,
             controlPanel: {
                 ...controlPanel,
-                layoutActions: !this.hasSelectedRecords,
+                actions: !this.hasSelectedRecords,
             },
         };
     }
@@ -446,7 +438,7 @@ export class KanbanController extends Component {
             if (firstGroup.isFolded) {
                 await firstGroup.toggle();
             }
-            this.quickCreateState.groupId = firstGroup.id;
+            await this.quickCreateState.openQuickCreate(firstGroup.id);
         } else if (onCreate && onCreate !== "quick_create") {
             const options = {
                 additionalContext: root.context,
@@ -454,7 +446,7 @@ export class KanbanController extends Component {
                     if (!noReload) {
                         await root.load();
                         this.model.useSampleModel = false;
-                        this.render(true); // FIXME WOWL reactivity
+                        render(this, true); // FIXME WOWL reactivity
                     }
                 },
             };
@@ -466,6 +458,17 @@ export class KanbanController extends Component {
 
     get canCreate() {
         return this.props.archInfo.activeActions.create;
+    }
+
+    get isNewButtonAvailableOffline() {
+        if (this.props.archInfo.activeActions.quickCreate) {
+            return this.offlineService.isAvailableOffline(
+                this.env.config.actionId,
+                "kanban_quick_create",
+                false
+            );
+        }
+        return this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false);
     }
 
     get isNewButtonDisabled() {
@@ -506,7 +509,7 @@ export class KanbanController extends Component {
         }
     }
 
-    onPageChangeScroll() {
+    onPageChange() {
         if (this.rootRef && this.rootRef.el) {
             if (this.env.isSmall) {
                 this.rootRef.el.scrollTop = 0;
@@ -519,8 +522,6 @@ export class KanbanController extends Component {
     async beforeExecuteActionButton(clickParams) {}
 
     async afterExecuteActionButton(clickParams) {}
-
-    async onUpdatedPager() {}
 
     scrollTop() {
         this.rootRef.el.querySelector(".o_content").scrollTo({ top: 0 });

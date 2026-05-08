@@ -1,4 +1,5 @@
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 
 export class FormStatusIndicator extends Component {
@@ -18,7 +19,7 @@ export class FormStatusIndicator extends Component {
             "FIELD_IS_DIRTY",
             (ev) => (this.state.fieldIsDirty = ev.detail)
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.props.model.root.isNew && this.indicatorMode === "invalid") {
                     this.saveButton.el.setAttribute("disabled", "1");
@@ -36,10 +37,15 @@ export class FormStatusIndicator extends Component {
         return this.indicatorMode !== "saved";
     }
 
+    get isNew() {
+        const { isNew, offlineId } = this.props.model.root;
+        return isNew && !offlineId;
+    }
+
     get indicatorMode() {
-        const { isNew, isValid } = this.props.model.root;
+        const { isValid } = this.props.model.root;
         const isDirty = this.props.model.root.dirty || this.state.fieldIsDirty;
-        if (isNew || isDirty) {
+        if (this.isNew || isDirty) {
             return isValid ? "dirty" : "invalid";
         }
         return "saved";

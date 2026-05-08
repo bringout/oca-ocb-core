@@ -16,11 +16,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:38+0000\n"
-"PO-Revision-Date: 2026-02-25 14:42+0000\n"
+"POT-Creation-Date: 2026-02-13 18:35+0000\n"
+"PO-Revision-Date: 2026-02-14 12:05+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/base_vat/"
-"pl/>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
+"base_vat/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,11 +76,6 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 lub 49098576"
 
 #. module: base_vat
-#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
-msgid "Base VAT: Sync updates from IAP VIES"
-msgstr ""
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -88,13 +83,13 @@ msgstr "CHE-123.456.788 TVA lub CHE-123.456.788 MWST lub CHE-123.456.788 IVA"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
-msgid "Companies"
-msgstr "Firmy"
+msgid "Company"
+msgstr "Firma"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfiguracja ustawień"
+msgstr "Ustawienia konfiguracji"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -126,6 +121,12 @@ msgstr "DE123456788 lub 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Error while checking the VAT number '%s' against the VIES service."
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -199,12 +200,6 @@ msgstr "Ważne wewnątrz Wspólnoty"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "Invalid IAP VIES endpoint"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "Note: the expected format is %(expected_format)s"
 msgstr "Uwaga: oczekiwany format to %(expected_format)s"
 
@@ -217,7 +212,6 @@ msgstr "Przeprowadź walidację Vies"
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "NIP"
 
@@ -225,11 +219,11 @@ msgstr "NIP"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
-"(expected_note)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. "
+"%(expected_note)s"
 msgstr ""
-"Numer %(vat_label)s [%(wrong_vat)s] wydaje się nieprawidłowy. %"
-"(expected_note)s"
+"Numer %(vat_label)s [%(wrong_vat)s] wydaje się nieprawidłowy. "
+"%(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -240,12 +234,6 @@ msgid ""
 msgstr ""
 "Numer %(vat_label)s [%(wrong_vat)s] dla %(record_label)s wydaje się "
 "nieprawidłowy. %(expected_note)s"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "The Intra-Community validity has been updated."
-msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
@@ -262,20 +250,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VIES check failed. Please check the Tax ID manually."
+msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
 msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "The VIES check is pending. The status will be updated soon."
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
-msgstr "Aby wyraźnie zaznaczyć brak (ważnego) podatku VAT, użyj znaku \"/\". "
 
 #. module: base_vat
 #. odoo-python
@@ -297,12 +273,6 @@ msgstr "Weryfikuj numery NIP za pomocą europejskiej usługi VIES"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "XXXXXXXXX [9 digits]"
-msgstr ""
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
 "XXXXXXXXX [9 cyfr] i powinno być zgodne z algorytmem sum kontrolnych Luhna."
@@ -318,71 +288,3 @@ msgstr "11 cyfr dla CPF lub 14 cyfr dla CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partner [%s]"
-
-#~ msgid ""
-#~ "Connection with the VIES server failed. The VAT number %s could not be "
-#~ "validated."
-#~ msgstr ""
-#~ "Nie udało się połączyć z serwerem VIES. Nie można zweryfikować numeru VAT "
-#~ "%s."
-
-#~ msgid "The VAT number %s could not be interpreted by the VIES server."
-#~ msgstr "Numer VAT %s nie mógł zostać zinterpretowany przez serwer VIES."
-
-#~ msgid ""
-#~ "The request for VAT validation was not processed. VIES service has "
-#~ "responded with the following error: %s"
-#~ msgstr ""
-#~ "Wniosek o weryfikację VAT nie został przetworzony. Usługa VIES zwróciła "
-#~ "następujący błąd: %s"
-
-#~ msgid "17291716060 (NIN) or 1729171602 (VKN)"
-#~ msgstr "17291716060 (NIN) lub 1729171602 (VKN)"
-
-#~ msgid "Fiscal Position"
-#~ msgstr "Obszar podatkowy"
-
-#~ msgid ""
-#~ "If this checkbox is ticked, you will not be able to save a contact if its "
-#~ "VAT number cannot be verified by the European VIES service."
-#~ msgstr ""
-#~ "Jeśli to pole wyboru jest zaznaczone, nie będzie można zapisać kontaktu, "
-#~ "jeśli jego numer NIP nie może zostać zweryfikowany przez europejską "
-#~ "usługę VIES."
-
-#~ msgid ""
-#~ "Technical field display a message to the user if the VIES check fails."
-#~ msgstr ""
-#~ "Pole techniczne wyświetla komunikat dla użytkownika, jeśli sprawdzenie "
-#~ "VIES zakończy się niepowodzeniem."
-
-#~ msgid ""
-#~ "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
-#~ "Note: the expected format is %(expected_format)s"
-#~ msgstr ""
-#~ "%(vat_label)s liczba  [%(wrong_vat)s] nie wydaje się być prawidłowa. \n"
-#~ "Uwaga: oczekiwany format to %(expected_format)s"
-
-#~ msgid ""
-#~ "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not "
-#~ "seem to be valid. \n"
-#~ "Note: the expected format is %(expected_format)s"
-#~ msgstr ""
-#~ "%(vat_label)s liczba [%(wrong_vat)s] dla %(record_label)s nie wydaje się "
-#~ "być prawidłowa. \n"
-#~ "Uwaga: oczekiwany format to %(expected_format)s"
-
-#~ msgid "The VAT number %s failed the VIES VAT validation check."
-#~ msgstr ""
-#~ "Numer VAT %s nie przeszedł pomyślnie kontroli poprawności VAT w systemie "
-#~ "VIES."
-
-#~ msgid ""
-#~ "The country detected for this foreign VAT number does not match the one "
-#~ "set on this fiscal position."
-#~ msgstr ""
-#~ "Kraj wykryty dla tego zagranicznego numeru VAT nie jest zgodny z "
-#~ "ustawionym na tej pozycji fiskalnej."
-
-#~ msgid "fiscal position [%s]"
-#~ msgstr "pozycja fiskalna [%s]"

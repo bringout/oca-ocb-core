@@ -1,4 +1,5 @@
-import { Component, toRaw, useRef, useState } from "@odoo/owl";
+import { useRef, useState } from "@web/owl2/utils";
+import { Component, toRaw } from "@odoo/owl";
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -8,13 +9,13 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain } from "@web/model/relational_model/utils";
-import { Many2XAutocomplete, useOpenMany2XRecord } from "../relational_utils";
+import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 
 ///////////////////////////////////////////////////////////////////////////////
 // UTILS
 ///////////////////////////////////////////////////////////////////////////////
 
-function extractData(record) {
+export function extractData(record) {
     let name;
     if ("display_name" in record) {
         name = record.display_name;
@@ -58,7 +59,6 @@ export function computeM2OProps(fieldProps) {
         readonly: fieldProps.readonly,
         relation: fieldProps.record.fields[fieldProps.name].relation,
         searchThreshold: fieldProps.searchThreshold,
-        preventMemoization: fieldProps.preventMemoization,
         string: fieldProps.string || fieldProps.record.fields[fieldProps.name].string || "",
         update: (value, options = {}) =>
             fieldProps.record.update({ [fieldProps.name]: value }, options),
@@ -95,7 +95,6 @@ export class Many2One extends Component {
         relation: { type: String },
         searchMoreLabel: { type: String, optional: true },
         searchThreshold: { type: Number, optional: true },
-        preventMemoization: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
         specification: { type: Object, optional: true },
         string: { type: String, optional: true },
@@ -113,6 +112,7 @@ export class Many2One extends Component {
         domain: [],
         linkCssClass: "",
         nameCreateField: "name",
+        openActionContext: () => ({}),
         otherSources: [],
         placeholder: "",
         readonly: false,
@@ -175,7 +175,6 @@ export class Many2One extends Component {
             resModel: this.props.relation,
             searchMoreLabel: this.props.searchMoreLabel,
             searchThreshold: this.props.searchThreshold,
-            preventMemoization: this.props.preventMemoization,
             setInputFloats: (isFloating) => {
                 this.state.isFloating = isFloating;
             },
@@ -232,6 +231,10 @@ export class Many2One extends Component {
             ? this.props.relation
             : `m-${this.props.relation}`;
         return `/odoo/${relation}/${this.props.value.id}`;
+    }
+
+    onExtraLinesClick() {
+        this.rootRef.el?.querySelector(this.props.readonly ? ".o_form_uri" : "input").click();
     }
 
     async openBarcodeScanner() {

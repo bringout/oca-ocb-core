@@ -1,4 +1,5 @@
-import { onMounted, useComponent, useEffect, useExternalListener } from "@odoo/owl";
+import { useComponent, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { onMounted } from "@odoo/owl";
 
 export const scrollSymbol = Symbol("scroll");
 
@@ -39,7 +40,7 @@ export class CallbackRecorder {
  */
 export function useCallbackRecorder(callbackRecorder, callback) {
     const component = useComponent();
-    useEffect(
+    useLayoutEffect(
         () => {
             callbackRecorder.add(component, callback);
             return () => callbackRecorder.remove(component);
@@ -98,10 +99,8 @@ export function useSetupAction(params = {}) {
                 rootRef.el.scrollLeft = (scrolling.root && scrolling.root.left) || 0;
             } else if (scrolling.content) {
                 const contentEl =
-                    rootRef.el.querySelector(
-                        ".o_component_with_search_panel > .o_renderer_with_searchpanel," +
-                            ".o_component_with_search_panel > .o_renderer"
-                    ) || rootRef.el.querySelector(".o_content");
+                    rootRef.el.querySelector(".o_component_with_search_panel > .o_renderer") ||
+                    rootRef.el.querySelector(".o_content");
                 if (contentEl) {
                     contentEl.scrollTop = scrolling.content.top || 0;
                     contentEl.scrollLeft = scrolling.content.left || 0;
@@ -122,10 +121,8 @@ export function useSetupAction(params = {}) {
                     };
                 } else {
                     const contentEl =
-                        rootRef.el.querySelector(
-                            ".o_component_with_search_panel > .o_renderer_with_searchpanel," +
-                                ".o_component_with_search_panel > .o_renderer"
-                        ) || rootRef.el.querySelector(".o_content");
+                        rootRef.el.querySelector(".o_component_with_search_panel > .o_renderer") ||
+                        rootRef.el.querySelector(".o_content");
                     if (contentEl) {
                         state[scrollSymbol] = {
                             content: { left: contentEl.scrollLeft, top: contentEl.scrollTop },

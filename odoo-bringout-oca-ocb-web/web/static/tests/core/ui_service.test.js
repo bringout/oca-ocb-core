@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -43,7 +44,7 @@ test("a component can be the  UI active element: simple usage", async () => {
         static template = xml`
             <div>
                 <h1>My Component</h1>
-                <div t-if="hasRef" id="owner" t-ref="delegatedRef">
+                <div t-if="this.hasRef" id="owner" t-ref="delegatedRef">
                 <input type="text"/>
             </div>
             </div>
@@ -60,7 +61,7 @@ test("a component can be the  UI active element: simple usage", async () => {
     expect(getService("ui").activeElement).toBe(queryOne("#owner"));
     expect("#owner input").toBeFocused();
     comp.hasRef = false;
-    comp.render();
+    render(comp);
     await animationFrame();
     expect(getService("ui").activeElement).toBe(document);
     expect(document.body).toBeFocused();
@@ -188,9 +189,9 @@ test("UI active element: trap focus - first or last tabable changes", async () =
                 <input type="text" name="outer"/>
                 <div id="idActiveElement" t-ref="delegatedRef">
                     <div>
-                        <input type="text" name="a" t-if="show.a"/>
+                        <input type="text" name="a" t-if="this.show.a"/>
                         <input type="text" name="b"/>
-                        <input type="text" name="c" t-if="show.c"/>
+                        <input type="text" name="c" t-if="this.show.c"/>
                     </div>
                 </div>
             </div>

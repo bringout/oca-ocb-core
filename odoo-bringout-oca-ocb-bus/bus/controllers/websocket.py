@@ -2,7 +2,9 @@
 
 import json
 
-from odoo.http import Controller, request, route, SessionExpiredException
+from odoo.http import Controller, request, route
+from odoo.http.session import SessionExpiredException
+
 from ..models.bus import channel_with_db
 from ..websocket import WebsocketConnectionHandler
 
@@ -36,7 +38,6 @@ class WebsocketController(Controller):
         elif 'is_websocket_session' not in request.session:
             raise SessionExpiredException()
         subscribe_data = request.env["ir.websocket"]._prepare_subscribe_data(channels, last)
-        request.env["ir.websocket"]._after_subscribe_data(subscribe_data)
         channels_with_db = [channel_with_db(request.db, c) for c in subscribe_data["channels"]]
         notifications = request.env["bus.bus"]._poll(channels_with_db, subscribe_data["last"])
         return {"channels": channels_with_db, "notifications": notifications}

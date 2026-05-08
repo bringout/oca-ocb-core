@@ -1,4 +1,5 @@
-import { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, onWillStart, onWillUpdateProps, toRaw } from "@odoo/owl";
 import { CallbackRecorder, useSetupAction } from "@web/search/action_hook";
 import { SearchModel } from "@web/search/search_model";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -58,6 +59,7 @@ export class WithSearch extends Component {
                 field: useService("field"),
                 name: useService("name"),
                 dialog: useService("dialog"),
+                offline: useService("offline"),
                 treeProcessor: useService("tree_processor"),
             },
             this.props.searchModelArgs

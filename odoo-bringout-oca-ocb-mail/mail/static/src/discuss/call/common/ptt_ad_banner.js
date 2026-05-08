@@ -1,4 +1,5 @@
-import { Component, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
@@ -25,7 +26,7 @@ export class PttAdBanner extends Component {
     get isVisible() {
         return (
             !this.pttExtService.isEnabled &&
-            this.store.settings.use_push_to_talk &&
+            this.store.settings.usePushToTalk &&
             !isMobileOS() &&
             !this.state.wasDiscarded
         );

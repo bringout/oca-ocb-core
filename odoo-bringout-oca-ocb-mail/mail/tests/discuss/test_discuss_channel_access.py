@@ -5,11 +5,9 @@ from psycopg2.errors import UniqueViolation
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError
-from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
 
-@tagged("post_install", "-at_install")
 class TestDiscussChannelAccess(MailCommon):
     @classmethod
     def setUpClass(cls):
@@ -495,6 +493,17 @@ class TestDiscussChannelAccess(MailCommon):
             channel = DiscussChannel._create_channel("Channel", group_id=None)
             if membership == "member":
                 channel._add_members(users=user, guests=guest)
+        # Channel is added to the store, then the group is changed. In the case of
+        # `group_failing`, `other_user` is not allowed to read the channel anymore. If
+        # `Store.as_dict()` is called later to gather channel data, an access error is
+        # raised.
+        #
+        # Another issue is that the "unlink" tests create and unlink the channel in the
+        # same transaction which will lead to a missing error.
+        #
+        # This is unrelated to the scenarios being tested, clear the bus notification now
+        # thus preventing unrelated errors later on.
+        self._reset_bus()
         if channel_key == "no_group":
             channel.group_public_id = None
         elif channel_key == "group_matching":
@@ -502,10 +511,10 @@ class TestDiscussChannelAccess(MailCommon):
         elif channel_key == "group_failing":
             channel.group_public_id = self.env.ref("base.group_system")
         if sub_channel:
-            channel.sudo()._create_sub_channel()
-            channel = channel.sub_channel_ids[0]
+            channel = channel.sudo()._create_sub_channel()
             if membership == "member":
-                channel.sudo()._add_members(users=user, guests=guest)
+                channel._add_members(users=user, guests=guest)
+            self._reset_bus()
         return channel.id
 
     def _execute_action_channel(self, user_key, channel_key, membership, operation, result, for_sub_channel):
@@ -565,8 +574,8 @@ class TestDiscussChannelAccess(MailCommon):
             self.assertEqual(len(member), 1, "should find the target member")
             if operation == "read":
                 self.assertEqual(len(ChannelMemberAsUser.search(domain)), 1 if result else 0)
-                member.read(["custom_channel_name"])
+                member.read(["custom_notifications"])
             elif operation == "write":
-                member.write({"custom_channel_name": "new name"})
+                member.write({"custom_notifications": "mentions"})
             elif operation == "unlink":
                 member.unlink()

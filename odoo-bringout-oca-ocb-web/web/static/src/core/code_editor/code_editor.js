@@ -1,4 +1,5 @@
-import { Component, onMounted, onWillStart, useEffect, useRef, useState, status } from "@odoo/owl";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component, onMounted, onWillStart, status } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 
 export class CodeEditor extends Component {
@@ -10,6 +11,7 @@ export class CodeEditor extends Component {
             optional: true,
             validate: (mode) => CodeEditor.MODES.includes(mode),
         },
+        modeOptions: { type: Object, optional: true },
         value: { validate: (v) => typeof v === "string", optional: true },
         readonly: { type: Boolean, optional: true },
         onChange: { type: Function, optional: true },
@@ -24,6 +26,7 @@ export class CodeEditor extends Component {
         sessionId: { type: [Number, String], optional: true },
         initialCursorPosition: { type: Object, optional: true },
         showLineNumbers: { type: Boolean, optional: true },
+        lineWrapping: { type: Boolean, optional: true },
     };
     static defaultProps = {
         readonly: false,
@@ -35,7 +38,7 @@ export class CodeEditor extends Component {
         showLineNumbers: true,
     };
 
-    static MODES = ["javascript", "xml", "qweb", "scss", "python"];
+    static MODES = ["javascript", "xml", "qweb", "scss", "python", "json", "bash"];
     static THEMES = ["", "monokai"];
 
     setup() {
@@ -53,7 +56,7 @@ export class CodeEditor extends Component {
         // to notify the parent of changes done by the user, in the UI, so we
         // use this flag to filter out noisy "change" events.
         let ignoredAceChange = false;
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (!el) {
                     return;
@@ -67,6 +70,7 @@ export class CodeEditor extends Component {
                     maxLines: this.props.maxLines,
                     showPrintMargin: false,
                     useWorker: false,
+                    wrap: this.props.lineWrapping,
                 });
                 this.aceEditor.$blockScrolling = true;
 
@@ -100,12 +104,12 @@ export class CodeEditor extends Component {
             () => [this.editorRef.el]
         );
 
-        useEffect(
+        useLayoutEffect(
             (theme) => this.aceEditor.setTheme(theme ? `ace/theme/${theme}` : ""),
             () => [this.props.theme]
         );
 
-        useEffect(
+        useLayoutEffect(
             (readonly, showLineNumbers) => {
                 this.aceEditor.setOptions({
                     readOnly: readonly,
@@ -125,7 +129,7 @@ export class CodeEditor extends Component {
             () => [this.props.readonly, this.props.showLineNumbers]
         );
 
-        useEffect(
+        useLayoutEffect(
             (sessionId, mode, value) => {
                 let session = sessions[sessionId];
                 if (session) {
@@ -152,7 +156,7 @@ export class CodeEditor extends Component {
                     });
                     sessions[sessionId] = session;
                 }
-                session.setMode(mode ? `ace/mode/${mode}` : "");
+                session.setMode(this.aceMode);
                 this.aceEditor.setSession(session);
             },
             () => [this.props.sessionId, this.props.mode, this.props.value]
@@ -176,5 +180,16 @@ export class CodeEditor extends Component {
                 });
             });
         }
+    }
+
+    get aceMode() {
+        const mode = this.props.mode;
+        if (mode) {
+            return {
+                path: `ace/mode/${mode}`,
+                ...(this.props.modeOptions || {}),
+            };
+        }
+        return "";
     }
 }

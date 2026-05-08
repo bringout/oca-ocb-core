@@ -1,7 +1,7 @@
-import { fields, OR, Record } from "@mail/core/common/record";
+import { fields, OR, Record } from "@mail/model/export";
 import {
     convertBrToLineBreak,
-    getNonEditableMentions,
+    prepareBodyForEditing,
     prettifyMessageText,
 } from "@mail/utils/common/format";
 import { markup } from "@odoo/owl";
@@ -46,7 +46,7 @@ export class Composer extends Record {
     message = fields.One("mail.message");
     mentionedPartners = fields.Many("res.partner");
     mentionedRoles = fields.Many("res.role");
-    mentionedChannels = fields.Many("Thread");
+    mentionedChannels = fields.Many("discuss.channel");
     cannedResponses = fields.Many("mail.canned.response");
     isDirty = false;
     composerText = fields.Attr("", {
@@ -75,7 +75,7 @@ export class Composer extends Record {
         compute() {
             if (this.syncHtmlWithMessage) {
                 return (
-                    getNonEditableMentions(this.message.body) ||
+                    prepareBodyForEditing(this.message.body) ||
                     markup("<div class='o-paragraph'><br></div>")
                 );
             }
@@ -95,7 +95,7 @@ export class Composer extends Record {
             }
         },
     });
-    thread = fields.One("Thread");
+    thread = fields.One("mail.thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {
         start: 0,

@@ -16,8 +16,8 @@ class IrAttachment(models.Model):
 
     @api.depends("thumbnail")
     def _compute_has_thumbnail(self):
-        for attachment in self.with_context(bin_size=True):
-            attachment.has_thumbnail = bool(attachment.thumbnail)
+        for attachment in self:
+            attachment.has_thumbnail = bool(attachment.thumbnail.size)
 
     def _has_attachments_ownership(self, attachment_tokens):
         """ Checks if the current user has ownership of all attachments in the recordset.
@@ -86,25 +86,17 @@ class IrAttachment(models.Model):
             )
         self.unlink()
 
-    def _get_store_ownership_fields(self):
-        return [Store.Attr("ownership_token", lambda a: a._get_ownership_token())]
+    def _store_ownership_fields(self, res: Store.FieldList):
+        res.attr("ownership_token", lambda a: a._get_ownership_token())
 
-    def _to_store_defaults(self, target):
-        return [
-            "checksum",
-            "create_date",
-            "file_size",
-            "has_thumbnail",
-            "mimetype",
-            "name",
-            Store.Attr("raw_access_token", lambda a: a._get_raw_access_token()),
-            "res_name",
-            "res_model",
-            Store.One("thread", [], as_thread=True),
-            Store.Attr("thumbnail_access_token", lambda a: a._get_thumbnail_token()),
-            "type",
-            "url",
-        ]
+    def _store_attachment_fields(self, res: Store.FieldList, **kwargs):
+        res.extend(["checksum", "create_date", "file_size", "has_thumbnail", "mimetype", "name"])
+        res.attr("raw_access_token", lambda a: a._get_raw_access_token())
+        res.attr("res_name")
+        res.attr("res_model")
+        res.one("thread", [], as_thread=True)
+        res.attr("thumbnail_access_token", lambda a: a._get_thumbnail_token())
+        res.extend(["type", "url"])
 
     def _get_ownership_token(self):
         """ Returns a scoped limited access token that indicates ownership of the attachment when

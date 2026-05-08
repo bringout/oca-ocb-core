@@ -13,7 +13,6 @@ import re
 import sys
 import traceback
 import typing
-import warnings
 from collections.abc import Collection, Iterable, Mapping
 from os.path import join as opj
 
@@ -21,6 +20,9 @@ import odoo.addons
 import odoo.release as release
 import odoo.tools as tools
 import odoo.upgrade
+
+if typing.TYPE_CHECKING:
+    from unittest import TestCase
 
 try:
     from packaging.requirements import InvalidRequirement, Requirement
@@ -43,7 +45,6 @@ __all__ = [
     "get_manifest",
     "get_module_path",
     "get_modules",
-    "get_modules_with_version",
     "get_resource_from_path",
     "initialize_sys_path",
     "load_openerp_module",
@@ -74,6 +75,7 @@ _DEFAULT_MANIFEST = {
     'depends': [],
     'description': '',  # defaults to README file
     'external_dependencies': {},
+    'iap_paid_service': False,
     'init_xml': [],
     'installable': True,
     'images': [],  # website
@@ -107,8 +109,8 @@ TYPED_FIELD_DEFINITION_RE = re.compile(r'''
 
 _logger = logging.getLogger(__name__)
 
-current_test: bool = False
-"""Indicates whteher we are in a test mode"""
+current_test: TestCase | None = None
+"""The current test being run, if any"""
 
 
 class UpgradeHook:
@@ -395,22 +397,6 @@ def get_module_icon(module: str) -> str:
         return "/base/static/description/icon.png"
 
 
-def load_manifest(module: str, mod_path: str | None = None) -> dict:
-    """ Load the module manifest from the file system. """
-    warnings.warn("Since 19.0, use Manifest", DeprecationWarning)
-
-    if mod_path:
-        mod = Manifest._from_path(mod_path)
-        assert mod.path == mod_path
-    else:
-        mod = Manifest.for_addon(module)
-    if not mod:
-        _logger.debug('module %s: no manifest file found %s', module, MANIFEST_NAMES)
-        return {}
-
-    return dict(mod)
-
-
 def _load_manifest(module: str, manifest_content: dict) -> dict:
     """ Load and validate the module manifest.
 
@@ -540,12 +526,6 @@ def get_modules() -> list[str]:
     return [m.name for m in Manifest.all_addon_manifests()]
 
 
-def get_modules_with_version() -> dict[str, str]:
-    """Get the module list with the linked version."""
-    warnings.warn("Since 19.0, use Manifest.all_addon_manifests", DeprecationWarning)
-    return {m.name: m.version for m in Manifest.all_addon_manifests()}
-
-
 def adapt_version(version: str) -> str:
     """Reformat the version of the module into a canonical format."""
     version_str_parts = version.split('.')
@@ -602,7 +582,7 @@ def check_python_external_dependency(pydep: str) -> None:
         try:
             # keep compatibility with module name but log a warning instead of info
             importlib.import_module(pydep)
-            _logger.warning("python external dependency on '%s' does not appear o be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
+            _logger.warning("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
             return
         except ImportError:
             pass

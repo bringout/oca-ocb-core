@@ -1,20 +1,20 @@
+import { useChildSubEnv, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { ActionList } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
-import { ImStatus } from "@mail/core/common/im_status";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Thread } from "@mail/core/common/thread";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
-import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, toRaw, useChildSubEnv, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component, toRaw } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useBackButton, useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -29,11 +29,10 @@ export class ChatWindow extends Component {
     static components = {
         ActionList,
         CountryFlag,
+        DiscussAvatar,
         Dropdown,
         Thread,
         Composer,
-        ThreadIcon,
-        ImStatus,
         AutoresizeInput,
         Typing,
     };
@@ -44,7 +43,7 @@ export class ChatWindow extends Component {
         super.setup();
         useSubEnv({ inChatWindow: true });
         this.store = useService("mail.store");
-        this.messageHighlight = useMessageScrolling();
+        this.messageHighlight = useMessageScrolling({ thread: () => this.channel?.thread });
         this.state = useState({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
@@ -53,45 +52,34 @@ export class ChatWindow extends Component {
         });
         this.ui = useService("ui");
         this.contentRef = useRef("content");
-        this.threadActions = useThreadActions({ thread: () => this.thread });
+        this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");
         this.isMobileOS = isMobileOS();
 
-        useChildSubEnv({
-            closeActionPanel: () => this.threadActions.activeAction?.close(),
-            messageHighlight: this.messageHighlight,
-        });
-    }
-
-    get composerType() {
-        if (this.thread.model !== "discuss.channel") {
-            return "note";
-        }
-        return undefined;
+        useChildSubEnv({ messageHighlight: this.messageHighlight });
+        useBackButton(() => this.close());
     }
 
     get hasActionsMenu() {
+        const partition = this.threadActions.partition;
         return (
-            this.partitionedActions.group.length > 0 ||
-            this.partitionedActions.other.length > 0 ||
-            (this.ui.isSmall && this.partitionedActions.quick.length > 2) ||
-            (!this.ui.isSmall && this.partitionedActions.quick.length > 3)
+            partition.group.length > 0 ||
+            partition.other.length > 0 ||
+            (this.ui.isSmall && partition.quick.length > 2) ||
+            (!this.ui.isSmall && partition.quick.length > 3)
         );
     }
 
-    get thread() {
-        return this.props.chatWindow.thread;
-    }
-
-    get showImStatus() {
-        return this.thread?.channel_type === "chat" && this.thread.correspondent;
+    get channel() {
+        return this.props.chatWindow.channel;
     }
 
     get attClass() {
         return {
             "w-100 h-100 o-mobile": this.ui.isSmall,
-            "o-rounded-bubble border border-dark mb-2": !this.ui.isSmall,
+            "o-rounded-bubble border border-dark o-border-opacity-15 mb-2": !this.ui.isSmall,
+            "o-highlighted": this.props.chatWindow.highlighted,
         };
     }
 
@@ -106,7 +94,7 @@ export class ChatWindow extends Component {
     onKeydown(ev) {
         const chatWindow = toRaw(this.props.chatWindow);
         if (ev.key === "Escape" && this.threadActions.activeAction) {
-            this.threadActions.activeAction.close();
+            this.threadActions.activeAction.actionPanelClose();
             ev.stopPropagation();
             return;
         }
@@ -149,7 +137,7 @@ export class ChatWindow extends Component {
             this.ui.isSmall ||
             this.state.editingName ||
             this.props.chatWindow.actionsDisabled ||
-            isEventHandled(ev, "ThreadAction.onSelected")
+            isEventHandled(ev, "Action.onSelected")
         ) {
             return;
         }
@@ -165,24 +153,23 @@ export class ChatWindow extends Component {
     }
 
     close(options) {
-        const chatWindow = toRaw(this.props.chatWindow);
-        chatWindow.close(options);
+        this.props.chatWindow.requestClose(options);
     }
 
     get actionsMenuTitleText() {
         return _t("Open Actions Menu");
     }
 
-    async renameThread(name) {
-        const thread = toRaw(this.thread);
-        await thread.rename(name);
+    async renameChannel(name) {
+        const channel = toRaw(this.channel);
+        await channel.rename(name);
         this.state.editingName = false;
     }
 
     async renameGuest(name) {
         const newName = name.trim();
-        if (this.store.self.name !== newName) {
-            await this.store.self.updateGuestName(newName);
+        if (this.store.self_guest.name !== newName) {
+            await this.store.self_guest.updateGuestName(newName);
         }
         this.state.editingGuestName = false;
     }
@@ -190,5 +177,8 @@ export class ChatWindow extends Component {
     async onActionsMenuStateChanged(isOpen) {
         // await new Promise(setTimeout); // wait for bubbling header
         this.state.actionsMenuOpened = isOpen;
+    }
+    get showBlankBeforeComposerHiddenText() {
+        return true;
     }
 }

@@ -7,9 +7,17 @@
                 <form string="Model Description" duplicate="0">
                   <header><!-- used for override --></header>
                   <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Sales Order"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="explanation" placeholder="Provide a verbose explanation of the model's purpose..."/>
+                    </group>
                     <group>
                         <group>
-                            <field name="name"/>
                             <field name="model" readonly="id"/>
                             <field name="order"/>
                             <field name="abstract" readonly="id" groups="base.group_no_one"/>
@@ -70,9 +78,9 @@
                                                         invisible="ttype != 'many2one'"
                                                         readonly="ttype != 'many2one'"/>
                                                     <field name="relation_field"
-                                                        invisible="ttype != 'one2many'"
+                                                        invisible="ttype != 'one2many' or related or compute"
                                                         readonly="ttype != 'one2many'"
-                                                        required="ttype == 'one2many'"/>
+                                                        required="ttype == 'one2many' and not related and not compute"/>
                                                     <field name="relation_table" groups="base.group_no_one"
                                                         invisible="ttype != 'many2many' or state != 'manual'"
                                                         readonly="ttype != 'many2many' or state != 'manual'"/>
@@ -97,7 +105,7 @@
                                                 </field>
                                             </group>
                                         </page>
-                                        <page name="compute" string="Compute" groups="base.group_no_one">
+                                        <page name="compute" string="Compute" groups="base.group_no_one" invisible="ttype == 'one2many' and relation_field">
                                             <group>
                                                 <field name="related"/>
                                                 <field name="depends" required="compute not in [False, '']"/>
@@ -172,6 +180,7 @@
                             </field>
                         </page>
                         <page string="Notes" name="notes" groups="base.group_no_one">
+                            <separator string="Information"/>
                             <field name="info"/>
                         </page>
                         <page string="Views" name="views" groups="base.group_no_one">
@@ -213,7 +222,6 @@
             <field name="context">{}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
-        <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
 
         <!-- ir model fields -->
         <record id="view_model_fields_form" model="ir.ui.view">
@@ -262,9 +270,13 @@
                                             invisible="ttype != 'many2one'"
                                             readonly="ttype != 'many2one'"/>
                                         <field name="relation_field"
-                                            invisible="ttype != 'one2many'"
+                                            invisible="ttype != 'one2many' or related or compute"
                                             readonly="ttype != 'one2many'"
-                                            required="ttype == 'one2many'"/>
+                                            required="ttype == 'one2many' and not related and not compute"/>
+                                        <field name="relation_model_field"
+                                            invisible="ttype != 'many2one_reference'"
+                                            readonly="ttype != 'many2one_reference'"
+                                            required="ttype == 'many2one_reference'"/>
                                         <field name="relation_table" groups="base.group_no_one"
                                             invisible="ttype != 'many2many' or state != 'manual'"
                                             readonly="ttype != 'many2many' or state != 'manual'"/>
@@ -322,7 +334,7 @@
                                     </field>
                                 </group>
                             </page>
-                            <page name="compute" string="Compute" groups="base.group_no_one">
+                            <page name="compute" string="Compute" groups="base.group_no_one" invisible="ttype == 'one2many' and relation_field">
                                 <group>
                                     <field name="related"/>
                                     <field name="depends" required="bool(compute) and store"/>
@@ -411,7 +423,6 @@
             <field name="context">{}</field>
             <field name="view_id" ref="view_model_fields_tree"/>
         </record>
-        <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
 
         <!-- ir model fields selection -->
         <record id="view_model_fields_selection_form" model="ir.ui.view">
@@ -459,7 +470,6 @@
             <field name="res_model">ir.model.fields.selection</field>
             <field name="view_id" ref="view_model_fields_selection_tree"/>
         </record>
-        <menuitem action="action_model_fields_selection" id="ir_model_model_fields_selection" parent="base.next_id_9"/>
 
         <!-- ir model data -->
         <record model="ir.ui.view" id="view_model_data_form">
@@ -522,9 +532,6 @@
             <field name="res_model">ir.model.data</field>
             <field name="view_id" ref="view_model_data_list"/>
         </record>
-        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_custom" sequence="21" groups="base.group_no_one"/>
-        <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
-                  groups="base.group_no_one"/>
 
         <!-- ir model contraints -->
         <record model="ir.ui.view" id="view_model_constraint_form">
@@ -579,8 +586,6 @@
             <field name="view_id" ref="view_model_constraint_list"/>
             <field name="search_view_id" ref="view_model_constraint_search"/>
         </record>
-        <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_9"
-                  groups="base.group_no_one"/>
 
         <!-- ir model relations -->
         <record model="ir.ui.view" id="view_model_relation_form">
@@ -612,9 +617,6 @@
             <field name="res_model">ir.model.relation</field>
             <field name="view_id" ref="view_model_relation_list"/>
         </record>
-        <menuitem action="action_model_relation" id="ir_model_relation_menu" parent="base.next_id_9"
-                  groups="base.group_no_one"/>
-
         <!-- ir.model.access -->
         <record id="ir_access_view_tree" model="ir.ui.view">
             <field name="name">ir.model.access.view.list</field>
@@ -690,7 +692,7 @@
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
-                    <group colspan="11" col="11" groups="base.group_no_one">
+                    <group groups="base.group_no_one">
                         <filter string="Group" name="group" domain="[]" context="{'group_by': 'group_id'}"/>
                         <filter string="Model" name="group_by_object" domain="[]" context="{'group_by': 'model_id'}"/>
                     </group>
@@ -704,6 +706,4 @@
             <field name="view_id" ref="ir_access_view_tree_edition"/>
             <field name="search_view_id" ref="ir_access_view_search"/>
         </record>
-        <menuitem action="ir_access_act" id="menu_ir_access_act" parent="base.menu_security"/>
-
 </odoo>
