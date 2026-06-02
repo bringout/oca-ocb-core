@@ -748,7 +748,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel"
-msgstr "Otkaži"
+msgstr "Odustani"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -812,7 +812,7 @@ msgstr "Obuka material."
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
 msgid "Config Settings"
-msgstr "Podešavanja konfiguracije"
+msgstr "Postavke konfiguracije"
 
 # taken from hr.po
 #. module: event
@@ -952,7 +952,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
 msgid "Display Name"
-msgstr "Naziv za prikaz"
+msgstr "Naziv prikaza"
 
 # taken from hr.po
 #. module: event
@@ -999,8 +999,7 @@ msgid "Email Schedule"
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_mail__template_id
-#: model:ir.model.fields,field_description:event.field_event_type_mail__template_id
+#: model:ir.model,name:event.model_mail_template
 msgid "Email Template"
 msgstr "Predložak email-a"
 
@@ -1384,19 +1383,19 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm____last_update
 msgid "Last Modified on"
-msgstr "Zadnja izmjena"
+msgstr "Zadnji put izmijenjeno"
 
 # taken from hr.po
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
 msgid "Last Updated by"
-msgstr "Zadnji ažurirao"
+msgstr "Zadnji put ažurirao"
 
 # taken from hr.po
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_date
 msgid "Last Updated on"
-msgstr "Zadnje ažurirano"
+msgstr "Zadnji put ažurirano"
 
 #. module: event
 #: selection:event.event,seats_availability:0
@@ -4465,7 +4464,7 @@ msgstr "Napomena"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Notes"
-msgstr "Zabilješke"
+msgstr "Napomene"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -8291,3 +8290,51 @@ msgstr "rezervirano"
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
 msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
+
+#. module: event
+#: code:addons/event/models/event_slot.py:0
+msgid ""
+"A slot cannot be scheduled outside of its event time range.\n"
+"\n"
+"Event:\t%(event_start_date)s, %(event_start_time)s - %(event_end_date)s, %(event_end_time)s\n"
+"Slot:\t%(slot_name)s"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_plans_ids
+msgid "Activity Plans"
+msgstr "Planovi aktivnosti"
+
+#. module: event
+#: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
+msgid ""
+"Adding these slots will automatically adjust the event's time range to include them.\n"
+"\n"
+"From:\t%(start)s - %(end)s\n"
+"To:\t\t%(new_start)s - %(new_end)s\n"
+msgstr ""
+
+#. module: event
+#: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
+msgid "Confirmation"
+msgstr ""
+
+#. module: event
+#: model:ir.model,name:event.model_digest_digest
+msgid "Digest"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_digest_digest__kpi_nbr_of_registrations_value
+msgid "Kpi Nbr Of Registrations Value"
+msgstr ""
+
+#. module: event
+#: code:addons/event/static/src/views/event_slot/calendar/event_slot_multi_selection_buttons.xml:0
+msgid "Select days to add slots"
+msgstr ""
+
+#. module: event
+#: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
+msgid "Update Event"
+msgstr ""
