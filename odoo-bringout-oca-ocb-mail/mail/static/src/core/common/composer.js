@@ -90,6 +90,7 @@ export class Composer extends Component {
         Wysiwyg,
     };
     static defaultProps = {
+        autofocus: 0,
         mode: "normal",
         className: "",
         sidebar: true,
@@ -611,6 +612,7 @@ export class Composer extends Component {
             clicked_on_full_composer: true,
             body_contains_signature_only: !this.props.composer.composerText || this.props.composer.composerText.trim().length === 0,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
+            is_thread_composer: true,
             ...this.fullComposerAdditionalContext,
         };
         const action = {
@@ -628,10 +630,6 @@ export class Composer extends Component {
                 // args === { special: true } : click on 'discard'
                 const accidentalDiscard = args?.dismiss;
                 const isDiscard = accidentalDiscard || args?.special;
-                // otherwise message is posted (args === [undefined])
-                if (!isDiscard && this.props.composer.thread.model === "mail.box") {
-                    this.notifySendFromMailbox();
-                }
                 if (accidentalDiscard) {
                     this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
                         onAccidentalDiscard: (isEmpty) => {
@@ -679,9 +677,7 @@ export class Composer extends Component {
     }
 
     notifySendFromMailbox() {
-        this.env.services.notification.add(_t('Message posted on "%s"', this.thread.displayName), {
-            type: "info",
-        });
+        this.store.notifySendFromMailbox(this.thread.displayName);
     }
 
     isEventTrusted(ev) {

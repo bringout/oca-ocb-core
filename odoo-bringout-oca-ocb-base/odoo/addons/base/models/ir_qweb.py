@@ -391,6 +391,7 @@ from psycopg2.extensions import TransactionRollbackError
 from psycopg2.errors import ReadOnlySqlTransaction
 from typing import NamedTuple, Literal
 from types import FunctionType
+from urllib.parse import unquote_plus
 
 from odoo import api, models, tools
 from odoo.modules import Manifest
@@ -486,7 +487,8 @@ T_CALL_SLOT = '0'
 ETREE_TEMPLATE_REF = count()
 
 # Only allow a javascript scheme if it is followed by [ ][window.]history.back()
-MALICIOUS_SCHEMES = re.compile(r'javascript:(?!( ?)((window\.)?)history\.back\(\)$)', re.I).findall
+MALICIOUS_SCHEMES = re.compile(r'javascript:(?!((window\.)?)history\.back\(\)$)', re.I).findall
+WHITESPACE_REGEX = re.compile(r'[\s\x00-\x08\x0B\x0C\x0E-\x19]+')
 
 
 def _id_or_xmlid(ref):
@@ -614,12 +616,21 @@ class QwebContent:
     params__: QwebCallParameters  # not available for the python expression inside the xml
 
     def __init__(self, irQweb: IrQweb, params: QwebCallParameters):
-        self.irQweb = irQweb
+        self.__irQweb = irQweb
         self.html = None
         self.params__ = params
 
+    @property
+    def irQweb(self):
+        irQweb = self.__irQweb
+        if threading.current_thread().dbname != irQweb.env.cr.dbname:
+            return None
+        return irQweb
+
     def __str__(self):
         if self.html is None:
+            if self.irQweb is None:
+                return ''
             params = self.params__
             self.html = ''.join(self.irQweb._render_iterall(
                params.view_ref, params.method, params.values, params.directive,
@@ -1179,8 +1190,9 @@ class IrQweb(models.AbstractModel):
         if value.get('error'):
             raise value['error']
 
-        # In dev mode `_generate_code_cached` is not cached and the tree can be processed several times
-        value_tree = deepcopy(value['tree']) if 'xml' in tools.config['dev_mode'] else value['tree']
+        # The compiled template cache can evict entries during a render, causing
+        # the same preloaded tree to be processed several times.
+        value_tree = deepcopy(value['tree'])
         # return etree, document and ref
         return (value_tree, value['template'], value['ref'])
 
@@ -2713,7 +2725,10 @@ class IrQweb(models.AbstractModel):
 
             @returns dict
         """
-        if not atts.pop('__is_static_node', False) and (href := atts.get('href')) and MALICIOUS_SCHEMES(str(href)):
+        if atts.pop('__is_static_node', False):
+            return atts
+        href = str(atts.get('href') or '')
+        if MALICIOUS_SCHEMES(WHITESPACE_REGEX.sub('', unquote_plus(href))):
             atts['href'] = ""
         return atts
 
