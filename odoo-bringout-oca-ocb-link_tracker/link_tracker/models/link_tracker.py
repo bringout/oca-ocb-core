@@ -11,9 +11,9 @@ from werkzeug import urls
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.addons.mail.tools import link_preview
 
 LINK_TRACKER_MIN_CODE_LENGTH = 3
-URL_MAX_SIZE = 10 * 1024 * 1024
 
 
 class LinkTracker(models.Model):
@@ -59,15 +59,12 @@ class LinkTracker(models.Model):
 
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
-        if self.ids:
-            clicks_data = self.env['link.tracker.click']._read_group(
-                [('link_id', 'in', self.ids)],
-                ['link_id'],
-                ['link_id']
-            )
-            mapped_data = {m['link_id'][0]: m['link_id_count'] for m in clicks_data}
-        else:
-            mapped_data = dict()
+        clicks_data = self.env['link.tracker.click']._read_group(
+            [('link_id', 'in', self.ids)],
+            ['link_id'],
+            ['__count'],
+        )
+        mapped_data = {link.id: count for link, count in clicks_data}
         for tracker in self:
             tracker.count = mapped_data.get(tracker.id, 0)
 
@@ -110,27 +107,20 @@ class LinkTracker(models.Model):
                     attr = attr.name
                 if attr:
                     query[key] = attr
-            tracker.redirected_url = parsed.replace(query=urls.url_encode(query)).to_url()
+
+            query = urls.url_encode(query)
+            # '...' is detected as malicious by some nginx
+            # configuration, encoding it solve the issue
+            query = query.replace('...', '%2E%2E%2E')
+            tracker.redirected_url = parsed.replace(query=query).to_url()
 
     @api.model
     @api.depends('url')
     def _get_title_from_url(self, url):
-        try:
-            head = requests.head(url, allow_redirects=True, timeout=5)
-            if (
-                    int(head.headers.get('Content-Length', 0)) > URL_MAX_SIZE
-                    or
-                    'text/html' not in head.headers.get('Content-Type', 'text/html')
-            ):
-                return url
-            # HTML parser can work with a part of page, so ask server to limit downloading to 50 KB
-            page = requests.get(url, timeout=5, headers={"range": "bytes=0-50000"})
-            p = html.fromstring(page.text.encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
-            title = p.find('.//title').text
-        except:
-            title = url
-
-        return title
+        preview = link_preview.get_link_preview_from_url(url)
+        if preview and preview.get('og_title'):
+            return preview['og_title']
+        return url
 
     @api.constrains('url', 'campaign_id', 'medium_id', 'source_id')
     def _check_unicity(self):
@@ -292,7 +282,7 @@ class LinkTrackerClick(models.Model):
     _description = "Link Tracker Click"
 
     campaign_id = fields.Many2one(
-        'utm.campaign', 'UTM Campaign',
+        'utm.campaign', 'UTM Campaign', index='btree_not_null',
         related="link_id.campaign_id", store=True, ondelete="set null")
     link_id = fields.Many2one(
         'link.tracker', 'Link',
@@ -311,11 +301,6 @@ class LinkTrackerClick(models.Model):
         """ Main API to add a click on a link. """
         tracker_code = self.env['link.tracker.code'].search([('code', '=', code)])
         if not tracker_code:
-            return None
-
-        ip = route_values.get('ip', False)
-        existing = self.search_count(['&', ('link_id', '=', tracker_code.link_id.id), ('ip', '=', ip)])
-        if existing:
             return None
 
         route_values['link_id'] = tracker_code.link_id.id

@@ -9,7 +9,7 @@ import logging
 import odoo
 import werkzeug
 
-from odoo import http
+from odoo import _, http
 from odoo.http import request
 from werkzeug.exceptions import NotFound
 
@@ -27,6 +27,8 @@ class Authenticate(http.Controller):
          old route name "/mail_client_extension/auth is deprecated as of saas-14.3,it is not needed for newer
          versions of the mail plugin but necessary for supporting older versions
          """
+        if not request.env.user._is_internal():
+            return request.render('mail_plugin.app_error', {'error': _('Access Error: Only Internal Users can link their inboxes to this database.')})
         return request.render('mail_plugin.app_auth', values)
 
     @http.route(['/mail_client_extension/auth/confirm', '/mail_plugin/auth/confirm'], type='http', auth="user", methods=['POST'])
@@ -52,6 +54,12 @@ class Authenticate(http.Controller):
             params.update({'success': 0, 'state': kw.get('state', '')})
         updated_redirect = parsed_redirect.replace(query=werkzeug.urls.url_encode(params))
         return request.redirect(updated_redirect.to_url(), local=False)
+
+    @http.route(['/mail_plugin/auth/check_version'], type='json', auth="none", cors="*",
+                methods=['POST', 'OPTIONS'])
+    def auth_check_version(self):
+        """Allow to know if the module is installed and which addin version is supported."""
+        return 1
 
     # In this case, an exception will be thrown in case of preflight request if only POST is allowed.
     @http.route(['/mail_client_extension/auth/access_token', '/mail_plugin/auth/access_token'], type='json', auth="none", cors="*",

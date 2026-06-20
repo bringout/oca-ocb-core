@@ -12,7 +12,7 @@ class WebSocketMock extends EventTarget {
 
         queueMicrotask(() => {
             this.readyState = 1;
-            const openEv = new Event('open');
+            const openEv = new Event("open");
             this.onopen(openEv);
             this.dispatchEvent(openEv);
         });
@@ -20,7 +20,7 @@ class WebSocketMock extends EventTarget {
 
     close(code = 1000, reason) {
         this.readyState = 3;
-        const closeEv = new CloseEvent('close', {
+        const closeEv = new CloseEvent("close", {
             code,
             reason,
             wasClean: code === 1000,
@@ -35,7 +35,7 @@ class WebSocketMock extends EventTarget {
 
     send(data) {
         if (this.readyState !== 1) {
-            const errorEv = new Event('error');
+            const errorEv = new Event("error");
             this.onerror(errorEv);
             this.dispatchEvent(errorEv);
             throw new DOMException("Failed to execute 'send' on 'WebSocket': State is not OPEN");
@@ -53,7 +53,7 @@ class SharedWorkerMock extends EventTarget {
         this._messageChannel.port2.start();
         this._websocketWorker.registerClient(this._messageChannel.port2);
     }
-  }
+}
 
 class WorkerMock extends SharedWorkerMock {
     constructor(websocketWorker) {
@@ -64,6 +64,7 @@ class WorkerMock extends SharedWorkerMock {
 }
 
 let websocketWorker;
+QUnit.testDone(() => (websocketWorker = null));
 /**
  * @param {*} params Parameters used to patch the websocket worker.
  * @returns {WebsocketWorker} Instance of the worker which will run during the
@@ -75,9 +76,15 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
         WebSocket: function () {
             return new WebSocketMock();
         },
-    }, { pure: true });
-    patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
+        // Browser can't be imported in the worker bundle, but intervals should
+        // be cleared during tests.
+        setInterval: browser.setInterval.bind(browser),
+        clearInterval: browser.clearInterval.bind(browser),
+    });
     websocketWorker = websocketWorker || new WebsocketWorker();
+    patchWithCleanup(websocketWorker, params);
+    websocketWorker.INITIAL_RECONNECT_DELAY = 0;
+    websocketWorker.RECONNECT_JITTER = 0;
     patchWithCleanup(browser, {
         SharedWorker: function () {
             const sharedWorker = new SharedWorkerMock(websocketWorker);
@@ -95,7 +102,7 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
             });
             return worker;
         },
-    }, { pure: true });
+    });
     registerCleanup(() => {
         if (websocketWorker) {
             clearTimeout(websocketWorker.connectTimeout);

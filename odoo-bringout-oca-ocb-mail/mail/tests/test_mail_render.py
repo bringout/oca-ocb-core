@@ -98,6 +98,13 @@ class TestMailRenderCommon(common.MailCommon):
     <span>Autre Narrateur</span>
 </p>"""
         ]
+        cls.base_rendered_void = [
+            '<p>Hello</p>',
+            '<p>Hello </p>',
+            """<p>
+    <span>English Speaker</span>
+</p>"""
+        ]
 
         # link to mail template
         cls.test_template = cls.env['mail.template'].create({
@@ -201,6 +208,43 @@ class TestMailRender(TestMailRenderCommon):
             self.assertEqual(rendered, expected)
 
     @users('employee')
+    def test_render_field_no_records(self):
+        """ Test rendering on void IDs, or a list with dummy / falsy ID """
+        template = self.test_template.with_env(self.env)
+        partner = self.render_object.with_env(self.env)
+        for res_ids in ([], (), [False], [''], [None], [False, partner.id]):  # various corner cases
+            for fname, expected_obj, expected_void in zip(['subject', 'body_html'], self.base_rendered, self.base_rendered_void):
+                with self.subTest():
+                    rendered_all = template._render_field(
+                        fname,
+                        res_ids,
+                        compute_lang=True
+                    )
+                    if res_ids:
+                        self.assertTrue(res_ids[0] in rendered_all,
+                                        f'Rendering: key {repr(res_ids[0])} is considered as valid and should have an entry')
+                        self.assertEqual(rendered_all[res_ids[0]], expected_void)
+                    if len(res_ids) == 2:  # second is partner
+                        self.assertTrue(res_ids[1] in rendered_all)
+                        self.assertEqual(rendered_all[res_ids[1]], expected_obj)
+                    if not res_ids:
+                        self.assertFalse(rendered_all,
+                                         'Rendering: void input -> void output')
+
+    @users('employee')
+    def test_render_field_not_existing(self):
+        """ Test trying to render a not-existing field: raise a proper ValueError
+        instead of crashing / raising a KeyError """
+        template = self.env['mail.template'].browse(self.test_template.ids)
+        partner = self.env['res.partner'].browse(self.render_object_fr.ids)
+        with self.assertRaises(ValueError):
+            _rendered = template._render_field(
+                'not_existing',
+                partner.ids,
+                compute_lang=True
+            )[partner.id]
+
+    @users('employee')
     def test_render_template_inline_template(self):
         partner = self.env['res.partner'].browse(self.render_object.ids)
         for source, expected in zip(self.base_inline_template_bits, self.base_rendered):
@@ -219,7 +263,7 @@ class TestMailRender(TestMailRenderCommon):
         partner_ids = self.env['res.partner'].sudo().create([{
             'name': f'test partner {n}'
         } for n in range(20)]).ids
-        with patch('odoo.models.Model.get_base_url', new=_mock_get_base_url), self.assertQueryCount(7):
+        with patch('odoo.models.Model.get_base_url', new=_mock_get_base_url), self.assertQueryCount(8):
             # make sure name isn't already in cache
             self.env['res.partner'].browse(partner_ids).invalidate_recordset(['name', 'display_name'])
             render_results = self.env['mail.render.mixin']._render_template(
@@ -227,7 +271,7 @@ class TestMailRender(TestMailRenderCommon):
                 'res.partner',
                 partner_ids,
                 engine='inline_template',
-                post_process=True,
+                options={'post_process': True},
             )
         Partner = self.env['res.partner'].with_prefetch(partner_ids)
         for partner_id, render_result in render_results.items():

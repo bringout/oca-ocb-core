@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* data_recycle
-# 
+#
 # Translators:
-# Martin Trigaux, 2022
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: data_recycle
@@ -78,7 +78,7 @@ msgstr "配置規則以標識要清理的記錄"
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_uid
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立人員"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_date
@@ -93,15 +93,21 @@ msgstr "資料清理"
 
 #. module: data_recycle
 #: model:ir.actions.server,name:data_recycle.ir_cron_clean_records_ir_actions_server
-#: model:ir.cron,cron_name:data_recycle.ir_cron_clean_records
 msgid "Data Recycle: Clean Records"
 msgstr "數據回收：乾淨的記錄"
+
+#. module: data_recycle
+#. odoo-python
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+#, python-format
+msgid "Data to Recycle"
+msgstr "待回收數據"
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__days
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__days
 msgid "Days"
-msgstr "天數"
+msgstr "天"
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__unlink
@@ -149,18 +155,12 @@ msgstr "篩選"
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__id
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__id
 msgid "ID"
-msgstr "ID"
+msgstr "識別號"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__include_archived
 msgid "Include Archived"
 msgstr "包括已封存"
-
-#. module: data_recycle
-#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model____last_update
-#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record____last_update
-msgid "Last Modified on"
-msgstr "最後修改於"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__last_notification
@@ -357,7 +357,7 @@ msgstr "取消選擇"
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
 #, python-format
 msgid "Validate"
-msgstr "驗證"
+msgstr "核實"
 
 #. module: data_recycle
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification

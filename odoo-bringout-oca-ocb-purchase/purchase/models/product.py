@@ -70,8 +70,8 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids),
             ('order_id.date_approve', '>=', date_from)
         ]
-        order_lines = self.env['purchase.order.line']._read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
-        purchased_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in order_lines])
+        order_lines = self.env['purchase.order.line']._read_group(domain, ['product_id'], ['product_uom_qty:sum'])
+        purchased_data = {product.id: qty for product, qty in order_lines}
         for product in self:
             if not product.id:
                 product.purchased_product_qty = 0.0
@@ -92,6 +92,10 @@ class ProductSupplierinfo(models.Model):
     def _onchange_partner_id(self):
         self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.company.currency_id.id
 
+    def _get_filtered_supplier(self, company_id, product_id, params):
+        if params and 'order_id' in params and params['order_id'].company_id:
+            company_id = params['order_id'].company_id
+        return super()._get_filtered_supplier(company_id, product_id, params)
 
 class ProductPackaging(models.Model):
     _inherit = 'product.packaging'

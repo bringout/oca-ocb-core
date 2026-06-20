@@ -1,32 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-# 
+#
 # Translators:
-# Martin Trigaux, 2023
+# Wil Odoo, 2023
+# Fabian Liesch <fabian.liesch@gmail.com>, 2023
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
+#: code:addons/resource/models/resource_resource.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"o_stat_text\">Time Off</span>"
+msgstr "<span class=\"o_stat_text\">Abwesenheit</span>"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"o_stat_text\">Work Resources</span>"
+msgstr "<span class=\"o_stat_text\">Arbeitsressourcen</span>"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
@@ -40,6 +51,7 @@ msgid "Afternoon"
 msgstr "Nachmittag"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -49,7 +61,7 @@ msgstr "Archiviert"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid ""
-"Are you sure you want to switch this calendar to 1 week calendar ? All "
+"Are you sure you want to switch this calendar to 1 week calendar? All "
 "entries will be lost"
 msgstr ""
 "Sind Sie sicher, dass Sie diesen Kalender auf einen 1-Wochen-Kalender "
@@ -58,7 +70,7 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid ""
-"Are you sure you want to switch this calendar to 2 weeks calendar ? All "
+"Are you sure you want to switch this calendar to 2 weeks calendar? All "
 "entries will be lost"
 msgstr ""
 "Sind Sie sicher, dass Sie diesen Kalender auf einen 2-Wochen-Kalender "
@@ -66,7 +78,7 @@ msgstr ""
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Attendances can't overlap."
 msgstr "Die Anwesenheitszeiten dürfen sich nicht überschneiden."
@@ -83,6 +95,11 @@ msgid ""
 msgstr ""
 "Durchschnittliche Stunden pro Tag, die eine Ressource mit diesem Kalender "
 "arbeiten soll."
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
+msgid "Break"
+msgstr "Pause"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
@@ -127,6 +144,11 @@ msgid "Created on"
 msgstr "Erstellt am"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Date"
+msgstr "Datum"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
 msgid "Day Period"
 msgstr "Tageszeitraum"
@@ -165,6 +187,16 @@ msgid "Display Type"
 msgstr "Anzeigetyp"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_days
+msgid "Duration (days)"
+msgstr "Dauer (Tage)"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_hours
+msgid "Duration (hours)"
+msgstr "Dauer (Stunden)"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
 msgid "Efficiency Factor"
 msgstr "Effizienzfaktor"
@@ -187,7 +219,7 @@ msgstr "Erste"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "First week"
 msgstr "Erste Woche"
@@ -199,14 +231,21 @@ msgstr "Freitag"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Afternoon"
 msgstr "Freitagnachmittag"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Friday Lunch"
+msgstr "Mittagessen am Freitag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Friday Morning"
 msgstr "Freitagmorgen"
@@ -215,8 +254,7 @@ msgstr "Freitagmorgen"
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
 msgstr ""
-"Gibt die Sequenz dieser Zeile an, wenn der Ressourcenkalender angezeigt "
-"wird."
+"Gibt die Sequenz dieser Zeile an, wenn der Ressourcenkalender angezeigt wird."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -278,21 +316,13 @@ msgstr ""
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr ""
 "In einem Kalender mit 2-Wochen-Modus müssen alle Zeiträume in den "
 "Abschnitten enthalten sein."
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar____last_update
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance____last_update
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves____last_update
-#: model:ir.model.fields,field_description:resource.field_resource_resource____last_update
-msgid "Last Modified on"
-msgstr "Letzte Änderung am"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -311,17 +341,6 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-msgid "Leave Date"
-msgstr "Urlaubsdatum"
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
-msgid "Leave Detail"
-msgstr "Abwesenheitsdetail"
-
-#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__material
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Material"
@@ -334,14 +353,21 @@ msgstr "Montag"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Afternoon"
 msgstr "Montagnachmittag"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Monday Lunch"
+msgstr "Mittagessen am Montag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Monday Morning"
 msgstr "Montagmorgen"
@@ -473,7 +499,7 @@ msgstr "Zweite"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "Second week"
 msgstr "Zweite Woche"
@@ -516,8 +542,8 @@ msgstr "Startdatum"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-msgid "Starting Date of Leave"
-msgstr "Beginn des Urlaubs"
+msgid "Starting Date of Time Off"
+msgstr "Beginn der Abwesenheit"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -541,14 +567,14 @@ msgstr "Technisches Feld für Benutzererlebniszwecke."
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "The current week (from %s to %s) correspond to the  %s one."
 msgstr "Die aktuelle Woche (von %s bis %s) entspricht %s."
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
 msgstr "Das Startdatum der Abwesenheit muss vor dem Enddatum liegen."
@@ -584,14 +610,21 @@ msgstr "Donnerstag"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Afternoon"
 msgstr "Donnerstagnachmittag"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Thursday Lunch"
+msgstr "Mittagessen am Donnerstag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Thursday Morning"
 msgstr "Donnerstagmorgen"
@@ -599,9 +632,14 @@ msgstr "Donnerstagmorgen"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__leave
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Time Off"
 msgstr "Abwesenheiten"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+msgid "Time Off Detail"
+msgstr "Abwesenheitsdetails"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -632,14 +670,21 @@ msgstr "Dienstag"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Afternoon"
 msgstr "Dienstagnachmittag"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Tuesday Lunch"
+msgstr "Mittagessen am Dienstag"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Tuesday Morning"
 msgstr "Dienstagmorgen"
@@ -664,14 +709,21 @@ msgstr "Mittwoch"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Afternoon"
 msgstr "Mittwochnachmittag"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
+#, python-format
+msgid "Wednesday Lunch"
+msgstr "Mittagessen am Mittwoch"
+
+#. module: resource
+#. odoo-python
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Wednesday Morning"
 msgstr "Mittwochmorgen"
@@ -684,8 +736,7 @@ msgstr "Kalenderwoche"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
-"Whether this should be computed as a time off or as work time (eg: "
-"formation)"
+"Whether this should be computed as a time off or as work time (eg: formation)"
 msgstr ""
 "Ob diese Zeit als Abwesenheit oder als Arbeitszeit (z. B. Ausbildung) "
 "berechnet werden soll"
@@ -694,11 +745,6 @@ msgstr ""
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
 msgstr "Arbeitsdetail"
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "Work Resources"
-msgstr "Arbeitsressourcen"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
@@ -720,10 +766,16 @@ msgstr "Arbeitsstunden"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "Working Hours of %s"
 msgstr "Arbeitsstunden von %s"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+msgid "Working Schedules"
+msgstr "Arbeitspläne"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
@@ -738,42 +790,36 @@ msgid "Working Time"
 msgstr "Arbeitszeit"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: model:ir.ui.menu,name:resource.menu_resource_calendar
-msgid "Working Times"
-msgstr "Arbeitszeiten"
-
-#. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "You can't delete section between weeks."
 msgstr "Sie können keine Abschnitte zwischen den Wochen löschen."
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "first"
 msgstr "erste"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "other week"
 msgstr "andere Woche"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar.py:0
 #, python-format
 msgid "second"
 msgstr "Sekunde"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
+#: code:addons/resource/models/resource_calendar_attendance.py:0
 #, python-format
 msgid "this week"
 msgstr "diese Woche"

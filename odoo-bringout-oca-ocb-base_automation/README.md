@@ -1,10 +1,10 @@
-# Automated Action Rules
+# Automation Rules
 
 
-This module allows to implement action rules for any object.
-============================================================
+This module allows to implement automation rules for any object.
+================================================================
 
-Use automated actions to automatically trigger actions for various screens.
+Use automation rules to automatically trigger actions for various screens.
 
 **Example:** A lead created by a specific user may be automatically set to a specific
 Sales Team, or an opportunity which still has status pending after 14 days might
@@ -19,37 +19,17 @@ pip install odoo-bringout-oca-ocb-base_automation
 
 ## Dependencies
 
-This addon depends on:
 - base
 - resource
 - mail
-
-## Manifest Information
-
-- **Name**: Automated Action Rules
-- **Version**: 1.0
-- **Category**: Sales/Sales
-- **License**: LGPL-3
-- **Installable**: False
+- sms
 
 ## Source
 
-Based on [OCA/OCB](https://github.com/OCA/OCB) branch 16.0, addon `base_automation`.
+- Repository: https://github.com/OCA/OCB
+- Branch: 17.0
+- Path: addons/base_automation
 
 ## License
 
-This package maintains the original LGPL-3 license from the upstream Odoo project.
-
-## Documentation
-
-- Overview: doc/OVERVIEW.md
-- Architecture: doc/ARCHITECTURE.md
-- Models: doc/MODELS.md
-- Controllers: doc/CONTROLLERS.md
-- Wizards: doc/WIZARDS.md
-- Install: doc/INSTALL.md
-- Usage: doc/USAGE.md
-- Configuration: doc/CONFIGURATION.md
-- Dependencies: doc/DEPENDENCIES.md
-- Troubleshooting: doc/TROUBLESHOOTING.md
-- FAQ: doc/FAQ.md
+This package preserves the original LGPL-3 license.

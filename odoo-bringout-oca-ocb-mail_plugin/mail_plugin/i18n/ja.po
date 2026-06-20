@@ -1,26 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mail_plugin
-# 
+#
 # Translators:
-# Martin Trigaux, 2022
-# Noma Yuki, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Wil Odoo, 2024
 # Junko Augias, 2025
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mail_plugin
@@ -29,6 +27,16 @@ msgstr ""
 #, python-format
 msgid "%s employees"
 msgstr "%s従業員 "
+
+#. module: mail_plugin
+#. odoo-python
+#: code:addons/mail_plugin/controllers/authenticate.py:0
+#, python-format
+msgid ""
+"Access Error: Only Internal Users can link their inboxes to this database."
+msgstr ""
+"アクセスエラー:  このデータベースに受信トレイをリンクできるのは内部ユーザのみ"
+"です。"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -43,7 +51,7 @@ msgstr "連絡先をデータベースに追加"
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Address"
-msgstr "アドレス"
+msgstr "住所"
 
 #. module: mail_plugin
 #: model_terms:ir.ui.view,arch_db:mail_plugin.app_auth
@@ -71,7 +79,8 @@ msgstr "年間収益"
 msgid ""
 "Attachments could not be logged in Odoo because their total size exceeded "
 "the allowed maximum."
-msgstr "添付ファイルの合計サイズが許容上限を超えたため、Odooに記録できませんでした。"
+msgstr ""
+"添付ファイルの合計サイズが許容上限を超えたため、Odooに記録できませんでした。"
 
 #. module: mail_plugin
 #. odoo-python
@@ -193,7 +202,8 @@ msgstr "連絡先が見つかりました (%(count)s)"
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Could not autocomplete the company. Internal error. Try again later..."
-msgstr "会社を自動入力できませんでした。内部エラーです。後で再試行して下さい..."
+msgstr ""
+"会社を自動入力できませんでした。内部エラーです。後で再試行して下さい..."
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -408,11 +418,6 @@ msgid "Keywords"
 msgstr "キーワード"
 
 #. module: mail_plugin
-#: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap____last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
-
-#. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__write_uid
 msgid "Last Updated by"
 msgstr "最終更新者"
@@ -477,7 +482,7 @@ msgstr "アクセス権なし"
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "No additional insights were found for this company"
-msgstr "この会社用に追加の洞察は見つかりませんでした"
+msgstr "この会社用に追加のインサイトは見つかりませんでした"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -505,7 +510,9 @@ msgstr "この連絡先にリンクしている企業は、エンリッチでき
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "No company linked to this contact could be enriched or found in Odoo"
-msgstr "この連絡先にリンクしている企業は、エンリッチできない、またはOdooで見つかりませんでした"
+msgstr ""
+"この連絡先にリンクしている企業は、エンリッチできない、またはOdooで見つかりま"
+"せんでした"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -533,7 +540,7 @@ msgstr "追加の情報が見つかりません"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "No insights for this company."
-msgstr "この会社への洞察はありません"
+msgstr "この会社へのインサイトはありません"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -582,14 +589,16 @@ msgstr "パートナーのIAPは1人につき1つのみ許可されます"
 msgid ""
 "Oops, looks like you have exhausted your free enrichment requests. Please "
 "log in to try again."
-msgstr "無料エンリッチメントリクエストを使い果たしたようです。ログインして再度お試し下さい。"
+msgstr ""
+"無料エンリッチメントリクエストを使い果たしたようです。ログインして再度お試し"
+"下さい。"
 
 #. module: mail_plugin
 #. odoo-javascript
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Our IAP server is down, please come back later."
-msgstr "IAPサーバーがダウンしているので、後で戻ってきて下さい。"
+msgstr "IAPサーバーがダウンしているため、後で戻ってきて下さい。"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -634,7 +643,7 @@ msgstr "続きを読む"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Refresh"
-msgstr "更新"
+msgstr "リフレッシュ"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -747,7 +756,8 @@ msgstr "この連絡先はOdooのデータベースに存在しません。"
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "This contact has no email address, no company could be enriched."
-msgstr "この連絡先にはEメールアドレスがなく、エンリッチできる会社はありません。"
+msgstr ""
+"この連絡先にはEメールアドレスがなく、エンリッチできる会社はありません。"
 
 #. module: mail_plugin
 #. odoo-python
@@ -756,15 +766,16 @@ msgstr "この連絡先にはEメールアドレスがなく、エンリッチ�
 msgid ""
 "This is your notification address. Search the Contact manually to link this "
 "email to a record."
-msgstr "これはあなたの通知アドレスです。このメールをレコードにリンクするには、手動で連絡先を検索します。"
+msgstr ""
+"これはあなたの通知アドレスです。このメールをレコードにリンクするには、手動で"
+"連絡先を検索します。"
 
 #. module: mail_plugin
 #. odoo-python
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
-#: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "This partner does not exist"
-msgstr "この取引先はそんざいしません"
+msgstr "この取引先は存在しません"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -773,7 +784,9 @@ msgstr "この取引先はそんざいしません"
 msgid ""
 "Warning: Attachments could not be logged in Odoo because their total size "
 "exceeded the allowed maximum."
-msgstr "警告: 添付ファイルの合計サイズが許容上限を超えたため、Odooに記録できませんでした。"
+msgstr ""
+"警告: 添付ファイルの合計サイズが許容上限を超えたため、Odooに記録できませんで"
+"した。"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -783,8 +796,8 @@ msgid ""
 "Warning: Could not fetch the attachments %(attachments)s as their sizes are "
 "bigger then the maximum size of %(size)sMB per each attachment."
 msgstr ""
-"警告: "
-"添付ファイル%(attachments)sのサイズが各添付ファイルの最大サイズ%(size)sMBを超えているため、添付ファイルを取得できませんでした。"
+"警告: 添付ファイル%(attachments)sのサイズが各添付ファイルの最大サイ"
+"ズ%(size)sMBを超えているため、添付ファイルを取得できませんでした。"
 
 #. module: mail_plugin
 #. odoo-javascript

@@ -31,8 +31,7 @@ class MailBlackListMixin(models.AbstractModel):
     _primary_email = 'email'
 
     email_normalized = fields.Char(
-        string='Normalized Email', compute="_compute_email_normalized", compute_sudo=True,
-        store=True, invisible=True,
+        string='Normalized Email', compute="_compute_email_normalized", compute_sudo=True, store=True,
         help="This field is used to search on email address as the primary email field can contain more than strictly an email address.")
     # Note : is_blacklisted sould only be used for display. As the compute is not depending on the blacklist,
     # once read, it won't be re-computed again if the blacklist is modified in the same request.
@@ -86,7 +85,7 @@ class MailBlackListMixin(models.AbstractModel):
     def _compute_is_blacklisted(self):
         # TODO : Should remove the sudo as compute_sudo defined on methods.
         # But if user doesn't have access to mail.blacklist, doen't work without sudo().
-        blacklist = set(self.env['mail.blacklist'].sudo().search([
+        blacklist = set(self.env['mail.blacklist'].sudo().with_context(active_test=True).search([
             ('email', 'in', self.mapped('email_normalized'))]).mapped('email'))
         for record in self:
             record.is_blacklisted = record.email_normalized in blacklist

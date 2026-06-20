@@ -39,8 +39,10 @@ class LoyaltyReward(models.Model):
             ('per_order', _('%s per order', symbol))
         ]
 
-    def name_get(self):
-        return [(reward.id, '%s - %s' % (reward.program_id.name, reward.description)) for reward in self]
+    @api.depends('program_id', 'description')
+    def _compute_display_name(self):
+        for reward in self:
+            reward.display_name = f'{reward.program_id.name} - {reward.description}'
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one('loyalty.program', required=True, ondelete='cascade')
@@ -195,7 +197,7 @@ class LoyaltyReward(models.Model):
                 elif len(products) == 1:
                     reward_string = _('Free Product - %s', reward.reward_product_id.with_context(display_default_code=False).display_name)
                 else:
-                    reward_string = _('Free Product - [%s]', ', '.join(products._origin.with_context(display_default_code=False).mapped('display_name')))
+                    reward_string = _('Free Product - [%s]', ', '.join(products.with_context(display_default_code=False).mapped('display_name')))
             elif reward.reward_type == 'discount':
                 format_string = '%(amount)g %(symbol)s'
                 if reward.currency_id.position == 'before':

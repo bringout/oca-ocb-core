@@ -8,6 +8,7 @@ import pytz
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -62,7 +63,7 @@ class MailActivityMixin(models.AbstractModel):
              'Today: Activity date is today\nPlanned: Future activities.')
     activity_user_id = fields.Many2one(
         'res.users', 'Responsible User',
-        related='activity_ids.user_id', readonly=False,
+        compute='_compute_activity_user_id', readonly=True,
         search='_search_activity_user_id',
         groups="base.group_user")
     activity_type_id = fields.Many2one(
@@ -111,6 +112,11 @@ class MailActivityMixin(models.AbstractModel):
             record.activity_exception_decoration = exception_activity_type_id and exception_activity_type_id.decoration_type
             record.activity_exception_icon = exception_activity_type_id and exception_activity_type_id.icon
 
+    @api.depends('activity_ids.user_id')
+    def _compute_activity_user_id(self):
+        for record in self:
+            record.activity_user_id = record.activity_ids[0].user_id if record.activity_ids else False
+
     def _search_activity_exception_decoration(self, operator, operand):
         return [('activity_ids.activity_type_id.decoration_type', operator, operand)]
 
@@ -157,6 +163,7 @@ class MailActivityMixin(models.AbstractModel):
 
         search_states_int = {integer_state_value.get(s or False) for s in search_states}
 
+        self.env['mail.activity'].flush_model(['active', 'date_deadline', 'res_model', 'user_id'])
         query = """
           SELECT res_id
             FROM (
@@ -176,7 +183,7 @@ class MailActivityMixin(models.AbstractModel):
                     ON res_users.id = mail_activity.user_id
              LEFT JOIN res_partner
                     ON res_partner.id = res_users.partner_id
-                 WHERE mail_activity.res_model = %(res_model_table)s
+                 WHERE mail_activity.res_model = %(res_model_table)s AND mail_activity.active = true 
               GROUP BY res_id
             ) AS res_record
           WHERE %(search_states_int)s @> ARRAY[activity_state]
@@ -204,7 +211,9 @@ class MailActivityMixin(models.AbstractModel):
 
     @api.model
     def _search_activity_user_id(self, operator, operand):
-        return [('activity_ids.user_id', operator, operand)]
+        if isinstance(operand, bool) and ((operator == '=' and not operand) or (operator == '!=' and operand)):
+            return [('activity_ids', '=', False)]
+        return [('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])]
 
     @api.model
     def _search_activity_type_id(self, operator, operand):
@@ -226,6 +235,7 @@ class MailActivityMixin(models.AbstractModel):
 
     def _search_my_activity_date_deadline(self, operator, operand):
         activity_ids = self.env['mail.activity']._search([
+            ('active', '=', True),  # never overdue if "done"
             ('date_deadline', operator, operand),
             ('res_model', '=', self._name),
             ('user_id', '=', self.env.user.id)
@@ -244,84 +254,45 @@ class MailActivityMixin(models.AbstractModel):
         """ Override unlink to delete records activities through (res_model, res_id). """
         record_ids = self.ids
         result = super(MailActivityMixin, self).unlink()
-        self.env['mail.activity'].sudo().search(
+        self.env['mail.activity'].with_context(active_test=False).sudo().search(
             [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
         ).unlink()
         return result
 
-    def _read_progress_bar(self, domain, group_by, progress_bar):
-        group_by_fname = group_by.partition(':')[0]
-        if not (progress_bar['field'] == 'activity_state' and self._fields[group_by_fname].store):
-            return super()._read_progress_bar(domain, group_by, progress_bar)
+    def _read_group_groupby(self, groupby_spec, query):
+        if groupby_spec != 'activity_state':
+            return super()._read_group_groupby(groupby_spec, query)
 
-        # optimization for 'activity_state'
-
-        # explicitly check access rights, since we bypass the ORM
-        self.check_access_rights('read')
-        self._flush_search(domain, fields=[group_by_fname], order='id')
         self.env['mail.activity'].flush_model(['res_model', 'res_id', 'user_id', 'date_deadline'])
         self.env['res.users'].flush_model(['partner_id'])
         self.env['res.partner'].flush_model(['tz'])
 
-        query = self._where_calc(domain)
-        self._apply_ir_rules(query, 'read')
-        gb = group_by.partition(':')[0]
-        annotated_groupbys = [
-            self._read_group_process_groupby(gb, query)
-            for gb in [group_by, 'activity_state']
-        ]
-        groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
-        for gb in annotated_groupbys:
-            if gb['field'] == 'activity_state':
-                gb['qualified_field'] = '"_last_activity_state"."activity_state"'
-        groupby_terms, _orderby_terms = self._read_group_prepare('activity_state', [], annotated_groupbys, query)
-        select_terms = [
-            '%s as "%s"' % (gb['qualified_field'], gb['groupby'])
-            for gb in annotated_groupbys
-        ]
-        from_clause, where_clause, where_params = query.get_sql()
-        tz = self._context.get('tz') or self.env.user.tz or 'UTC'
-        select_query = """
-            SELECT 1 AS id, count(*) AS "__count", {fields}
-            FROM {from_clause}
-            JOIN (
-                SELECT res_id,
+        tz = 'UTC'
+        if self.env.context.get('tz') in pytz.all_timezones_set:
+            tz = self.env.context['tz']
+
+        sql_join = SQL(
+            """
+            (SELECT res_id,
                 CASE
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) > 0 THEN 'planned'
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) < 0 THEN 'overdue'
-                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) = 0 THEN 'today'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))))) > 0 THEN 'planned'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))))) < 0 THEN 'overdue'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(res_partner.tz, %(tz)s))))) = 0 THEN 'today'
                     ELSE null
                 END AS activity_state
-                FROM mail_activity
-                JOIN res_users ON (res_users.id = mail_activity.user_id)
-                JOIN res_partner ON (res_partner.id = res_users.partner_id)
-                WHERE res_model = '{model}'
-                GROUP BY res_id
-            ) AS "_last_activity_state" ON ("{table}".id = "_last_activity_state".res_id)
-            WHERE {where_clause}
-            GROUP BY {group_by}
-        """.format(
-            fields=', '.join(select_terms),
-            from_clause=from_clause,
-            model=self._name,
-            table=self._table,
-            where_clause=where_clause or '1=1',
-            group_by=', '.join(groupby_terms),
+            FROM mail_activity
+            JOIN res_users ON (res_users.id = mail_activity.user_id)
+            JOIN res_partner ON (res_partner.id = res_users.partner_id)
+            WHERE res_model = %(res_model)s AND mail_activity.active = true
+            GROUP BY res_id)
+            """,
+            res_model=self._name,
+            today_utc=pytz.utc.localize(datetime.utcnow()),
+            tz=tz,
         )
-        num_from_params = from_clause.count('%s')
-        where_params[num_from_params:num_from_params] = [tz] * 3 # timezone after from parameters
-        self.env.cr.execute(select_query, where_params)
-        fetched_data = self.env.cr.dictfetchall()
-        self._read_group_resolve_many2x_fields(fetched_data, annotated_groupbys)
-        data = [
-            {key: self._read_group_prepare_data(key, val, groupby_dict)
-             for key, val in row.items()}
-            for row in fetched_data
-        ]
-        return [
-            self._read_group_format_result(vals, annotated_groupbys, [group_by], domain)
-            for vals in data
-        ]
+        alias = query.left_join(self._table, "id", sql_join, "res_id", "last_activity_state")
+
+        return SQL.identifier(alias, 'activity_state'), ['activity_state']
 
     def toggle_active(self):
         """ Before archiving the record we should also remove its ongoing
@@ -342,11 +313,10 @@ class MailActivityMixin(models.AbstractModel):
         template = self.env['mail.template'].browse(template_id).exists()
         if not template:
             return False
-        for record in self:
-            record.message_post_with_template(
-                template_id,
-                composition_mode='comment'
-            )
+        self.message_post_with_source(
+            template,
+            subtype_xmlid='mail.mt_comment',
+        )
         return True
 
     def activity_search(self, act_type_xmlids='', user_id=None, additional_domain=None):
@@ -388,6 +358,9 @@ class MailActivityMixin(models.AbstractModel):
         It is useful to avoid having various "env.ref" in the code and allow
         to let the mixin handle access rights.
 
+        Note that unless specified otherwise in act_values, the activities created
+        will have their "automated" field set to True.
+
         :param date_deadline: the day the activity must be scheduled on
         the timezone of the user must be considered to set the correct deadline
         """
@@ -400,13 +373,19 @@ class MailActivityMixin(models.AbstractModel):
             _logger.warning("Scheduled deadline should be a date (got %s)", date_deadline)
         if act_type_xmlid:
             activity_type_id = self.env['ir.model.data']._xmlid_to_res_id(act_type_xmlid, raise_if_not_found=False)
-            if activity_type_id:
-                activity_type = self.env['mail.activity.type'].browse(activity_type_id)
-            else:
-                activity_type = self._default_activity_type()
         else:
             activity_type_id = act_values.get('activity_type_id', False)
-            activity_type = self.env['mail.activity.type'].browse(activity_type_id) if activity_type_id else self.env['mail.activity.type']
+        activity_type = self.env['mail.activity.type'].browse(activity_type_id)
+        invalid_model = activity_type.res_model and activity_type.res_model != self._name
+        if not activity_type or invalid_model:
+            if invalid_model:
+                _logger.warning(
+                    'Invalid activity type model %s used on %s (tried with xml id %s)',
+                    activity_type.res_model, self._name, act_type_xmlid or '',
+                )
+            # TODO master: reset invalid model to default type, keep it for stable as not harmful
+            if not activity_type:
+                activity_type = self._default_activity_type()
 
         model_id = self.env['ir.model']._get(self._name).id
         create_vals_list = []

@@ -206,6 +206,10 @@ class Groups(models.Model):
     def _check_one_user_type(self):
         self.users._check_one_user_type()
 
+    @api.constrains('view_access')
+    def _check_inherited_view_groups(self):
+        self.view_access._check_groups()
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_settings_group(self):
         classified = self.env['res.config.settings']._get_classified_fields()
@@ -542,12 +546,16 @@ class Users(models.Model):
     def onchange_parent_id(self):
         return self.partner_id.onchange_parent_id()
 
+    @property
+    def USER_PRIVATE_FIELDS(self):
+        return list(USER_PRIVATE_FIELDS)
+
     def _fetch_query(self, query, fields):
         records = super()._fetch_query(query, fields)
-        if not set(USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
+        if not set(self.USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
             if self.check_access_rights('write', raise_exception=False):
                 return records
-            for fname in USER_PRIVATE_FIELDS:
+            for fname in self.USER_PRIVATE_FIELDS:
                 self.env.cache.update(records, self._fields[fname], repeat('********'))
         return records
 
@@ -655,14 +663,14 @@ class Users(models.Model):
     @api.model
     def _read_group_check_field_access_rights(self, field_names):
         super()._read_group_check_field_access_rights(field_names)
-        if set(field_names).intersection(USER_PRIVATE_FIELDS):
+        if set(field_names).intersection(self.USER_PRIVATE_FIELDS):
             raise AccessError(_("Invalid 'group by' parameter"))
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         if not self.env.su and domain:
             domain_fields = {term[0] for term in domain if isinstance(term, (tuple, list))}
-            if domain_fields.intersection(USER_PRIVATE_FIELDS):
+            if domain_fields.intersection(self.USER_PRIVATE_FIELDS):
                 raise AccessError(_('Invalid search criterion'))
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
@@ -763,6 +771,7 @@ class Users(models.Model):
     def _unlink_except_master_data(self):
         portal_user_template = self.env.ref('base.template_portal_user_id', False)
         default_user_template = self.env.ref('base.default_user', False)
+        public_user = self.env.ref('base.public_user', False)
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
@@ -771,6 +780,8 @@ class Users(models.Model):
         self.env.registry.clear_cache()
         if (portal_user_template and portal_user_template in self) or (default_user_template and default_user_template in self):
             raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
+        if public_user and public_user in self:
+            raise UserError(_("Deleting the public user is not allowed. Deleting this profile will compromise critical functionalities."))
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -850,7 +861,7 @@ class Users(models.Model):
     def _get_invalidation_fields(self):
         return {
             'groups_id', 'active', 'lang', 'tz', 'company_id', 'company_ids',
-            *USER_PRIVATE_FIELDS,
+            *self.USER_PRIVATE_FIELDS,
             *self._get_session_token_fields()
         }
 

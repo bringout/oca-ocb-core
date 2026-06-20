@@ -1,26 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* utm
-# 
+#
 # Translators:
-# surapas haemaprasertsuk <surapas@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
+# Wil Odoo, 2023
 # Rasareeyar Lappiam, 2024
-# Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: utm
@@ -31,6 +28,7 @@ msgid "%(content)s (%(model_description)s created on %(create_date)s)"
 msgstr "%(content)s (%(model_description)s สร้างเมื่อวันที่ %(create_date)s)"
 
 #. module: utm
+#: model:ir.model.fields,field_description:utm.field_utm_campaign__active
 #: model:ir.model.fields,field_description:utm.field_utm_medium__active
 msgid "Active"
 msgstr "เปิดใช้งาน"
@@ -55,7 +53,14 @@ msgid "Approved"
 msgstr "อนุมัติแล้ว"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Archive"
+msgstr "เก็บถาวร"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Archived"
 msgstr "เก็บถาวรแล้ว"
 
@@ -119,6 +124,11 @@ msgid ""
 msgstr "แคมเปญใช้เพื่อรวมศูนย์การตลาดของคุณและติดตามผลลัพธ์"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "Campaigns that are assigned to me"
+msgstr "แคมเปญที่มอบหมายให้ฉัน"
+
+#. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
 msgid "Christmas Special"
 msgstr "คริสต์มาสสเปเชียล"
@@ -146,7 +156,7 @@ msgstr "การเขียนโฆษณา"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Create a Medium"
-msgstr "สร้างสื่อกลาง"
+msgstr "สร้างวิธีที่เข้ามา"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
@@ -210,7 +220,6 @@ msgstr "ปรับใช้"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_2
 #, python-format
 msgid "Design"
@@ -228,21 +237,14 @@ msgstr "แสดงชื่อ"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Done"
 msgstr "เสร็จสิ้น"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
-msgid "Dropdown menu"
-msgstr "เมนูดรอปดาว์น"
-
-#. module: utm
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Edit"
-msgstr "การแก้ไข"
+msgstr "แก้ไข"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
@@ -275,9 +277,7 @@ msgstr "รวบรวมข้อมูล"
 msgid ""
 "Gather data, build a recipient list and write content based on your "
 "Marketing target."
-msgstr ""
-"รวบรวมข้อมูล สร้างรายชื่อผู้รับ "
-"และเขียนเนื้อหาอิงตามเป้าหมายทางการตลาดของคุณ"
+msgstr "รวบรวมข้อมูล สร้างรายชื่อผู้รับ และเขียนเนื้อหาอิงตามเป้าหมายทางการตลาดของคุณ"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
@@ -301,19 +301,9 @@ msgstr "ไอดี"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Ideas"
 msgstr "แนวคิด"
-
-#. module: utm
-#: model:ir.model.fields,field_description:utm.field_utm_campaign____last_update
-#: model:ir.model.fields,field_description:utm.field_utm_medium____last_update
-#: model:ir.model.fields,field_description:utm.field_utm_source____last_update
-#: model:ir.model.fields,field_description:utm.field_utm_stage____last_update
-#: model:ir.model.fields,field_description:utm.field_utm_tag____last_update
-msgid "Last Modified on"
-msgstr "แก้ไขครั้งล่าสุดเมื่อ"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
@@ -361,24 +351,30 @@ msgstr "การตลาด"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
-msgstr "สื่อกลาง"
+msgstr "วิธีที่เข้ามา"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
 msgid "Medium Name"
-msgstr "ชื่อกลาง"
+msgstr "ชื่อวิธีที่เข้ามา"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "Mediums"
-msgstr "สื่อกลาง"
+msgstr "วิธีที่เข้ามา"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
+msgid "My Campaigns"
+msgstr "แคมเปญของฉัน"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
 #: model:ir.model.fields,field_description:utm.field_utm_stage__name
 #: model:ir.model.fields,field_description:utm.field_utm_tag__name
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 msgid "Name"
 msgstr "ชื่อ"
 
@@ -413,9 +409,7 @@ msgstr "เตรียมแคมเปญและได้รับการ
 msgid ""
 "Prepare your Campaign, test it with part of your audience and deploy it "
 "fully afterwards."
-msgstr ""
-"เตรียมแคมเปญของคุณ ทดสอบกับผู้ชมบางส่วนของคุณ "
-"และปรับใช้อย่างเต็มที่ในภายหลัง"
+msgstr "เตรียมแคมเปญของคุณ ทดสอบกับผู้ชมบางส่วนของคุณ และปรับใช้อย่างเต็มที่ในภายหลัง"
 
 #. module: utm
 #. odoo-javascript
@@ -431,8 +425,12 @@ msgid "Responsible"
 msgstr "รับผิดชอบ"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Restore"
+msgstr "คืนค่า"
+
+#. module: utm
 #. odoo-javascript
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Review"
@@ -458,11 +456,10 @@ msgstr "กำหนดเวลา"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Search UTM Medium"
-msgstr "ค้นหาสื่อกลาง UTM"
+msgstr "ค้นหาวิธีที่เข้ามา UTM"
 
 #. module: utm
 #. odoo-javascript
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Send"
@@ -470,7 +467,6 @@ msgstr "ส่ง"
 
 #. module: utm
 #. odoo-javascript
-#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_3
 #, python-format
@@ -522,6 +518,7 @@ msgid "Stage"
 msgstr "ขั้นตอน"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_search
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_tree
 msgid "Stages"
@@ -530,11 +527,11 @@ msgstr "สถานะ"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
 msgid ""
-"Stages allow you to organize your workflow  (e.g. : plan, design, in "
-"progress,  done, …)."
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress, "
+"done, …)."
 msgstr ""
-"ขั้นตอนช่วยให้คุณจัดระเบียบเวิร์กโฟลว์ของคุณ (เช่น : วางแผน การออกแบบ "
-"อยู่ระหว่างดำเนินการ เสร็จสิ้น …)"
+"ขั้นตอนช่วยให้คุณสามารถจัดระเบียบเวิร์กโฟลว์ของคุณได้ (เช่น แผน การออกแบบ กำลังดำเนินการ "
+"เสร็จแล้ว …)"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
@@ -542,16 +539,16 @@ msgid ""
 "Tag color. No color means no display in kanban to distinguish internal tags "
 "from public categorization tags."
 msgstr ""
-"แท็กสี "
-"ไม่มีสีหมายความว่าไม่มีการแสดงในคัมบังเพื่อแยกแท็กภายในออกจากแท็กการจัดหมวดหมู่สาธารณะ"
+"แท็กสี ไม่มีสีหมายความว่าไม่มีการแสดงในคัมบังเพื่อแยกแท็กภายในออกจากแท็กการจัดหมวดหมู่สาธารณะ"
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
-msgid "Tag name already exists !"
-msgstr "ชื่อแท็กนี้มีอยู่แล้ว!"
+msgid "Tag name already exists!"
+msgstr "มีชื่อแท็กแล้ว!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
+#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Tags"
 msgstr "แท็ก"
 
@@ -563,8 +560,7 @@ msgid ""
 "The UTM medium '%s' cannot be deleted as it is used in some main functional "
 "flows, such as the recruitment and the mass mailing."
 msgstr ""
-"ไม่สามารถลบวิธีที่เข้ามา UTM '%s' ได้ "
-"เนื่องจากถูกใช้ในขั้นตอนการทำงานหลักบางอย่าง เช่น "
+"ไม่สามารถลบวิธีที่เข้ามา UTM '%s' ได้ เนื่องจากถูกใช้ในขั้นตอนการทำงานหลักบางอย่าง เช่น "
 "การสรรหาบุคลากรและการส่งไปรษณีย์จำนวนมาก"
 
 #. module: utm
@@ -591,24 +587,22 @@ msgstr "สัปดาห์นี้"
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts, "
+"e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"ชื่อนี้ช่วยให้คุณติดตามความพยายามของแคมเปญต่าง ๆ เช่น Fall_Drive, "
-"Christmas_Special"
+"ชื่อนี้ช่วยให้คุณติดตามความพยายามของแคมเปญต่าง ๆ เช่น Fall_Drive, Christmas_Special"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "นี้เป็นวิธีการจัดส่งเช่น โปสการ์ด อีเมล หรือโฆษณาแบนเนอร์"
+msgstr "นี้เป็นวิธีการจัดส่งเช่น โปสการ์ด อีเมล หรือป้ายโฆษณา"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr ""
-"นี่เป็นที่มาของลิงก์ เช่น เครื่องมือค้นหา โดเมนอื่นๆ หรือชื่อรายการอีเมล"
+msgstr "นี่เป็นที่มาของลิงก์ เช่น เครื่องมือค้นหา โดเมนอื่นๆ หรือชื่อรายการอีเมล"
 
 #. module: utm
 #. odoo-javascript
@@ -622,11 +616,11 @@ msgstr "ได้รับการอนุมัติ"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid ""
-"Track incoming events (e.g. : Christmas, Black Friday, ...) and publish "
-"timely content."
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely "
+"content."
 msgstr ""
-"ติดตามอีเวนต์ที่เข้ามา (เช่น คริสต์มาส แบล็กฟรายเดย์ ...) "
-"และเผยแพร่เนื้อหาในเวลาที่เหมาะสม"
+"ติดตามกิจกรรมที่กำลังจะเกิดขึ้น (เช่น คริสต์มาส แบล็กฟรายเดย์ ...) "
+"และเผยแพร่เนื้อหาอย่างทันท่วงที"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
@@ -643,7 +637,7 @@ msgstr "แคมเปญ UTM "
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
 msgid "UTM Medium"
-msgstr "สื่อกลาง UTM"
+msgstr "วิธีที่เข้ามา UTM"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
@@ -651,7 +645,7 @@ msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
 "\"Website\", \"Twitter\", ...)."
 msgstr ""
-"สื่อกลาง UTM ติดตามค่าเฉลี่ยที่ใช้ในการดึงดูดการเข้าชม (เช่น \"เว็บไซต์\", "
+"วิธีที่เข้ามา UTM ติดตามค่าเฉลี่ยที่ใช้ในการดึงดูดการเข้าชม (เช่น \"เว็บไซต์\", "
 "\"Twitter\", ...)"
 
 #. module: utm
@@ -672,11 +666,9 @@ msgstr "มิกซ์อินแหล่งที่มา UTM"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
 msgid ""
-"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
-"...)."
-msgstr ""
-"แหล่งที่มา UTM ติดตามที่มาของการเข้าชม (เช่น \"จดหมายข่าวพฤษภาคม\", \"\", "
-"...)"
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", "
+"\"\", ...)."
+msgstr "แหล่งที่มา UTM ติดตามที่มาของการเข้าชม (เช่น \"จดหมายข่าวพฤษภาคม\", \"\", ...)"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage
@@ -707,8 +699,22 @@ msgstr "ใช้สิ่งนี้สำหรับแคมเปญขอ
 msgid ""
 "You cannot update multiple records with the same name. The name should be "
 "unique!"
-msgstr ""
-"คุณไม่สามารถอัปเดตข้อมูลหลายรายการที่มีชื่อเดียวกันได้ ชื่อจะต้องไม่ซ้ำกัน!"
+msgstr "คุณไม่สามารถอัปเดตข้อมูลหลายรายการที่มีชื่อเดียวกันได้ ชื่อจะต้องไม่ซ้ำกัน!"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
+msgid "e.g. \"Brainstorming\""
+msgstr "เช่น “การระดมความคิด”"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
+msgid "e.g. \"Christmas Mailing\""
+msgstr "เช่น \"อีเมลสำหรับวันคริสต์มาส\""
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+msgid "e.g. \"Email\""
+msgstr "เช่น \"อีเมล\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form

@@ -9,14 +9,13 @@ except ImportError:
 
 from odoo.tests import tagged, new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase
-from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.mail.tests.common import MailCommon
 
 
 @tagged("post_install", "-at_install")
 class TestBusPresence(WebsocketCase, MailCommon):
     def _receive_presence(self, sender, recipient):
-        self._reset_bus()
         sent_from_user = isinstance(sender, self.env.registry["res.users"])
         receive_to_user = isinstance(recipient, self.env.registry["res.users"])
         if receive_to_user:
@@ -38,16 +37,23 @@ class TestBusPresence(WebsocketCase, MailCommon):
         self.trigger_notification_dispatching([(sender_bus_target, "presence")])
         notifications = json.loads(websocket.recv())
         self._close_websockets()
-        bus_record = self.env["bus.bus"].search([("id", "=", int(notifications[0]["id"]))])
+        presence_notification = next(
+            (
+                notification
+                for notification in notifications
+                if notification["message"]["type"] == "bus.bus/im_status_updated"
+            ),
+            None,
+        )
+        bus_record = self.env["bus.bus"].search([("id", "=", presence_notification["id"])])
         self.assertEqual(
             bus_record.channel,
             json_dump(channel_with_db(self.env.cr.dbname, (sender_bus_target, "presence"))),
         )
-        self.assertEqual(notifications[0]["message"]["type"], "bus.bus/im_status_updated")
-        self.assertEqual(notifications[0]["message"]["payload"]["im_status"], "online")
-        self.assertEqual(notifications[0]["message"]["payload"]["presence_status"], "online")
+        self.assertEqual(presence_notification["message"]["payload"]["im_status"], "online")
+        self.assertEqual(presence_notification["message"]["payload"]["presence_status"], "online")
         self.assertEqual(
-            notifications[0]["message"]["payload"]["partner_id" if sent_from_user else "guest_id"],
+            presence_notification["message"]["payload"]["partner_id" if sent_from_user else "guest_id"],
             sender_bus_target.id,
         )
 

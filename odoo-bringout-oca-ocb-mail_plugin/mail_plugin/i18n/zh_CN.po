@@ -1,27 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mail_plugin
-# 
+#
 # Translators:
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Wil Odoo, 2024
 # Chloe Wang, 2024
-# 
+# 湘子 南 <1360857908@qq.com>, 2024
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-06 13:31+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mail_plugin
@@ -30,6 +29,14 @@ msgstr ""
 #, python-format
 msgid "%s employees"
 msgstr "%s员工"
+
+#. module: mail_plugin
+#. odoo-python
+#: code:addons/mail_plugin/controllers/authenticate.py:0
+#, python-format
+msgid ""
+"Access Error: Only Internal Users can link their inboxes to this database."
+msgstr "访问错误：只有内部用户才能将其收件箱链接到此数据库。"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -72,7 +79,7 @@ msgstr "年收入"
 msgid ""
 "Attachments could not be logged in Odoo because their total size exceeded "
 "the allowed maximum."
-msgstr "附件无法在Odoo中登录，因为其总大小超过了允许的最大值。"
+msgstr "附件无法在 ERP 中登录，因为其总大小超过了允许的最大值."
 
 #. module: mail_plugin
 #. odoo-python
@@ -246,7 +253,7 @@ msgstr "创建人"
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建日期"
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -279,7 +286,7 @@ msgstr "禁止"
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Description"
-msgstr "说明"
+msgstr "描述"
 
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__display_name
@@ -409,11 +416,6 @@ msgid "Keywords"
 msgstr "关键词"
 
 #. module: mail_plugin
-#: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap____last_update
-msgid "Last Modified on"
-msgstr "最后修改时间"
-
-#. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
@@ -421,7 +423,7 @@ msgstr "最后更新人"
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "上次更新日期"
 
 #. module: mail_plugin
 #: model_terms:ir.ui.view,arch_db:mail_plugin.app_auth
@@ -602,7 +604,7 @@ msgstr "Outlook收件箱"
 #. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__partner_id
 msgid "Partner"
-msgstr "业务伙伴"
+msgstr "合作伙伴"
 
 #. module: mail_plugin
 #: model:ir.model,name:mail_plugin.model_res_partner_iap
@@ -720,7 +722,7 @@ msgstr "发生了一些不好的事情。请稍后再试。"
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "The email of this contact is not valid and we can not enrich it"
-msgstr "该联系人的电子邮件无效，我们不能充实它。"
+msgstr "该联系人的电子邮件无效，我们无法对其进行充实"
 
 #. module: mail_plugin
 #. odoo-python
@@ -762,7 +764,6 @@ msgstr "这是您的通知地址。手动搜索联系人，将此电子邮件链
 #. module: mail_plugin
 #. odoo-python
 #: code:addons/mail_plugin/controllers/mail_plugin.py:0
-#: code:addons/mail_plugin/controllers/mail_plugin.py:0
 #, python-format
 msgid "This partner does not exist"
 msgstr "这个伙伴不存在"
@@ -774,7 +775,7 @@ msgstr "这个伙伴不存在"
 msgid ""
 "Warning: Attachments could not be logged in Odoo because their total size "
 "exceeded the allowed maximum."
-msgstr "警告。附件无法在Odoo中登录，因为其总大小超过了允许的最大值。"
+msgstr "警告。附件无法在 ERP 中登录，因为其总大小超过了允许的最大值."
 
 #. module: mail_plugin
 #. odoo-javascript
@@ -783,7 +784,9 @@ msgstr "警告。附件无法在Odoo中登录，因为其总大小超过了允�
 msgid ""
 "Warning: Could not fetch the attachments %(attachments)s as their sizes are "
 "bigger then the maximum size of %(size)sMB per each attachment."
-msgstr "警告。无法获取附件%(attachments)s，因为其大小超过了每个附件的最大容量%(size)sMB。"
+msgstr ""
+"警告。无法获取附件%(attachments)s，因为其大小超过了每个附件的最大容"
+"量%(size)sMB。"
 
 #. module: mail_plugin
 #. odoo-javascript

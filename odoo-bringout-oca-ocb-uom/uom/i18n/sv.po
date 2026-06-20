@@ -1,52 +1,60 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* uom
-# 
+# * uom
+#
 # Translators:
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Simon S, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
+# Kristoffer Grundström <lovaren@gmail.com>, 2023
+# Robin Calvin, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Simon S, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Martin Trigaux, 2023
 # Lasse L, 2023
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2026-04-03 18:40+0000\n"
+"PO-Revision-Date: 2026-05-16 08:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/uom/sv/>"
+"\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
+"                                    e.g: 1*(reference unit)=ratio*(this "
+"unit)\n"
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    t.ex: 1*(referensenhet)=ratio*(denna enheten)\n"
+"                                    t.ex: 1*(referensenhet)=ratio*(denna "
+"enheten)\n"
 "                                </span>"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
+"                                    e.g: 1*(this unit)=ratio*(reference "
+"unit)\n"
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    t.ex: 1*(denna enheten)=ratio*(referensenhet)\n"
+"                                    t.ex: 1*(denna "
+"enheten)=ratio*(referensenhet)\n"
 "                                </span>"
 
 #. module: uom
@@ -102,7 +110,7 @@ msgid ""
 "same category. The conversion will be made based on the ratios."
 msgstr ""
 "Omräkning av enheter kan endast ske om de tillhör samma kategori. "
-"Omräkningen baseras på angiven ratio."
+"Omräkningen baseras på ett givet förhållande."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -114,7 +122,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
@@ -131,6 +139,11 @@ msgstr "Visningsnamn"
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
 msgstr "Dussin"
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_energy
+msgid "Energy"
+msgstr "Energi"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -168,10 +181,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category____last_update
-#: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
-msgid "Last Modified on"
-msgstr "Senast redigerad den"
+#: model:uom.uom,name:uom.product_uom_kwh
+msgid "KWH"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_litre
+msgid "L"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
@@ -183,7 +200,7 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_length
@@ -194,6 +211,11 @@ msgstr "Längd / Avstånd"
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Administrera flera måttenheter"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_minute
+msgid "Minutes"
+msgstr "Minuter"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
@@ -242,24 +264,29 @@ msgid "Smaller than the reference Unit of Measure"
 msgstr "Mindre än referensmåttet"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
 "Some critical fields have been modified on %s.\n"
 "Note that existing data WON'T be updated by this change.\n"
 "\n"
-"As units of measure impact the whole system, this may cause critical issues.\n"
+"As units of measure impact the whole system, this may cause critical "
+"issues.\n"
 "E.g. modifying the rounding could disturb your inventory balance.\n"
 "\n"
-"Therefore, changing core units of measure in a running database is not recommended."
+"Therefore, changing core units of measure in a running database is not "
+"recommended."
 msgstr ""
 "Vissa kritiska fält har ändrats på %s.\n"
 "Observera att befintliga data INTE kommer att uppdateras av denna ändring.\n"
 "\n"
-"Eftersom måttenheter påverkar hela systemet kan detta orsaka kritiska problem.\n"
+"Eftersom måttenheter påverkar hela systemet kan detta orsaka kritiska "
+"problem.\n"
 "Om du t.ex. ändrar avrundningen kan det störa ditt lagersaldo.\n"
 "\n"
-"Det är därför inte rekommenderat att ändra centrala måttenheter i en databas som körs."
+"Det är därför inte rekommenderat att ändra centrala måttenheter i en databas "
+"som körs."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -272,8 +299,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
-"Den beräknade kvantiteten kommer att vara en multipel av detta värde. Använd"
-" 1.0 för en måttenhet som inte kan delas upp ytterligare, t.ex. en bit."
+"Den beräknade kvantiteten kommer att vara en multipel av detta värde. Använd "
+"1.0 för en måttenhet som inte kan delas upp ytterligare, t.ex. en bit."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -281,10 +308,12 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "Omvandlingsfaktorn får inte vara noll!"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
-"The following units of measure are used by the system and cannot be deleted: %s\n"
+"The following units of measure are used by the system and cannot be deleted: "
+"%s\n"
 "You can archive them instead."
 msgstr ""
 "Följande måttenheter används av systemet och kan inte tas bort: %s\n"
@@ -301,20 +330,21 @@ msgid "The rounding precision must be strictly positive."
 msgstr "Avrundningsnoggrannheten måste vara strikt positiv."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
 "category as the unit of measure %s defined on the product. Please correct "
-"the unit of measure defined on the order line or on the product, they should"
-" belong to the same category."
+"the unit of measure defined on the order line or on the product, they should "
+"belong to the same category."
 msgstr ""
 "Måttenheten %s som anges på orderraden tillhör inte samma kategori som "
 "måttenheten %s som anges på produkten. Vänligen korrigera måttenheten som "
-"definierats på orderraden eller på produkten, de bör tillhöra samma "
-"kategori."
+"definierats på orderraden eller på produkten, de bör tillhöra samma kategori."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "The value of ratio could not be Zero"
@@ -330,8 +360,8 @@ msgstr "Typ"
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Avmarkera det aktiva fältet för att inaktivera en måttenhet utan att ta bort"
-" den."
+"Avmarkera det aktiva fältet för att inaktivera en måttenhet utan att ta bort "
+"den."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -386,18 +416,21 @@ msgstr ""
 "            Timmar, Dagar."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr "UoM-kategorin %s måste ha minst en referensmåttenhet."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
 msgstr "UoM-kategorin %s bör ha en referensmåttenhet."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
@@ -414,6 +447,7 @@ msgid "Volume"
 msgstr "Volym"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "Warning for %s"
@@ -464,6 +498,11 @@ msgid "ft³"
 msgstr "ft³"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_gram
+msgid "g"
+msgstr "g"
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
 msgstr "gal (US)"
@@ -494,6 +533,11 @@ msgid "lb"
 msgstr "lb"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_meter
+msgid "m"
+msgstr "m"
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mi"
 msgstr "mile"
@@ -522,6 +566,11 @@ msgstr "oz"
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt (US)"
 msgstr "qt (US)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_ton
+msgid "t"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard

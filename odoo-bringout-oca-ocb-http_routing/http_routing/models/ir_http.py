@@ -10,6 +10,7 @@ import unicodedata
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls
+import urllib.parse
 from werkzeug.exceptions import HTTPException, NotFound
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
@@ -88,7 +89,6 @@ def slug(value):
     try:
         if not value.id:
             raise ValueError("Cannot slug non-existent record %s" % value)
-        # [(id, name)] = value.name_get()
         identifier, name = value.id, getattr(value, 'seo_name', False) or value.display_name
     except AttributeError:
         # assume name_search result tuple
@@ -100,13 +100,13 @@ def slug(value):
 
 
 # NOTE: the second pattern is used for the ModelConverter, do not use nor flags nor groups
-_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
-_UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(?:-?\d+)(?=$|/)'
+_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
+_UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(?:-?\d+)(?=$|\/|#|\?)'
 
 
 def unslug(s):
-    """Extract slug and id from a string.
-        Always return un 2-tuple (str|None, int|None)
+    """ Extract slug and id from a string.
+        Always return a 2-tuple (str|None, int|None)
     """
     m = _UNSLUG_RE.match(s)
     if not m:
@@ -143,9 +143,9 @@ def url_lang(path_or_uri, lang_code=None):
     location = pycompat.to_text(path_or_uri).strip()
     force_lang = lang_code is not None
     try:
-        url = werkzeug.urls.url_parse(location)
+        url = urllib.parse.urlparse(location)
     except ValueError:
-        # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
+        # e.g. Invalid IPv6 URL, `urllib.parse.urlparse('http://]')`
         url = False
     # relative URL with either a path or a force_lang
     if url and not url.netloc and not url.scheme and (url.path or force_lang):
@@ -168,6 +168,9 @@ def url_lang(path_or_uri, lang_code=None):
             # Insert the context language or the provided language
             elif lang_url_code != default_lg.url_code or force_lang:
                 ps.insert(1, lang_url_code)
+                # Remove the last empty string to avoid trailing / after joining
+                if ps[-1] == '':
+                    ps.pop(-1)
 
             location = u'/'.join(ps) + sep + qs
     return location
@@ -183,15 +186,15 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
         :param no_rewrite: don't try to match route with website.rewrite.
     '''
     new_url = False
-
+    rewrite = not no_rewrite
     # don't try to match route if we know that no rewrite has been loaded.
     routing = getattr(request, 'website_routing', None)  # not modular, but not overridable
-    if not getattr(request.env['ir.http'], '_rewrite_len', {}).get(routing):
-        no_rewrite = True
+    if not request.env['ir.http']._rewrite_len(routing):
+        rewrite = False
 
     path, _, qs = (url_from or '').partition('?')
 
-    if (not no_rewrite and path and (
+    if (rewrite and path and (
             len(path) > 1
             and path.startswith('/')
             and '/static/' not in path
@@ -281,7 +284,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_default_lang(cls):
-        lang_code = request.env['ir.default'].sudo().get('res.partner', 'lang')
+        lang_code = request.env['ir.default'].sudo()._get('res.partner', 'lang')
         if lang_code:
             return request.env['res.lang']._lang_get(lang_code)
         return request.env['res.lang'].search([], limit=1)
@@ -292,8 +295,12 @@ class IrHttp(models.AbstractModel):
 
         IrHttpModel = request.env['ir.http'].sudo()
         modules = IrHttpModel.get_translation_frontend_modules()
-        user_context = request.session.context if request.session.uid else {}
-        lang = user_context.get('lang')
+        if request.is_frontend:
+            lang = request.lang._get_cached('code')
+            session_info['bundle_params']['lang'] = lang
+        else:
+            user_context = request.session.context if request.session.uid else {}
+            lang = user_context.get('lang')
         translation_hash = request.env['ir.http'].get_web_translations_hash(modules, lang)
 
         session_info.update({
@@ -347,6 +354,8 @@ class IrHttp(models.AbstractModel):
             return lang_code
 
         short = lang_code.partition('_')[0]
+        if not short:
+            return None
         return next((code for code in lang_codes if code.startswith(short)), None)
 
     @classmethod
@@ -462,28 +471,28 @@ class IrHttp(models.AbstractModel):
         elif not url_lang_str:
             _logger.debug("%r (lang: %r) missing lang in url, redirect", path, request_url_code)
             redirect = request.redirect_query(f'/{request_url_code}{path}', request.httprequest.args)
-            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
+            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'))
             werkzeug.exceptions.abort(redirect)
 
         # See /6, default lang in url, /en/home -> /home
         elif url_lang_str == default_lang.url_code and allow_redirect:
             _logger.debug("%r (lang: %r) default lang in url, redirect", path, request_url_code)
             redirect = request.redirect_query(path_no_lang, request.httprequest.args)
-            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'), max_age=365 * 24 * 3600)
+            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'))
             werkzeug.exceptions.abort(redirect)
 
         # See /7, lang alias in url, /fr_FR/home -> /fr/home
         elif url_lang_str != request_url_code and allow_redirect:
             _logger.debug("%r (lang: %r) lang alias in url, redirect", path, request_url_code)
             redirect = request.redirect_query(f'/{request_url_code}{path_no_lang}', request.httprequest.args, code=301)
-            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
+            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'))
             werkzeug.exceptions.abort(redirect)
 
         # See /8, homepage with trailing slash. /fr_BE/ -> /fr_BE
         elif path == f'/{url_lang_str}/' and allow_redirect:
             _logger.debug("%r (lang: %r) homepage with trailing slash, redirect", path, request_url_code)
             redirect = request.redirect_query(path[:-1], request.httprequest.args, code=301)
-            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'), max_age=365 * 24 * 3600)
+            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'))
             werkzeug.exceptions.abort(redirect)
 
         # See /9, valid lang in url
@@ -560,12 +569,8 @@ class IrHttp(models.AbstractModel):
             if request.httprequest.method in ('GET', 'HEAD'):
                 try:
                     _, path = rule.build(args)
-                except exceptions.MissingError as exc:
+                except odoo.exceptions.MissingError as exc:
                     raise werkzeug.exceptions.NotFound() from exc
-                except exceptions.AccessError as exc:
-                    if request.env.user.is_public:
-                        raise werkzeug.exceptions.NotFound() from exc
-                    raise
                 assert path is not None
                 generated_path = werkzeug.urls.url_unquote_plus(path)
                 current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
@@ -579,7 +584,7 @@ class IrHttp(models.AbstractModel):
     def _frontend_pre_dispatch(cls):
         request.update_context(lang=request.lang._get_cached('code'))
         if request.httprequest.cookies.get('frontend_lang') != request.lang._get_cached('code'):
-            request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
+            request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'))
 
     @classmethod
     def _get_exception_code_values(cls, exception):
@@ -665,7 +670,7 @@ class IrHttp(models.AbstractModel):
         return response
 
     @api.model
-    @tools.ormcache('path', 'query_args')
+    @tools.ormcache('path', 'query_args', cache='routing.rewrites')
     def url_rewrite(self, path, query_args=None):
         new_url = False
         router = http.root.get_db_router(request.db).bind('')
@@ -682,3 +687,6 @@ class IrHttp(models.AbstractModel):
         except werkzeug.exceptions.NotFound:
             new_url = path
         return new_url or path, endpoint and endpoint[0]
+
+    def _rewrite_len(self, website_id):
+        return 0
