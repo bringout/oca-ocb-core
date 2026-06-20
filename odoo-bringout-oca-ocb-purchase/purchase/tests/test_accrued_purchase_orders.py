@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.exceptions import UserError
 
 
@@ -9,14 +9,15 @@ from odoo.exceptions import UserError
 class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('XAF')
         cls.alt_exp_account = cls.company_data['default_account_expense'].copy()
         # set 'type' to 'service' to allow manualy set 'qty_delivered' even with purchase_stock installed
         cls.product_a.update({'type': 'service', 'purchase_method': 'receive'})
         cls.product_b.update({'type': 'service', 'purchase_method': 'receive'})
         #analytic distribution
-        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default', 'company_id': False})
+        cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default'})
         cls.analytic_account_a = cls.env['account.analytic.account'].create({
             'name': 'analytic_account_a',
             'plan_id': cls.default_plan.id,
@@ -96,7 +97,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         # 5 qty of each product billeable
         self.purchase_order.order_line.qty_received = 5
         # set currency != company currency
-        self.purchase_order.currency_id = self.currency_data['currency']
+        self.purchase_order.currency_id = self.other_currency
         moves = self.env['account.move'].search(self.wizard.create_entries()['domain'])
         for move in moves:
             self.assertEqual(move.currency_id, self.purchase_order.currency_id)
@@ -130,7 +131,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             'name': 'Tax 10% included',
             'amount': 10.0,
             'type_tax_use': 'purchase',
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
         self.purchase_order.order_line.taxes_id = tax_10_included
         self.purchase_order.order_line.qty_received = 5
@@ -193,7 +194,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             }, 
             {
                 'partner_id': self.partner_a.id,
-                'currency_id': self.currency_data['currency'].id,
+                'currency_id': self.other_currency.id,
             }
         ])
         purchase_orders.button_confirm()
@@ -203,3 +204,40 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         ).new()
         with self.assertRaises(UserError, msg="An error should be raised if two different currencies are used for Accrued Expense Entry."):
             accrued_wizard._compute_move_vals()
+
+    def test_accrued_entries_with_discount(self):
+        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product_a.uom_id.id,
+                    'price_unit': 10.0,
+                    'taxes_id': False,
+                    'discount': 10,
+                }),
+            ],
+        })
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 10
+        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='purchase.order',
+            active_ids=purchase_order.ids,
+        ).create({
+            'account_id': self.account_revenue.id,
+        })
+        res = self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
+        self.assertRecordValues(res, [
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 90.0},
+        ])
+
+    def test_accrued_entries_with_no_date(self):
+        wizard_form = Form(self.wizard)
+        wizard_form.date = False
+        with self.assertRaises(AssertionError):
+            wizard_form.save()

@@ -10,14 +10,14 @@ from odoo.exceptions import UserError
 class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.env.user.company_id.anglo_saxon_accounting = True
 
         cls.fifo_product = cls.env['product.product'].create({
             'name': 'product',
-            'type': 'product',
+            'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
         })
 
@@ -40,12 +40,14 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'price_unit': unit_cost,
         })
         move._action_confirm()
-        move.quantity_done = quantity
+        move.quantity = quantity
+        move.picked = True
         move._action_done()
         return move
 
     def test_inv_ro_with_auto_fifo_part(self):
         self.fifo_product.standard_price = 100
+        self.fifo_product.taxes_id = False
 
         self._make_in_move(self.fifo_product, unit_cost=10)
         self._make_in_move(self.fifo_product, unit_cost=25)
@@ -53,27 +55,24 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         ro = self.env['repair.order'].create({
             'product_id': self.product_a.id,
             'partner_id': self.partner_a.id,
-            'invoice_method': 'after_repair',
-            'operations': [(0, 0, {
-                'name': self.fifo_product.name,
-                'type': 'add',
+            'move_ids': [(0, 0, {
+                'repair_line_type': 'add',
                 'product_id': self.fifo_product.id,
-                'price_unit': 1,
+                'product_uom_qty': 1,
             })],
         })
-        ro.action_repair_confirm()
+        ro.action_validate()
         ro.action_repair_start()
         ro.action_repair_end()
 
-        wizard_ctx = {
-            "active_model": 'repair_order',
-            "active_ids": [ro.id],
-            "active_id": ro.id
-        }
-        self.env['repair.order.make_invoice'].with_context(wizard_ctx).create({}).make_invoices()
-        invoice = ro.invoice_id
+        ro.action_create_sale_order()
+        so = ro.sale_order_id
+        so.action_confirm()
+        self.assertEqual(so.order_line.qty_to_invoice, 1)
 
+        invoice = so._create_invoices()
         self.env.invalidate_all()
+        self.env.flush_all()
         invoice.with_user(self.basic_accountman).action_post()
 
         self.assertRecordValues(invoice.line_ids, [

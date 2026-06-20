@@ -1,14 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged, TransactionCase, Form
 from odoo.tools import mute_logger
 
 from unittest.mock import patch
+
 
 @tagged('post_install', '-at_install')
 class TestLoyalty(TransactionCase):
@@ -16,18 +16,57 @@ class TestLoyalty(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
         cls.program = cls.env['loyalty.program'].create({
             'name': 'Test Program',
             'reward_ids': [(0, 0, {})],
         })
         cls.product = cls.env['product.product'].with_context(default_taxes_id=False).create({
             'name': "Test Product",
-            'detailed_type': 'consu',
+            'type': 'consu',
             'list_price': 20.0,
         })
 
+    def create_program_with_code(self, code):
+        return self.env['loyalty.program'].create({
+            'name': "Discount delivery",
+            'program_type': 'promo_code',
+            'rule_ids': [Command.create({
+                'code': code,
+                'minimum_amount': 0,
+            })],
+        })
+
+    def test_loyalty_program_default_values(self):
+        # Test that the default values are correctly set when creating a new program
+        program = self.env['loyalty.program'].create({'name': "Test"})
+        self._check_promotion_default_values(program)
+
+    def _check_promotion_default_values(self, program):
+        self.assertEqual(program.program_type, 'promotion')
+        self.assertEqual(program.trigger, 'auto')
+        self.assertEqual(program.portal_visible, False)
+        self.assertTrue(program.rule_ids)
+        self.assertTrue(len(program.rule_ids) == 1)
+        self.assertEqual(program.rule_ids.reward_point_amount, 1)
+        self.assertEqual(program.rule_ids.reward_point_mode, 'order')
+        self.assertEqual(program.rule_ids.minimum_amount, 50)
+        self.assertEqual(program.rule_ids.minimum_qty, 0)
+        self.assertTrue(program.reward_ids)
+        self.assertTrue(len(program.reward_ids) == 1)
+        self.assertEqual(program.reward_ids.required_points, 1)
+        self.assertEqual(program.reward_ids.discount, 10)
+        self.assertFalse(program.communication_plan_ids)
+
+    def test_loyalty_program_default_values_in_form(self):
+        # Test that the default values are correctly set when creating a new program in a form
+        with Form(self.env['loyalty.program']) as program_form:
+            program_form.name = 'Test'
+            program = program_form.save()
+        self._check_promotion_default_values(program)
+
     def test_discount_product_unlink(self):
-        # Test that we can not unlink dicount line product id
+        # Test that we can not unlink discount line product id
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
                 with self.cr.savepoint():
@@ -142,6 +181,15 @@ class TestLoyalty(TransactionCase):
         after_archived_reward_ids = self.program.reward_ids
         self.assertEqual(before_archived_reward_ids, after_archived_reward_ids)
 
+    def test_prevent_archive_pricelist_linked_to_program(self):
+        self.program.pricelist_ids = demo_pricelist = self.env['product.pricelist'].create({
+            'name': "Demo"
+        })
+        with self.assertRaises(UserError):
+            demo_pricelist.action_archive()
+        self.program.action_archive()
+        demo_pricelist.action_archive()
+
     def test_prevent_archiving_product_linked_to_active_loyalty_reward(self):
         self.program.program_type = 'promotion'
         self.program.flush_recordset()
@@ -159,8 +207,12 @@ class TestLoyalty(TransactionCase):
         product.action_archive()
 
     def test_prevent_archiving_product_used_for_discount_reward(self):
-        self.program.program_type = 'promotion'
+        """
+        Ensure products cannot be archived while they have a specific program active.
+        """
         self.program.write({
+            'name': f"50% Discount on {self.product.name}",
+            'program_type': 'promotion',
             'reward_ids': [Command.create({
                 'discount': 50.0,
                 'discount_applicability': 'specific',
@@ -171,6 +223,7 @@ class TestLoyalty(TransactionCase):
             self.product.action_archive()
         self.program.action_archive()
         self.product.action_archive()
+        self.assertFalse(self.product.active)
 
     def test_prevent_archiving_product_when_archiving_program(self):
         """
@@ -194,13 +247,58 @@ class TestLoyalty(TransactionCase):
         # Make sure that the main product didn't get archived
         self.assertTrue(product.active)
 
+    def test_merge_loyalty_cards(self):
+        """Test merging nominative loyalty cards from source partners to a destination partner
+        when partners are merged.
+        """
+        program = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'is_nominative': True,
+            'applies_on': 'both',
+        })
+
+        partner_1, partner_2, dest_partner = self.env['res.partner'].create([
+            {'name': 'Source Partner 1'},
+            {'name': 'Source Partner 2'},
+            {'name': 'Destination Partner'},
+        ])
+        self.env['loyalty.card'].create([
+            {
+                'partner_id': partner_1.id,
+                'program_id': program.id,
+                'points': 10
+            }, {
+                'partner_id': partner_2.id,
+                'program_id': program.id,
+                'points': 20
+            }, {
+                'partner_id': dest_partner.id,
+                'program_id': program.id,
+                'points': 30
+            }
+        ])
+
+        self.env['base.partner.merge.automatic.wizard']._merge(
+            [partner_1.id, partner_2.id, dest_partner.id], dest_partner
+        )
+
+        dest_partner_loyalty_cards = self.env['loyalty.card'].search([
+            ('partner_id', '=', dest_partner.id),
+            ('program_id', '=', program.id),
+        ])
+
+        self.assertEqual(len(dest_partner_loyalty_cards), 1)
+        self.assertEqual(dest_partner_loyalty_cards.points, 60)
+        self.assertFalse(self.env['loyalty.card'].search([
+            ('partner_id', 'in', [partner_1.id, partner_2.id]),
+        ]))
+
     def test_card_description_on_tag_change(self):
         product_tag = self.env['product.tag'].create({'name': 'Multiple Products'})
         product1 = self.product
         product1.product_tag_ids = product_tag
         self.env['product.product'].create({
             'name': 'Test Product 2',
-            'detailed_type': 'consu',
             'list_price': 30.0,
             'product_tag_ids': product_tag,
         })
@@ -222,3 +320,25 @@ class TestLoyalty(TransactionCase):
             "Free Product - [Test Product, Test Product 2]",
             "Reward description for reward with tag should be 'Free Product - [Test Product, Test Product 2]'"
         )
+
+    def test_prevent_unarchive_when_conflicting_active_program_exists(self):
+        """Unarchiving a program should fail if another active program already has the same rule
+           code."""
+        program = self.create_program_with_code("FREE")
+        program.action_archive()
+        # create another active program with the same rule code
+        self.create_program_with_code("FREE")
+        # attempt to unarchive the first program
+        with self.assertRaises(ValidationError):
+            program.action_unarchive()
+
+    def test_prevent_unarchive_when_batch_contains_duplicate_codes(self):
+        """Unarchiving multiple programs at once should fail if they share the same rule code."""
+        program1 = self.create_program_with_code("FREE")
+        program1.action_archive()
+        # create another program with the same rule code and archive it
+        program2 = self.create_program_with_code("FREE")
+        program2.action_archive()
+        # attempt to unarchive both programs together
+        with self.assertRaises(ValidationError):
+            (program1 + program2).action_unarchive()

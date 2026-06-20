@@ -7,7 +7,7 @@
     'summary': "Auto-complete partner companies' data",
     'version': '1.1',
     'description': """
-       Auto-complete partner companies' data
+Auto-complete partner companies' data
     """,
     'category': 'Hidden/Tools',
     'depends': [
@@ -19,8 +19,9 @@
         'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
         'data/cron.xml',
+        'data/iap_service_data.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'partner_autocomplete/static/src/scss/*',

@@ -1,30 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* privacy_lookup
-# 
+#
 # Translators:
-# oscaryuu, 2022
-# jabelchi, 2022
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Jonatan Gk, 2022
-# Arnau Ros, 2022
-# Martin Trigaux, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# Ivan Espinola, 2022
-# 
+# Jonatan Gk, 2024
+# oscaryuu, 2024
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
+# Arnau Ros, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
+# Carles Antoli <carlesantoli@hotmail.com>, 2024
+# Martin Trigaux, 2024
+# Ivan Espinola, 2024
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ivan Espinola, 2022\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Ivan Espinola, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: privacy_lookup
@@ -48,9 +48,9 @@ msgid "Archive Selection"
 msgstr "Arxiva la selecció"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-#, python-format
 msgid "Archived"
 msgstr "Arxivat"
 
@@ -94,8 +94,8 @@ msgid "Delete Selection"
 msgstr "Suprimeix la selecció"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Deleted"
 msgstr "Esborrat"
 
@@ -104,7 +104,7 @@ msgstr "Esborrat"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__res_model
@@ -152,6 +152,12 @@ msgid "ID"
 msgstr "ID"
 
 #. module: privacy_lookup
+#. odoo-python
+#: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
+msgid "Invalid email address “%s”"
+msgstr ""
+
+#. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_active
 msgid "Is Active"
 msgstr "És actiu"
@@ -160,13 +166,6 @@ msgstr "És actiu"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__is_unlinked
 msgid "Is Unlinked"
 msgstr "Està desenllaçat"
-
-#. module: privacy_lookup
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard____last_update
-#: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line____last_update
-msgid "Last Modified on"
-msgstr "Última modificació el "
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__write_uid
@@ -237,12 +236,12 @@ msgid "Privacy Logs"
 msgstr "Registres de privadesa"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
 #: model:ir.actions.act_window,name:privacy_lookup.action_privacy_lookup_wizard
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_partner
 #: model:ir.actions.server,name:privacy_lookup.ir_action_server_action_privacy_lookup_user
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_view_form
-#, python-format
 msgid "Privacy Lookup"
 msgstr "Cerca de privadesa"
 
@@ -297,14 +296,14 @@ msgid "Search References"
 msgstr "Cerca referències"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "The record is already unlinked."
 msgstr "El registre ja està desenllaçat."
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/models/privacy_log.py:0
-#, python-format
 msgid "This email address is not valid (%s)"
 msgstr "Aquesta adreça de correu electrònic no és vàlida (%s)"
 
@@ -312,14 +311,12 @@ msgstr "Aquesta adreça de correu electrònic no és vàlida (%s)"
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid ""
 "This operation is irreversible. Do you wish to proceed to the record "
-"deletion ?"
+"deletion?"
 msgstr ""
-"Aquesta operació és irreversible. Voleu procedir a la supressió del "
-"registre?"
 
 #. module: privacy_lookup
+#. odoo-python
 #: code:addons/privacy_lookup/wizard/privacy_lookup_wizard.py:0
-#, python-format
 msgid "Unarchived"
 msgstr "Desarxivat"
 

@@ -150,7 +150,13 @@ class PurchaseOrder(models.Model):
             # configurable products are only configured through the matrix in purchase, so no need to check product_add_mode.
             for template in grid_configured_templates:
                 if len(self.order_line.filtered(lambda line: line.product_template_id == template)) > 1:
-                    matrixes.append(self._get_matrix(template))
+                    matrix = self._get_matrix(template)
+                    matrix_data = []
+                    for row in matrix['matrix']:
+                        if any(column['qty'] != 0 for column in row[1:]):
+                            matrix_data.append(row)
+                    matrix['matrix'] = matrix_data
+                    matrixes.append(matrix)
         return matrixes
 
 
@@ -164,7 +170,8 @@ class PurchaseOrderLine(models.Model):
 
     def _get_product_purchase_description(self, product):
         name = super(PurchaseOrderLine, self)._get_product_purchase_description(product)
-        for no_variant_attribute_value in self.product_no_variant_attribute_value_ids:
+        product_lang_no_variant_attribute_value_ids = self.with_context(product.env.context).product_no_variant_attribute_value_ids
+        for no_variant_attribute_value in product_lang_no_variant_attribute_value_ids:
             name += "\n" + no_variant_attribute_value.attribute_id.name + ': ' + no_variant_attribute_value.name
 
         return name

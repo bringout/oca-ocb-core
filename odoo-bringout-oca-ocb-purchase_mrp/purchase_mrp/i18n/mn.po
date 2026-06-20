@@ -1,26 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_mrp
-# 
+#
 # Translators:
-# Martin Trigaux, 2022
-# Minj P <pminj322@gmail.com>, 2022
-# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2022
 # Munkhbaatar Gombosuren, 2024
+# Martin Trigaux, 2024
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2024
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:27+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_mrp
@@ -51,16 +50,15 @@ msgstr "Орцын мөр"
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
-#, python-format
 msgid "Components cost share have to be positive or equals to zero."
 msgstr ""
-"Орцын бүрэлдэхүүний өртөг хуваалт нь тэгээс их эсвэл тэгтэй тэнцүү байх "
+"Орцын бүрэлдэхүүний өртөг хуваарилалт нь тэгээс их эсвэл тэгтэй тэнцүү байх "
 "ёстой."
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
 msgid "Cost Share (%)"
-msgstr "Өртөг хуваарилах %"
+msgstr "Өртөг хуваарилах (%)"
 
 #. module: purchase_mrp
 #: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
@@ -78,27 +76,30 @@ msgid "Journal Item"
 msgstr "Журналын бичилт"
 
 #. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr "Үйлдвэрийн захиалгын товчоо тайлан"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Үйлдвэрлэлийн захиалга"
+
+#. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/purchase.py:0
-#, python-format
 msgid "Manufacturing Source of %s"
 msgstr "%s-ын сурвалж үйлдвэрлэл"
 
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/stock_move.py:0
-#, python-format
 msgid ""
-"Odoo is not able to generate the anglo saxon entries. The total valuation of"
-" %s is zero."
+"Odoo is not able to generate the anglo saxon entries. The total valuation of "
+"%s is zero."
 msgstr ""
 "Odoo англи-саксоны бүртгэлийн бичилт үүсгэж чадсангүй. %s-ын нийт өртөгийн "
 "дүн нь тэг байна."
-
-#. module: purchase_mrp
-#: model:ir.model,name:purchase_mrp.model_mrp_production
-msgid "Production Order"
-msgstr "Үйлдвэрлэлийн захиалга"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order
@@ -113,7 +114,6 @@ msgstr "Худалдан авалтын захиалгын мөр"
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_production.py:0
-#, python-format
 msgid "Purchase Order generated from %s"
 msgstr "%s-с үүсгэгдсэн худалдан авалтын захиалга"
 
@@ -134,7 +134,6 @@ msgstr ""
 #. module: purchase_mrp
 #. odoo-python
 #: code:addons/purchase_mrp/models/mrp_bom.py:0
-#, python-format
 msgid "The total cost share for a BoM's component have to be 100"
 msgstr ""
 "Бүтээгдэхүүний жорыг (BoM) бүрдүүлэгч орцуудын өртгийн нийт хувь 100 байх "

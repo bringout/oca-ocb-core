@@ -1,27 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* snailmail
-# 
+# * snailmail
+#
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
-# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
-# Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2022
-# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2022
-# Martin Trigaux, 2022
-# 
+# Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2024
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
+# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
+# Martin Trigaux, 2024
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2024
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-06-06 19:26+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
+"snailmail/mn/>\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
+msgid "ATTACHMENT_ERROR"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -38,29 +45,32 @@ msgstr "Хаяг"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/notification_group/notification_group.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr ""
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending a letter with Snailmail."
 msgstr ""
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "An error occurred when sending the document by post.<br>Error: %s"
 msgstr ""
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr "Тодорхойгүй алдаа гарсан. Дуудлагын төвтэй холбогдоно уу."
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "An unknown error occurred. Please contact our"
 msgstr ""
 
@@ -76,8 +86,7 @@ msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
-#, python-format
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Awaiting Dispatch"
 msgstr ""
 
@@ -93,9 +102,7 @@ msgstr "Хоёр талууд"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "Buy credits"
 msgstr "Credit худалдан авах"
 
@@ -105,7 +112,6 @@ msgid "CREDIT_ERROR"
 msgstr ""
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Cancel"
 msgstr "Цуцлах"
@@ -117,9 +123,8 @@ msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-#, python-format
 msgid "Cancel letter"
 msgstr ""
 
@@ -130,10 +135,9 @@ msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
-#, python-format
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Цуцлагдсан"
 
 #. module: snailmail
@@ -145,15 +149,13 @@ msgstr "Хот"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-#, python-format
 msgid "Close"
 msgstr "Хаах"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "Өнгө"
@@ -172,11 +174,6 @@ msgstr "Компани"
 #: model:ir.model,name:snailmail.model_res_config_settings
 msgid "Config Settings"
 msgstr "Тохиргооны тохируулга"
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
-msgid "Confirm"
-msgstr "Батлах"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_partner
@@ -234,10 +231,9 @@ msgstr "Имэйл-ын мод"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__error_code
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__error
-#, python-format
 msgid "Error"
 msgstr "Алдаа"
 
@@ -248,9 +244,8 @@ msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
-#, python-format
 msgid "Failed letter"
 msgstr ""
 
@@ -289,16 +284,8 @@ msgstr "Мэдээлэл"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Invalid recipient name."
 msgstr ""
-
-#. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter____last_update
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error____last_update
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields____last_update
-msgid "Last Modified on"
-msgstr "Сүүлд зассан огноо"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -324,7 +311,6 @@ msgstr "Захидал"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Letter sent by post with Snailmail"
 msgstr ""
 
@@ -350,24 +336,9 @@ msgid "Message Notifications"
 msgstr "Зурвасын Мэдэгдэлүүд"
 
 #. module: snailmail
-#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
-#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
-msgstr ""
-"Зурвасын төрөл: имэйл зурваст зориулсан имэйл, системийн зурвасын мэдэгдэл, "
-"бусад зурвас дахь сэтгэгдэл буюу хариулт гэх мэт"
-
-#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
 msgid "Model"
 msgstr "Модел"
-
-#. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_confirm__model_name
-msgid "Model Name"
-msgstr "Моделийн Нэр"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
@@ -377,7 +348,6 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Not enough credits for Snail Mail"
 msgstr ""
 
@@ -394,7 +364,6 @@ msgstr "Мэдэгдлүүд"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "One or more required fields are empty."
 msgstr "Нэг эсвэл олон тооны бөглөх шаардлагатай талбар хоосон байна."
 
@@ -407,7 +376,8 @@ msgstr "Хэвлэх болон хавсаргах заавал биш тайл�
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid ""
 "Our service cannot read your letter due to its format.<br/>\n"
-"                Please modify the format of the template or update your settings\n"
+"                Please modify the format of the template or update your "
+"settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
 
@@ -419,7 +389,6 @@ msgstr "Харилцагч"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Please use an A4 Paper format."
 msgstr ""
 
@@ -435,8 +404,7 @@ msgstr "Өнгөтөөр хэвлэх"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "Re-send letter"
 msgstr ""
 
@@ -461,42 +429,42 @@ msgid "Send Now"
 msgstr "Одоо илгээх"
 
 #. module: snailmail
+#: model:iap.service,description:snailmail.iap_service_snailmail
+msgid "Send your customer invoices and follow-up reports by post, worldwide."
+msgstr ""
+
+#. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
-#, python-format
 msgid "Sent"
 msgstr "Илгээгдсэн"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "Sent by"
-msgstr ""
+msgstr "Илгээсэн этгээд"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Snail Mails are successfully sent"
 msgstr ""
 
 #. module: snailmail
-#. odoo-python
-#: code:addons/snailmail/wizard/snailmail_confirm.py:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
-#, python-format
 msgid "Snailmail"
+msgstr "Шуудан"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+msgid "Snailmail Color"
 msgstr ""
 
 #. module: snailmail
-#: model:ir.model,name:snailmail.model_snailmail_confirm
-msgid "Snailmail Confirm"
-msgstr ""
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
-msgid "Snailmail Confirmation"
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
+msgid "Snailmail Cover Readonly"
 msgstr ""
 
 #. module: snailmail
@@ -506,8 +474,13 @@ msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/notification_group.js:0
-#, python-format
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
+msgstr ""
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "Snailmail Failures"
 msgstr ""
 
@@ -561,9 +534,13 @@ msgstr ""
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
-#: model:ir.cron,cron_name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
 msgstr "Шуудан илгээх: Хүлээгдэж буй захиануудыг илгээх"
+
+#. module: snailmail
+#: model:iap.service,unit_name:snailmail.iap_service_snailmail
+msgid "Stamps"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
@@ -607,17 +584,15 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "The address of the recipient is not complete"
 msgstr ""
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid ""
-"The attachment of the letter could not be sent. Please check its content and"
-" contact the support if the problem persists."
+"The attachment of the letter could not be sent. Please check its content and "
+"contact the support if the problem persists."
 msgstr ""
 "Захидлын хавсралтыг илгээх боломжгүй. \n"
 "Контентыг шалгаж үзээд, алдаа гарсаар байвал холбоо барина уу."
@@ -625,14 +600,12 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "The country of the partner is not covered by Snailmail."
 msgstr "Түншийн улс орныг Snailmail хамардаггүй."
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid ""
 "The country to which you want to send the letter is not supported by our "
 "service."
@@ -648,17 +621,20 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
+msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
+msgstr ""
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
 msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid ""
-"The letter could not be sent due to insufficient credits on your IAP "
-"account."
+"The letter could not be sent due to insufficient credits on your IAP account."
 msgstr ""
 
 #. module: snailmail
@@ -688,22 +664,31 @@ msgid "Update address of partner"
 msgstr ""
 
 #. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
+msgid ""
+"Used to categorize message generator\n"
+"'email': generated by an incoming email e.g. mailgateway\n"
+"'comment': generated by user input e.g. through discuss or composer\n"
+"'email_outgoing': generated by a mailing\n"
+"'notification': generated by system e.g. tracking messages\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
+"'user_notification': generated for a specific recipient"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
 "If the letter is correctly sent, the status goes in 'Sent',\n"
-"If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
-msgstr ""
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
-msgid "You are about to send this"
+"If not, it will got in state 'Error' and the error message will be displayed "
+"in the field 'Error Message'."
 msgstr ""
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
@@ -714,7 +699,6 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
@@ -724,8 +708,7 @@ msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "You need credits on your IAP account to send a letter."
 msgstr ""
 
@@ -741,20 +724,13 @@ msgid "Zip"
 msgstr "Зип код"
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
-msgid "by post. Are you sure you want to continue?"
-msgstr ""
-
-#. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "for further assistance."
 msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "support"
 msgstr ""

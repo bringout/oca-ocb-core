@@ -11,20 +11,21 @@ try:
 except ImportError:
     websocket = None
 
-import odoo.tools
-from odoo.tests import HOST, HttpCase, TEST_CURSOR_COOKIE_NAME
+from odoo.tests.common import HOST
+from odoo.tests import HttpCase, TEST_CURSOR_COOKIE_NAME
 from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
+from ..models.bus import dispatch, hashable, channel_with_db
 
 
 class WebsocketCase(HttpCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         if websocket is None:
             cls._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
-        cls._WEBSOCKET_URL = f"ws://{HOST}:{odoo.tools.config['http_port']}/websocket"
+        cls._BASE_WEBSOCKET_URL = f"ws://{HOST}:{cls.http_port()}/websocket"
+        cls._WEBSOCKET_URL = f"{cls._BASE_WEBSOCKET_URL}?version={WebsocketConnectionHandler._VERSION}"
         websocket_allowed_patch = patch.object(WebsocketConnectionHandler, "websocket_allowed", return_value=True)
         cls.startClassPatcher(websocket_allowed_patch)
 
@@ -63,7 +64,7 @@ class WebsocketCase(HttpCase):
                 ws.close(CloseCode.CLEAN)
         self.wait_remaining_websocket_connections()
 
-    def websocket_connect(self, *args, **kwargs):
+    def websocket_connect(self, *args, ping_after_connect=True, **kwargs):
         """
         Connect a websocket. If no cookie is given, the connection is
         opened with a default session. The created websocket is closed
@@ -75,15 +76,17 @@ class WebsocketCase(HttpCase):
         kwargs['cookie'] += f';{TEST_CURSOR_COOKIE_NAME}={self.http_request_key}'
         kwargs['timeout'] = 10  # keep a large timeout to avoid aving a websocket request escaping the test
         ws = websocket.create_connection(
-            type(self)._WEBSOCKET_URL, *args, **kwargs
+            self._WEBSOCKET_URL, *args, **kwargs
         )
-        ws.ping()
-        ws.recv_data_frame(control_frame=True) # pong
+        if ping_after_connect:
+            ws.ping()
+            ws.recv_data_frame(control_frame=True)  # pong
         self._websockets.add(ws)
         return ws
 
     def subscribe(self, websocket, channels=None, last=None, wait_for_dispatch=True):
         """ Subscribe the websocket to the given channels.
+
         :param websocket: The websocket of the client.
         :param channels: The list of channels to subscribe to.
         :param last: The last notification id the client received.
@@ -101,18 +104,33 @@ class WebsocketCase(HttpCase):
             sub = {'event_name': 'subscribe', 'data': {
                 'channels': channels or [],
             }}
-            if last:
+            if last is not None:
                 sub['data']['last'] = last
             websocket.send(json.dumps(sub))
             if wait_for_dispatch:
                 dispatch_bus_notification_done.wait(timeout=5)
+
+    def trigger_notification_dispatching(self, channels):
+        """ Notify the websockets subscribed to the given channels that new
+        notifications are available. Usefull since the bus is not able to do
+        it during tests.
+        """
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        channels = [
+            hashable(channel_with_db(self.registry.db_name, c)) for c in channels
+        ]
+        websockets = set()
+        for channel in channels:
+            websockets.update(dispatch._channels_to_ws.get(hashable(channel), []))
+        for websocket in websockets:
+            websocket.trigger_notification_dispatching()
 
     def wait_remaining_websocket_connections(self):
         """ Wait for the websocket connections to terminate. """
         for event in self._websocket_events:
             event.wait(5)
 
-    def assert_close_with_code(self, websocket, expected_code):
+    def assert_close_with_code(self, websocket, expected_code, expected_reason=None):
         """
         Assert that the websocket is closed with the expected_code.
         """
@@ -122,3 +140,6 @@ class WebsocketCase(HttpCase):
         code = struct.unpack('!H', payload[:2])[0]
         # ensure the close code is the one we expected
         self.assertEqual(code, expected_code)
+        if expected_reason:
+            # ensure the close reason is the one we expected
+            self.assertEqual(payload[2:].decode(), expected_reason)

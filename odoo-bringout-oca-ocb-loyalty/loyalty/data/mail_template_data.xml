@@ -35,8 +35,7 @@
                 </div>
             </div>
         </field>
-        <field name="report_template" ref="loyalty.report_gift_card"/>
-        <field name="report_name">Your Gift Card</field>
+        <field name="report_template_ids" eval="[(4, ref('loyalty.report_gift_card'))]"/>
         <field name="auto_delete" eval="True"/>
     </record>
 
@@ -70,7 +69,7 @@
     <td valign="top" style="text-align: center; font-size: 14px;">
         Use this promo code
         <t t-if="object.expiration_date">
-            before <t t-out="object.expiration_date or ''">2021-06-16</t>
+            before <t t-out="format_date(object.expiration_date) or ''">2021-06-16</t>
         </t>
         <p style="margin-top: 16px;">
             <strong style="padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;" t-out="object.code or ''">15637502648479132902</strong>
@@ -97,8 +96,7 @@
 </tr>
 </tbody></table>
         </field>
-        <field name="report_template" ref="loyalty.report_loyalty_card"/>
-        <field name="report_name">Your Coupon Code</field>
+        <field name="report_template_ids" eval="[(4, ref('loyalty.report_loyalty_card'))]"/>
         <field name="auto_delete" eval="True"/>
     </record>
 </odoo>

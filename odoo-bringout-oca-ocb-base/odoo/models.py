@@ -649,10 +649,15 @@ class BaseModel(metaclass=MetaModel):
     """
 
     # default values for _transient_vacuum()
-    _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
-    "maximum number of transient records, unlimited if ``0``"
-    _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
-    "maximum idle lifetime (in hours), unlimited if ``0``"
+    @lazy_classproperty
+    def _transient_max_count(cls):
+        """maximum number of transient records, unlimited if ``0``"""
+        return config.get('osv_memory_count_limit')
+
+    @lazy_classproperty
+    def _transient_max_hours(cls):
+        """maximum idle lifetime (in hours), unlimited if ``0``"""
+        return config.get('transient_age_limit')
 
     def _valid_field_parameter(self, field, name):
         """ Return whether the given parameter name is valid for the field. """
@@ -2096,8 +2101,9 @@ class BaseModel(metaclass=MetaModel):
             # special case for many2many fields: prepare a query on the comodel
             # in order to reuse the mechanism _apply_ir_rules, then inject the
             # query as an extra condition of the left join
-            comodel = self.env[field.comodel_name]
-            coquery = comodel._where_calc([], active_test=False)
+            codomain = field.get_domain_list(self)
+            comodel = self.env[field.comodel_name].with_context(**field.context)
+            coquery = comodel._where_calc(codomain)
             comodel._apply_ir_rules(coquery)
             # LEFT JOIN {field.relation} AS rel_alias ON
             #     alias.id = rel_alias.{field.column1}
@@ -3660,7 +3666,7 @@ class BaseModel(metaclass=MetaModel):
                     rows = self.env.execute_query(SQL('SELECT data_type FROM information_schema.columns WHERE table_name = %s AND column_name = %s', cls._table, name))
                     if rows and rows[0][0] == 'jsonb':
                         # patch the field definition by adding an override
-                        _logger.warning("Patching %s.%s with company_dependent=True", cls._name, name)
+                        _logger.debug("Patching %s.%s with company_dependent=True", cls._name, name)
                         fields_.append(type(fields_[0])(company_dependent=True))
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
@@ -3992,7 +3998,7 @@ class BaseModel(metaclass=MetaModel):
             for lang, _translations in translations.items():
                 _old_translations = {src: values[lang] for src, values in old_translation_dictionary.items() if lang in values}
                 _new_translations = {**_old_translations, **_translations}
-                new_values[lang] = field.translate(_new_translations.get, old_source_lang_value)
+                new_values[lang] = field.convert_to_cache(field.translate(_new_translations.get, old_source_lang_value), self)
             self.env.cache.update_raw(self, field, [new_values], dirty=True)
 
         # the following write is incharge of
@@ -6647,7 +6653,7 @@ class BaseModel(metaclass=MetaModel):
                             yield '$'
                         # no need to match r'.*' in else because we only use .match()
 
-                    like_regex = re.compile("".join(build_like_regex(unaccent(value), comparator.startswith("="))))
+                    like_regex = re.compile("".join(build_like_regex(unaccent(value), comparator.startswith("="))), flags=re.DOTALL)
                 if comparator in ('=', '!=') and field.type in ('char', 'text', 'html') and not value:
                     # use the comparator 'in' for falsy comparison of strings
                     comparator = 'in' if comparator == '=' else 'not in'

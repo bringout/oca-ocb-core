@@ -1,40 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_booth
-# 
+#
 # Translators:
-# Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Martin Trigaux, 2022
-# Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Corina Calin, 2024
+# Wil Odoo, 2024
 # Lyall Kindmurr, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_booked_template
 msgid "<b>Renter Email</b>:"
 msgstr "<b>Email chiriaș</b>:"
-
-#. module: event_booth
-#: model_terms:ir.ui.view,arch_db:event_booth.event_booth_booked_template
-msgid "<b>Renter Mobile</b>:"
-msgstr ""
 
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_booked_template
@@ -50,17 +42,6 @@ msgstr "<b>Telefon chiriaș</b>:"
 #: model_terms:ir.ui.view,arch_db:event_booth.event_event_view_form
 msgid "<span class=\"o_stat_text\">Booths</span>"
 msgstr "<span class=\"o_stat_text\">Standuri</span>"
-
-#. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_standard
-msgid "<span class=\"text-white\">4m²</span>"
-msgstr ""
-
-#. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_vip
-msgid "<span class=\"text-white\">8m²</span>"
-msgstr ""
 
 #. module: event_booth
 #: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
@@ -108,8 +89,19 @@ msgstr "<span>Ecran de afișaj de 46\"</span>"
 
 #. module: event_booth
 #: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
+#: model_terms:event.booth.category,description:event_booth.event_booth_category_standard
+msgid "<span>4m²</span>"
+msgstr "<span>4m²</span>"
+
+#. module: event_booth
+#: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
 msgid "<span>50 words description on website</span>"
 msgstr "<span>Descriere de 50 de cuvinte pe site</span>"
+
+#. module: event_booth
+#: model_terms:event.booth.category,description:event_booth.event_booth_category_vip
+msgid "<span>8m²</span>"
+msgstr "<span>8m²</span>"
 
 #. module: event_booth
 #: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
@@ -121,7 +113,7 @@ msgstr "<span>Logo &amp; link pe site</span>"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_needaction
 msgid "Action Needed"
-msgstr "Intervenție necesară"
+msgstr "Acțiune necesară"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__active
@@ -136,7 +128,7 @@ msgstr "Activități"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activitate Excepție Decorare"
+msgstr "Decorator Excepție Activitate"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_state
@@ -214,7 +206,9 @@ msgstr "Categorie stand"
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_event__event_booth_category_available_ids
 msgid "Booth Category for which booths are still available. Used in frontend"
-msgstr "categorii de stand libere. Folosit de frontend"
+msgstr ""
+"Categorie de stand pentru care standurile sunt încă disponibile. Folosit în "
+"frontend"
 
 #. module: event_booth
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_category_view_form
@@ -228,8 +222,8 @@ msgid ""
 "Booth categories are used to represent the different types of booths you "
 "rent (Premium Booth, Table and Chairs, ...)"
 msgstr ""
-"Categorii de standuri sunt folosite pentru a reprezenta diferitele tipuri de"
-" standuri pe care le închiriați (Stand Premium, Masă și Scaune, ...)"
+"Categorii de standuri sunt folosite pentru a reprezenta diferitele tipuri de "
+"standuri pe care le închiriați (Stand Premium, Masă și Scaune, ...)"
 
 #. module: event_booth
 #: model:ir.actions.act_window,name:event_booth.event_booth_action
@@ -281,7 +275,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__create_date
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__description
@@ -313,12 +307,12 @@ msgstr "Stand pentru evenimente"
 #: model:ir.model,name:event_booth.model_event_booth_category
 #: model:ir.model.fields,field_description:event_booth.field_event_event__event_booth_category_ids
 msgid "Event Booth Category"
-msgstr "Categoria de stand pentru evenimente"
+msgstr "Categoria de stand"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_event__event_booth_category_available_ids
 msgid "Event Booth Category Available"
-msgstr "Categorie de stand pentru evenimente disponibilă"
+msgstr "Categorie de stand disponibilă"
 
 #. module: event_booth
 #: model:ir.model,name:event_booth.model_event_type_booth
@@ -357,7 +351,7 @@ msgstr "Stand eveniment"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_follower_ids
 msgid "Followers"
-msgstr "Persoane interesate"
+msgstr "Urmăritori"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_partner_ids
@@ -367,7 +361,7 @@ msgstr "Urmăritori (Parteneri)"
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
+msgstr "Pictogramă Font awesome, de ex. fa-tasks"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_20_event_7
@@ -410,18 +404,18 @@ msgstr "Pictogramă"
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Pictograma pentru a indica o activitate de excepție."
+msgstr "Pictogramă care indică o activitate de excepție."
 
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
+msgstr "Dacă este bifat, mesajele noi necesită atenția dumneavoastră."
 
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_has_error
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
+msgstr "Dacă este bifat, unele mesaje au o eroare de livrare."
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__image_1920
@@ -451,7 +445,7 @@ msgstr "Imagine 512"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__is_available
 msgid "Is Available"
-msgstr "Este Valabil"
+msgstr "Este disponibil"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_is_follower
@@ -459,35 +453,23 @@ msgid "Is Follower"
 msgstr "Este urmăritor"
 
 #. module: event_booth
-#: model:ir.model.fields,field_description:event_booth.field_event_booth____last_update
-#: model:ir.model.fields,field_description:event_booth.field_event_booth_category____last_update
-#: model:ir.model.fields,field_description:event_booth.field_event_type_booth____last_update
-msgid "Last Modified on"
-msgstr "Ultima modificare la"
-
-#. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__write_uid
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__write_uid
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__write_uid
 msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
+msgstr "Ultima actualizare de"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__write_date
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__write_date
 #: model:ir.model.fields,field_description:event_booth.field_event_type_booth__write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare pe"
-
-#. module: event_booth
-#: model:ir.model.fields,field_description:event_booth.field_event_booth__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "Atașament principal"
+msgstr "Ultima actualizare la"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_has_error
 msgid "Message Delivery error"
-msgstr "Eroare livrare mesaj"
+msgstr "Eroare de livrare a mesajului"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_ids
@@ -497,7 +479,7 @@ msgstr "Mesaje"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Data limită a activității mele"
+msgstr "Termen limită activitate proprie"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__name
@@ -517,17 +499,17 @@ msgstr "Următoarea activitate din calendar"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Data limită pentru următoarea activitate"
+msgstr "Termen limită următoare activitate"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_summary
 msgid "Next Activity Summary"
-msgstr "Sumarul următoarei activități"
+msgstr "Sumar următoare activitate"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tip de activitate urmatoare"
+msgstr "Tip următoare activitate"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_needaction_counter
@@ -537,17 +519,17 @@ msgstr "Număr de acțiuni"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_has_error_counter
 msgid "Number of errors"
-msgstr "Numărul de erori"
+msgstr "Număr de erori"
 
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "Numărul de mesaje care necesită acțiune"
+msgstr "Număr de mesaje care necesită acțiune"
 
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Numărul de mesaje cu eroare de livrare"
+msgstr "Număr de mesaje cu eroare de livrare"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_10_event_7
@@ -572,9 +554,9 @@ msgid "Pick a Booth Category..."
 msgstr "Alege o categorie de stand..."
 
 #. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_premium
-msgid "Premium"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_form_from_event
+msgid "Pick a Renter..."
+msgstr "Alege un chiriaș..."
 
 #. module: event_booth
 #: model:event.booth.category,name:event_booth.event_booth_category_premium
@@ -588,15 +570,22 @@ msgstr "Stand Premium A4"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_2_event_2
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_conference_2
+#: model:event.booth,name:event_booth.event_booth_2_event_3
+#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_2
 msgid "Premium Showbooth 1"
 msgstr "Stand de prezentare Premium 1"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_3_event_2
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_conference_3
+#: model:event.booth,name:event_booth.event_booth_3_event_3
+#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_3
 msgid "Premium Showbooth 2"
 msgstr "Stand de prezentare Premium 2"
+
+#. module: event_booth
+#: model:ir.model.fields,field_description:event_booth.field_event_booth__rating_ids
+msgid "Ratings"
+msgstr "Evaluări"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__partner_id
@@ -608,11 +597,6 @@ msgstr "Chiriaș"
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
 msgid "Renter Email"
 msgstr "Email chiriaș"
-
-#. module: event_booth
-#: model:ir.model.fields,field_description:event_booth.field_event_booth__contact_mobile
-msgid "Renter Mobile"
-msgstr ""
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__contact_name
@@ -633,7 +617,7 @@ msgstr "Utilizator responsabil"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Eroare livrare SMS"
+msgstr "Eroare de livrare SMS"
 
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth_category__sequence
@@ -642,20 +626,17 @@ msgstr "Secvență"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_0_event_2
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_conference_0
+#: model:event.booth,name:event_booth.event_booth_0_event_3
+#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_0
 msgid "Showbooth 1"
 msgstr "Stand de prezentare 1"
 
 #. module: event_booth
 #: model:event.booth,name:event_booth.event_booth_1_event_2
-#: model:event.type.booth,name:event_booth.event_type_booth_demo_conference_1
+#: model:event.booth,name:event_booth.event_booth_1_event_3
+#: model:event.type.booth,name:event_booth.event_type_booth_demo_exhibition_1
 msgid "Showbooth 2"
 msgstr "Stand de prezentare 2"
-
-#. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_standard
-msgid "Standard"
-msgstr "Standard"
 
 #. module: event_booth
 #: model:event.booth.category,name:event_booth.event_booth_category_standard
@@ -676,8 +657,8 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Stare bazată pe activități\n"
-"Întârziată: data scadentă este deja trecută\n"
-"Astăzi: activității pentru astăzi\n"
+"Întârziată: data scadentă a trecut deja\n"
+"Astăzi: data activității este astăzi\n"
 "Planificate: activități viitoare."
 
 #. module: event_booth
@@ -688,18 +669,13 @@ msgstr "Total standuri"
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipul activității de excepție din înregistrare."
+msgstr "Tipul activității de excepție înregistrate."
 
 #. module: event_booth
 #: model:ir.model.fields.selection,name:event_booth.selection__event_booth__state__unavailable
 #: model_terms:ir.ui.view,arch_db:event_booth.event_booth_view_search
 msgid "Unavailable"
 msgstr "Indisponibil"
-
-#. module: event_booth
-#: model_terms:event.booth.category,description:event_booth.event_booth_category_vip
-msgid "VIP"
-msgstr "VIP"
 
 #. module: event_booth
 #: model:event.booth.category,name:event_booth.event_booth_category_vip
@@ -714,7 +690,7 @@ msgstr "Stand VIP A5"
 #. module: event_booth
 #: model:ir.model.fields,field_description:event_booth.field_event_booth__website_message_ids
 msgid "Website Messages"
-msgstr "Mesaje Website"
+msgstr "Mesaje website"
 
 #. module: event_booth
 #: model:ir.model.fields,help:event_booth.field_event_booth__website_message_ids

@@ -1,36 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* snailmail
-# 
+# * snailmail
+#
 # Translators:
-# Denys Sarapulov, 2022
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Carles Antoli <carlesantoli@hotmail.com>, 2022
-# eriiikgt, 2022
-# jabelchi, 2022
-# Arnau Ros, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# Jonatan Gk, 2022
-# Martin Trigaux, 2022
-# marcescu, 2022
-# jabiri7, 2022
-# Ivan Espinola, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
-# martioodo hola, 2023
-# 
+# Albert Parera, 2024
+# Arnau Ros, 2024
+# eriiikgt, 2024
+# Jonatan Gk, 2024
+# Iván Infantes Castarnado, 2024
+# Carles Antoli <carlesantoli@hotmail.com>, 2024
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
+# martioodo hola, 2024
+# Josep Anton Belchi, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
+# Eric Antones <eantones@users.noreply.github.com>, 2024
+# Martin Trigaux, 2024
+# Ivan Espinola, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
+# marcescu, 2024
+# Santiago Payà <santiagopim@gmail.com>, 2025
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:52+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: martioodo hola, 2023\n"
-"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2025-09-02 22:21+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-18/"
+"snailmail/ca/>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
+msgid "ATTACHMENT_ERROR"
+msgstr "ATTACHMENT_ERROR"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -47,15 +56,22 @@ msgstr "Adreça"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/notification_group/notification_group.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr ""
+"S'ha produït un error en enviar una carta per correu postal en “%"
+"(record_name)s”"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending a letter with Snailmail."
 msgstr "S'ha produït un error en enviar una carta amb Snailmail."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "An error occurred when sending the document by post.<br>Error: %s"
 msgstr ""
 "S'ha produït un error en enviar el document per publicació.<br>Error: %s"
@@ -63,14 +79,12 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr "Ha succeït un error desconegut. Contacteu amb el suport."
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "An unknown error occurred. Please contact our"
 msgstr "Hi ha hagut un error desconegut. Contacteu amb el nostre"
 
@@ -86,8 +100,7 @@ msgstr "Nom del fitxer adjunt"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
-#, python-format
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Awaiting Dispatch"
 msgstr "Esperant enviament"
 
@@ -103,9 +116,7 @@ msgstr "Totes dues parts"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "Buy credits"
 msgstr "Comprar crèdits"
 
@@ -115,10 +126,9 @@ msgid "CREDIT_ERROR"
 msgstr "CREDIT_ERROR"
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Cancel"
-msgstr "Cancel·lar"
+msgstr "Cancel·la"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
@@ -127,9 +137,8 @@ msgstr "Cancel·lar Carta"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-#, python-format
 msgid "Cancel letter"
 msgstr "Cancel·lar carta"
 
@@ -140,10 +149,9 @@ msgstr "Cancel· la la notificació en error"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
-#, python-format
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "Cancel·lat"
 
 #. module: snailmail
@@ -155,15 +163,13 @@ msgstr "Ciutat"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-#, python-format
 msgid "Close"
 msgstr "Tancar"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "Color"
@@ -181,12 +187,7 @@ msgstr "Empresa"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ajustos de configuració"
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
-msgid "Confirm"
-msgstr "Confirmar"
+msgstr "Paràmetres de configuració"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_partner
@@ -224,7 +225,7 @@ msgstr "Creat el"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__display_name
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_datas
@@ -244,10 +245,9 @@ msgstr "Fil de correus"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__error_code
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__error
-#, python-format
 msgid "Error"
 msgstr "Error"
 
@@ -258,9 +258,8 @@ msgstr "FORMAT_ERROR"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
-#, python-format
 msgid "Failed letter"
 msgstr "Carta fallida"
 
@@ -299,16 +298,8 @@ msgstr "Informació"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Invalid recipient name."
 msgstr "El nom del destinatari no és vàlid."
-
-#. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter____last_update
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error____last_update
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields____last_update
-msgid "Last Modified on"
-msgstr "Última modificació el "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -334,7 +325,6 @@ msgstr "Carta"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Letter sent by post with Snailmail"
 msgstr "Carta enviada per publicació amb Snailmail"
 
@@ -360,25 +350,9 @@ msgid "Message Notifications"
 msgstr "Notificacions de missatges"
 
 #. module: snailmail
-#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
-#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid ""
-"Message type: email for email message, notification for system message, "
-"comment for other messages such as user replies"
-msgstr ""
-"Tipus de missatge: e-mail per a missatges de correu, notificació per a "
-"missatges de sistema, comentaris per altres tipus de missatges com resposta "
-"d'usuaris."
-
-#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
 msgid "Model"
 msgstr "Model"
-
-#. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_confirm__model_name
-msgid "Model Name"
-msgstr "Nom del model"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
@@ -388,7 +362,6 @@ msgstr "SENSE_PREU_DISPONIBLE"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Not enough credits for Snail Mail"
 msgstr "No hi ha prou crèdits per al Snail Mail"
 
@@ -405,7 +378,6 @@ msgstr "Notificacions"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "One or more required fields are empty."
 msgstr "Un o més camps obligatoris estan buits."
 
@@ -418,12 +390,15 @@ msgstr "Informe opcional a generar i adjuntar"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid ""
 "Our service cannot read your letter due to its format.<br/>\n"
-"                Please modify the format of the template or update your settings\n"
+"                Please modify the format of the template or update your "
+"settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
 "El nostre servei no pot llegir la vostra carta pel seu format.<br/>\n"
-"                Modifica el format de la plantilla o actualitza la configuració\n"
-"               per afegir automàticament una pàgina de portada en blanc a totes les lletres."
+"                Modifica el format de la plantilla o actualitza la "
+"configuració\n"
+"               per afegir automàticament una pàgina de portada en blanc a "
+"totes les lletres."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -433,7 +408,6 @@ msgstr "Empresa"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Please use an A4 Paper format."
 msgstr "Utilitzeu un format de paper A4."
 
@@ -449,8 +423,7 @@ msgstr "Impressió en color"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "Re-send letter"
 msgstr "Torna a enviar la carta"
 
@@ -475,10 +448,14 @@ msgid "Send Now"
 msgstr "Enviar ara"
 
 #. module: snailmail
+#: model:iap.service,description:snailmail.iap_service_snailmail
+msgid "Send your customer invoices and follow-up reports by post, worldwide."
+msgstr ""
+
+#. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/snailmail_notification_popover_content_view.js:0
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__sent
-#, python-format
 msgid "Sent"
 msgstr "Enviat"
 
@@ -490,28 +467,24 @@ msgstr "Enviat per"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "Snail Mails are successfully sent"
 msgstr "Els Snail Mail s'han enviat correctament"
 
 #. module: snailmail
-#. odoo-python
-#: code:addons/snailmail/wizard/snailmail_confirm.py:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
-#, python-format
 msgid "Snailmail"
 msgstr "Correu postal"
 
 #. module: snailmail
-#: model:ir.model,name:snailmail.model_snailmail_confirm
-msgid "Snailmail Confirm"
-msgstr "Snailmail Confirmar"
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+msgid "Snailmail Color"
+msgstr ""
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
-msgid "Snailmail Confirmation"
-msgstr "Confirmació Snailmail"
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
+msgid "Snailmail Cover Readonly"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
@@ -520,8 +493,13 @@ msgstr "Error de crèdit de Snailmail"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/models/notification_group.js:0
-#, python-format
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
+msgstr ""
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "Snailmail Failures"
 msgstr "Errors del Snailmail"
 
@@ -575,16 +553,20 @@ msgstr "Missatge de Snailmail per error"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
-#: model:ir.cron,cron_name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
 msgstr "Snailmail: processar la cua de cartes"
+
+#. module: snailmail
+#: model:iap.service,unit_name:snailmail.iap_service_snailmail
+msgid "Stamps"
+msgstr "Segells"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__state_id
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "State"
-msgstr "Província"
+msgstr "Estat"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -600,7 +582,7 @@ msgstr "Carrer"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Street 2..."
-msgstr "2a adreça"
+msgstr "Carrer 2..."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -621,17 +603,15 @@ msgstr "TRIAL_ERROR"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "The address of the recipient is not complete"
 msgstr "L'adreça del destinatari no està completa"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid ""
-"The attachment of the letter could not be sent. Please check its content and"
-" contact the support if the problem persists."
+"The attachment of the letter could not be sent. Please check its content and "
+"contact the support if the problem persists."
 msgstr ""
 "No s'ha pogut enviar l'adjunt de la carta. Comproveu el seu contingut i "
 "poseu-vos en contacte amb el suport si el problema persisteix."
@@ -639,14 +619,12 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid "The country of the partner is not covered by Snailmail."
 msgstr "El país del soci no està cobert per Snailmail."
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid ""
 "The country to which you want to send the letter is not supported by our "
 "service."
@@ -659,13 +637,18 @@ msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
 msgstr ""
-"La direcció del client no està completa. Actualitzi l'adreça aquí i torni a "
+"La adreça del client no està completa. Actualitzi l'adreça aquí i torni a "
 "enviar la carta."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
+msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
+msgstr ""
+
+#. module: snailmail
+#. odoo-python
+#: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
 msgstr ""
 "El document va ser enviat correctament per correu.<br>L'identificador de "
@@ -673,11 +656,9 @@ msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid ""
-"The letter could not be sent due to insufficient credits on your IAP "
-"account."
+"The letter could not be sent due to insufficient credits on your IAP account."
 msgstr ""
 "No s'ha pogut enviar la carta a causa dels crèdits insuficients del vostre "
 "compte IAP."
@@ -709,25 +690,35 @@ msgid "Update address of partner"
 msgstr "Actualitza l'adreça del soci"
 
 #. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
+msgid ""
+"Used to categorize message generator\n"
+"'email': generated by an incoming email e.g. mailgateway\n"
+"'comment': generated by user input e.g. through discuss or composer\n"
+"'email_outgoing': generated by a mailing\n"
+"'notification': generated by system e.g. tracking messages\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
+"'user_notification': generated for a specific recipient"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
 "If the letter is correctly sent, the status goes in 'Sent',\n"
-"If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
+"If not, it will got in state 'Error' and the error message will be displayed "
+"in the field 'Error Message'."
 msgstr ""
 "Quan es crea una carta, l'estat és \"Pending\".\n"
 "Si la lletra s'envia correctament, l'estat s'inclou a «Envia»,\n"
-"En cas contrari, s'aconseguirà l'estat \"error\" i el missatge d'error es mostrarà en el camp \"Missatge d'error\"."
-
-#. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
-msgid "You are about to send this"
-msgstr "Està a punt d'enviar això"
+"En cas contrari, s'aconseguirà l'estat \"error\" i el missatge d'error es "
+"mostrarà en el camp \"Missatge d'error\"."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
@@ -739,7 +730,6 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-#, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
@@ -749,8 +739,7 @@ msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "You need credits on your IAP account to send a letter."
 msgstr "Necessites crèdits al teu compte IAP per enviar una carta."
 
@@ -766,20 +755,13 @@ msgid "Zip"
 msgstr "Codi Postal"
 
 #. module: snailmail
-#: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
-msgid "by post. Are you sure you want to continue?"
-msgstr "per correu. Estàs segur que vols continuar?"
-
-#. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "for further assistance."
 msgstr "per a obtenir més ajuda."
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/components/snailmail_error/snailmail_error.xml:0
-#, python-format
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "support"
 msgstr "suport"
