@@ -12,9 +12,9 @@ class StripeCommon(PaymentCommon):
         super().setUpClass()
 
         cls.stripe = cls._prepare_provider('stripe', update_values={
-            'stripe_secret_key': 'sk_test_placeholder_key_replace_me',
-            'stripe_publishable_key': 'pk_test_placeholder_key_replace_me',
-            'stripe_webhook_secret': 'whsec_placeholder_secret_replace_me',
+            'stripe_secret_key': 'sk_test_KJtHgNwt2KS3xM7QJPr4O5E8',
+            'stripe_publishable_key': 'pk_test_QSPnimmb4ZhtkEy3Uhdm4S6J',
+            'stripe_webhook_secret': 'whsec_vG1fL6CMUouQ7cObF2VJprLVXT5jBLxB',
             'payment_method_ids': [(5, 0, 0)],
         })
 
@@ -50,6 +50,13 @@ class StripeCommon(PaymentCommon):
             'payment_intent': 'pi_000000000000000000000000',
             'status': 'succeeded',
             **cls.notification_amount_and_currency,
+        }
+        cls.void_payment_data = {
+            'data': {
+                'captured': False,
+                'object': cls.refund_object,
+            },
+            'type': 'charge.refunded',
         }
         cls.refund_payment_data = {
             'data': {

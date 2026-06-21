@@ -29,6 +29,21 @@ class DriverController(http.Controller):
         We specify in data from which session_id that action is called
         And call the action of specific device
         """
+        if device_identifier == helpers.get_identifier():
+            match data.get('action'):
+                case "restart_odoo":
+                    event_manager.events.append({
+                        'time': time.time(),
+                        'device_identifier': device_identifier,
+                        'owner': session_id,
+                        'status': 'success',
+                    })
+                    time.sleep(2)  # wait for the server to catch the event before restarting
+                    return helpers.odoo_restart()
+                case _:
+                    # Special case for testing if longpolling protocol is working
+                    return True
+
         # If device_identifier is a type of device, we take the first device of this type
         # required for longpolling with community db
         if device_identifier in DEVICE_TYPES:
@@ -41,8 +56,10 @@ class DriverController(http.Controller):
             return False
 
         data['session_id'] = session_id  # ensure session_id is in data as for websocket communication
-        _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
+        start_operation_time = time.perf_counter()
+        _logger.info("Longpolling: calling action %s for device %s", data.get('action', ''), device_identifier)
         iot_device.action(data)
+        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
         return True
 
     @helpers.toggleable
