@@ -9,7 +9,7 @@ on:
     branches: ["16.0", "17.0", "18.0", "19.0"]
 jobs:
   publish:
-    if: contains(github.event.head_commit.message, '[publish]') || contains(github.event.head_commit.message, '[republish]')
+    if: contains(github.event.head_commit.message, '[publish]') || contains(github.event.head_commit.message, '[republish')
     runs-on: native
     steps:
       - name: checkout addon repo
@@ -30,6 +30,8 @@ jobs:
           set -euo pipefail
           python3 -m venv /tmp/venv && . /tmp/venv/bin/activate
           pip install -q build twine
-          REPUB=""
-          case "$MSG" in *"[republish]"*) REPUB="--replace";; esac
-          python3 .core_0/scripts/publish_addon_wheels.py --repo-dir . --repo-name "$REPO" $REPUB
+          REPUB_ARGS=""
+          MODS=$(printf '%s' "$MSG" | grep -oE '\[republish-[a-z0-9_]+\]' | sed -E 's/.*\[republish-([a-z0-9_]+)\].*/\1/' | paste -sd, -)
+          if [ -n "$MODS" ]; then REPUB_ARGS="--replace --only $MODS";
+          elif printf '%s' "$MSG" | grep -q '\[republish\]'; then REPUB_ARGS="--replace"; fi
+          python3 .core_0/scripts/publish_addon_wheels.py --repo-dir . --repo-name "$REPO" $REPUB_ARGS
