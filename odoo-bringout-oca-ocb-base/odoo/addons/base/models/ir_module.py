@@ -980,8 +980,25 @@ class IrModuleModule(models.Model):
                 for po_path in get_po_paths(module_name, lang):
                     _logger.info('module %s: loading translation file %s for language %s', module_name, po_path, lang)
                     translation_importer.load_file(po_path, lang)
-                for data_path in get_datafile_translation_path(module_name):
-                    translation_importer.load_file(data_path, lang, module=module_name)
+                # bring.out: thin wheels strip demo/test DATA files (still listed in
+                # manifests); skip files absent on disk instead of crashing the
+                # registry load (get_datafile_translation_path resolves via file_path
+                # which raises FileNotFoundError on the stripped demo/*.xml).
+                from odoo.tools import file_path as _bo_file_path
+                from os.path import join as _bo_join
+                _bo_manifest = Manifest.for_addon(module_name, display_warning=False) or {}
+                for _bo_dt in ("data", "demo"):
+                    for _bo_p in (_bo_manifest.get(_bo_dt, ()) or ()):
+                        if not _bo_p.endswith((".xml", ".csv")):
+                            continue
+                        try:
+                            data_path = _bo_file_path(_bo_join(module_name, _bo_p))
+                        except FileNotFoundError:
+                            continue
+                        try:
+                            translation_importer.load_file(data_path, lang, module=module_name)
+                        except FileNotFoundError:
+                            pass
                 if lang != 'en_US' and lang not in translation_importer.imported_langs:
                     _logger.info('module %s: no translation for language %s', module_name, lang)
 
